@@ -1,0 +1,81 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+
+namespace NetP3DLib.P3D.Chunks;
+
+[ChunkAttributes((uint)ChunkIdentifier.Animation_Channel_Count)]
+public class AnimationChannelCountChunk : Chunk
+{
+    public uint Version { get; set; }
+    public uint ChannelChunkID { get; set; }
+    public uint NumNumKeys
+    {
+        get => (uint)NumKeys.Count;
+        set
+        {
+            if (value == NumNumKeys)
+                return;
+
+            if (value < NumNumKeys)
+            {
+                while (NumNumKeys > value)
+                    NumKeys.RemoveAt(NumKeys.Count - 1);
+            }
+            else
+            {
+                while (NumNumKeys < value)
+                    NumKeys.Add(default);
+            }
+        }
+    }
+    public List<ushort> NumKeys { get; } = [];
+
+    public override byte[] DataBytes
+    {
+        get
+        {
+            List<byte> data = [];
+
+            data.AddRange(BitConverter.GetBytes(Version));
+            data.AddRange(BitConverter.GetBytes(ChannelChunkID));
+            data.AddRange(BitConverter.GetBytes(NumNumKeys));
+            foreach (var key in NumKeys)
+                data.AddRange(BitConverter.GetBytes(key));
+
+            return [.. data];
+        }
+    }
+    public override uint DataLength => sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(ushort) * NumNumKeys;
+
+    public AnimationChannelCountChunk(BinaryReader br) : base((uint)ChunkIdentifier.Animation_Channel_Count)
+    {
+        Version = br.ReadUInt32();
+        ChannelChunkID = br.ReadUInt32();
+        int numChannels = br.ReadInt32();
+        NumKeys.Capacity = numChannels;
+        for (int i = 0; i < numChannels; i++)
+            NumKeys.Add(br.ReadUInt16());
+    }
+
+    public AnimationChannelCountChunk(uint version, uint channelChunkID, List<ushort> numKeys) : base((uint)ChunkIdentifier.Animation_Channel_Count)
+    {
+        Version = version;
+        ChannelChunkID = channelChunkID;
+        NumKeys.AddRange(numKeys);
+    }
+
+    public override void Validate()
+    {
+        base.Validate();
+    }
+
+    internal override void WriteData(BinaryWriter bw)
+    {
+        bw.Write(Version);
+        bw.Write(ChannelChunkID);
+        bw.Write(NumNumKeys);
+        foreach (var key in NumKeys)
+            bw.Write(key);
+    }
+}

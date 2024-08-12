@@ -1,0 +1,59 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+
+namespace NetP3DLib.P3D.Chunks;
+
+[ChunkAttributes((uint)ChunkIdentifier.Skeleton_Joint_Mirror_Map)]
+public class SkeletonJointMirrorMapChunk : Chunk
+{
+    public uint MappedJointIndex { get; set; }
+    public float XAxisMap { get; set; }
+    public float YAxisMap { get; set; }
+    public float ZAxisMap { get; set; }
+
+    public override byte[] DataBytes
+    {
+        get
+        {
+            List<byte> data = [];
+
+            data.AddRange(BitConverter.GetBytes(MappedJointIndex));
+            data.AddRange(BitConverter.GetBytes(XAxisMap));
+            data.AddRange(BitConverter.GetBytes(YAxisMap));
+            data.AddRange(BitConverter.GetBytes(ZAxisMap));
+
+            return [.. data];
+        }
+    }
+    public override uint DataLength => sizeof(uint) + sizeof(float) + sizeof(float) + sizeof(float);
+
+    public SkeletonJointMirrorMapChunk(BinaryReader br) : base((uint)ChunkIdentifier.Skeleton_Joint_Mirror_Map)
+    {
+        MappedJointIndex = br.ReadUInt32();
+        XAxisMap = br.ReadSingle();
+        YAxisMap = br.ReadSingle();
+        ZAxisMap = br.ReadSingle();
+    }
+
+    public SkeletonJointMirrorMapChunk(uint mappedJointIndex, float xAxisMap, float yAxisMap, float zAxisMap) : base((uint)ChunkIdentifier.Skeleton_Joint_Mirror_Map)
+    {
+        MappedJointIndex = mappedJointIndex;
+        XAxisMap = xAxisMap;
+        YAxisMap = yAxisMap;
+        ZAxisMap = zAxisMap;
+    }
+
+    public override void Validate()
+    {
+        base.Validate();
+    }
+
+    internal override void WriteData(BinaryWriter bw)
+    {
+        bw.Write(MappedJointIndex);
+        bw.Write(XAxisMap);
+        bw.Write(YAxisMap);
+        bw.Write(ZAxisMap);
+    }
+}

@@ -1,0 +1,50 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Numerics;
+
+namespace NetP3DLib.P3D.Chunks;
+
+[ChunkAttributes((uint)ChunkIdentifier.Bounding_Sphere)]
+public class BoundingSphereChunk : Chunk
+{
+    public Vector3 Centre { get; set; }
+    public float Radius { get; set; }
+
+    public override byte[] DataBytes
+    {
+        get
+        {
+            List<byte> data = [];
+
+            data.AddRange(BinaryExtensions.GetBytes(Centre));
+            data.AddRange(BitConverter.GetBytes(Radius));
+
+            return [.. data];
+        }
+    }
+    public override uint DataLength => sizeof(float) * 3 + sizeof(float);
+
+    public BoundingSphereChunk(BinaryReader br) : base((uint)ChunkIdentifier.Bounding_Sphere)
+    {
+        Centre = br.ReadVector3();
+        Radius = br.ReadSingle();
+    }
+
+    public BoundingSphereChunk(Vector3 centre, float radius) : base((uint)ChunkIdentifier.Bounding_Sphere)
+    {
+        Centre = centre;
+        Radius = radius;
+    }
+
+    public override void Validate()
+    {
+        base.Validate();
+    }
+
+    internal override void WriteData(BinaryWriter bw)
+    {
+        bw.Write(Centre);
+        bw.Write(Radius);
+    }
+}

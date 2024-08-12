@@ -1,0 +1,85 @@
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+
+namespace NetP3DLib.P3D.Chunks;
+
+[ChunkAttributes((uint)ChunkIdentifier.Light)]
+public class LightChunk : NamedChunk
+{
+    public enum Types : uint
+    {
+        Ambient = 0,
+        Directional = 2,
+    }
+
+    public uint Version { get; set; }
+    public Types Type { get; set; }
+    public Color Colour { get; set; }
+    public float Constant { get; set; }
+    public float Linear { get; set; }
+    public float Squared { get; set; }
+    public uint Enabled { get; set; }
+
+    public override byte[] DataBytes
+    {
+        get
+        {
+            List<byte> data = [];
+
+            data.AddRange(BinaryExtensions.GetP3DStringBytes(Name));
+            data.AddRange(BitConverter.GetBytes(Version));
+            data.AddRange(BitConverter.GetBytes((uint)Type));
+            data.AddRange(BinaryExtensions.GetBytes(Colour));
+            data.AddRange(BitConverter.GetBytes(Constant));
+            data.AddRange(BitConverter.GetBytes(Linear));
+            data.AddRange(BitConverter.GetBytes(Squared));
+            data.AddRange(BitConverter.GetBytes(Enabled));
+
+            return [.. data];
+        }
+    }
+    public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(uint);
+
+    public LightChunk(BinaryReader br) : base((uint)ChunkIdentifier.Light)
+    {
+        Name = br.ReadP3DString();
+        Version = br.ReadUInt32();
+        Type = (Types)br.ReadUInt32();
+        Colour = br.ReadColor();
+        Constant = br.ReadSingle();
+        Linear = br.ReadSingle();
+        Squared = br.ReadSingle();
+        Enabled = br.ReadUInt32();
+    }
+
+    public LightChunk(string name, uint version, Types type, Color colour, float constant, float linear, float squared, uint enabled) : base((uint)ChunkIdentifier.Light)
+    {
+        Name = name;
+        Version = version;
+        Type = type;
+        Colour = colour;
+        Constant = constant;
+        Linear = linear;
+        Squared = squared;
+        Enabled = enabled;
+    }
+
+    public override void Validate()
+    {
+        base.Validate();
+    }
+
+    internal override void WriteData(BinaryWriter bw)
+    {
+        bw.WriteP3DString(Name);
+        bw.Write(Version);
+        bw.Write((uint)Type);
+        bw.Write(Colour);
+        bw.Write(Constant);
+        bw.Write(Linear);
+        bw.Write(Squared);
+        bw.Write(Enabled);
+    }
+}

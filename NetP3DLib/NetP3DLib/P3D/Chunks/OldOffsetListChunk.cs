@@ -1,0 +1,131 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Numerics;
+
+namespace NetP3DLib.P3D.Chunks;
+
+[ChunkAttributes((uint)ChunkIdentifier.Old_Offset_List)]
+public class OldOffsetListChunk : Chunk
+{
+    public uint NumOffsets
+    {
+        get => (uint)Offsets.Count;
+        set
+        {
+            if (value == NumOffsets)
+                return;
+
+            if (value < NumOffsets)
+            {
+                while (NumOffsets > value)
+                    Offsets.RemoveAt(Offsets.Count - 1);
+            }
+            else
+            {
+                while (NumOffsets < value)
+                    Offsets.Add(default);
+            }
+        }
+    }
+    public uint KeyIndex { get; set; }
+    public List<OffsetEntry> Offsets { get; } = [];
+    public uint PrimGroupIndex { get; set; }
+
+    public override byte[] DataBytes
+    {
+        get
+        {
+            List<byte> data = [];
+
+            data.AddRange(BitConverter.GetBytes(NumOffsets));
+            data.AddRange(BitConverter.GetBytes(KeyIndex));
+            foreach (var offset in Offsets)
+                data.AddRange(offset.DataBytes);
+            data.AddRange(BitConverter.GetBytes(PrimGroupIndex));
+
+            return [.. data];
+        }
+    }
+    public override uint DataLength => sizeof(uint) + sizeof(uint) + (uint)Offsets.Sum(x => x.DataBytes.Length) + sizeof(uint);
+
+    public OldOffsetListChunk(BinaryReader br) : base((uint)ChunkIdentifier.Old_Offset_List)
+    {
+        var numOffsets = br.ReadInt32();
+        KeyIndex = br.ReadUInt32();
+        Offsets.Capacity = numOffsets;
+        for (int i = 0; i < numOffsets; i++)
+            Offsets.Add(new(br));
+        PrimGroupIndex = br.ReadUInt32();
+    }
+
+    public OldOffsetListChunk(uint keyIndex, IList<OffsetEntry> offsets, uint primGroupIndex) : base((uint)ChunkIdentifier.Old_Offset_List)
+    {
+        KeyIndex = keyIndex;
+        Offsets.AddRange(offsets);
+        PrimGroupIndex = primGroupIndex;
+    }
+
+    public override void Validate()
+    {
+        base.Validate();
+    }
+
+    internal override void WriteData(BinaryWriter bw)
+    {
+        bw.Write(NumOffsets);
+        bw.Write(KeyIndex);
+        foreach (var offset in Offsets)
+            offset.Write(bw);
+        bw.Write(PrimGroupIndex);
+    }
+
+    public class OffsetEntry
+    {
+        public uint Index { get; set; }
+        public Vector3 Offset { get; set; }
+
+        public byte[] DataBytes
+        {
+            get
+            {
+                List<byte> data = [];
+
+                data.AddRange(BitConverter.GetBytes(Index));
+                data.AddRange(BinaryExtensions.GetBytes(Offset));
+
+                return [.. data];
+            }
+        }
+
+        public OffsetEntry(BinaryReader br)
+        {
+            Index = br.ReadUInt32();
+            Offset = br.ReadVector3();
+        }
+
+        public OffsetEntry(uint index, Vector3 offset)
+        {
+            Index = index;
+            Offset = offset;
+        }
+
+        public OffsetEntry()
+        {
+            Index = 0;
+            Offset = Vector3.Zero;
+        }
+
+        internal void Write(BinaryWriter bw)
+        {
+            bw.Write(Index);
+            bw.Write(Offset);
+        }
+
+        public override string ToString()
+        {
+            return $"{Index} | {Offset}";
+        }
+    }
+}

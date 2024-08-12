@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Title>NetP3DLib</Title>
+    <Authors>Proddy</Authors>
+    <Company>Donut Team</Company>
+    <Description>A .NET library for working with Pure3D files. Contains all known Simpsons: Hit &amp; Run chunk types.</Description>
+    <PackageIcon>128x128.png</PackageIcon>
+    <ApplicationIcon>256x256.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="256x256.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="128x128.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
+  </ItemGroup>
+
+</Project>
