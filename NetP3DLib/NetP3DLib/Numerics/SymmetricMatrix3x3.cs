@@ -1,4 +1,6 @@
-﻿namespace NetP3DLib.Numerics;
+﻿using System.Numerics;
+
+namespace NetP3DLib.Numerics;
 
 /// <summary>
 /// Credits: <see href="https://lucasstuff.com" langword=" (Lucas Cardellini)"/>.
@@ -46,6 +48,30 @@ public struct SymmetricMatrix3x3
 
     public bool IsIdentity => Equals(Identity);
 
+    /// <summary>
+    /// Credits: <see href="https://github.com/EnAppelsin" langword=" (EnAppelsin)"/>.
+    /// </summary>
+    public static SymmetricMatrix3x3 Outer(Vector3 r)
+    {
+        SymmetricMatrix3x3 i = Zero;
+        i.XX = r.X * r.X;
+        i.XY = r.X * r.Y;
+        i.XZ = r.X * r.Z;
+        i.YY = r.Y * r.Y;
+        i.YZ = r.Y * r.Z;
+        i.ZZ = r.Z * r.Z;
+        return i;
+    }
+
+    /// <summary>
+    /// Credits: <see href="https://github.com/EnAppelsin" langword=" (EnAppelsin)"/>.
+    /// </summary>
+    public static SymmetricMatrix3x3 Translate(SymmetricMatrix3x3 inertia, Vector3 centre)
+    {
+        SymmetricMatrix3x3 e3 = Identity;
+        return inertia + (e3 * centre.LengthSquared() - Outer(centre));
+    }
+
     public static void Add(ref SymmetricMatrix3x3 Left, ref SymmetricMatrix3x3 Right, out SymmetricMatrix3x3 Result)
     {
         Result.XX = Left.XX + Right.XX;
@@ -59,6 +85,22 @@ public struct SymmetricMatrix3x3
     public static SymmetricMatrix3x3 Add(SymmetricMatrix3x3 Left, SymmetricMatrix3x3 Right)
     {
         Add(ref Left, ref Right, out var Result);
+        return Result;
+    }
+
+    public static void Subtract(ref SymmetricMatrix3x3 Left, ref SymmetricMatrix3x3 Right, out SymmetricMatrix3x3 Result)
+    {
+        Result.XX = Left.XX - Right.XX;
+        Result.XY = Left.XY - Right.XY;
+        Result.XZ = Left.XZ - Right.XZ;
+        Result.YY = Left.YY - Right.YY;
+        Result.YZ = Left.YZ - Right.YZ;
+        Result.ZZ = Left.ZZ - Right.ZZ;
+    }
+
+    public static SymmetricMatrix3x3 Subtract(SymmetricMatrix3x3 Left, SymmetricMatrix3x3 Right)
+    {
+        Subtract(ref Left, ref Right, out var Result);
         return Result;
     }
 
@@ -144,6 +186,12 @@ public struct SymmetricMatrix3x3
     public static SymmetricMatrix3x3 operator +(SymmetricMatrix3x3 Left, SymmetricMatrix3x3 Right)
     {
         Add(ref Left, ref Right, out var Result);
+        return Result;
+    }
+
+    public static SymmetricMatrix3x3 operator -(SymmetricMatrix3x3 Left, SymmetricMatrix3x3 Right)
+    {
+        Subtract(ref Left, ref Right, out var Result);
         return Result;
     }
 
