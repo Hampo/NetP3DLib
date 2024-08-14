@@ -27,7 +27,7 @@ public abstract class Chunk
     /// Property <c>DataLength</c> should be the number of bytes of <see cref="DataBytes"/>.
     /// <para>NOTE: This can be calculated by <see cref="DataBytes"/>.<c>Length</c>, however hardcoding is faster.</para>
     /// </summary>
-    public abstract uint DataLength { get; }
+    public virtual uint DataLength => (uint)DataBytes.Length;
     /// <summary>
     /// Property <c>HeaderSize</c> is the chunk's header size.
     /// <para>This is usually <see cref="P3DFile.HEADER_SIZE"/> + <see cref="DataBytes"/><c>.Length</c>.</para>
