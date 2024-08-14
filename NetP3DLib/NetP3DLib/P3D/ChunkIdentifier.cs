@@ -87,6 +87,7 @@ public enum ChunkIdentifier : uint
     Image = 0x19001,
     Image_Data = 0x19002,
     Image_Font = 0x22002,
+    Image_Glyph_List = 0x22003,
     Index_List = 0x1000A,
     Instance_List = 0x3000008,
     Inst_Particle_System = 0x3001001,
