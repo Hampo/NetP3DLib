@@ -22,7 +22,7 @@ public static class ChunkLoader
         Console.WriteLine($"Known chunk identifiers: {Enum.GetValues(typeof(ChunkIdentifier)).Length}. Loaded chunk classes: {ChunkTypes.Count}.");
         foreach (var chunkIdentifier in Enum.GetValues(typeof(ChunkIdentifier)))
             if (!ChunkTypes.ContainsKey((uint)chunkIdentifier))
-                Console.WriteLine($"\tMissing class for identifier: {chunkIdentifier}");
+                Console.WriteLine($"\tMissing class for identifier: {chunkIdentifier} (0x{(uint)chunkIdentifier:X})");
 #endif
     }
 
