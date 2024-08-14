@@ -66,7 +66,7 @@ public class P3DFile
         (uint)ChunkIdentifier.Skin,
         (uint)ChunkIdentifier.Expression_Group,
         (uint)ChunkIdentifier.Expression_Mixer,
-        (uint)ChunkIdentifier.Fence_2,
+        (uint)ChunkIdentifier.Wall,
         (uint)ChunkIdentifier.Fenceline,
         (uint)ChunkIdentifier.Intersection,
         (uint)ChunkIdentifier.Road_Data_Segment,

@@ -1,12 +1,11 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Fence_2)]
-public class Fence2Chunk : Chunk
+[ChunkAttributes((uint)ChunkIdentifier.Wall)]
+public class WallChunk : Chunk
 {
     public Vector3 Start { get; set; }
     public Vector3 End { get; set; }
@@ -27,14 +26,14 @@ public class Fence2Chunk : Chunk
     }
     public override uint DataLength => sizeof(float) * 3 + sizeof(float) * 3 + sizeof(float) * 3;
 
-    public Fence2Chunk(BinaryReader br) : base((uint)ChunkIdentifier.Fence_2)
+    public WallChunk(BinaryReader br) : base((uint)ChunkIdentifier.Wall)
     {
         Start = br.ReadVector3();
         End = br.ReadVector3();
         Normal = br.ReadVector3();
     }
 
-    public Fence2Chunk(Vector3 start, Vector3 end, Vector3 normal) : base((uint)ChunkIdentifier.Fence_2)
+    public WallChunk(Vector3 start, Vector3 end, Vector3 normal) : base((uint)ChunkIdentifier.Wall)
     {
         Start = start;
         End = end;
