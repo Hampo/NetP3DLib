@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NetP3DLib.P3D.Chunks;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -172,14 +173,48 @@ public class P3DFile
     /// Sort <see cref="Chunks"/> in the priority order <c>Simpsons: Hit &amp; Run</c> expects.
     /// <para>Chunk IDs without a sort priority will remain in their original order at the end of the file.</para>
     /// </summary>
-    public void SortChunks()
+    /// <param name="includeSectionHeaders">If <c>true</c>, will add a History chunk before each chunk ID.</param>
+    /// <param name="alphabetical">If <c>true</c>, named chunks will be further sorted into alphabetical order.</param>
+    public void SortChunks(bool includeSectionHeaders = false, bool alphabetical = false)
     {
         List<Chunk> newChunks = new(Chunks.Count);
 
         foreach (uint id in ChunkSortPriority)
-            newChunks.AddRange(Chunks.Where(x => x.ID == id));
+        {
+            var chunks = Chunks.Where(x => x.ID == id);
+            if (!chunks.Any())
+                continue;
 
-        newChunks.AddRange(Chunks.Where(x => !ChunkSortPriority.Contains(x.ID)));
+            if (includeSectionHeaders)
+            {
+                var chunkIdentifier = (ChunkIdentifier)id;
+                newChunks.Add(new HistoryChunk([$"{chunkIdentifier} (0x{(uint)chunkIdentifier:X})"]));
+            }
+
+            if (alphabetical && chunks.First() is NamedChunk)
+                chunks = chunks.Cast<NamedChunk>().OrderBy(x => x.Name);
+
+            newChunks.AddRange(chunks);
+        }
+
+        HashSet<uint> remainingIDs = new(Chunks.Where(x => !ChunkSortPriority.Contains(x.ID)).Select(x => x.ID));
+        foreach (uint id in remainingIDs)
+        {
+            var chunks = Chunks.Where(x => x.ID == id);
+            if (!chunks.Any())
+                continue;
+
+            if (includeSectionHeaders)
+            {
+                var chunkIdentifier = (ChunkIdentifier)id;
+                newChunks.Add(new HistoryChunk([$"{chunkIdentifier} (0x{(uint)chunkIdentifier:X})"]));
+            }
+
+            if (alphabetical && chunks.First() is NamedChunk)
+                chunks = chunks.Cast<NamedChunk>().OrderBy(x => x.Name);
+
+            newChunks.AddRange(chunks);
+        }
 
         Chunks = newChunks;
     }
