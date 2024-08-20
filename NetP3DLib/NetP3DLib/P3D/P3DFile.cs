@@ -31,7 +31,7 @@ public class P3DFile
         }
     }
 
-    private static readonly HashSet<uint> ChunkSortPriority = [
+    private static readonly List<uint> ChunkSortPriority = [
         (uint)ChunkIdentifier.History,
         (uint)ChunkIdentifier.Export_Info,
         (uint)ChunkIdentifier.Image,
@@ -179,36 +179,35 @@ public class P3DFile
     {
         List<Chunk> newChunks = new(Chunks.Count);
 
-        foreach (uint id in ChunkSortPriority)
+        HashSet<uint> chunkIDs = new(Chunks.Select(x => x.ID));
+        foreach (uint id in chunkIDs.OrderBy(x => ChunkSortPriority.Contains(x) ? ChunkSortPriority.IndexOf(x) : int.MaxValue))
         {
             var chunks = Chunks.Where(x => x.ID == id);
             if (!chunks.Any())
                 continue;
 
-            if (includeSectionHeaders)
+            if (chunks.First() is LocatorChunk)
             {
-                var chunkIdentifier = (ChunkIdentifier)id;
-                newChunks.Add(new HistoryChunk([$"{chunkIdentifier} (0x{(uint)chunkIdentifier:X})"]));
-            }
+                var locatorChunks = chunks.Cast<LocatorChunk>();
+                HashSet<uint> types = new(locatorChunks.Select(x => x.LocatorType));
+                foreach (uint type in types.OrderBy(x => x))
+                {
+                    var typeChunks = locatorChunks.Where(x => x.LocatorType == type);
 
-            if (alphabetical && chunks.First() is NamedChunk)
-                chunks = chunks.Cast<NamedChunk>().OrderBy(x => x.Name);
+                    if (includeSectionHeaders)
+                        newChunks.Add(new HistoryChunk([$"Locator Type {type} (0x{id:X})"]));
 
-            newChunks.AddRange(chunks);
-        }
+                    if (alphabetical)
+                        typeChunks = typeChunks.OrderBy(x => x.Name);
 
-        HashSet<uint> remainingIDs = new(Chunks.Where(x => !ChunkSortPriority.Contains(x.ID)).Select(x => x.ID));
-        foreach (uint id in remainingIDs)
-        {
-            var chunks = Chunks.Where(x => x.ID == id);
-            if (!chunks.Any())
+                    newChunks.AddRange(typeChunks);
+                }
+
                 continue;
+            }
 
             if (includeSectionHeaders)
-            {
-                var chunkIdentifier = (ChunkIdentifier)id;
-                newChunks.Add(new HistoryChunk([$"{chunkIdentifier} (0x{(uint)chunkIdentifier:X})"]));
-            }
+                newChunks.Add(new HistoryChunk([$"{((ChunkIdentifier)id).ToString().Replace("_", " ")} (0x{id:X})"]));
 
             if (alphabetical && chunks.First() is NamedChunk)
                 chunks = chunks.Cast<NamedChunk>().OrderBy(x => x.Name);
