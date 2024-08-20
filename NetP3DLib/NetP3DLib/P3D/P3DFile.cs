@@ -33,6 +33,7 @@ public class P3DFile
 
     /// <summary>
     /// When using <see cref="SortChunks"/>, this is the chunk sort order.
+    /// <para>Defaults to the order <c>Simpsons: Hit &amp; Run</c> expects.</para>
     /// </summary>
     public static readonly List<uint> ChunkSortPriority = [
         (uint)ChunkIdentifier.History,
@@ -173,7 +174,7 @@ public class P3DFile
     }
 
     /// <summary>
-    /// Sort <see cref="Chunks"/> in the priority order <c>Simpsons: Hit &amp; Run</c> expects.
+    /// Sort <see cref="Chunks"/> in the order specified in <see cref="ChunkSortPriority"/>.
     /// <para>Chunk IDs without a sort priority will remain in their original order at the end of the file.</para>
     /// </summary>
     /// <param name="includeSectionHeaders">If <c>true</c>, will add a History chunk before each chunk ID.</param>
