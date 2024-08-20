@@ -276,7 +276,7 @@ public static class LZR_Compression
             file.Chunks.Insert(0, new HistoryChunk(["Compressed with NetP3DLib", $"Run at {DateTime.Now:R}"]));
 
         using var stream = new MemoryStream();
-        file.Write(stream, Endianness.Little);
+        file.Write(stream);
         List<byte> input = stream.ToArray().ToList();
 
         return CompressFile(input, fast);
