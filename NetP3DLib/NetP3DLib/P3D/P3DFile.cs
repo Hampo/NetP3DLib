@@ -31,7 +31,10 @@ public class P3DFile
         }
     }
 
-    private static readonly List<uint> ChunkSortPriority = [
+    /// <summary>
+    /// When using <see cref="SortChunks"/>, this is the chunk sort order.
+    /// </summary>
+    public static readonly List<uint> ChunkSortPriority = [
         (uint)ChunkIdentifier.History,
         (uint)ChunkIdentifier.Export_Info,
         (uint)ChunkIdentifier.Image,
