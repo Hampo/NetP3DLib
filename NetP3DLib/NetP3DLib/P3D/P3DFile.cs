@@ -200,10 +200,7 @@ public class P3DFile
 
     public void Write(string filePath, Endianness endianness)
     {
-        foreach (var c in Chunks)
-            c.Validate();
-
-        using FileStream fs = System.IO.File.Open(filePath, FileMode.Create, FileAccess.ReadWrite, FileShare.None);
+        using FileStream fs = File.Open(filePath, FileMode.Create, FileAccess.ReadWrite, FileShare.None);
         Write(fs, endianness);
     }
 
@@ -213,6 +210,9 @@ public class P3DFile
     {
         if (!stream.CanWrite)
             throw new ArgumentException("Cannot write to stream.", nameof(stream));
+
+        foreach (var c in Chunks)
+            c.Validate();
 
         EndianAwareBinaryWriter bw = new(stream, endianness);
 
