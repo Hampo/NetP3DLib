@@ -222,4 +222,19 @@ public class P3DFile
         foreach (Chunk chunk in Chunks)
             chunk.Write(bw);
     }
+
+    public void Compress(string filePath, bool includeHistory = true)
+    {
+        using FileStream fs = File.Open(filePath, FileMode.Create, FileAccess.ReadWrite, FileShare.None);
+        Compress(fs, includeHistory);
+    }
+
+    public void Compress(Stream stream, bool includeHistory = true)
+    {
+        if (!stream.CanWrite)
+            throw new ArgumentException("Cannot write to stream.", nameof(stream));
+
+        var compressedBytes = LZR_Compression.CompressFile(this, includeHistory);
+        stream.Write(compressedBytes, 0, compressedBytes.Length);
+    }
 }
