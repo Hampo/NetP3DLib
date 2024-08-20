@@ -175,12 +175,16 @@ public class P3DFile
     /// </summary>
     /// <param name="includeSectionHeaders">If <c>true</c>, will add a History chunk before each chunk ID.</param>
     /// <param name="alphabetical">If <c>true</c>, named chunks will be further sorted into alphabetical order.</param>
-    public void SortChunks(bool includeSectionHeaders = false, bool alphabetical = false)
+    /// <param name="includeHistory">If <c>true</c>, a history chunk will be added to the start to indicate how and when it was sorted.<para>Defaults to <c>true</c>.</para></param>
+    public void SortChunks(bool includeSectionHeaders = false, bool alphabetical = false, bool includeHistory = true)
     {
         List<Chunk> newChunks = new(Chunks.Count);
 
+        if (includeHistory)
+            newChunks.Add(new HistoryChunk(["Sorted with NetP3DLib", $"Run at {DateTime.Now:R}"]));
+
         HashSet<uint> chunkIDs = new(Chunks.Select(x => x.ID));
-        foreach (uint id in chunkIDs.OrderBy(x => ChunkSortPriority.Contains(x) ? ChunkSortPriority.IndexOf(x) : int.MaxValue))
+        foreach (uint id in chunkIDs.OrderBy(x => (uint)ChunkSortPriority.IndexOf(x)))
         {
             var chunks = Chunks.Where(x => x.ID == id);
             if (!chunks.Any())
