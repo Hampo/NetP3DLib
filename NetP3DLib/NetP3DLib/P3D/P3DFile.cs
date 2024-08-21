@@ -63,6 +63,7 @@ public class P3DFile
         (uint)ChunkIdentifier.Anim_Obj_Wrapper,
         (uint)ChunkIdentifier.Breakable_Object,
         (uint)ChunkIdentifier.Inst_Particle_System,
+        (uint)ChunkIdentifier.Tree,
         (uint)ChunkIdentifier.Anim,
         (uint)ChunkIdentifier.Locator,
         (uint)ChunkIdentifier.Spline,
