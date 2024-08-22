@@ -115,17 +115,14 @@ public class LocatorChunk : NamedChunk
             {
                 uint value = data[index];
                 if (value == 0)
-                {
                     break;
-                }
 
                 for (int i = 0; i < 4; i++)
                 {
                     char ch = (char)(value & 0xFF);
                     if (ch == '\0')
-                    {
                         return (result.ToString(), index + 1);
-                    }
+
                     result.Append(ch);
                     value >>= 8;
                 }
