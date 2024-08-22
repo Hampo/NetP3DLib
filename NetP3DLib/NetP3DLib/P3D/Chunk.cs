@@ -132,10 +132,13 @@ public abstract class Chunk
         if (ID != chunk2.ID)
             return false;
 
-        if (!DataBytes.SequenceEqual(chunk2.DataBytes))
+        if (DataLength != chunk2.DataLength)
             return false;
 
         if (Children.Count != chunk2.Children.Count)
+            return false;
+
+        if (!DataBytes.SequenceEqual(chunk2.DataBytes))
             return false;
 
         for (int i = 0; i < Children.Count; i++)
