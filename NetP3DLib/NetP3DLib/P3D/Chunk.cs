@@ -189,7 +189,7 @@ public class UnknownChunk : Chunk
 
     public override byte[] DataBytes => Data;
 
-    public override uint DataLength => (uint)DataBytes.Length;
+    public override uint DataLength => (uint)Data.Length;
 
     /// <summary>
     /// This constructor initialises an unknown chunk with the given <paramref name="chunkId"/>. It sets <see cref="Data"/> to <paramref name="data"/>.
