@@ -61,7 +61,7 @@ public abstract class Chunk
     /// This constructor initialises an unknown chunk with the given <paramref name="chunkId"/>.
     /// </summary>
     /// <param name="chunkId">The chunk's identifier. See <seealso cref="ChunkIdentifier"/> for known identifiers.</param>
-    public Chunk(uint chunkId)
+    internal Chunk(uint chunkId)
     {
         ID = chunkId;
     }
