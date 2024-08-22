@@ -38,6 +38,7 @@ public class P3DFile
     public static readonly List<uint> ChunkSortPriority = [
         (uint)ChunkIdentifier.History,
         (uint)ChunkIdentifier.Export_Info,
+        (uint)ChunkIdentifier.Tree,
         (uint)ChunkIdentifier.Image,
         (uint)ChunkIdentifier.Texture,
         (uint)ChunkIdentifier.Set,
@@ -63,7 +64,6 @@ public class P3DFile
         (uint)ChunkIdentifier.Anim_Obj_Wrapper,
         (uint)ChunkIdentifier.Breakable_Object,
         (uint)ChunkIdentifier.Inst_Particle_System,
-        (uint)ChunkIdentifier.Tree,
         (uint)ChunkIdentifier.Anim_Dyna_Phys_Wrapper,
         (uint)ChunkIdentifier.Collision_Effect,
         (uint)ChunkIdentifier.Instance_List,
