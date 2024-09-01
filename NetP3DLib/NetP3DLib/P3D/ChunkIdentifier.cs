@@ -127,6 +127,7 @@ public enum ChunkIdentifier : uint
     Old_Emitter_Animation = 0x15809,
     Old_Expression_Offsets = 0x10018,
     Old_Frame_Controller = 0x121200,
+    Old_Frame_Controller_2 = 0x4520,
     Old_Generator_Animation = 0x1580A,
     Old_Index_Offset_List = 0x121303,
     Old_Offset_List = 0x1000E,
