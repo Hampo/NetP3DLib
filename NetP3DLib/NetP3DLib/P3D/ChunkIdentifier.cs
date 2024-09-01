@@ -197,6 +197,8 @@ public enum ChunkIdentifier : uint
     Vector_2D_OF_Channel = 0x121103,
     Vector_3D_OF_Channel = 0x121104,
     Vertex_Shader = 0x10011,
+    Visibility_Anim = 0x4290,
+    Visibility_Anim_Channel = 0x4291,
     Volume_Image = 0x19004,
     Wall = 0x3000000,
     Walker_Camera_Data = 0x3000101,
