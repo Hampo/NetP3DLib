@@ -12,6 +12,9 @@ namespace NetP3DLib.P3D;
 public static class ChunkLoader
 {
     public static readonly Dictionary<uint, Type> ChunkTypes;
+#if DEBUG
+    public static HashSet<uint> UnknownChunks = [];
+#endif
 
     static ChunkLoader()
     {
@@ -110,6 +113,9 @@ public static class ChunkLoader
         else
         {
             c = new UnknownChunk(chunkId, headerData);
+#if DEBUG
+            UnknownChunks.Add(chunkId);
+#endif
         }
 
         if (headerSize != actualHeaderSize)

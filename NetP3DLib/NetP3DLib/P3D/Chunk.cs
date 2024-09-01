@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System;
+using System.Diagnostics;
 
 namespace NetP3DLib.P3D;
 
@@ -88,7 +89,18 @@ public abstract class Chunk
         bw.Write(HeaderSize);
         bw.Write(Size);
 
+#if DEBUG
+        var startPos = bw.BaseStream.Position;
+#endif
         WriteData(bw);
+#if DEBUG
+        var length = bw.BaseStream.Position - startPos;
+        if (length != HeaderSize - 12)
+        {
+            ChunkIdentifier chunkIdentifier = (ChunkIdentifier)ID;
+            Debugger.Break();
+        }
+#endif
 
         foreach (var chunk in Children)
             chunk.Write(bw);
