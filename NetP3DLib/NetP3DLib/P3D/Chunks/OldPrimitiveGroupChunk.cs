@@ -146,7 +146,7 @@ public class OldPrimitiveGroupChunk : Chunk
         if (Encoding.UTF8.GetBytes(ShaderName).Length > 255)
             throw new InvalidDataException($"The max length of {nameof(ShaderName)} is 255 bytes.");
 
-        var expectedVertextType = GetVertexType();
+        var expectedVertextType = GetVertexType() & ~VertexTypes.Position; // Hacky fix for "The Simpsons: Road Rage" as the Position List didn't exist then. "The Simpsons: Hit & Run" hardcodedly adds the Position List type to all Old Primitive Groups.
         if ((VertexType & expectedVertextType) != expectedVertextType)
             throw new InvalidDataException($"The {nameof(VertexType)} \"{VertexType}\" does not match expected value \"{expectedVertextType}\"");
 
