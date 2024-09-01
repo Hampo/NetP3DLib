@@ -31,6 +31,7 @@ public class OldOffsetListChunk : Chunk
     }
     public uint KeyIndex { get; set; }
     public List<OffsetEntry> Offsets { get; } = [];
+    public bool HasPrimGroupIndex { get; set; }
     public uint PrimGroupIndex { get; set; }
 
     public override byte[] DataBytes
@@ -48,7 +49,7 @@ public class OldOffsetListChunk : Chunk
             return [.. data];
         }
     }
-    public override uint DataLength => sizeof(uint) + sizeof(uint) + (uint)Offsets.Sum(x => x.DataBytes.Length) + sizeof(uint);
+    public override uint DataLength => sizeof(uint) + sizeof(uint) + (uint)Offsets.Sum(x => x.DataBytes.Length) + (HasPrimGroupIndex ? sizeof(uint) : 0u);
 
     public OldOffsetListChunk(BinaryReader br) : base((uint)ChunkIdentifier.Old_Offset_List)
     {
@@ -57,6 +58,12 @@ public class OldOffsetListChunk : Chunk
         Offsets.Capacity = numOffsets;
         for (int i = 0; i < numOffsets; i++)
             Offsets.Add(new(br));
+        if (br.BaseStream.Position == br.BaseStream.Length)
+        {
+            HasPrimGroupIndex = false;
+            return;
+        }
+        HasPrimGroupIndex = true;
         PrimGroupIndex = br.ReadUInt32();
     }
 
@@ -64,7 +71,15 @@ public class OldOffsetListChunk : Chunk
     {
         KeyIndex = keyIndex;
         Offsets.AddRange(offsets);
+        HasPrimGroupIndex = true;
         PrimGroupIndex = primGroupIndex;
+    }
+
+    public OldOffsetListChunk(uint keyIndex, IList<OffsetEntry> offsets) : base((uint)ChunkIdentifier.Old_Offset_List)
+    {
+        KeyIndex = keyIndex;
+        Offsets.AddRange(offsets);
+        HasPrimGroupIndex = false;
     }
 
     public override void Validate()
@@ -78,7 +93,8 @@ public class OldOffsetListChunk : Chunk
         bw.Write(KeyIndex);
         foreach (var offset in Offsets)
             offset.Write(bw);
-        bw.Write(PrimGroupIndex);
+        if (HasPrimGroupIndex)
+            bw.Write(PrimGroupIndex);
     }
 
     public class OffsetEntry
