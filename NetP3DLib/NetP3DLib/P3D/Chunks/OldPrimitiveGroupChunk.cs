@@ -14,6 +14,7 @@ public class OldPrimitiveGroupChunk : Chunk
         TriangleStrip,
         LineList,
         LineStrip,
+        Points,
     }
 
     [Flags]
@@ -38,7 +39,7 @@ public class OldPrimitiveGroupChunk : Chunk
         BiNormal = 1 << 11,
         Tangent = 1 << 12,
         Position = 1 << 13,
-        Colour2 = 1 << 14,
+        Colours2 = 1 << 14,
         ColourCount1 = 1 << 15,
         ColourCount2 = 2 << 15,
         ColourCount3 = 3 << 15,
@@ -46,7 +47,6 @@ public class OldPrimitiveGroupChunk : Chunk
         ColourCount5 = 5 << 15,
         ColourCount6 = 6 << 15,
         ColourCount7 = 7 << 15,
-        ColourMask = 7 << 15,
         ColourMaskOffset = 15,
     }
 
@@ -103,6 +103,7 @@ public class OldPrimitiveGroupChunk : Chunk
         { (uint)ChunkIdentifier.Packed_Normal_List, VertexTypes.Normals },
         { (uint)ChunkIdentifier.Normal_List, VertexTypes.Normals },
         { (uint)ChunkIdentifier.Colour_List, VertexTypes.Colours },
+        //{ (uint)ChunkIdentifier.Multi_Colour_List, VertexTypes.Colours2 },
         { (uint)ChunkIdentifier.Matrix_List, VertexTypes.Matrices },
         { (uint)ChunkIdentifier.Matrix_Palette, VertexTypes.Matrices },
         { (uint)ChunkIdentifier.Weight_List, VertexTypes.Weights },
