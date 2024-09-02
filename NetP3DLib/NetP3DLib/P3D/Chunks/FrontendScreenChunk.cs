@@ -25,7 +25,7 @@ public class FrontendScreenChunk : NamedChunk
             else
             {
                 while (NumPageNames < value)
-                    PageNames.Add(default);
+                    PageNames.Add(string.Empty);
             }
         }
     }

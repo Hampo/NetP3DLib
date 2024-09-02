@@ -24,7 +24,7 @@ public class HistoryChunk : Chunk
             else
             {
                 while (NumHistory < value)
-                    History.Add(default);
+                    History.Add(string.Empty);
             }
         }
     }

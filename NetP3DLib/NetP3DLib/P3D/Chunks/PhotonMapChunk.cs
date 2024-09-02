@@ -26,7 +26,7 @@ public class PhotonMapChunk : NamedChunk
             else
             {
                 while (NumLights < value)
-                    Lights.Add(default);
+                    Lights.Add(string.Empty);
             }
             NumLightScales = value;
         }

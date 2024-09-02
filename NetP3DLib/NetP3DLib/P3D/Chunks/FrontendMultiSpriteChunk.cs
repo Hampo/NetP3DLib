@@ -44,7 +44,7 @@ public class FrontendMultiSpriteChunk : NamedChunk
             else
             {
                 while (NumImageNames < value)
-                    ImageNames.Add(default);
+                    ImageNames.Add(string.Empty);
             }
         }
     }

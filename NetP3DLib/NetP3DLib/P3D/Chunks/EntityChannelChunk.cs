@@ -48,7 +48,7 @@ public class EntityChannelChunk : ParamChunk
             else
             {
                 while (NumValues < value)
-                    Values.Add(default);
+                    Values.Add(string.Empty);
             }
             NumFrames = value;
         }
