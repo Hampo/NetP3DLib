@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes((uint)ChunkIdentifier.Tree_Node)]
 public class TreeNodeChunk : Chunk
 {
-    public uint NumChildren { get; set; } // TODO: This is calculated from the `NumChildren` and `ParentOffset` of other `TreeNodeChunk`s in the parent `Tree`. Currently no pay to access a parent from the current chunk so cannot be calculated at this time.
+    public uint NumChildren { get; set; } // TODO: This is calculated from the `NumChildren` and `ParentOffset` of other `TreeNodeChunk`s in the parent `Tree`. Currently no way to access a parent from the current chunk so cannot be calculated at this time.
     public int ParentOffset { get; set; }
 
     public override byte[] DataBytes
