@@ -115,32 +115,22 @@ public class P3DFile
             fs.Read(signatureBuffer, 0, 4);
             uint signature = BitConverter.ToUInt32(signatureBuffer, 0);
 
+            var endianness = (signature == SIGNATURE_SWAP || signature == COMPRESSED_SIGNATURE_SWAP) ? BinaryExtensions.SwappedEndian : BinaryExtensions.DefaultEndian;
+
             switch (signature)
             {
                 case SIGNATURE:
-                    br = new(fs, BinaryExtensions.DefaultEndian);
-                    break;
                 case SIGNATURE_SWAP:
-                    br = new(fs, BinaryExtensions.SwappedEndian);
+                    br = new(fs, endianness);
                     break;
                 case COMPRESSED_SIGNATURE:
-                    fs.Position = 0;
-                    using (EndianAwareBinaryReader br2 = new(fs, BinaryExtensions.DefaultEndian))
-                    {
-                        byte[] decryptedBytes = LZR_Compression.DecompressFile(br2);
-                        ms = new(decryptedBytes);
-                        br = new(ms, BinaryExtensions.DefaultEndian);
-                        if (br.ReadUInt32() != SIGNATURE)
-                            throw new InvalidDataException($"Decompressed file signature 0x{signature:X} is invalid.");
-                    }
-                    break;
                 case COMPRESSED_SIGNATURE_SWAP:
                     fs.Position = 0;
-                    using (EndianAwareBinaryReader br2 = new(fs, BinaryExtensions.SwappedEndian))
+                    using (EndianAwareBinaryReader br2 = new(fs, endianness))
                     {
                         byte[] decryptedBytes = LZR_Compression.DecompressFile(br2);
                         ms = new(decryptedBytes);
-                        br = new(ms, BinaryExtensions.SwappedEndian);
+                        br = new(ms, endianness);
                         if (br.ReadUInt32() != SIGNATURE)
                             throw new InvalidDataException($"Decompressed file signature 0x{signature:X} is invalid.");
                     }
