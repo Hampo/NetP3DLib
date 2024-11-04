@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Old_Billboard_Perspective_Info)]
+[ChunkAttributes(ChunkID)]
 public class OldBillboardPerspectiveInfoChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Old_Billboard_Perspective_Info;
+    
     public uint Version { get; set; }
     public uint Perspective { get; set; }
 
@@ -24,13 +26,13 @@ public class OldBillboardPerspectiveInfoChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint);
 
-    public OldBillboardPerspectiveInfoChunk(BinaryReader br) : base((uint)ChunkIdentifier.Old_Billboard_Perspective_Info)
+    public OldBillboardPerspectiveInfoChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         Perspective = br.ReadUInt32();
     }
 
-    public OldBillboardPerspectiveInfoChunk(uint version, uint perspective) : base((uint)ChunkIdentifier.Old_Billboard_Perspective_Info)
+    public OldBillboardPerspectiveInfoChunk(uint version, uint perspective) : base(ChunkID)
     {
         Version = version;
         Perspective = perspective;

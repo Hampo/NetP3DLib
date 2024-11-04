@@ -5,9 +5,11 @@ using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Sprite_Particle_Emitter)]
+[ChunkAttributes(ChunkID)]
 public class SpriteParticleEmitterChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Sprite_Particle_Emitter;
+    
     public uint Version { get; set; }
     public string ShaderName { get; set; }
     public uint UpdateMode { get; set; }
@@ -48,7 +50,7 @@ public class SpriteParticleEmitterChunk : NamedChunk
     }
     public override uint DataLength => sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + (uint)BinaryExtensions.GetP3DStringBytes(ShaderName).Length + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(float);
 
-    public SpriteParticleEmitterChunk(BinaryReader br) : base((uint)ChunkIdentifier.Sprite_Particle_Emitter)
+    public SpriteParticleEmitterChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         Name = br.ReadP3DString();
@@ -66,7 +68,7 @@ public class SpriteParticleEmitterChunk : NamedChunk
         RotationalCohesion = br.ReadSingle();
     }
 
-    public SpriteParticleEmitterChunk(uint version, string name, string shaderName, uint updateMode, uint zTest, uint zWrite, uint maxParticles, uint infiniteLife, uint numTextureFrames, uint textureFrameRate, float initialAngle, float initialAngleVariance, float translationalCohesion, float rotationalCohesion) : base((uint)ChunkIdentifier.Sprite_Particle_Emitter)
+    public SpriteParticleEmitterChunk(uint version, string name, string shaderName, uint updateMode, uint zTest, uint zWrite, uint maxParticles, uint infiniteLife, uint numTextureFrames, uint textureFrameRate, float initialAngle, float initialAngleVariance, float translationalCohesion, float rotationalCohesion) : base(ChunkID)
     {
         Version = version;
         Name = name;

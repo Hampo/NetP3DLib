@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Topology)]
+[ChunkAttributes(ChunkID)]
 public class TopologyChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Topology;
+    
     public uint NumTopology
     {
         get => (uint)Topologies.Count;
@@ -44,7 +46,7 @@ public class TopologyChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + Topology.Size * NumTopology;
 
-    public TopologyChunk(BinaryReader br) : base((uint)ChunkIdentifier.Topology)
+    public TopologyChunk(BinaryReader br) : base(ChunkID)
     {
         var numEntries = br.ReadInt32();
         Topologies.Capacity = numEntries;
@@ -52,7 +54,7 @@ public class TopologyChunk : Chunk
             Topologies.Add(new(br));
     }
 
-    public TopologyChunk(IList<Topology> entries) : base((uint)ChunkIdentifier.Topology)
+    public TopologyChunk(IList<Topology> entries) : base(ChunkID)
     {
         Topologies.AddRange(entries);
     }

@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Physics_Joint)]
+[ChunkAttributes(ChunkID)]
 public class PhysicsJointChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Physics_Joint;
+    
     public uint Index { get; set; }
     public float Volume { get; set; }
     public float Stiffness { get; set; }
@@ -32,7 +34,7 @@ public class PhysicsJointChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(float);
 
-    public PhysicsJointChunk(BinaryReader br) : base((uint)ChunkIdentifier.Physics_Joint)
+    public PhysicsJointChunk(BinaryReader br) : base(ChunkID)
     {
         Index = br.ReadUInt32();
         Volume = br.ReadSingle();
@@ -42,7 +44,7 @@ public class PhysicsJointChunk : Chunk
         DOF = br.ReadSingle();
     }
 
-    public PhysicsJointChunk(uint index, float volume, float stiffness, float maxAngle, float minAngle, float dof) : base((uint)ChunkIdentifier.Physics_Joint)
+    public PhysicsJointChunk(uint index, float volume, float stiffness, float maxAngle, float minAngle, float dof) : base(ChunkID)
     {
         Index = index;
         Volume = volume;

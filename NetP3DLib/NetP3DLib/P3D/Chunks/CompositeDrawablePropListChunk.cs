@@ -5,9 +5,11 @@ using System.Linq;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Composite_Drawable_Prop_List)]
+[ChunkAttributes(ChunkID)]
 public class CompositeDrawablePropListChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Composite_Drawable_Prop_List;
+    
     public uint NumElements => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.Composite_Drawable_Prop).Count();
 
     public override byte[] DataBytes
@@ -24,12 +26,12 @@ public class CompositeDrawablePropListChunk : Chunk
     public override uint DataLength => sizeof(uint);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public CompositeDrawablePropListChunk(BinaryReader br) : base((uint)ChunkIdentifier.Composite_Drawable_Prop_List)
+    public CompositeDrawablePropListChunk(BinaryReader br) : base(ChunkID)
     {
         var numElements = br.ReadUInt32();
     }
 
-    public CompositeDrawablePropListChunk() : base((uint)ChunkIdentifier.Composite_Drawable_Prop_List)
+    public CompositeDrawablePropListChunk() : base(ChunkID)
     { }
 
     public override void Validate()

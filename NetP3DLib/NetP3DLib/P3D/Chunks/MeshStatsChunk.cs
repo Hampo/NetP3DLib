@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Mesh_Stats)]
+[ChunkAttributes(ChunkID)]
 public class MeshStatsChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Mesh_Stats;
+    
     public uint Version { get; set; }
     public uint IsRendered { get; set; }
     public uint IsCollision { get; set; }
@@ -26,7 +28,7 @@ public class MeshStatsChunk : NamedChunk
     }
     public override uint DataLength => sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(uint);
 
-    public MeshStatsChunk(BinaryReader br) : base((uint)ChunkIdentifier.Mesh_Stats)
+    public MeshStatsChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         Name = br.ReadP3DString();
@@ -34,7 +36,7 @@ public class MeshStatsChunk : NamedChunk
         IsCollision = br.ReadUInt32();
     }
 
-    public MeshStatsChunk(uint version, string name, uint isRendered, uint isCollision) : base((uint)ChunkIdentifier.Mesh_Stats)
+    public MeshStatsChunk(uint version, string name, uint isRendered, uint isCollision) : base(ChunkID)
     {
         Version = version;
         Name = name;

@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Anim_Dyna_Phys_Wrapper)]
+[ChunkAttributes(ChunkID)]
 public class AnimDynaPhysWrapperChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Anim_Dyna_Phys_Wrapper;
+    
     public uint Version { get; set; }
     public uint HasAlpha { get; set; }
 
@@ -25,14 +27,14 @@ public class AnimDynaPhysWrapperChunk : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(uint);
 
-    public AnimDynaPhysWrapperChunk(BinaryReader br) : base((uint)ChunkIdentifier.Anim_Dyna_Phys_Wrapper)
+    public AnimDynaPhysWrapperChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         Version = br.ReadUInt32();
         HasAlpha = br.ReadUInt32();
     }
 
-    public AnimDynaPhysWrapperChunk(string name, uint version, uint hasAlpha) : base((uint)ChunkIdentifier.Anim_Dyna_Phys_Wrapper)
+    public AnimDynaPhysWrapperChunk(string name, uint version, uint hasAlpha) : base(ChunkID)
     {
         Name = name;
         Version = version;

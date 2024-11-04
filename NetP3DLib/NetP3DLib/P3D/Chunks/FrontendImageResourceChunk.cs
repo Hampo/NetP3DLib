@@ -5,9 +5,11 @@ using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Frontend_Image_Resource)]
+[ChunkAttributes(ChunkID)]
 public class FrontendImageResourceChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Frontend_Image_Resource;
+    
     public uint Version { get; set; }
     public string Filename { get; set; }
 
@@ -26,14 +28,14 @@ public class FrontendImageResourceChunk : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Filename).Length;
 
-    public FrontendImageResourceChunk(BinaryReader br) : base((uint)ChunkIdentifier.Frontend_Image_Resource)
+    public FrontendImageResourceChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         Version = br.ReadUInt32();
         Filename = br.ReadP3DString();
     }
 
-    public FrontendImageResourceChunk(string name, uint version, string filename) : base((uint)ChunkIdentifier.Frontend_Image_Resource)
+    public FrontendImageResourceChunk(string name, uint version, string filename) : base(ChunkID)
     {
         Name = name;
         Version = version;

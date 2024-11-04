@@ -5,9 +5,11 @@ using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Smart_Prop)]
+[ChunkAttributes(ChunkID)]
 public class SmartPropChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Smart_Prop;
+    
     public uint Version { get; set; }
     public string ObjectFactoryName { get; set; }
     public string Material { get; set; }
@@ -38,7 +40,7 @@ public class SmartPropChunk : NamedChunk
     }
     public override uint DataLength => sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + (uint)BinaryExtensions.GetP3DStringBytes(ObjectFactoryName).Length + (uint)BinaryExtensions.GetP3DStringBytes(Material).Length + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint);
 
-    public SmartPropChunk(BinaryReader br) : base((uint)ChunkIdentifier.Smart_Prop)
+    public SmartPropChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         Name = br.ReadP3DString();
@@ -51,7 +53,7 @@ public class SmartPropChunk : NamedChunk
         NumStates = br.ReadUInt32();
     }
 
-    public SmartPropChunk(uint version, string name, string objectFactoryName, string material, uint materialEnum, uint numBreakables, uint renderingCost, uint simulationCost, uint numStates) : base((uint)ChunkIdentifier.Smart_Prop)
+    public SmartPropChunk(uint version, string name, string objectFactoryName, string material, uint materialEnum, uint numBreakables, uint renderingCost, uint simulationCost, uint numStates) : base(ChunkID)
     {
         Version = version;
         Name = name;

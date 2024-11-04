@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Skeleton_Joint_Mirror_Map)]
+[ChunkAttributes(ChunkID)]
 public class SkeletonJointMirrorMapChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Skeleton_Joint_Mirror_Map;
+    
     public uint MappedJointIndex { get; set; }
     public float XAxisMap { get; set; }
     public float YAxisMap { get; set; }
@@ -28,7 +30,7 @@ public class SkeletonJointMirrorMapChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(float) + sizeof(float) + sizeof(float);
 
-    public SkeletonJointMirrorMapChunk(BinaryReader br) : base((uint)ChunkIdentifier.Skeleton_Joint_Mirror_Map)
+    public SkeletonJointMirrorMapChunk(BinaryReader br) : base(ChunkID)
     {
         MappedJointIndex = br.ReadUInt32();
         XAxisMap = br.ReadSingle();
@@ -36,7 +38,7 @@ public class SkeletonJointMirrorMapChunk : Chunk
         ZAxisMap = br.ReadSingle();
     }
 
-    public SkeletonJointMirrorMapChunk(uint mappedJointIndex, float xAxisMap, float yAxisMap, float zAxisMap) : base((uint)ChunkIdentifier.Skeleton_Joint_Mirror_Map)
+    public SkeletonJointMirrorMapChunk(uint mappedJointIndex, float xAxisMap, float yAxisMap, float zAxisMap) : base(ChunkID)
     {
         MappedJointIndex = mappedJointIndex;
         XAxisMap = xAxisMap;

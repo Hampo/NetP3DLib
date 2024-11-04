@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Old_Particle_Instancing_Info)]
+[ChunkAttributes(ChunkID)]
 public class OldParticleInstancingInfoChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Old_Particle_Instancing_Info;
+    
     public uint Version { get; set; }
     public uint MaxInstances { get; set; }
 
@@ -24,13 +26,13 @@ public class OldParticleInstancingInfoChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint);
 
-    public OldParticleInstancingInfoChunk(BinaryReader br) : base((uint)ChunkIdentifier.Old_Particle_Instancing_Info)
+    public OldParticleInstancingInfoChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         MaxInstances = br.ReadUInt32();
     }
 
-    public OldParticleInstancingInfoChunk(uint version, uint maxInstances) : base((uint)ChunkIdentifier.Old_Particle_Instancing_Info)
+    public OldParticleInstancingInfoChunk(uint version, uint maxInstances) : base(ChunkID)
     {
         Version = version;
         MaxInstances = maxInstances;

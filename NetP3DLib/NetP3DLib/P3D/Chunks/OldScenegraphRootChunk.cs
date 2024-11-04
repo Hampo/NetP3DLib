@@ -2,9 +2,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Old_Scenegraph_Root)]
+[ChunkAttributes(ChunkID)]
 public class OldScenegraphRootChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Old_Scenegraph_Root;
+    
     public override byte[] DataBytes
     {
         get
@@ -15,10 +17,10 @@ public class OldScenegraphRootChunk : Chunk
     public override uint DataLength => 0;
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Required for ChunkLoader.")]
-    public OldScenegraphRootChunk(BinaryReader br) : base((uint)ChunkIdentifier.Old_Scenegraph_Root)
+    public OldScenegraphRootChunk(BinaryReader br) : base(ChunkID)
     { }
 
-    public OldScenegraphRootChunk() : base((uint)ChunkIdentifier.Old_Scenegraph_Root)
+    public OldScenegraphRootChunk() : base(ChunkID)
     { }
 
     public override void Validate()

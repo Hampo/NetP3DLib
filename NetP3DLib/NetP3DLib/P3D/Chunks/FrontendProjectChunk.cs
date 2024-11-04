@@ -5,9 +5,11 @@ using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Frontend_Project)]
+[ChunkAttributes(ChunkID)]
 public class FrontendProjectChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Frontend_Project;
+    
     public uint Version { get; set; }
     public uint ResolutionX { get; set; }
     public uint ResolutionY { get; set; }
@@ -36,7 +38,7 @@ public class FrontendProjectChunk : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(uint) + sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Platform).Length + (uint)BinaryExtensions.GetP3DStringBytes(PagePath).Length + (uint)BinaryExtensions.GetP3DStringBytes(ResourcePath).Length + (uint)BinaryExtensions.GetP3DStringBytes(ScreenPath).Length;
 
-    public FrontendProjectChunk(BinaryReader br) : base((uint)ChunkIdentifier.Frontend_Project)
+    public FrontendProjectChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         Version = br.ReadUInt32();
@@ -48,7 +50,7 @@ public class FrontendProjectChunk : NamedChunk
         ScreenPath = br.ReadP3DString();
     }
 
-    public FrontendProjectChunk(string name, uint version, uint resolutionX, uint resolutionY, string platform, string pagePath, string resourcePath, string screenPath) : base((uint)ChunkIdentifier.Frontend_Project)
+    public FrontendProjectChunk(string name, uint version, uint resolutionX, uint resolutionY, string platform, string pagePath, string resourcePath, string screenPath) : base(ChunkID)
     {
         Name = name;
         Version = version;

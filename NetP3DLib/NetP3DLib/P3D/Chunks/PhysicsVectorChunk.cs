@@ -4,9 +4,11 @@ using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Physics_Vector)]
+[ChunkAttributes(ChunkID)]
 public class PhysicsVectorChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Physics_Vector;
+    
     public Vector3 Vector { get; set; }
 
     public override byte[] DataBytes
@@ -22,12 +24,12 @@ public class PhysicsVectorChunk : Chunk
     }
     public override uint DataLength => sizeof(float) * 3;
 
-    public PhysicsVectorChunk(BinaryReader br) : base((uint)ChunkIdentifier.Physics_Vector)
+    public PhysicsVectorChunk(BinaryReader br) : base(ChunkID)
     {
         Vector = br.ReadVector3();
     }
 
-    public PhysicsVectorChunk(Vector3 vector) : base((uint)ChunkIdentifier.Physics_Vector)
+    public PhysicsVectorChunk(Vector3 vector) : base(ChunkID)
     {
         Vector = vector;
     }

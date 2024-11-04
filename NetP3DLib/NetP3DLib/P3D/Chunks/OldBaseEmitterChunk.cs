@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Old_Base_Emitter)]
+[ChunkAttributes(ChunkID)]
 public class OldBaseEmitterChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Old_Base_Emitter;
+    
     public uint Version { get; set; }
     public string ParticleType { get; set; }
     public string GeneratorType { get; set; }
@@ -41,7 +43,7 @@ public class OldBaseEmitterChunk : NamedChunk
     }
     public override uint DataLength => sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + 4 + 4 + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(float) + sizeof(float);
 
-    public OldBaseEmitterChunk(BinaryReader br) : base((uint)ChunkIdentifier.Old_Base_Emitter)
+    public OldBaseEmitterChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         Name = br.ReadP3DString();
@@ -56,7 +58,7 @@ public class OldBaseEmitterChunk : NamedChunk
         TranslationCohesion = br.ReadSingle();
     }
 
-    public OldBaseEmitterChunk(uint version, string name, string particleType, string generatorType, uint zTest, uint zWrite, uint fog, uint maxParticles, uint infiniteLife, float rotationalCohesion, float translationCohesion) : base((uint)ChunkIdentifier.Old_Base_Emitter)
+    public OldBaseEmitterChunk(uint version, string name, string particleType, string generatorType, uint zTest, uint zWrite, uint fog, uint maxParticles, uint infiniteLife, float rotationalCohesion, float translationCohesion) : base(ChunkID)
     {
         Version = version;
         Name = name;

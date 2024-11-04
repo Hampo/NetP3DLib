@@ -5,9 +5,11 @@ using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Collision_Mesh_Tree)]
+[ChunkAttributes(ChunkID)]
 public class CollisionMeshTreeChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Collision_Mesh_Tree;
+    
     public uint Version { get; set; }
     public uint FirstNode { get; set; }
     public uint HierarchyIndex { get; set; }
@@ -31,7 +33,7 @@ public class CollisionMeshTreeChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(float) * 3 + sizeof(float) * 3;
 
-    public CollisionMeshTreeChunk(BinaryReader br) : base((uint)ChunkIdentifier.Collision_Mesh_Tree)
+    public CollisionMeshTreeChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         FirstNode = br.ReadUInt32();
@@ -40,7 +42,7 @@ public class CollisionMeshTreeChunk : Chunk
         High = br.ReadVector3();
     }
 
-    public CollisionMeshTreeChunk(uint version, uint firstNode, uint hierarchyIndex, Vector3 low, Vector3 high) : base((uint)ChunkIdentifier.Collision_Mesh_Tree)
+    public CollisionMeshTreeChunk(uint version, uint firstNode, uint hierarchyIndex, Vector3 low, Vector3 high) : base(ChunkID)
     {
         Version = version;
         FirstNode = firstNode;

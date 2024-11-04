@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Physics_Inertia_Matrix)]
+[ChunkAttributes(ChunkID)]
 public class PhysicsInertiaMatrixChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Physics_Inertia_Matrix;
+    
     public SymmetricMatrix3x3 Matrix { get; set; }
 
     public override byte[] DataBytes
@@ -22,12 +24,12 @@ public class PhysicsInertiaMatrixChunk : Chunk
     }
     public override uint DataLength => SymmetricMatrix3x3.SizeInBytes;
 
-    public PhysicsInertiaMatrixChunk(BinaryReader br) : base((uint)ChunkIdentifier.Physics_Inertia_Matrix)
+    public PhysicsInertiaMatrixChunk(BinaryReader br) : base(ChunkID)
     {
         Matrix = br.ReadSymmetricMatrix3x3();
     }
 
-    public PhysicsInertiaMatrixChunk(SymmetricMatrix3x3 matrix) : base((uint)ChunkIdentifier.Physics_Inertia_Matrix)
+    public PhysicsInertiaMatrixChunk(SymmetricMatrix3x3 matrix) : base(ChunkID)
     {
         Matrix = matrix;
     }

@@ -5,9 +5,11 @@ using System.Linq;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Intersect_Mesh)]
+[ChunkAttributes(ChunkID)]
 public class IntersectMeshChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Intersect_Mesh;
+    
     public uint NumMeshes => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.Intersect_Mesh_2).Count();
 
     public override byte[] DataBytes
@@ -25,13 +27,13 @@ public class IntersectMeshChunk : NamedChunk
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public IntersectMeshChunk(BinaryReader br) : base((uint)ChunkIdentifier.Intersect_Mesh)
+    public IntersectMeshChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         var numMeshes = br.ReadUInt32();
     }
 
-    public IntersectMeshChunk(string name) : base((uint)ChunkIdentifier.Intersect_Mesh)
+    public IntersectMeshChunk(string name) : base(ChunkID)
     {
         Name = name;
     }

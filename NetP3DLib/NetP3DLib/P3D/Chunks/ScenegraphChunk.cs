@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Scenegraph)]
+[ChunkAttributes(ChunkID)]
 public class ScenegraphChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Scenegraph;
+    
     public uint Version { get; set; }
 
     public override byte[] DataBytes
@@ -23,13 +25,13 @@ public class ScenegraphChunk : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint);
 
-    public ScenegraphChunk(BinaryReader br) : base((uint)ChunkIdentifier.Scenegraph)
+    public ScenegraphChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         Version = br.ReadUInt32();
     }
 
-    public ScenegraphChunk(string name, uint version) : base((uint)ChunkIdentifier.Scenegraph)
+    public ScenegraphChunk(string name, uint version) : base(ChunkID)
     {
         Name = name;
         Version = version;

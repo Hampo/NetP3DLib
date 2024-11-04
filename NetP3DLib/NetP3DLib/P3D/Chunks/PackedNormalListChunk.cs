@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Packed_Normal_List)]
+[ChunkAttributes(ChunkID)]
 public class PackedNormalListChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Packed_Normal_List;
+    
     public uint NumNormals
     {
         get => (uint)Normals.Count;
@@ -43,13 +45,13 @@ public class PackedNormalListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(byte) * NumNormals;
 
-    public PackedNormalListChunk(BinaryReader br) : base((uint)ChunkIdentifier.Packed_Normal_List)
+    public PackedNormalListChunk(BinaryReader br) : base(ChunkID)
     {
         var numNormals = br.ReadInt32();
         Normals.AddRange(br.ReadBytes(numNormals));
     }
 
-    public PackedNormalListChunk(IList<byte> normals) : base((uint)ChunkIdentifier.Packed_Normal_List)
+    public PackedNormalListChunk(IList<byte> normals) : base(ChunkID)
     {
         Normals.AddRange(normals);
     }

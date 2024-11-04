@@ -5,9 +5,11 @@ using System.Linq;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.World_Sphere)]
+[ChunkAttributes(ChunkID)]
 public class WorldSphereChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.World_Sphere;
+    
     public uint Version { get; set; }
     public uint NumMeshes => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.Mesh).Count();
     public uint NumOldBillboardQuadGroups => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.Old_Billboard_Quad_Group).Count();
@@ -29,7 +31,7 @@ public class WorldSphereChunk : NamedChunk
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(uint) + sizeof(uint);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public WorldSphereChunk(BinaryReader br) : base((uint)ChunkIdentifier.World_Sphere)
+    public WorldSphereChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         Version = br.ReadUInt32();
@@ -37,7 +39,7 @@ public class WorldSphereChunk : NamedChunk
         var numOldBillboardQuadGroups = br.ReadUInt32();
     }
 
-    public WorldSphereChunk(string name, uint version) : base((uint)ChunkIdentifier.World_Sphere)
+    public WorldSphereChunk(string name, uint version) : base(ChunkID)
     {
         Name = name;
         Version = version;

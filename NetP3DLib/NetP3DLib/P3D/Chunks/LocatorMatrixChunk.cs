@@ -4,9 +4,11 @@ using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Locator_Matrix)]
+[ChunkAttributes(ChunkID)]
 public class LocatorMatrixChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Locator_Matrix;
+    
     public Matrix4x4 Matrix { get; set; }
 
     public override byte[] DataBytes
@@ -22,12 +24,12 @@ public class LocatorMatrixChunk : Chunk
     }
     public override uint DataLength => sizeof(float) * 16;
 
-    public LocatorMatrixChunk(BinaryReader br) : base((uint)ChunkIdentifier.Locator_Matrix)
+    public LocatorMatrixChunk(BinaryReader br) : base(ChunkID)
     {
         Matrix = br.ReadMatrix4x4();
     }
 
-    public LocatorMatrixChunk(Matrix4x4 matrix) : base((uint)ChunkIdentifier.Locator_Matrix)
+    public LocatorMatrixChunk(Matrix4x4 matrix) : base(ChunkID)
     {
         Matrix = matrix;
     }

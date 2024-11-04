@@ -5,9 +5,11 @@ using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Particle_System_2)]
+[ChunkAttributes(ChunkID)]
 public class ParticleSystem2Chunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Particle_System_2;
+    
     public uint Version { get; set; }
     public string FactoryName { get; set; }
 
@@ -26,14 +28,14 @@ public class ParticleSystem2Chunk : NamedChunk
     }
     public override uint DataLength => sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + (uint)BinaryExtensions.GetP3DStringBytes(FactoryName).Length;
 
-    public ParticleSystem2Chunk(BinaryReader br) : base((uint)ChunkIdentifier.Particle_System_2)
+    public ParticleSystem2Chunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         Name = br.ReadP3DString();
         FactoryName = br.ReadP3DString();
     }
 
-    public ParticleSystem2Chunk(uint version, string name, string factoryName) : base((uint)ChunkIdentifier.Particle_System_2)
+    public ParticleSystem2Chunk(uint version, string name, string factoryName) : base(ChunkID)
     {
         Version = version;
         Name = name;

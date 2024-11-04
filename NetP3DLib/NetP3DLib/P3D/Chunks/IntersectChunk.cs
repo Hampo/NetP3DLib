@@ -5,9 +5,11 @@ using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Intersect)]
+[ChunkAttributes(ChunkID)]
 public class IntersectChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Intersect;
+    
     public uint NumIndices
     {
         get => (uint)Indices.Count;
@@ -93,7 +95,7 @@ public class IntersectChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) * NumIndices + sizeof(uint) + sizeof(float) * 3 * NumPositions + sizeof(uint) + sizeof(float) * 3 * NumNormals;
 
-    public IntersectChunk(BinaryReader br) : base((uint)ChunkIdentifier.Intersect)
+    public IntersectChunk(BinaryReader br) : base(ChunkID)
     {
         var numIndices = br.ReadInt32();
         Indices.Capacity = numIndices;
@@ -109,7 +111,7 @@ public class IntersectChunk : Chunk
             Normals.Add(br.ReadVector3());
     }
 
-    public IntersectChunk(IList<uint> indices, IList<Vector3> positions, IList<Vector3> normals) : base((uint)ChunkIdentifier.Intersect)
+    public IntersectChunk(IList<uint> indices, IList<Vector3> positions, IList<Vector3> normals) : base(ChunkID)
     {
         Indices.AddRange(indices);
         Positions.AddRange(positions);

@@ -5,9 +5,11 @@ using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Old_Sprite_Emitter)]
+[ChunkAttributes(ChunkID)]
 public class OldSpriteEmitterChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Old_Sprite_Emitter;
+    
     public uint Version { get; set; }
     public string ShaderName { get; set; }
     public string AngleMode { get; set; }
@@ -36,7 +38,7 @@ public class OldSpriteEmitterChunk : NamedChunk
     }
     public override uint DataLength => sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + (uint)BinaryExtensions.GetP3DStringBytes(ShaderName).Length + 4 + sizeof(float) + 4 + sizeof(uint) + sizeof(uint);
 
-    public OldSpriteEmitterChunk(BinaryReader br) : base((uint)ChunkIdentifier.Old_Sprite_Emitter)
+    public OldSpriteEmitterChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         Name = br.ReadP3DString();
@@ -48,7 +50,7 @@ public class OldSpriteEmitterChunk : NamedChunk
         TextureFrameRate = br.ReadUInt32();
     }
 
-    public OldSpriteEmitterChunk(uint version, string name, string shaderName, string angleMode, float angle, string textureAnimMode, uint numTextureFrames, uint textureFrameRate) : base((uint)ChunkIdentifier.Old_Sprite_Emitter)
+    public OldSpriteEmitterChunk(uint version, string name, string shaderName, string angleMode, float angle, string textureAnimMode, uint numTextureFrames, uint textureFrameRate) : base(ChunkID)
     {
         Version = version;
         Name = name;

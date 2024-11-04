@@ -6,9 +6,11 @@ using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Collision_Object)]
+[ChunkAttributes(ChunkID)]
 public class CollisionObjectChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Collision_Object;
+    
     public uint Version { get; set; }
     public string MaterialName { get; set; }
     public uint NumSubObjects { get; set; }
@@ -32,7 +34,7 @@ public class CollisionObjectChunk : NamedChunk
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(MaterialName).Length + sizeof(uint) + sizeof(uint);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public CollisionObjectChunk(BinaryReader br) : base((uint)ChunkIdentifier.Collision_Object)
+    public CollisionObjectChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         Version = br.ReadUInt32();
@@ -41,7 +43,7 @@ public class CollisionObjectChunk : NamedChunk
         var numOwners = br.ReadUInt32();
     }
 
-    public CollisionObjectChunk(string name, uint version, string materialName, uint numSubObjects) : base((uint)ChunkIdentifier.Collision_Object)
+    public CollisionObjectChunk(string name, uint version, string materialName, uint numSubObjects) : base(ChunkID)
     {
         Name = name;
         Version = version;

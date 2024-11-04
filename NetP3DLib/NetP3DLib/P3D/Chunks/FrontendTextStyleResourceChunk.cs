@@ -5,9 +5,11 @@ using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Frontend_Text_Style_Resource)]
+[ChunkAttributes(ChunkID)]
 public class FrontendTextStyleResourceChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Frontend_Text_Style_Resource;
+    
     public uint Version { get; set; }
     public string Filename { get; set; }
     public string InventoryName { get; set; }
@@ -28,7 +30,7 @@ public class FrontendTextStyleResourceChunk : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Filename).Length + (uint)BinaryExtensions.GetP3DStringBytes(InventoryName).Length;
 
-    public FrontendTextStyleResourceChunk(BinaryReader br) : base((uint)ChunkIdentifier.Frontend_Text_Style_Resource)
+    public FrontendTextStyleResourceChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         Version = br.ReadUInt32();
@@ -36,7 +38,7 @@ public class FrontendTextStyleResourceChunk : NamedChunk
         InventoryName = br.ReadP3DString();
     }
 
-    public FrontendTextStyleResourceChunk(string name, uint version, string filename, string inventoryName) : base((uint)ChunkIdentifier.Frontend_Text_Style_Resource)
+    public FrontendTextStyleResourceChunk(string name, uint version, string filename, string inventoryName) : base(ChunkID)
     {
         Name = name;
         Version = version;

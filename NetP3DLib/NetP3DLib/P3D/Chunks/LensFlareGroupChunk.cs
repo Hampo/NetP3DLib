@@ -6,9 +6,11 @@ using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Lens_Flare_Group)]
+[ChunkAttributes(ChunkID)]
 public class LensFlareGroupChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Lens_Flare_Group;
+    
     public uint Version { get; set; }
     public string ShaderName { get; set; }
     public uint ZTest { get; set; }
@@ -40,7 +42,7 @@ public class LensFlareGroupChunk : NamedChunk
     public override uint DataLength => sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + (uint)BinaryExtensions.GetP3DStringBytes(ShaderName).Length + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(float) + sizeof(float) + sizeof(uint);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public LensFlareGroupChunk(BinaryReader br) : base((uint)ChunkIdentifier.Lens_Flare_Group)
+    public LensFlareGroupChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         Name = br.ReadP3DString();
@@ -53,7 +55,7 @@ public class LensFlareGroupChunk : NamedChunk
         var numLensFlares = br.ReadUInt32();
     }
 
-    public LensFlareGroupChunk(uint version, string name, string shaderName, uint zTest, uint zWrite, uint fog, float sourceRadius, float edgeRadius) : base((uint)ChunkIdentifier.Lens_Flare_Group)
+    public LensFlareGroupChunk(uint version, string name, string shaderName, uint zTest, uint zWrite, uint fog, float sourceRadius, float edgeRadius) : base(ChunkID)
     {
         Version = version;
         Name = name;

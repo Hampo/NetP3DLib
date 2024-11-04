@@ -4,9 +4,11 @@ using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Collision_Vector)]
+[ChunkAttributes(ChunkID)]
 public class CollisionVectorChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Collision_Vector;
+    
     public Vector3 Vector { get; set; }
 
     public override byte[] DataBytes
@@ -22,12 +24,12 @@ public class CollisionVectorChunk : Chunk
     }
     public override uint DataLength => sizeof(float) * 3;
 
-    public CollisionVectorChunk(BinaryReader br) : base((uint)ChunkIdentifier.Collision_Vector)
+    public CollisionVectorChunk(BinaryReader br) : base(ChunkID)
     {
         Vector = br.ReadVector3();
     }
 
-    public CollisionVectorChunk(Vector3 vector) : base((uint)ChunkIdentifier.Collision_Vector)
+    public CollisionVectorChunk(Vector3 vector) : base(ChunkID)
     {
         Vector = vector;
     }

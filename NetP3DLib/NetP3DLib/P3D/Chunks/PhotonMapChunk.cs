@@ -6,9 +6,11 @@ using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Photon_Map)]
+[ChunkAttributes(ChunkID)]
 public class PhotonMapChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Photon_Map;
+    
     public uint Version { get; set; }
     public uint NumLights
     {
@@ -98,7 +100,7 @@ public class PhotonMapChunk : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(uint) + (uint)Lights.Sum(x => BinaryExtensions.GetP3DStringBytes(x).Length) + sizeof(float) * NumLights + sizeof(uint) + (uint)Photons.Sum(x => x.DataBytes.Length);
 
-    public PhotonMapChunk(BinaryReader br) : base((uint)ChunkIdentifier.Photon_Map)
+    public PhotonMapChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         Version = br.ReadUInt32();
@@ -115,7 +117,7 @@ public class PhotonMapChunk : NamedChunk
             Photons.Add(new(br));
     }
 
-    public PhotonMapChunk(string name, uint version, IList<string> lights, IList<float> lightScales, IList<Photon> photons) : base((uint)ChunkIdentifier.Photon_Map)
+    public PhotonMapChunk(string name, uint version, IList<string> lights, IList<float> lightScales, IList<Photon> photons) : base(ChunkID)
     {
         Name = name;
         Version = version;

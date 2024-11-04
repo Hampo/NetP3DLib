@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Animation_Channel_Count)]
+[ChunkAttributes(ChunkID)]
 public class AnimationChannelCountChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Animation_Channel_Count;
+    
     public uint Version { get; set; }
     public uint ChannelChunkID { get; set; }
     public uint NumNumKeys
@@ -48,7 +50,7 @@ public class AnimationChannelCountChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(ushort) * NumNumKeys;
 
-    public AnimationChannelCountChunk(BinaryReader br) : base((uint)ChunkIdentifier.Animation_Channel_Count)
+    public AnimationChannelCountChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         ChannelChunkID = br.ReadUInt32();
@@ -58,7 +60,7 @@ public class AnimationChannelCountChunk : Chunk
             NumKeys.Add(br.ReadUInt16());
     }
 
-    public AnimationChannelCountChunk(uint version, uint channelChunkID, List<ushort> numKeys) : base((uint)ChunkIdentifier.Animation_Channel_Count)
+    public AnimationChannelCountChunk(uint version, uint channelChunkID, List<ushort> numKeys) : base(ChunkID)
     {
         Version = version;
         ChannelChunkID = channelChunkID;

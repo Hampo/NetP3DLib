@@ -4,9 +4,11 @@ using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Frontend_String_Text_Bible)]
+[ChunkAttributes(ChunkID)]
 public class FrontendStringTextBibleChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Frontend_String_Text_Bible;
+    
     public string BibleName { get; set; }
     public string StringID { get; set; }
 
@@ -24,13 +26,13 @@ public class FrontendStringTextBibleChunk : Chunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(BibleName).Length + (uint)BinaryExtensions.GetP3DStringBytes(StringID).Length;
 
-    public FrontendStringTextBibleChunk(BinaryReader br) : base((uint)ChunkIdentifier.Frontend_String_Text_Bible)
+    public FrontendStringTextBibleChunk(BinaryReader br) : base(ChunkID)
     {
         BibleName = br.ReadP3DString();
         StringID = br.ReadP3DString();
     }
 
-    public FrontendStringTextBibleChunk(string bibleName, string stringID) : base((uint)ChunkIdentifier.Frontend_String_Text_Bible)
+    public FrontendStringTextBibleChunk(string bibleName, string stringID) : base(ChunkID)
     {
         BibleName = bibleName;
         StringID = stringID;

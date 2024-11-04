@@ -3,9 +3,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Instance_List)]
+[ChunkAttributes(ChunkID)]
 public class InstanceListChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Instance_List;
+    
     public override byte[] DataBytes
     {
         get
@@ -19,12 +21,12 @@ public class InstanceListChunk : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length;
 
-    public InstanceListChunk(BinaryReader br) : base((uint)ChunkIdentifier.Instance_List)
+    public InstanceListChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
     }
 
-    public InstanceListChunk(string name) : base((uint)ChunkIdentifier.Instance_List)
+    public InstanceListChunk(string name) : base(ChunkID)
     {
         Name = name;
     }

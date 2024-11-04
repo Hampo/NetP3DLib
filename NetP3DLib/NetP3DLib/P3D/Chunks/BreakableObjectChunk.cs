@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Breakable_Object)]
+[ChunkAttributes(ChunkID)]
 public class BreakableObjectChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Breakable_Object;
+    
     public enum Indexes : int
     {
         Null = -1,
@@ -55,13 +57,13 @@ public class BreakableObjectChunk : Chunk
     }
     public override uint DataLength => sizeof(int) + sizeof(uint);
 
-    public BreakableObjectChunk(BinaryReader br) : base((uint)ChunkIdentifier.Breakable_Object)
+    public BreakableObjectChunk(BinaryReader br) : base(ChunkID)
     {
         Index = (Indexes)br.ReadInt32();
         MaxInstances = br.ReadUInt32();
     }
 
-    public BreakableObjectChunk(Indexes index, uint maxInstances) : base((uint)ChunkIdentifier.Breakable_Object)
+    public BreakableObjectChunk(Indexes index, uint maxInstances) : base(ChunkID)
     {
         Index = index;
         MaxInstances = maxInstances;

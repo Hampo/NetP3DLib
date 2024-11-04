@@ -5,9 +5,11 @@ using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Collision_Mesh_Vector_list)]
+[ChunkAttributes(ChunkID)]
 public class CollisionMeshVectorListChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Collision_Mesh_Vector_list;
+    
     public uint NumVectors
     {
         get => (uint)Vectors.Count;
@@ -45,7 +47,7 @@ public class CollisionMeshVectorListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(float) * 3 * NumVectors;
 
-    public CollisionMeshVectorListChunk(BinaryReader br) : base((uint)ChunkIdentifier.Collision_Mesh_Vector_list)
+    public CollisionMeshVectorListChunk(BinaryReader br) : base(ChunkID)
     {
         var numVectors = br.ReadInt32();
         Vectors.Capacity = numVectors;
@@ -53,7 +55,7 @@ public class CollisionMeshVectorListChunk : Chunk
             Vectors.Add(br.ReadVector3());
     }
 
-    public CollisionMeshVectorListChunk(IList<Vector3> vectors) : base((uint)ChunkIdentifier.Collision_Mesh_Vector_list)
+    public CollisionMeshVectorListChunk(IList<Vector3> vectors) : base(ChunkID)
     {
         Vectors.AddRange(vectors);
     }

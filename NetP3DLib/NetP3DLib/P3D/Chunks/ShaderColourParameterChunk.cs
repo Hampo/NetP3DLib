@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Shader_Colour_Parameter)]
+[ChunkAttributes(ChunkID)]
 public class ShaderColourParameterChunk : ParamChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Shader_Colour_Parameter;
+    
     public Color Value { get; set; }
 
     public override byte[] DataBytes
@@ -23,13 +25,13 @@ public class ShaderColourParameterChunk : ParamChunk
     }
     public override uint DataLength => 4 + sizeof(uint);
 
-    public ShaderColourParameterChunk(BinaryReader br) : base((uint)ChunkIdentifier.Shader_Colour_Parameter)
+    public ShaderColourParameterChunk(BinaryReader br) : base(ChunkID)
     {
         Param = br.ReadFourCC();
         Value = br.ReadColor();
     }
 
-    public ShaderColourParameterChunk(string param, Color value) : base((uint)ChunkIdentifier.Shader_Colour_Parameter)
+    public ShaderColourParameterChunk(string param, Color value) : base(ChunkID)
     {
         Param = param;
         Value = value;

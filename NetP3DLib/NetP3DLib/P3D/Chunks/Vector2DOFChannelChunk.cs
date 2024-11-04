@@ -5,9 +5,11 @@ using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Vector_2D_OF_Channel)]
+[ChunkAttributes(ChunkID)]
 public class Vector2DOFChannelChunk : ParamChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Vector_2D_OF_Channel;
+    
     public uint Version { get; set; }
     public ushort Mapping { get; set; }
     public Vector3 Constants { get; set; }
@@ -77,7 +79,7 @@ public class Vector2DOFChannelChunk : ParamChunk
     }
     public override uint DataLength => sizeof(uint) + 4 + sizeof(ushort) + sizeof(float) * 3 + sizeof(uint) + sizeof(ushort) * NumFrames + sizeof(float) * 2 * NumValues;
 
-    public Vector2DOFChannelChunk(BinaryReader br) : base((uint)ChunkIdentifier.Vector_2D_OF_Channel)
+    public Vector2DOFChannelChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         Param = br.ReadFourCC();
@@ -92,7 +94,7 @@ public class Vector2DOFChannelChunk : ParamChunk
             Values.Add(br.ReadVector2());
     }
 
-    public Vector2DOFChannelChunk(uint version, string param, ushort mapping, Vector3 constants, IList<ushort> frames, IList<Vector2> values) : base((uint)ChunkIdentifier.Vector_2D_OF_Channel)
+    public Vector2DOFChannelChunk(uint version, string param, ushort mapping, Vector3 constants, IList<ushort> frames, IList<Vector2> values) : base(ChunkID)
     {
         Version = version;
         Param = param;

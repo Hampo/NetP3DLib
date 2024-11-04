@@ -2,9 +2,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Fence)]
+[ChunkAttributes(ChunkID)]
 public class FenceChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Fence;
+    
     public override byte[] DataBytes
     {
         get
@@ -15,10 +17,10 @@ public class FenceChunk : Chunk
     public override uint DataLength => 0;
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Required for ChunkLoader.")]
-    public FenceChunk(BinaryReader br) : base((uint)ChunkIdentifier.Fence)
+    public FenceChunk(BinaryReader br) : base(ChunkID)
     { }
 
-    public FenceChunk() : base((uint)ChunkIdentifier.Fence)
+    public FenceChunk() : base(ChunkID)
     { }
 
     public override void Validate()

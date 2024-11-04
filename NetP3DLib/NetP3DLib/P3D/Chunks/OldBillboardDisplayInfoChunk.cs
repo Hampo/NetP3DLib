@@ -5,9 +5,11 @@ using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Old_Billboard_Display_Info)]
+[ChunkAttributes(ChunkID)]
 public class OldBillboardDisplayInfoChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Old_Billboard_Display_Info;
+    
     public uint Version { get; set; }
     public Vector4 Rotation { get; set; }
     public string CutOffMode { get; set; }
@@ -33,7 +35,7 @@ public class OldBillboardDisplayInfoChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(float) * 4 + 4 + sizeof(float) * 2 + sizeof(float) + sizeof(float);
 
-    public OldBillboardDisplayInfoChunk(BinaryReader br) : base((uint)ChunkIdentifier.Old_Billboard_Display_Info)
+    public OldBillboardDisplayInfoChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         Rotation = br.ReadVector4();
@@ -43,7 +45,7 @@ public class OldBillboardDisplayInfoChunk : Chunk
         EdgeRange = br.ReadSingle();
     }
 
-    public OldBillboardDisplayInfoChunk(uint version, Vector4 rotation, string cutOffMode, Vector2 uvOffsetRange, float sourceRange, float edgeRange) : base((uint)ChunkIdentifier.Old_Billboard_Display_Info)
+    public OldBillboardDisplayInfoChunk(uint version, Vector4 rotation, string cutOffMode, Vector2 uvOffsetRange, float sourceRange, float edgeRange) : base(ChunkID)
     {
         Version = version;
         Rotation = rotation;

@@ -6,9 +6,11 @@ using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Old_Offset_List)]
+[ChunkAttributes(ChunkID)]
 public class OldOffsetListChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Old_Offset_List;
+    
     public uint NumOffsets
     {
         get => (uint)Offsets.Count;
@@ -51,7 +53,7 @@ public class OldOffsetListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) + (uint)Offsets.Sum(x => x.DataBytes.Length) + (HasPrimGroupIndex ? sizeof(uint) : 0u);
 
-    public OldOffsetListChunk(BinaryReader br) : base((uint)ChunkIdentifier.Old_Offset_List)
+    public OldOffsetListChunk(BinaryReader br) : base(ChunkID)
     {
         var numOffsets = br.ReadInt32();
         KeyIndex = br.ReadUInt32();
@@ -67,7 +69,7 @@ public class OldOffsetListChunk : Chunk
         PrimGroupIndex = br.ReadUInt32();
     }
 
-    public OldOffsetListChunk(uint keyIndex, IList<OffsetEntry> offsets, uint primGroupIndex) : base((uint)ChunkIdentifier.Old_Offset_List)
+    public OldOffsetListChunk(uint keyIndex, IList<OffsetEntry> offsets, uint primGroupIndex) : base(ChunkID)
     {
         KeyIndex = keyIndex;
         Offsets.AddRange(offsets);
@@ -75,7 +77,7 @@ public class OldOffsetListChunk : Chunk
         PrimGroupIndex = primGroupIndex;
     }
 
-    public OldOffsetListChunk(uint keyIndex, IList<OffsetEntry> offsets) : base((uint)ChunkIdentifier.Old_Offset_List)
+    public OldOffsetListChunk(uint keyIndex, IList<OffsetEntry> offsets) : base(ChunkID)
     {
         KeyIndex = keyIndex;
         Offsets.AddRange(offsets);

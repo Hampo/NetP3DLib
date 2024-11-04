@@ -5,9 +5,11 @@ using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Compressed_Quaternion_Channel_2)]
+[ChunkAttributes(ChunkID)]
 public class CompressedQuaternionChannel2Chunk : ParamChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Compressed_Quaternion_Channel_2;
+    
     public uint Version { get; set; }
     public uint NumFrames
     {
@@ -80,7 +82,7 @@ public class CompressedQuaternionChannel2Chunk : ParamChunk
     }
     public override uint DataLength => sizeof(uint) + 4 + sizeof(uint) + sizeof(ushort) * NumFrames + sizeof(short) * 3 * NumValues;
 
-    public CompressedQuaternionChannel2Chunk(BinaryReader br) : base((uint)ChunkIdentifier.Compressed_Quaternion_Channel_2)
+    public CompressedQuaternionChannel2Chunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         Param = br.ReadFourCC();
@@ -99,7 +101,7 @@ public class CompressedQuaternionChannel2Chunk : ParamChunk
         }
     }
 
-    public CompressedQuaternionChannel2Chunk(uint version, string param, List<ushort> frames, List<Quaternion> values) : base((uint)ChunkIdentifier.Compressed_Quaternion_Channel_2)
+    public CompressedQuaternionChannel2Chunk(uint version, string param, List<ushort> frames, List<Quaternion> values) : base(ChunkID)
     {
         Version = version;
         Param = param;

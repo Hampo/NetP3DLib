@@ -5,9 +5,11 @@ using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Tree)]
+[ChunkAttributes(ChunkID)]
 public class TreeChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Tree;
+    
     public uint NumChildren => (uint)Children.Count;
     public Vector3 Minimum { get; set; }
     public Vector3 Maximum { get; set; }
@@ -28,14 +30,14 @@ public class TreeChunk : Chunk
     public override uint DataLength => sizeof(uint) + sizeof(float) * 3 + sizeof(float) * 3;
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public TreeChunk(BinaryReader br) : base((uint)ChunkIdentifier.Tree)
+    public TreeChunk(BinaryReader br) : base(ChunkID)
     {
         var numChildren = br.ReadUInt32();
         Minimum = br.ReadVector3();
         Maximum = br.ReadVector3();
     }
 
-    public TreeChunk(Vector3 minimum, Vector3 maximum) : base((uint)ChunkIdentifier.Tree)
+    public TreeChunk(Vector3 minimum, Vector3 maximum) : base(ChunkID)
     {
         Minimum = minimum;
         Maximum = maximum;

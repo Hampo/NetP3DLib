@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Multi_Controller_Track)]
+[ChunkAttributes(ChunkID)]
 public class MultiControllerTrackChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Multi_Controller_Track;
+    
     public uint Version { get; set; }
     public string Type { get; set; }
 
@@ -25,14 +27,14 @@ public class MultiControllerTrackChunk : NamedChunk
     }
     public override uint DataLength => sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + 4;
 
-    public MultiControllerTrackChunk(BinaryReader br) : base((uint)ChunkIdentifier.Multi_Controller_Track)
+    public MultiControllerTrackChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         Name = br.ReadP3DString();
         Type = br.ReadFourCC();
     }
 
-    public MultiControllerTrackChunk(uint version, string name, string type) : base((uint)ChunkIdentifier.Multi_Controller_Track)
+    public MultiControllerTrackChunk(uint version, string name, string type) : base(ChunkID)
     {
         Version = version;
         Name = name;

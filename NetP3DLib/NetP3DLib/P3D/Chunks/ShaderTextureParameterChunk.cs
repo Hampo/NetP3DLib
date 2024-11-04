@@ -4,9 +4,11 @@ using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Shader_Texture_Parameter)]
+[ChunkAttributes(ChunkID)]
 public class ShaderTextureParameterChunk : ParamChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Shader_Texture_Parameter;
+    
     public string Value { get; set; }
 
     public override byte[] DataBytes
@@ -23,13 +25,13 @@ public class ShaderTextureParameterChunk : ParamChunk
     }
     public override uint DataLength => 4 + (uint)BinaryExtensions.GetP3DStringBytes(Value).Length;
 
-    public ShaderTextureParameterChunk(BinaryReader br) : base((uint)ChunkIdentifier.Shader_Texture_Parameter)
+    public ShaderTextureParameterChunk(BinaryReader br) : base(ChunkID)
     {
         Param = br.ReadFourCC();
         Value = br.ReadP3DString();
     }
 
-    public ShaderTextureParameterChunk(string param, string value) : base((uint)ChunkIdentifier.Shader_Texture_Parameter)
+    public ShaderTextureParameterChunk(string param, string value) : base(ChunkID)
     {
         Param = param;
         Value = value;

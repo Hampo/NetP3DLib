@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Intersect_Mesh_2)]
+[ChunkAttributes(ChunkID)]
 public class IntersectMesh2Chunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Intersect_Mesh_2;
+    
     public uint SurfaceType { get; set; }
 
     public override byte[] DataBytes
@@ -22,12 +24,12 @@ public class IntersectMesh2Chunk : Chunk
     }
     public override uint DataLength => sizeof(uint);
 
-    public IntersectMesh2Chunk(BinaryReader br) : base((uint)ChunkIdentifier.Intersect_Mesh_2)
+    public IntersectMesh2Chunk(BinaryReader br) : base(ChunkID)
     {
         SurfaceType = br.ReadUInt32();
     }
 
-    public IntersectMesh2Chunk(uint surfaceType) : base((uint)ChunkIdentifier.Intersect_Mesh_2)
+    public IntersectMesh2Chunk(uint surfaceType) : base(ChunkID)
     {
         SurfaceType = surfaceType;
     }

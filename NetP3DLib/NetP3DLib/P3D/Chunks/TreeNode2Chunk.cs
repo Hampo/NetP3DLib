@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Tree_Node_2)]
+[ChunkAttributes(ChunkID)]
 public class TreeNode2Chunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Tree_Node_2;
+    
     public enum Axis : sbyte
     {
         None = -1,
@@ -48,7 +50,7 @@ public class TreeNode2Chunk : Chunk
     }
     public override uint DataLength => sizeof(sbyte) + sizeof(float) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint);
 
-    public TreeNode2Chunk(BinaryReader br) : base((uint)ChunkIdentifier.Tree_Node_2)
+    public TreeNode2Chunk(BinaryReader br) : base(ChunkID)
     {
         SplitAxis = (Axis)br.ReadSByte();
         SplitPosition = br.ReadSingle();
@@ -62,7 +64,7 @@ public class TreeNode2Chunk : Chunk
         AnimEntityLimit = br.ReadUInt32();
     }
 
-    public TreeNode2Chunk(Axis splitAxis, float splitPosition, uint staticEntityLimit, uint staticPhysEntityLimit, uint intersectEntityLimit, uint dynaPhysEntityLimit, uint fencyEntityLimit, uint roadSegmentEntityLimit, uint pathSegmentEntityLimit, uint animEntityLimit) : base((uint)ChunkIdentifier.Tree_Node_2)
+    public TreeNode2Chunk(Axis splitAxis, float splitPosition, uint staticEntityLimit, uint staticPhysEntityLimit, uint intersectEntityLimit, uint dynaPhysEntityLimit, uint fencyEntityLimit, uint roadSegmentEntityLimit, uint pathSegmentEntityLimit, uint animEntityLimit) : base(ChunkID)
     {
         SplitAxis = splitAxis;
         SplitPosition = splitPosition;

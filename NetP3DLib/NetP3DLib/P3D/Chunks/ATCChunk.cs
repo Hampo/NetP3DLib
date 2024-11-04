@@ -6,9 +6,11 @@ using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.ATC)]
+[ChunkAttributes(ChunkID)]
 public class ATCChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.ATC;
+    
     public uint NumEntries
     {
         get => (uint)Entries.Count;
@@ -46,7 +48,7 @@ public class ATCChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + (uint)Entries.Sum(x => x.DataBytes.Length);
 
-    public ATCChunk(BinaryReader br) : base((uint)ChunkIdentifier.ATC)
+    public ATCChunk(BinaryReader br) : base(ChunkID)
     {
         var numEntries = br.ReadInt32();
         Entries.Capacity = numEntries;
@@ -54,7 +56,7 @@ public class ATCChunk : Chunk
             Entries.Add(new(br));
     }
 
-    public ATCChunk(IList<Entry> entries) : base((uint)ChunkIdentifier.ATC)
+    public ATCChunk(IList<Entry> entries) : base(ChunkID)
     {
         Entries.AddRange(entries);
     }

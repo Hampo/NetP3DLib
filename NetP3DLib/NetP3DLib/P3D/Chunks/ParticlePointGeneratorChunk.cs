@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Particle_Point_Generator)]
+[ChunkAttributes(ChunkID)]
 public class ParticlePointGeneratorChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Particle_Point_Generator;
+    
     public uint Version { get; set; }
     public float HorizontalSpread { get; set; }
     public float VerticalSpread { get; set; }
@@ -28,7 +30,7 @@ public class ParticlePointGeneratorChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(float) + sizeof(float) + sizeof(float);
 
-    public ParticlePointGeneratorChunk(BinaryReader br) : base((uint)ChunkIdentifier.Particle_Point_Generator)
+    public ParticlePointGeneratorChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         HorizontalSpread = br.ReadSingle();
@@ -36,7 +38,7 @@ public class ParticlePointGeneratorChunk : Chunk
         RadialVar = br.ReadSingle();
     }
 
-    public ParticlePointGeneratorChunk(uint version, float horizontalSpread, float verticalSpread, float radialVar) : base((uint)ChunkIdentifier.Particle_Point_Generator)
+    public ParticlePointGeneratorChunk(uint version, float horizontalSpread, float verticalSpread, float radialVar) : base(ChunkID)
     {
         Version = version;
         HorizontalSpread = horizontalSpread;

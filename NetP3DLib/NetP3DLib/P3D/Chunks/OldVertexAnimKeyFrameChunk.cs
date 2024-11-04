@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Old_Vertex_Anim_Key_Frame)]
+[ChunkAttributes(ChunkID)]
 public class OldVertexAnimKeyFrameChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Old_Vertex_Anim_Key_Frame;
+    
     public uint Version { get; set; }
 
     public override byte[] DataBytes
@@ -23,13 +25,13 @@ public class OldVertexAnimKeyFrameChunk : NamedChunk
     }
     public override uint DataLength => sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Name).Length;
 
-    public OldVertexAnimKeyFrameChunk(BinaryReader br) : base((uint)ChunkIdentifier.Old_Vertex_Anim_Key_Frame)
+    public OldVertexAnimKeyFrameChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         Name = br.ReadP3DString();
     }
 
-    public OldVertexAnimKeyFrameChunk(uint version, string name) : base((uint)ChunkIdentifier.Old_Vertex_Anim_Key_Frame)
+    public OldVertexAnimKeyFrameChunk(uint version, string name) : base(ChunkID)
     {
         Version = version;
         Name = name;

@@ -7,9 +7,11 @@ using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Locator)]
+[ChunkAttributes(ChunkID)]
 public class LocatorChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Locator;
+    
     public uint LocatorType => TypeData.LocatorType;
     public uint DataLen => TypeData.DataLen;
     public LocatorData TypeData { get; set; }
@@ -36,7 +38,7 @@ public class LocatorChunk : NamedChunk
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(uint) + sizeof(uint) * DataLen + sizeof(float) * 3 + sizeof(uint);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public LocatorChunk(BinaryReader br) : base((uint)ChunkIdentifier.Locator)
+    public LocatorChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         var type = br.ReadUInt32();
@@ -67,7 +69,7 @@ public class LocatorChunk : NamedChunk
         var triggerCount = br.ReadUInt32();
     }
 
-    public LocatorChunk(string name, LocatorData typeData, Vector3 position) : base((uint)ChunkIdentifier.Locator)
+    public LocatorChunk(string name, LocatorData typeData, Vector3 position) : base(ChunkID)
     {
         Name = name;
         TypeData = typeData;

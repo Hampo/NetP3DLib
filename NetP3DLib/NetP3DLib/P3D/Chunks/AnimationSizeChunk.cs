@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Animation_Size)]
+[ChunkAttributes(ChunkID)]
 public class AnimationSizeChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Animation_Size;
+    
     public uint Version { get; set; }
     public uint PC { get; set; }
     public uint PS2 { get; set; }
@@ -30,7 +32,7 @@ public class AnimationSizeChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint);
 
-    public AnimationSizeChunk(BinaryReader br) : base((uint)ChunkIdentifier.Animation_Size)
+    public AnimationSizeChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         PC = br.ReadUInt32();
@@ -39,7 +41,7 @@ public class AnimationSizeChunk : Chunk
         GC = br.ReadUInt32();
     }
 
-    public AnimationSizeChunk(uint version, uint pc, uint ps2, uint xbox, uint gc) : base((uint)ChunkIdentifier.Animation_Size)
+    public AnimationSizeChunk(uint version, uint pc, uint ps2, uint xbox, uint gc) : base(ChunkID)
     {
         Version = version;
         PC = pc;

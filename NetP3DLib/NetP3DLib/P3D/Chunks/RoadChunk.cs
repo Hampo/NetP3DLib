@@ -5,9 +5,11 @@ using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Road)]
+[ChunkAttributes(ChunkID)]
 public class RoadChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Road;
+    
     public uint Type { get; set; }
     public string StartIntersection { get; set; }
     public string EndIntersection { get; set; }
@@ -38,7 +40,7 @@ public class RoadChunk : NamedChunk
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(StartIntersection).Length + (uint)BinaryExtensions.GetP3DStringBytes(EndIntersection).Length + sizeof(uint) + sizeof(byte) + sizeof(byte) + sizeof(byte) + sizeof(byte);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public RoadChunk(BinaryReader br) : base((uint)ChunkIdentifier.Road)
+    public RoadChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         Type = br.ReadUInt32();
@@ -51,7 +53,7 @@ public class RoadChunk : NamedChunk
         var padding = br.ReadByte();
     }
 
-    public RoadChunk(string name, uint type, string startIntersection, string endIntersection, uint maximumCars, byte speed, byte intelligence, byte shortcut) : base((uint)ChunkIdentifier.Road)
+    public RoadChunk(string name, uint type, string startIntersection, string endIntersection, uint maximumCars, byte speed, byte intelligence, byte shortcut) : base(ChunkID)
     {
         Name = name;
         Type = type;

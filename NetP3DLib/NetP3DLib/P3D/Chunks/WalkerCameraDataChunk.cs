@@ -5,9 +5,11 @@ using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Walker_Camera_Data)]
+[ChunkAttributes(ChunkID)]
 public class WalkerCameraDataChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Walker_Camera_Data;
+    
     public uint Index { get; set; }
     public float MinMagnitude { get; set; }
     public float MaxMagnitude { get; set; }
@@ -31,7 +33,7 @@ public class WalkerCameraDataChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(float) * 3;
 
-    public WalkerCameraDataChunk(BinaryReader br) : base((uint)ChunkIdentifier.Walker_Camera_Data)
+    public WalkerCameraDataChunk(BinaryReader br) : base(ChunkID)
     {
         Index = br.ReadUInt32();
         MinMagnitude = br.ReadSingle();
@@ -40,7 +42,7 @@ public class WalkerCameraDataChunk : Chunk
         TargetOffset = br.ReadVector3();
     }
 
-    public WalkerCameraDataChunk(uint index, float minMagnitude, float maxMagnitude, float elevation, Vector3 targetOffset) : base((uint)ChunkIdentifier.Walker_Camera_Data)
+    public WalkerCameraDataChunk(uint index, float minMagnitude, float maxMagnitude, float elevation, Vector3 targetOffset) : base(ChunkID)
     {
         Index = index;
         MinMagnitude = minMagnitude;

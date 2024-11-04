@@ -4,9 +4,11 @@ using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Frontend_String_Hard_Coded)]
+[ChunkAttributes(ChunkID)]
 public class FrontendStringHardCodedChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Frontend_String_Hard_Coded;
+    
     public string String { get; set; }
 
     public override byte[] DataBytes
@@ -22,12 +24,12 @@ public class FrontendStringHardCodedChunk : Chunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(String).Length;
 
-    public FrontendStringHardCodedChunk(BinaryReader br) : base((uint)ChunkIdentifier.Frontend_String_Hard_Coded)
+    public FrontendStringHardCodedChunk(BinaryReader br) : base(ChunkID)
     {
         String = br.ReadP3DString();
     }
 
-    public FrontendStringHardCodedChunk(string @string) : base((uint)ChunkIdentifier.Frontend_String_Hard_Coded)
+    public FrontendStringHardCodedChunk(string @string) : base(ChunkID)
     {
         String = @string;
     }

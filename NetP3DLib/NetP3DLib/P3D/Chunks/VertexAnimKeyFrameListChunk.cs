@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Vertex_Anim_Key_Frame_List)]
+[ChunkAttributes(ChunkID)]
 public class VertexAnimKeyFrameListChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Vertex_Anim_Key_Frame_List;
+    
     public uint Version { get; set; }
     public uint NumKeyFrameIds
     {
@@ -71,7 +73,7 @@ public class VertexAnimKeyFrameListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) + sizeof(uint) * NumKeyFrameIds + sizeof(uint) * NumKeyFrameCounts;
 
-    public VertexAnimKeyFrameListChunk(BinaryReader br) : base((uint)ChunkIdentifier.Vertex_Anim_Key_Frame_List)
+    public VertexAnimKeyFrameListChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         var numKeyFrameIds = br.ReadInt32();
@@ -83,7 +85,7 @@ public class VertexAnimKeyFrameListChunk : Chunk
             KeyFrameCounts.Add(br.ReadUInt32());
     }
 
-    public VertexAnimKeyFrameListChunk(uint version, IList<uint> keyFrameIds, IList<uint> keyFrameCounts) : base((uint)ChunkIdentifier.Vertex_Anim_Key_Frame_List)
+    public VertexAnimKeyFrameListChunk(uint version, IList<uint> keyFrameIds, IList<uint> keyFrameCounts) : base(ChunkID)
     {
         Version = version;
         KeyFrameIds.AddRange(keyFrameIds);

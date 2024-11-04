@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Vertex_Compression_Hint)]
+[ChunkAttributes(ChunkID)]
 public class VertexCompressionHintChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Vertex_Compression_Hint;
+    
     public uint Version { get; set; }
     public uint UV0Size { get; set; }
     public uint UV1Size { get; set; }
@@ -36,7 +38,7 @@ public class VertexCompressionHintChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint);
 
-    public VertexCompressionHintChunk(BinaryReader br) : base((uint)ChunkIdentifier.Vertex_Compression_Hint)
+    public VertexCompressionHintChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         UV0Size = br.ReadUInt32();
@@ -48,7 +50,7 @@ public class VertexCompressionHintChunk : Chunk
         PositionSize = br.ReadUInt32();
     }
 
-    public VertexCompressionHintChunk(uint version, uint uv0Size, uint uv1Size, uint uv2Size, uint uv3Size, uint normalSize, uint colourSize, uint positionSize) : base((uint)ChunkIdentifier.Vertex_Compression_Hint)
+    public VertexCompressionHintChunk(uint version, uint uv0Size, uint uv1Size, uint uv2Size, uint uv3Size, uint normalSize, uint colourSize, uint positionSize) : base(ChunkID)
     {
         Version = version;
         UV0Size = uv0Size;

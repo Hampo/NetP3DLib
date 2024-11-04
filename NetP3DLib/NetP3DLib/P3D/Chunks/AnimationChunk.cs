@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Animation)]
+[ChunkAttributes(ChunkID)]
 public class AnimationChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Animation;
+    
     public uint Version { get; set; }
     public string AnimationType { get; set; }
     public float NumFrames { get; set; }
@@ -31,7 +33,7 @@ public class AnimationChunk : NamedChunk
     }
     public override uint DataLength => sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + 4 + sizeof(float) + sizeof(float) + sizeof(uint);
 
-    public AnimationChunk(BinaryReader br) : base((uint)ChunkIdentifier.Animation)
+    public AnimationChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         Name = br.ReadP3DString();
@@ -41,7 +43,7 @@ public class AnimationChunk : NamedChunk
         Cyclic = br.ReadUInt32();
     }
 
-    public AnimationChunk(uint version, string name, string animationType, float numFrames, float frameRate, uint cyclic) : base((uint)ChunkIdentifier.Animation)
+    public AnimationChunk(uint version, string name, string animationType, float numFrames, float frameRate, uint cyclic) : base(ChunkID)
     {
         Version = version;
         Name = name;

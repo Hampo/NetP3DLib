@@ -4,9 +4,11 @@ using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Export_Info_Named_String)]
+[ChunkAttributes(ChunkID)]
 public class ExportInfoNamedStringChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Export_Info_Named_String;
+    
     public string Value { get; set; }
 
     public override byte[] DataBytes
@@ -23,13 +25,13 @@ public class ExportInfoNamedStringChunk : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + (uint)BinaryExtensions.GetP3DStringBytes(Value).Length;
 
-    public ExportInfoNamedStringChunk(BinaryReader br) : base((uint)ChunkIdentifier.Export_Info_Named_String)
+    public ExportInfoNamedStringChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         Value = br.ReadP3DString();
     }
 
-    public ExportInfoNamedStringChunk(string name, string value) : base((uint)ChunkIdentifier.Export_Info_Named_String)
+    public ExportInfoNamedStringChunk(string name, string value) : base(ChunkID)
     {
         Name = name;
         Value = value;

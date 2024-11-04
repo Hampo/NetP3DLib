@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Collision_Mesh_Triangle_list)]
+[ChunkAttributes(ChunkID)]
 public class CollisionMeshTriangleListChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Collision_Mesh_Triangle_list;
+    
     public uint NumTriangles
     {
         get => (uint)Triangles.Count;
@@ -44,7 +46,7 @@ public class CollisionMeshTriangleListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + Triangle.Size * NumTriangles;
 
-    public CollisionMeshTriangleListChunk(BinaryReader br) : base((uint)ChunkIdentifier.Collision_Mesh_Triangle_list)
+    public CollisionMeshTriangleListChunk(BinaryReader br) : base(ChunkID)
     {
         var numEntries = br.ReadInt32();
         Triangles.Capacity = numEntries;
@@ -52,7 +54,7 @@ public class CollisionMeshTriangleListChunk : Chunk
             Triangles.Add(new(br));
     }
 
-    public CollisionMeshTriangleListChunk(IList<Triangle> entries) : base((uint)ChunkIdentifier.Collision_Mesh_Triangle_list)
+    public CollisionMeshTriangleListChunk(IList<Triangle> entries) : base(ChunkID)
     {
         Triangles.AddRange(entries);
     }

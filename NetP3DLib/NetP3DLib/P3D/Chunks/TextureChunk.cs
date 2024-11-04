@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Texture)]
+[ChunkAttributes(ChunkID)]
 public class TextureChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Texture;
+    
     public uint Version { get; set; }
     public uint Width { get; set; }
     public uint Height { get; set; }
@@ -39,7 +41,7 @@ public class TextureChunk : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint);
 
-    public TextureChunk(BinaryReader br) : base((uint)ChunkIdentifier.Texture)
+    public TextureChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         Version = br.ReadUInt32();
@@ -52,7 +54,7 @@ public class TextureChunk : NamedChunk
         Usage = br.ReadUInt32();
         Priority = br.ReadUInt32();
     }
-    public TextureChunk(string name, uint version, uint width, uint height, uint bpp, uint alphaDepth, uint numMipMaps, uint textureType, uint usage, uint priority) : base((uint)ChunkIdentifier.Texture)
+    public TextureChunk(string name, uint version, uint width, uint height, uint bpp, uint alphaDepth, uint numMipMaps, uint textureType, uint usage, uint priority) : base(ChunkID)
     {
         Name = name;
         Version = version;

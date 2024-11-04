@@ -5,9 +5,11 @@ using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Shader)]
+[ChunkAttributes(ChunkID)]
 public class ShaderChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Shader;
+    
     public uint Version { get; set; }
     public string PddiShaderName { get; set; }
     public uint HasTranslucency { get; set; }
@@ -35,7 +37,7 @@ public class ShaderChunk : NamedChunk
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(PddiShaderName).Length + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public ShaderChunk(BinaryReader br) : base((uint)ChunkIdentifier.Shader)
+    public ShaderChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         Version = br.ReadUInt32();
@@ -46,7 +48,7 @@ public class ShaderChunk : NamedChunk
         var numParams = br.ReadUInt32();
     }
 
-    public ShaderChunk(string name, uint version, string pddiShaderName, uint hasTranslucency, uint vertexNeeds, uint vertexMask) : base((uint)ChunkIdentifier.Shader)
+    public ShaderChunk(string name, uint version, string pddiShaderName, uint hasTranslucency, uint vertexNeeds, uint vertexMask) : base(ChunkID)
     {
         Name = name;
         Version = version;

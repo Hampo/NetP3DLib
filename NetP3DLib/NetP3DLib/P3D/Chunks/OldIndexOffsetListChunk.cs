@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Old_Index_Offset_List)]
+[ChunkAttributes(ChunkID)]
 public class OldIndexOffsetListChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Old_Index_Offset_List;
+    
     public uint Version { get; set; }
     public uint NumOffsets
     {
@@ -46,7 +48,7 @@ public class OldIndexOffsetListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) + sizeof(uint) * NumOffsets;
 
-    public OldIndexOffsetListChunk(BinaryReader br) : base((uint)ChunkIdentifier.Old_Index_Offset_List)
+    public OldIndexOffsetListChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         var numOffsets = br.ReadInt32();
@@ -55,7 +57,7 @@ public class OldIndexOffsetListChunk : Chunk
             Offsets.Add(br.ReadUInt32());
     }
 
-    public OldIndexOffsetListChunk(uint version, IList<uint> offsets) : base((uint)ChunkIdentifier.Old_Index_Offset_List)
+    public OldIndexOffsetListChunk(uint version, IList<uint> offsets) : base(ChunkID)
     {
         Version = version;
         Offsets.AddRange(offsets);

@@ -6,9 +6,11 @@ using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Texture_Font)]
+[ChunkAttributes(ChunkID)]
 public class TextureFontChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Texture_Font;
+    
     public uint Version { get; set; }
     public string Shader { get; set; }
     public float FontSize { get; set; }
@@ -38,7 +40,7 @@ public class TextureFontChunk : NamedChunk
     public override uint DataLength => sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + (uint)BinaryExtensions.GetP3DStringBytes(Shader).Length + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(uint);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public TextureFontChunk(BinaryReader br) : base((uint)ChunkIdentifier.Texture_Font)
+    public TextureFontChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         Name = br.ReadP3DString();
@@ -50,7 +52,7 @@ public class TextureFontChunk : NamedChunk
         var numTexture = br.ReadUInt32();
     }
 
-    public TextureFontChunk(uint version, string name, string shader, float fontSize, float fontWidth, float fontHeight, float fontBaseLine) : base((uint)ChunkIdentifier.Texture_Font)
+    public TextureFontChunk(uint version, string name, string shader, float fontSize, float fontWidth, float fontHeight, float fontBaseLine) : base(ChunkID)
     {
         Version = version;
         Name = name;

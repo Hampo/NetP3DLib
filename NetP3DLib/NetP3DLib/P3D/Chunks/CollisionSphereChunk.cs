@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Collision_Sphere)]
+[ChunkAttributes(ChunkID)]
 public class CollisionSphereChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Collision_Sphere;
+    
     public float Radius { get; set; }
 
     public override byte[] DataBytes
@@ -22,12 +24,12 @@ public class CollisionSphereChunk : Chunk
     }
     public override uint DataLength => sizeof(float);
 
-    public CollisionSphereChunk(BinaryReader br) : base((uint)ChunkIdentifier.Collision_Sphere)
+    public CollisionSphereChunk(BinaryReader br) : base(ChunkID)
     {
         Radius = br.ReadSingle();
     }
 
-    public CollisionSphereChunk(float radius) : base((uint)ChunkIdentifier.Collision_Sphere)
+    public CollisionSphereChunk(float radius) : base(ChunkID)
     {
         Radius = radius;
     }

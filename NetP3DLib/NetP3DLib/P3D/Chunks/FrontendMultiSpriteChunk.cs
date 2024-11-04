@@ -6,9 +6,11 @@ using System.Linq;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Frontend_Multi_Sprite)]
+[ChunkAttributes(ChunkID)]
 public class FrontendMultiSpriteChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Frontend_Multi_Sprite;
+    
     public enum Justifications : uint
     {
         Left,
@@ -76,7 +78,7 @@ public class FrontendMultiSpriteChunk : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(int) + sizeof(int) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(float) + sizeof(uint) + (uint)ImageNames.Sum(x => BinaryExtensions.GetP3DStringBytes(x).Length);
 
-    public FrontendMultiSpriteChunk(BinaryReader br) : base((uint)ChunkIdentifier.Frontend_Multi_Sprite)
+    public FrontendMultiSpriteChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         Version = br.ReadUInt32();
@@ -95,7 +97,7 @@ public class FrontendMultiSpriteChunk : NamedChunk
             ImageNames.Add(br.ReadP3DString());
     }
 
-    public FrontendMultiSpriteChunk(string name, uint version, int positionX, int positionY, uint dimensionX, uint dimensionY, Justifications justificationX, Justifications justificationY, Color colour, uint translucency, float rotationValue, IList<string> imageNames) : base((uint)ChunkIdentifier.Frontend_Multi_Sprite)
+    public FrontendMultiSpriteChunk(string name, uint version, int positionX, int positionY, uint dimensionX, uint dimensionY, Justifications justificationX, Justifications justificationY, Color colour, uint translucency, float rotationValue, IList<string> imageNames) : base(ChunkID)
     {
         Name = name;
         Version = version;

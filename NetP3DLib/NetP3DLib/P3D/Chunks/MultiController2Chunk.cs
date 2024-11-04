@@ -5,9 +5,11 @@ using System.Linq;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Multi_Controller_2)]
+[ChunkAttributes(ChunkID)]
 public class MultiController2Chunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Multi_Controller_2;
+    
     public uint Version { get; set; }
     public string CycleMode { get; set; }
     public uint NumCycles { get; set; }
@@ -37,7 +39,7 @@ public class MultiController2Chunk : NamedChunk
     public override uint DataLength => sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + 4 + sizeof(uint) + sizeof(uint) + sizeof(float) + sizeof(float) + sizeof(uint);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public MultiController2Chunk(BinaryReader br) : base((uint)ChunkIdentifier.Multi_Controller_2)
+    public MultiController2Chunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         Name = br.ReadP3DString();
@@ -49,7 +51,7 @@ public class MultiController2Chunk : NamedChunk
         var numTracks = br.ReadUInt32();
     }
 
-    public MultiController2Chunk(uint version, string name, string cycleMode, uint numCycles, uint infiniteCycle, float numFrames, float frameRate) : base((uint)ChunkIdentifier.Multi_Controller_2)
+    public MultiController2Chunk(uint version, string name, string cycleMode, uint numCycles, uint infiniteCycle, float numFrames, float frameRate) : base(ChunkID)
     {
         Version = version;
         Name = name;

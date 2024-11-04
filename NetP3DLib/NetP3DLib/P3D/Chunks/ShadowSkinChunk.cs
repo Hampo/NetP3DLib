@@ -5,9 +5,11 @@ using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Shadow_Skin)]
+[ChunkAttributes(ChunkID)]
 public class ShadowSkinChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Shadow_Skin;
+    
     public uint Version { get; set; }
     public string SkeletonName { get; set; }
     // TODO: Calculate from children
@@ -31,7 +33,7 @@ public class ShadowSkinChunk : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(SkeletonName).Length + sizeof(uint) + sizeof(uint);
 
-    public ShadowSkinChunk(BinaryReader br) : base((uint)ChunkIdentifier.Shadow_Skin)
+    public ShadowSkinChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         Version = br.ReadUInt32();
@@ -40,7 +42,7 @@ public class ShadowSkinChunk : NamedChunk
         NumTriangles = br.ReadUInt32();
     }
 
-    public ShadowSkinChunk(string name, uint version, string skeletonName, uint numVertices, uint numTriangles) : base((uint)ChunkIdentifier.Shadow_Skin)
+    public ShadowSkinChunk(string name, uint version, string skeletonName, uint numVertices, uint numTriangles) : base(ChunkID)
     {
         Name = name;
         Version = version;

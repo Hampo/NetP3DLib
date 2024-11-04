@@ -5,9 +5,11 @@ using System.Linq;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.State_Prop_State_Data_V1)]
+[ChunkAttributes(ChunkID)]
 public class StatePropStateDataV1Chunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.State_Prop_State_Data_V1;
+    
     public uint AutoTransition { get; set; }
     public uint OutState { get; set; }
     public uint NumDrawables => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.State_Prop_Visibilities_Data).Count();
@@ -37,7 +39,7 @@ public class StatePropStateDataV1Chunk : NamedChunk
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(float);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public StatePropStateDataV1Chunk(BinaryReader br) : base((uint)ChunkIdentifier.State_Prop_State_Data_V1)
+    public StatePropStateDataV1Chunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         AutoTransition = br.ReadUInt32();
@@ -49,7 +51,7 @@ public class StatePropStateDataV1Chunk : NamedChunk
         OutFrame = br.ReadSingle();
     }
 
-    public StatePropStateDataV1Chunk(string name, uint autoTransition, uint outState, float outFrame) : base((uint)ChunkIdentifier.State_Prop_State_Data_V1)
+    public StatePropStateDataV1Chunk(string name, uint autoTransition, uint outState, float outFrame) : base(ChunkID)
     {
         Name = name;
         AutoTransition = autoTransition;

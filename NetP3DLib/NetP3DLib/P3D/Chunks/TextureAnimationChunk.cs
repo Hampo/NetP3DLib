@@ -5,9 +5,11 @@ using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Texture_Animation)]
+[ChunkAttributes(ChunkID)]
 public class TextureAnimationChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Texture_Animation;
+    
     public uint Version { get; set; }
     public string MaterialName { get; set; }
     public uint NumFrames { get; set; }
@@ -32,7 +34,7 @@ public class TextureAnimationChunk : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(float) + sizeof(uint);
 
-    public TextureAnimationChunk(BinaryReader br) : base((uint)ChunkIdentifier.Texture_Animation)
+    public TextureAnimationChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         Version = br.ReadUInt32();
@@ -42,7 +44,7 @@ public class TextureAnimationChunk : NamedChunk
         Cyclic = br.ReadUInt32();
     }
 
-    public TextureAnimationChunk(string name, uint version, string materialName, uint numFrames, float frameRate, uint cyclic) : base((uint)ChunkIdentifier.Texture_Animation)
+    public TextureAnimationChunk(string name, uint version, string materialName, uint numFrames, float frameRate, uint cyclic) : base(ChunkID)
     {
         Name = name;
         Version = version;

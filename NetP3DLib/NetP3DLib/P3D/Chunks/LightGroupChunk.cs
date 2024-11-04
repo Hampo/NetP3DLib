@@ -6,9 +6,11 @@ using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Light_Group)]
+[ChunkAttributes(ChunkID)]
 public class LightGroupChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Light_Group;
+    
     public uint NumLights
     {
         get => (uint)Lights.Count;
@@ -47,7 +49,7 @@ public class LightGroupChunk : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + (uint)Lights.Sum(x => BinaryExtensions.GetP3DStringBytes(x).Length);
 
-    public LightGroupChunk(BinaryReader br) : base((uint)ChunkIdentifier.Light_Group)
+    public LightGroupChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         var numLights = br.ReadInt32();
@@ -56,7 +58,7 @@ public class LightGroupChunk : NamedChunk
             Lights.Add(br.ReadP3DString());
     }
 
-    public LightGroupChunk(string name, IList<string> lights) : base((uint)ChunkIdentifier.Light_Group)
+    public LightGroupChunk(string name, IList<string> lights) : base(ChunkID)
     {
         Name = name;
         Lights.AddRange(lights);

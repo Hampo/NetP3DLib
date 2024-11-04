@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Animation_Sync_Frame)]
+[ChunkAttributes(ChunkID)]
 public class AnimationSyncFrameChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Animation_Sync_Frame;
+    
     public uint Version { get; set; }
     public float SyncFrame { get; set; }
 
@@ -24,13 +26,13 @@ public class AnimationSyncFrameChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(float);
 
-    public AnimationSyncFrameChunk(BinaryReader br) : base((uint)ChunkIdentifier.Animation_Sync_Frame)
+    public AnimationSyncFrameChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         SyncFrame = br.ReadSingle();
     }
 
-    public AnimationSyncFrameChunk(uint version, float syncFrame) : base((uint)ChunkIdentifier.Animation_Sync_Frame)
+    public AnimationSyncFrameChunk(uint version, float syncFrame) : base(ChunkID)
     {
         Version = version;
         SyncFrame = syncFrame;

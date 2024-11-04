@@ -5,9 +5,11 @@ using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Trigger_Volume)]
+[ChunkAttributes(ChunkID)]
 public class TriggerVolumeChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Trigger_Volume;
+    
     public uint IsRect { get; set; }
     public Vector3 HalfExtents { get; set; }
     public Matrix4x4 Matrix { get; set; }
@@ -28,7 +30,7 @@ public class TriggerVolumeChunk : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(float) * 3 + sizeof(float) * 16;
 
-    public TriggerVolumeChunk(BinaryReader br) : base((uint)ChunkIdentifier.Trigger_Volume)
+    public TriggerVolumeChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         IsRect = br.ReadUInt32();
@@ -36,7 +38,7 @@ public class TriggerVolumeChunk : NamedChunk
         Matrix = br.ReadMatrix4x4();
     }
 
-    public TriggerVolumeChunk(string name, uint isRect, Vector3 halfExtents, Matrix4x4 matrix) : base((uint)ChunkIdentifier.Trigger_Volume)
+    public TriggerVolumeChunk(string name, uint isRect, Vector3 halfExtents, Matrix4x4 matrix) : base(ChunkID)
     {
         Name = name;
         IsRect = isRect;

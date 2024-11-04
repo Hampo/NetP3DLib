@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Collision_Cylinder)]
+[ChunkAttributes(ChunkID)]
 public class CollisionCylinderChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Collision_Cylinder;
+    
     public float Radius { get; set; }
     public float HalfLength { get; set; }
     public ushort FlatEnd { get; set; }
@@ -26,14 +28,14 @@ public class CollisionCylinderChunk : Chunk
     }
     public override uint DataLength => sizeof(float) + sizeof(float) + sizeof(ushort);
 
-    public CollisionCylinderChunk(BinaryReader br) : base((uint)ChunkIdentifier.Collision_Cylinder)
+    public CollisionCylinderChunk(BinaryReader br) : base(ChunkID)
     {
         Radius = br.ReadSingle();
         HalfLength = br.ReadSingle();
         FlatEnd = br.ReadUInt16();
     }
 
-    public CollisionCylinderChunk(float cylinderRadius, float length, ushort flatEnd) : base((uint)ChunkIdentifier.Collision_Cylinder)
+    public CollisionCylinderChunk(float cylinderRadius, float length, ushort flatEnd) : base(ChunkID)
     {
         Radius = cylinderRadius;
         HalfLength = length;

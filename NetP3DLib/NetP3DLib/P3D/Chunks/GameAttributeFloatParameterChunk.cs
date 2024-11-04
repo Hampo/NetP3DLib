@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Game_Attribute_Float_Parameter)]
+[ChunkAttributes(ChunkID)]
 public class GameAttributeFloatParameterChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Game_Attribute_Float_Parameter;
+    
     public float Value { get; set; }
 
     public override byte[] DataBytes
@@ -23,13 +25,13 @@ public class GameAttributeFloatParameterChunk : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(float);
 
-    public GameAttributeFloatParameterChunk(BinaryReader br) : base((uint)ChunkIdentifier.Game_Attribute_Float_Parameter)
+    public GameAttributeFloatParameterChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         Value = br.ReadSingle();
     }
 
-    public GameAttributeFloatParameterChunk(string name, float value) : base((uint)ChunkIdentifier.Game_Attribute_Float_Parameter)
+    public GameAttributeFloatParameterChunk(string name, float value) : base(ChunkID)
     {
         Name = name;
         Value = value;

@@ -5,9 +5,11 @@ using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Old_Locator)]
+[ChunkAttributes(ChunkID)]
 public class OldLocatorChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Old_Locator;
+    
     public uint Version { get; set; }
     public Vector3 Position { get; set; }
 
@@ -26,14 +28,14 @@ public class OldLocatorChunk : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(float) * 3;
 
-    public OldLocatorChunk(BinaryReader br) : base((uint)ChunkIdentifier.Old_Locator)
+    public OldLocatorChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         Version = br.ReadUInt32();
         Position = br.ReadVector3();
     }
 
-    public OldLocatorChunk(string name, uint version, Vector3 position) : base((uint)ChunkIdentifier.Old_Locator)
+    public OldLocatorChunk(string name, uint version, Vector3 position) : base(ChunkID)
     {
         Name = name;
         Version = version;

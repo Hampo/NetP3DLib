@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Image_Data)]
+[ChunkAttributes(ChunkID)]
 public class ImageDataChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Image_Data;
+    
     public byte[] ImageData { get; set; }
 
     public override byte[] DataBytes
@@ -23,13 +25,13 @@ public class ImageDataChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + (uint)ImageData.Length;
 
-    public ImageDataChunk(BinaryReader br) : base((uint)ChunkIdentifier.Image_Data)
+    public ImageDataChunk(BinaryReader br) : base(ChunkID)
     {
         int length = br.ReadInt32();
         ImageData = br.ReadBytes(length);
     }
 
-    public ImageDataChunk(byte[] imageData) : base((uint)ChunkIdentifier.Image_Data)
+    public ImageDataChunk(byte[] imageData) : base(ChunkID)
     {
         ImageData = imageData;
     }

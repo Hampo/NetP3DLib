@@ -3,9 +3,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Vertex_Shader)]
+[ChunkAttributes(ChunkID)]
 public class VertexShaderChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Vertex_Shader;
+    
     public override byte[] DataBytes
     {
         get
@@ -19,12 +21,12 @@ public class VertexShaderChunk : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length;
 
-    public VertexShaderChunk(BinaryReader br) : base((uint)ChunkIdentifier.Vertex_Shader)
+    public VertexShaderChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
     }
 
-    public VertexShaderChunk(string vertextShaderName) : base((uint)ChunkIdentifier.Vertex_Shader)
+    public VertexShaderChunk(string vertextShaderName) : base(ChunkID)
     {
         Name = vertextShaderName;
     }

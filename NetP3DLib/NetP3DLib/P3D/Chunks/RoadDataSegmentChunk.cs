@@ -5,9 +5,11 @@ using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Road_Data_Segment)]
+[ChunkAttributes(ChunkID)]
 public class RoadDataSegmentChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Road_Data_Segment;
+    
     public uint Type { get; set; }
     public uint Lanes { get; set; }
     public uint HasShoulder { get; set; }
@@ -34,7 +36,7 @@ public class RoadDataSegmentChunk : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(float) * 3 + sizeof(float) * 3 + sizeof(float) * 3;
 
-    public RoadDataSegmentChunk(BinaryReader br) : base((uint)ChunkIdentifier.Road_Data_Segment)
+    public RoadDataSegmentChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         Type = br.ReadUInt32();
@@ -45,7 +47,7 @@ public class RoadDataSegmentChunk : NamedChunk
         Bottom = br.ReadVector3();
     }
 
-    public RoadDataSegmentChunk(string name, uint type, uint lanes, uint hasShoulder, Vector3 direction, Vector3 top, Vector3 bottom) : base((uint)ChunkIdentifier.Road_Data_Segment)
+    public RoadDataSegmentChunk(string name, uint type, uint lanes, uint hasShoulder, Vector3 direction, Vector3 top, Vector3 bottom) : base(ChunkID)
     {
         Name = name;
         Type = type;

@@ -5,9 +5,11 @@ using System.Linq;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Old_Expression_Offsets)]
+[ChunkAttributes(ChunkID)]
 public class OldExpressionOffsetsChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Old_Expression_Offsets;
+    
     public uint NumPrimitiveGroups
     {
         get => (uint)PrimitiveGroupIndices.Count;
@@ -48,7 +50,7 @@ public class OldExpressionOffsetsChunk : Chunk
     public override uint DataLength => sizeof(uint) + sizeof(uint) + sizeof(uint) * NumPrimitiveGroups;
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public OldExpressionOffsetsChunk(BinaryReader br) : base((uint)ChunkIdentifier.Old_Expression_Offsets)
+    public OldExpressionOffsetsChunk(BinaryReader br) : base(ChunkID)
     {
         var numPrimitiveGroups = br.ReadInt32();
         var numOffsetLists = br.ReadUInt32();
@@ -57,7 +59,7 @@ public class OldExpressionOffsetsChunk : Chunk
             PrimitiveGroupIndices.Add(br.ReadUInt32());
     }
 
-    public OldExpressionOffsetsChunk(IList<uint> primitiveGroupIndices) : base((uint)ChunkIdentifier.Old_Expression_Offsets)
+    public OldExpressionOffsetsChunk(IList<uint> primitiveGroupIndices) : base(ChunkID)
     {
         PrimitiveGroupIndices.AddRange(primitiveGroupIndices);
     }

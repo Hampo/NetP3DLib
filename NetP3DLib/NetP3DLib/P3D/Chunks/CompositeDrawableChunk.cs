@@ -4,9 +4,11 @@ using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Composite_Drawable)]
+[ChunkAttributes(ChunkID)]
 public class CompositeDrawableChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Composite_Drawable;
+    
     public string SkeletonName { get; set; }
 
     public override byte[] DataBytes
@@ -23,13 +25,13 @@ public class CompositeDrawableChunk : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + (uint)BinaryExtensions.GetP3DStringBytes(SkeletonName).Length;
 
-    public CompositeDrawableChunk(BinaryReader br) : base((uint)ChunkIdentifier.Composite_Drawable)
+    public CompositeDrawableChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         SkeletonName = br.ReadP3DString();
     }
 
-    public CompositeDrawableChunk(string name, string skeletonName) : base((uint)ChunkIdentifier.Composite_Drawable)
+    public CompositeDrawableChunk(string name, string skeletonName) : base(ChunkID)
     {
         Name = name;
         SkeletonName = skeletonName;

@@ -6,9 +6,11 @@ using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Frontend_Multi_Text)]
+[ChunkAttributes(ChunkID)]
 public class FrontendMultiTextChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Frontend_Multi_Text;
+    
     public enum Justifications : uint
     {
         Left,
@@ -64,7 +66,7 @@ public class FrontendMultiTextChunk : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(int) + sizeof(int) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(float) + (uint)BinaryExtensions.GetP3DStringBytes(TextStyleName).Length + sizeof(byte) + sizeof(uint) + sizeof(int) + sizeof(int) + sizeof(uint);
 
-    public FrontendMultiTextChunk(BinaryReader br) : base((uint)ChunkIdentifier.Frontend_Multi_Text)
+    public FrontendMultiTextChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         Version = br.ReadUInt32();
@@ -85,7 +87,7 @@ public class FrontendMultiTextChunk : NamedChunk
         CurrentText = br.ReadUInt32();
     }
 
-    public FrontendMultiTextChunk(string name, uint version, int positionX, int positionY, uint dimensionX, uint dimensionY, Justifications justificationX, Justifications justificationY, Color colour, uint translucency, float rotationValue, string textStyleName, byte shadowEnabled, Color shadowColour, int shadowOffsetX, int shadowOffsetY, uint currentText) : base((uint)ChunkIdentifier.Frontend_Multi_Text)
+    public FrontendMultiTextChunk(string name, uint version, int positionX, int positionY, uint dimensionX, uint dimensionY, Justifications justificationX, Justifications justificationY, Color colour, uint translucency, float rotationValue, string textStyleName, byte shadowEnabled, Color shadowColour, int shadowOffsetX, int shadowOffsetY, uint currentText) : base(ChunkID)
     {
         Name = name;
         Version = version;

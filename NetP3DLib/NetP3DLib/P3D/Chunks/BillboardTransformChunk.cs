@@ -5,9 +5,11 @@ using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Billboard_Transform)]
+[ChunkAttributes(ChunkID)]
 public class BillboardTransformChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Billboard_Transform;
+    
     public uint Version { get; set; }
     public Quaternion Rotation { get; set; }
     public Vector3 Translation { get; set; }
@@ -27,14 +29,14 @@ public class BillboardTransformChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(float) * 4 + sizeof(float) * 3;
 
-    public BillboardTransformChunk(BinaryReader br) : base((uint)ChunkIdentifier.Billboard_Transform)
+    public BillboardTransformChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         Rotation = br.ReadQuaternion();
         Translation = br.ReadVector3();
     }
 
-    public BillboardTransformChunk(uint version, Quaternion rotation, Vector3 translation) : base((uint)ChunkIdentifier.Billboard_Transform)
+    public BillboardTransformChunk(uint version, Quaternion rotation, Vector3 translation) : base(ChunkID)
     {
         Version = version;
         Rotation = rotation;

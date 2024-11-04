@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Frontend_Layer)]
+[ChunkAttributes(ChunkID)]
 public class FrontendLayerChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Frontend_Layer;
+    
     public uint Version { get; set; }
     public uint Visible { get; set; }
     public uint Editable { get; set; }
@@ -29,7 +31,7 @@ public class FrontendLayerChunk : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint);
 
-    public FrontendLayerChunk(BinaryReader br) : base((uint)ChunkIdentifier.Frontend_Layer)
+    public FrontendLayerChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         Version = br.ReadUInt32();
@@ -38,7 +40,7 @@ public class FrontendLayerChunk : NamedChunk
         Alpha = br.ReadUInt32();
     }
 
-    public FrontendLayerChunk(string name, uint version, uint visible, uint editable, uint alpha) : base((uint)ChunkIdentifier.Frontend_Layer)
+    public FrontendLayerChunk(string name, uint version, uint visible, uint editable, uint alpha) : base(ChunkID)
     {
         Name = name;
         Version = version;

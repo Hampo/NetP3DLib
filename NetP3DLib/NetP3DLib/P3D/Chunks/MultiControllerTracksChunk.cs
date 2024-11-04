@@ -6,9 +6,11 @@ using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Multi_Controller_Tracks)]
+[ChunkAttributes(ChunkID)]
 public class MultiControllerTracksChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Multi_Controller_Tracks;
+    
     public uint NumTracks
     {
         get => (uint)Tracks.Count;
@@ -46,7 +48,7 @@ public class MultiControllerTracksChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + (uint)Tracks.Sum(x => x.DataBytes.Length);
 
-    public MultiControllerTracksChunk(BinaryReader br) : base((uint)ChunkIdentifier.Multi_Controller_Tracks)
+    public MultiControllerTracksChunk(BinaryReader br) : base(ChunkID)
     {
         var numTracks = br.ReadInt32();
         Tracks.Capacity = numTracks;
@@ -54,7 +56,7 @@ public class MultiControllerTracksChunk : Chunk
             Tracks.Add(new(br));
     }
 
-    public MultiControllerTracksChunk(IList<Track> tracks) : base((uint)ChunkIdentifier.Multi_Controller_Tracks)
+    public MultiControllerTracksChunk(IList<Track> tracks) : base(ChunkID)
     {
         Tracks.AddRange(tracks);
     }

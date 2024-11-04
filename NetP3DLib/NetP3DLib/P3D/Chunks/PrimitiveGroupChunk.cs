@@ -5,9 +5,11 @@ using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Primitive_Group)]
+[ChunkAttributes(ChunkID)]
 public class PrimitiveGroupChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Primitive_Group;
+    
     public enum PrimitiveTypes : uint
     {
         TriangleList,
@@ -85,7 +87,7 @@ public class PrimitiveGroupChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(ShaderName).Length + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint);
 
-    public PrimitiveGroupChunk(BinaryReader br) : base((uint)ChunkIdentifier.Primitive_Group)
+    public PrimitiveGroupChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         ShaderName = br.ReadP3DString();
@@ -100,7 +102,7 @@ public class PrimitiveGroupChunk : Chunk
         VertexAnimationMask = br.ReadUInt32();
     }
 
-    public PrimitiveGroupChunk(uint version, string shaderName, PrimitiveTypes primitiveType, VertexTypes vertexType, uint numVertices, uint numIndices, uint numMatrices, uint memoryImaged, uint optimized, uint vertexAnimated, uint vertexAnimationMask) : base((uint)ChunkIdentifier.Primitive_Group)
+    public PrimitiveGroupChunk(uint version, string shaderName, PrimitiveTypes primitiveType, VertexTypes vertexType, uint numVertices, uint numIndices, uint numMatrices, uint memoryImaged, uint optimized, uint vertexAnimated, uint vertexAnimationMask) : base(ChunkID)
     {
         Version = version;
         ShaderName = shaderName;

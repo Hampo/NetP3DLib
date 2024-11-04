@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Frontend_Group)]
+[ChunkAttributes(ChunkID)]
 public class FrontendGroupChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Frontend_Group;
+    
     public uint Version { get; set; }
     public uint HasAlpha { get; set; }
 
@@ -25,14 +27,14 @@ public class FrontendGroupChunk : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(uint);
 
-    public FrontendGroupChunk(BinaryReader br) : base((uint)ChunkIdentifier.Frontend_Group)
+    public FrontendGroupChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         Version = br.ReadUInt32();
         HasAlpha = br.ReadUInt32();
     }
 
-    public FrontendGroupChunk(string name, uint version, uint hasAlpha) : base((uint)ChunkIdentifier.Frontend_Group)
+    public FrontendGroupChunk(string name, uint version, uint hasAlpha) : base(ChunkID)
     {
         Name = name;
         Version = version;

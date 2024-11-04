@@ -5,9 +5,11 @@ using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Collision_Effect)]
+[ChunkAttributes(ChunkID)]
 public class CollisionEffectChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Collision_Effect;
+    
     public enum ClassTypes
     {
         WTF,
@@ -42,14 +44,14 @@ public class CollisionEffectChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(SoundResourceDataName).Length;
 
-    public CollisionEffectChunk(BinaryReader br) : base((uint)ChunkIdentifier.Collision_Effect)
+    public CollisionEffectChunk(BinaryReader br) : base(ChunkID)
     {
         ClassType = (ClassTypes)br.ReadUInt32();
         PhyPropID = br.ReadUInt32();
         SoundResourceDataName = br.ReadP3DString();
     }
 
-    public CollisionEffectChunk(ClassTypes classType, uint phyPropID, string soundResourceDataName) : base((uint)ChunkIdentifier.Collision_Effect)
+    public CollisionEffectChunk(ClassTypes classType, uint phyPropID, string soundResourceDataName) : base(ChunkID)
     {
         ClassType = classType;
         PhyPropID = phyPropID;

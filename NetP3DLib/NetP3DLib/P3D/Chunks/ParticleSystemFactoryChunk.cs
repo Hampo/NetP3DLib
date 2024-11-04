@@ -5,9 +5,11 @@ using System.Linq;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Particle_System_Factory)]
+[ChunkAttributes(ChunkID)]
 public class ParticleSystemFactoryChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Particle_System_Factory;
+    
     public uint Version { get; set; }
     public float FrameRate { get; set; }
     public uint NumAnimFrames { get; set; }
@@ -37,7 +39,7 @@ public class ParticleSystemFactoryChunk : NamedChunk
     public override uint DataLength => sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(float) + sizeof(uint) + sizeof(uint) + sizeof(ushort) + sizeof(ushort) + sizeof(uint);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public ParticleSystemFactoryChunk(BinaryReader br) : base((uint)ChunkIdentifier.Particle_System_Factory)
+    public ParticleSystemFactoryChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         Name = br.ReadP3DString();
@@ -49,7 +51,7 @@ public class ParticleSystemFactoryChunk : NamedChunk
         var numEmitters = br.ReadUInt32();
     }
 
-    public ParticleSystemFactoryChunk(uint version, string name, float frameRate, uint numAnimFrames, uint numOLFrames, ushort cycleAnim, ushort enableSorting) : base((uint)ChunkIdentifier.Particle_System_Factory)
+    public ParticleSystemFactoryChunk(uint version, string name, float frameRate, uint numAnimFrames, uint numOLFrames, ushort cycleAnim, ushort enableSorting) : base(ChunkID)
     {
         Version = version;
         Name = name;

@@ -5,9 +5,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Matrix_List)]
+[ChunkAttributes(ChunkID)]
 public class MatrixListChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Matrix_List;
+    
     public uint NumMatrices
     {
         get => (uint)Matrices.Count;
@@ -45,7 +47,7 @@ public class MatrixListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) * NumMatrices;
 
-    public MatrixListChunk(BinaryReader br) : base((uint)ChunkIdentifier.Matrix_List)
+    public MatrixListChunk(BinaryReader br) : base(ChunkID)
     {
         var numMatrices = br.ReadInt32();
         Matrices.Capacity = numMatrices;
@@ -53,7 +55,7 @@ public class MatrixListChunk : Chunk
             Matrices.Add(br.ReadColor());
     }
 
-    public MatrixListChunk(IList<Color> matrices) : base((uint)ChunkIdentifier.Matrix_List)
+    public MatrixListChunk(IList<Color> matrices) : base(ChunkID)
     {
         Matrices.AddRange(matrices);
     }

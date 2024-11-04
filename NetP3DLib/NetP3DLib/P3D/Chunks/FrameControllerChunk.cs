@@ -5,9 +5,11 @@ using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Frame_Controller)]
+[ChunkAttributes(ChunkID)]
 public class FrameControllerChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Frame_Controller;
+    
     public uint Version { get; set; }
     public string Type { get; set; }
     public string CycleMode { get; set; }
@@ -36,7 +38,7 @@ public class FrameControllerChunk : NamedChunk
     }
     public override uint DataLength => sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + 4 + 4 + sizeof(uint) + sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(HierarchyName).Length + (uint)BinaryExtensions.GetP3DStringBytes(AnimationName).Length;
 
-    public FrameControllerChunk(BinaryReader br) : base((uint)ChunkIdentifier.Frame_Controller)
+    public FrameControllerChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         Name = br.ReadP3DString();
@@ -48,7 +50,7 @@ public class FrameControllerChunk : NamedChunk
         AnimationName = br.ReadP3DString();
     }
 
-    public FrameControllerChunk(uint version, string name, string type, string cycleMode, uint numCycles, uint infiniteCycle, string hierarchyName, string animationName) : base((uint)ChunkIdentifier.Frame_Controller)
+    public FrameControllerChunk(uint version, string name, string type, string cycleMode, uint numCycles, uint infiniteCycle, string hierarchyName, string animationName) : base(ChunkID)
     {
         Version = version;
         Name = name;

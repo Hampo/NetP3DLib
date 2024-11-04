@@ -5,9 +5,11 @@ using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Memory_Image_Vertex_List)]
+[ChunkAttributes(ChunkID)]
 public class MemoryImageVertexListChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Memory_Image_Vertex_List;
+    
     public uint Version { get; set; }
     public uint Param { get; set; }
     public uint NumVertices
@@ -49,7 +51,7 @@ public class MemoryImageVertexListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) + sizeof(uint) + NumVertices * Vertex.Size;
 
-    public MemoryImageVertexListChunk(BinaryReader br) : base((uint)ChunkIdentifier.Memory_Image_Vertex_List)
+    public MemoryImageVertexListChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         Param = br.ReadUInt32();
@@ -59,7 +61,7 @@ public class MemoryImageVertexListChunk : Chunk
             Vertices.Add(new(br));
     }
 
-    public MemoryImageVertexListChunk(uint version, uint param, IList<Vertex> vertices) : base((uint)ChunkIdentifier.Memory_Image_Vertex_List)
+    public MemoryImageVertexListChunk(uint version, uint param, IList<Vertex> vertices) : base(ChunkID)
     {
         Version = version;
         Param = param;

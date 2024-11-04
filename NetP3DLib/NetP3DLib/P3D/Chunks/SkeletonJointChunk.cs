@@ -5,9 +5,11 @@ using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Skeleton_Joint)]
+[ChunkAttributes(ChunkID)]
 public class SkeletonJointChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Skeleton_Joint;
+    
     public uint Parent { get; set; }
     public int DOF { get; set; }
     public int FreeAxis { get; set; }
@@ -36,7 +38,7 @@ public class SkeletonJointChunk : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(float) * 16;
 
-    public SkeletonJointChunk(BinaryReader br) : base((uint)ChunkIdentifier.Skeleton_Joint)
+    public SkeletonJointChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         Parent = br.ReadUInt32();
@@ -48,7 +50,7 @@ public class SkeletonJointChunk : NamedChunk
         RestPose = br.ReadMatrix4x4();
     }
 
-    public SkeletonJointChunk(string name, uint parent, int dof, int freeAxis, int primaryAxis, int secondaryAxis, int twistAxis, Matrix4x4 restPose) : base((uint)ChunkIdentifier.Skeleton_Joint)
+    public SkeletonJointChunk(string name, uint parent, int dof, int freeAxis, int primaryAxis, int secondaryAxis, int twistAxis, Matrix4x4 restPose) : base(ChunkID)
     {
         Name = name;
         Parent = parent;

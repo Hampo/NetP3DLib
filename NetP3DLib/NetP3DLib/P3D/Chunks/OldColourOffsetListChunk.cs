@@ -5,9 +5,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Old_Colour_Offset_List)]
+[ChunkAttributes(ChunkID)]
 public class OldColourOffsetListChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Old_Colour_Offset_List;
+    
     public uint Version { get; set; }
     public uint NumOffsets
     {
@@ -47,7 +49,7 @@ public class OldColourOffsetListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) + sizeof(uint) * NumOffsets;
 
-    public OldColourOffsetListChunk(BinaryReader br) : base((uint)ChunkIdentifier.Old_Colour_Offset_List)
+    public OldColourOffsetListChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         var numOffsets = br.ReadInt32();
@@ -56,7 +58,7 @@ public class OldColourOffsetListChunk : Chunk
             Offsets.Add(br.ReadColor());
     }
 
-    public OldColourOffsetListChunk(uint version, IList<Color> offsets) : base((uint)ChunkIdentifier.Old_Colour_Offset_List)
+    public OldColourOffsetListChunk(uint version, IList<Color> offsets) : base(ChunkID)
     {
         Version = version;
         Offsets.AddRange(offsets);

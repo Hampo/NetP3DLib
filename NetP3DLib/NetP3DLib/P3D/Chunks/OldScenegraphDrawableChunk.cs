@@ -5,9 +5,11 @@ using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Old_Scenegraph_Drawable)]
+[ChunkAttributes(ChunkID)]
 public class OldScenegraphDrawableChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Old_Scenegraph_Drawable;
+    
     public string DrawableName { get; set; }
     public uint IsTranslucent { get; set; }
 
@@ -26,14 +28,14 @@ public class OldScenegraphDrawableChunk : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + (uint)BinaryExtensions.GetP3DStringBytes(DrawableName).Length + sizeof(uint);
 
-    public OldScenegraphDrawableChunk(BinaryReader br) : base((uint)ChunkIdentifier.Old_Scenegraph_Drawable)
+    public OldScenegraphDrawableChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         DrawableName = br.ReadP3DString();
         IsTranslucent = br.ReadUInt32();
     }
 
-    public OldScenegraphDrawableChunk(string name, string drawableName, uint isTranslucent) : base((uint)ChunkIdentifier.Old_Scenegraph_Drawable)
+    public OldScenegraphDrawableChunk(string name, string drawableName, uint isTranslucent) : base(ChunkID)
     {
         Name = name;
         DrawableName = drawableName;

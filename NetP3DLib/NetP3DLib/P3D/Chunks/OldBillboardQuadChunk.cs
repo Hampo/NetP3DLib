@@ -6,9 +6,11 @@ using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Old_Billboard_Quad)]
+[ChunkAttributes(ChunkID)]
 public class OldBillboardQuadChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Old_Billboard_Quad;
+    
     public uint Version { get; set; }
     public string BillboardMode { get; set; }
     public Vector3 Translation { get; set; }
@@ -47,7 +49,7 @@ public class OldBillboardQuadChunk : NamedChunk
     }
     public override uint DataLength => sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + 4 + sizeof(float) * 3 + sizeof(uint) + sizeof(float) * 2 + sizeof(float) * 2 + sizeof(float) * 2 + sizeof(float) * 2 + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(float) * 2;
 
-    public OldBillboardQuadChunk(BinaryReader br) : base((uint)ChunkIdentifier.Old_Billboard_Quad)
+    public OldBillboardQuadChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         Name = br.ReadP3DString();
@@ -64,7 +66,7 @@ public class OldBillboardQuadChunk : NamedChunk
         UVOffset = br.ReadVector2();
     }
 
-    public OldBillboardQuadChunk(uint version, string name, string billboardMode, Vector3 translation, Color colour, Vector2 uv0, Vector2 uv1, Vector2 uv2, Vector2 uv3, float width, float height, float distance, Vector2 uvOffset) : base((uint)ChunkIdentifier.Old_Billboard_Quad)
+    public OldBillboardQuadChunk(uint version, string name, string billboardMode, Vector3 translation, Color colour, Vector2 uv0, Vector2 uv1, Vector2 uv2, Vector2 uv3, float width, float height, float distance, Vector2 uvOffset) : base(ChunkID)
     {
         Version = version;
         Name = name;

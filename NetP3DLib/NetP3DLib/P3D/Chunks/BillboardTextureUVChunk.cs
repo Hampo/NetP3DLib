@@ -5,9 +5,11 @@ using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Billboard_Texture_UV)]
+[ChunkAttributes(ChunkID)]
 public class BillboardTextureUVChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Billboard_Texture_UV;
+    
     public uint Version { get; set; }
     public uint RandomU { get; set; }
     public uint RandomV { get; set; }
@@ -31,7 +33,7 @@ public class BillboardTextureUVChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(float) * 2 + sizeof(float) * 2 + sizeof(float) * 2 + sizeof(float) * 2 + sizeof(float) * 2;
 
-    public BillboardTextureUVChunk(BinaryReader br) : base((uint)ChunkIdentifier.Billboard_Texture_UV)
+    public BillboardTextureUVChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         RandomU = br.ReadUInt32();
@@ -43,7 +45,7 @@ public class BillboardTextureUVChunk : Chunk
         UVOffset = br.ReadVector2();
     }
 
-    public BillboardTextureUVChunk(uint version, uint randomU, uint randomV, Vector2 uv0, Vector2 uv1, Vector2 uv2, Vector2 uv3, Vector2 uvOffset) : base((uint)ChunkIdentifier.Billboard_Texture_UV)
+    public BillboardTextureUVChunk(uint version, uint randomU, uint randomV, Vector2 uv0, Vector2 uv1, Vector2 uv2, Vector2 uv3, Vector2 uvOffset) : base(ChunkID)
     {
         Version = version;
         RandomU = randomU;

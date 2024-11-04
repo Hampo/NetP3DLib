@@ -5,9 +5,11 @@ using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.UV_List)]
+[ChunkAttributes(ChunkID)]
 public class UVListChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.UV_List;
+    
     public uint NumUVs
     {
         get => (uint)UVs.Count;
@@ -47,7 +49,7 @@ public class UVListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) + sizeof(float) * 2 * NumUVs;
 
-    public UVListChunk(BinaryReader br) : base((uint)ChunkIdentifier.UV_List)
+    public UVListChunk(BinaryReader br) : base(ChunkID)
     {
         var numUVs = br.ReadInt32();
         Channel = br.ReadUInt32();
@@ -56,7 +58,7 @@ public class UVListChunk : Chunk
             UVs.Add(br.ReadVector2());
     }
 
-    public UVListChunk(uint channel, IList<Vector2> uvs) : base((uint)ChunkIdentifier.UV_List)
+    public UVListChunk(uint channel, IList<Vector2> uvs) : base(ChunkID)
     {
         Channel = channel;
         UVs.AddRange(uvs);

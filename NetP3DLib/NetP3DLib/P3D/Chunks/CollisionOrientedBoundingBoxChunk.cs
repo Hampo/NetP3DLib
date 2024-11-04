@@ -5,9 +5,11 @@ using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Collision_Oriented_Bounding_Box)]
+[ChunkAttributes(ChunkID)]
 public class CollisionOrientedBoundingBoxChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Collision_Oriented_Bounding_Box;
+    
     public Vector3 HalfExtents { get; set; }
 
     public override byte[] DataBytes
@@ -23,12 +25,12 @@ public class CollisionOrientedBoundingBoxChunk : Chunk
     }
     public override uint DataLength => sizeof(float) * 3;
 
-    public CollisionOrientedBoundingBoxChunk(BinaryReader br) : base((uint)ChunkIdentifier.Collision_Oriented_Bounding_Box)
+    public CollisionOrientedBoundingBoxChunk(BinaryReader br) : base(ChunkID)
     {
         HalfExtents = br.ReadVector3();
     }
 
-    public CollisionOrientedBoundingBoxChunk(Vector3 halfExtents) : base((uint)ChunkIdentifier.Collision_Oriented_Bounding_Box)
+    public CollisionOrientedBoundingBoxChunk(Vector3 halfExtents) : base(ChunkID)
     {
         HalfExtents = halfExtents;
     }

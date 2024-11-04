@@ -5,9 +5,11 @@ using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Rail_Cam)]
+[ChunkAttributes(ChunkID)]
 public class RailCamChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Rail_Cam;
+    
     public enum Behaviours : uint
     {
         Distance = 1,
@@ -50,7 +52,7 @@ public class RailCamChunk : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(float) + sizeof(float) + sizeof(uint) + sizeof(float) + sizeof(uint) + sizeof(float) + sizeof(float) * 3 + sizeof(float) * 3 + sizeof(float) + sizeof(float);
 
-    public RailCamChunk(BinaryReader br) : base((uint)ChunkIdentifier.Rail_Cam)
+    public RailCamChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         Behaviour = (Behaviours)br.ReadUInt32();
@@ -66,7 +68,7 @@ public class RailCamChunk : NamedChunk
         TargetLag = br.ReadSingle();
     }
 
-    public RailCamChunk(string name, Behaviours behaviour, float minRadius, float maxRadius, uint trackRail, float trackDist, uint reverseSense, float fov, Vector3 targetOffset, Vector3 axisPlay, float positionLag, float targetLag) : base((uint)ChunkIdentifier.Rail_Cam)
+    public RailCamChunk(string name, Behaviours behaviour, float minRadius, float maxRadius, uint trackRail, float trackDist, uint reverseSense, float fov, Vector3 targetOffset, Vector3 axisPlay, float positionLag, float targetLag) : base(ChunkID)
     {
         Name = name;
         Behaviour = behaviour;

@@ -5,9 +5,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Colour_Channel)]
+[ChunkAttributes(ChunkID)]
 public class ColourChannelChunk : ParamChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Colour_Channel;
+    
     public uint Version { get; set; }
     public uint NumFrames
     {
@@ -73,7 +75,7 @@ public class ColourChannelChunk : ParamChunk
     }
     public override uint DataLength => sizeof(uint) + 4 + sizeof(uint) + sizeof(ushort) * NumFrames + sizeof(uint) * NumValues;
 
-    public ColourChannelChunk(BinaryReader br) : base((uint)ChunkIdentifier.Colour_Channel)
+    public ColourChannelChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         Param = br.ReadFourCC();
@@ -86,7 +88,7 @@ public class ColourChannelChunk : ParamChunk
             Values.Add(br.ReadColor());
     }
 
-    public ColourChannelChunk(uint version, string param, IList<ushort> frames, IList<Color> values) : base((uint)ChunkIdentifier.Colour_Channel)
+    public ColourChannelChunk(uint version, string param, IList<ushort> frames, IList<Color> values) : base(ChunkID)
     {
         Version = version;
         Param = param;

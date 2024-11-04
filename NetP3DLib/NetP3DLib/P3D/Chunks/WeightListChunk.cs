@@ -5,9 +5,11 @@ using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Weight_List)]
+[ChunkAttributes(ChunkID)]
 public class WeightListChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Weight_List;
+    
     public uint NumWeights
     {
         get => (uint)Weights.Count;
@@ -45,7 +47,7 @@ public class WeightListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(float) * 3 * NumWeights;
 
-    public WeightListChunk(BinaryReader br) : base((uint)ChunkIdentifier.Weight_List)
+    public WeightListChunk(BinaryReader br) : base(ChunkID)
     {
         var numWeights = br.ReadInt32();
         Weights.Capacity = numWeights;
@@ -53,7 +55,7 @@ public class WeightListChunk : Chunk
             Weights.Add(br.ReadVector3());
     }
 
-    public WeightListChunk(IList<Vector3> weights) : base((uint)ChunkIdentifier.Weight_List)
+    public WeightListChunk(IList<Vector3> weights) : base(ChunkID)
     {
         Weights.AddRange(weights);
     }

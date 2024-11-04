@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Collision_Meta_Data_Short_Channel)]
+[ChunkAttributes(ChunkID)]
 public class CollisionMetaDataShortChannelChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Collision_Meta_Data_Short_Channel;
+    
     public uint Version { get; set; }
     public uint NumIndices
     {
@@ -72,7 +74,7 @@ public class CollisionMetaDataShortChannelChunk : NamedChunk
     }
     public override uint DataLength => sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(ushort) * NumIndices + sizeof(ushort) * NumValues;
 
-    public CollisionMetaDataShortChannelChunk(BinaryReader br) : base((uint)ChunkIdentifier.Collision_Meta_Data_Short_Channel)
+    public CollisionMetaDataShortChannelChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         Name = br.ReadP3DString();
@@ -85,7 +87,7 @@ public class CollisionMetaDataShortChannelChunk : NamedChunk
             Values.Add(br.ReadUInt16());
     }
 
-    public CollisionMetaDataShortChannelChunk(uint version, string name, IList<ushort> frames, IList<ushort> values) : base((uint)ChunkIdentifier.Collision_Meta_Data_Short_Channel)
+    public CollisionMetaDataShortChannelChunk(uint version, string name, IList<ushort> frames, IList<ushort> values) : base(ChunkID)
     {
         Version = version;
         Name = name;

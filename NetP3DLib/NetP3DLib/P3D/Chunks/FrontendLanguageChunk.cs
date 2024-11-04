@@ -6,9 +6,11 @@ using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Frontend_Language)]
+[ChunkAttributes(ChunkID)]
 public class FrontendLanguageChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Frontend_Language;
+    
     public char Language { get; set; }
     public uint NumEntries
     {
@@ -59,7 +61,7 @@ public class FrontendLanguageChunk : NamedChunk
     }
     public override uint DataLength => (uint)DataBytes.Length;
 
-    public FrontendLanguageChunk(BinaryReader br) : base((uint)ChunkIdentifier.Frontend_Language)
+    public FrontendLanguageChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         Language = br.ReadChar();
@@ -84,7 +86,7 @@ public class FrontendLanguageChunk : NamedChunk
         }
     }
 
-    public FrontendLanguageChunk(string name, char language, uint modulo, IList<Entry> entries) : base((uint)ChunkIdentifier.Frontend_Language)
+    public FrontendLanguageChunk(string name, char language, uint modulo, IList<Entry> entries) : base(ChunkID)
     {
         Name = name;
         Language = language;
@@ -92,7 +94,7 @@ public class FrontendLanguageChunk : NamedChunk
         Entries.AddRange(entries);
     }
 
-    public FrontendLanguageChunk(string name, char language, uint modulo, Dictionary<string, string> entries) : base((uint)ChunkIdentifier.Frontend_Language)
+    public FrontendLanguageChunk(string name, char language, uint modulo, Dictionary<string, string> entries) : base(ChunkID)
     {
         Name = name;
         Language = language;

@@ -5,9 +5,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Light)]
+[ChunkAttributes(ChunkID)]
 public class LightChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Light;
+    
     public enum Types : uint
     {
         Ambient = 0,
@@ -42,7 +44,7 @@ public class LightChunk : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(uint);
 
-    public LightChunk(BinaryReader br) : base((uint)ChunkIdentifier.Light)
+    public LightChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         Version = br.ReadUInt32();
@@ -54,7 +56,7 @@ public class LightChunk : NamedChunk
         Enabled = br.ReadUInt32();
     }
 
-    public LightChunk(string name, uint version, Types type, Color colour, float constant, float linear, float squared, uint enabled) : base((uint)ChunkIdentifier.Light)
+    public LightChunk(string name, uint version, Types type, Color colour, float constant, float linear, float squared, uint enabled) : base(ChunkID)
     {
         Name = name;
         Version = version;

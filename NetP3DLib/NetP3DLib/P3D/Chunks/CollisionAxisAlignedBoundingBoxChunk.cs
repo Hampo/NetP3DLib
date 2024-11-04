@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Collision_Axis_Aligned_Bounding_Box)]
+[ChunkAttributes(ChunkID)]
 public class CollisionAxisAlignedBoundingBoxChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Collision_Axis_Aligned_Bounding_Box;
+    
     public uint Nothing { get; set; }
 
     public override byte[] DataBytes
@@ -22,12 +24,12 @@ public class CollisionAxisAlignedBoundingBoxChunk : Chunk
     }
     public override uint DataLength => sizeof(uint);
 
-    public CollisionAxisAlignedBoundingBoxChunk(BinaryReader br) : base((uint)ChunkIdentifier.Collision_Axis_Aligned_Bounding_Box)
+    public CollisionAxisAlignedBoundingBoxChunk(BinaryReader br) : base(ChunkID)
     {
         Nothing = br.ReadUInt32();
     }
 
-    public CollisionAxisAlignedBoundingBoxChunk() : base((uint)ChunkIdentifier.Collision_Axis_Aligned_Bounding_Box)
+    public CollisionAxisAlignedBoundingBoxChunk() : base(ChunkID)
     {
         Nothing = 0;
     }

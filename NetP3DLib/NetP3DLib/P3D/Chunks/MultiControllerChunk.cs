@@ -5,9 +5,11 @@ using System.Linq;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Multi_Controller)]
+[ChunkAttributes(ChunkID)]
 public class MultiControllerChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Multi_Controller;
+    
     public uint Version { get; set; }
     public float Length { get; set; }
     public float Framerate { get; set; }
@@ -31,7 +33,7 @@ public class MultiControllerChunk : NamedChunk
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(float) + sizeof(float) + sizeof(uint);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public MultiControllerChunk(BinaryReader br) : base((uint)ChunkIdentifier.Multi_Controller)
+    public MultiControllerChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         Version = br.ReadUInt32();
@@ -40,7 +42,7 @@ public class MultiControllerChunk : NamedChunk
         var numTracks = br.ReadUInt32();
     }
 
-    public MultiControllerChunk(string name, uint version, float length, float framerate) : base((uint)ChunkIdentifier.Multi_Controller)
+    public MultiControllerChunk(string name, uint version, float length, float framerate) : base(ChunkID)
     {
         Name = name;
         Version = version;

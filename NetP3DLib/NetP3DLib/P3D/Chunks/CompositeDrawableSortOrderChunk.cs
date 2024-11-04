@@ -5,9 +5,11 @@ using System.Linq;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Composite_Drawable_Sort_Order)]
+[ChunkAttributes(ChunkID)]
 public class CompositeDrawableSortOrderChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Composite_Drawable_Sort_Order;
+    
     public float SortOrder { get; set; }
 
     public override byte[] DataBytes
@@ -23,12 +25,12 @@ public class CompositeDrawableSortOrderChunk : Chunk
     }
     public override uint DataLength => sizeof(float);
 
-    public CompositeDrawableSortOrderChunk(BinaryReader br) : base((uint)ChunkIdentifier.Composite_Drawable_Sort_Order)
+    public CompositeDrawableSortOrderChunk(BinaryReader br) : base(ChunkID)
     {
         SortOrder = br.ReadSingle();
     }
 
-    public CompositeDrawableSortOrderChunk(float sortOrder) : base((uint)ChunkIdentifier.Composite_Drawable_Sort_Order)
+    public CompositeDrawableSortOrderChunk(float sortOrder) : base(ChunkID)
     {
         SortOrder = sortOrder;
     }

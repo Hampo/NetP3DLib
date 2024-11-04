@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Skeleton_Joint_Bone_Preserve)]
+[ChunkAttributes(ChunkID)]
 public class SkeletonJointBonePreserveChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Skeleton_Joint_Bone_Preserve;
+    
     public uint PreserveBoneLengths { get; set; }
 
     public override byte[] DataBytes
@@ -22,12 +24,12 @@ public class SkeletonJointBonePreserveChunk : Chunk
     }
     public override uint DataLength => sizeof(uint);
 
-    public SkeletonJointBonePreserveChunk(BinaryReader br) : base((uint)ChunkIdentifier.Skeleton_Joint_Bone_Preserve)
+    public SkeletonJointBonePreserveChunk(BinaryReader br) : base(ChunkID)
     {
         PreserveBoneLengths = br.ReadUInt32();
     }
 
-    public SkeletonJointBonePreserveChunk(uint preserveBoneLengths) : base((uint)ChunkIdentifier.Skeleton_Joint_Bone_Preserve)
+    public SkeletonJointBonePreserveChunk(uint preserveBoneLengths) : base(ChunkID)
     {
         PreserveBoneLengths = preserveBoneLengths;
     }

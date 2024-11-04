@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.State_Prop_Event_Data)]
+[ChunkAttributes(ChunkID)]
 public class StatePropEventDataChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.State_Prop_Event_Data;
+    
     public enum Events : uint
     {
         Idle,
@@ -41,14 +43,14 @@ public class StatePropEventDataChunk : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(uint);
 
-    public StatePropEventDataChunk(BinaryReader br) : base((uint)ChunkIdentifier.State_Prop_Event_Data)
+    public StatePropEventDataChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         ToState = br.ReadUInt32();
         Event = (Events)br.ReadUInt32();
     }
 
-    public StatePropEventDataChunk(string name, uint toState, Events @event) : base((uint)ChunkIdentifier.State_Prop_Event_Data)
+    public StatePropEventDataChunk(string name, uint toState, Events @event) : base(ChunkID)
     {
         Name = name;
         ToState = toState;

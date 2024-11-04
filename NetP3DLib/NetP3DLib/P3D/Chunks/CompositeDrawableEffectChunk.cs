@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Composite_Drawable_Effect)]
+[ChunkAttributes(ChunkID)]
 public class CompositeDrawableEffectChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Composite_Drawable_Effect;
+    
     public uint IsTranslucent { get; set; }
     public uint SkeletonJointId { get; set; }
 
@@ -25,14 +27,14 @@ public class CompositeDrawableEffectChunk : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(uint);
 
-    public CompositeDrawableEffectChunk(BinaryReader br) : base((uint)ChunkIdentifier.Composite_Drawable_Effect)
+    public CompositeDrawableEffectChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         IsTranslucent = br.ReadUInt32();
         SkeletonJointId = br.ReadUInt32();
     }
 
-    public CompositeDrawableEffectChunk(string name, uint isTranslucent, uint skeletonJointId) : base((uint)ChunkIdentifier.Composite_Drawable_Effect)
+    public CompositeDrawableEffectChunk(string name, uint isTranslucent, uint skeletonJointId) : base(ChunkID)
     {
         Name = name;
         IsTranslucent = isTranslucent;

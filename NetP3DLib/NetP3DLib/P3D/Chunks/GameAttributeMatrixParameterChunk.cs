@@ -4,9 +4,11 @@ using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Game_Attribute_Matrix_Parameter)]
+[ChunkAttributes(ChunkID)]
 public class GameAttributeMatrixParameterChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Game_Attribute_Matrix_Parameter;
+    
     public Matrix4x4 Value { get; set; }
 
     public override byte[] DataBytes
@@ -23,13 +25,13 @@ public class GameAttributeMatrixParameterChunk : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(float) * 16;
 
-    public GameAttributeMatrixParameterChunk(BinaryReader br) : base((uint)ChunkIdentifier.Game_Attribute_Matrix_Parameter)
+    public GameAttributeMatrixParameterChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         Value = br.ReadMatrix4x4();
     }
 
-    public GameAttributeMatrixParameterChunk(string name, Matrix4x4 value) : base((uint)ChunkIdentifier.Game_Attribute_Matrix_Parameter)
+    public GameAttributeMatrixParameterChunk(string name, Matrix4x4 value) : base(ChunkID)
     {
         Name = name;
         Value = value;

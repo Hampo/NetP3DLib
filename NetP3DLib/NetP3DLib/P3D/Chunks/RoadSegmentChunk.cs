@@ -5,9 +5,11 @@ using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Road_Segment)]
+[ChunkAttributes(ChunkID)]
 public class RoadSegmentChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Road_Segment;
+    
     public string RoadDataSegment { get; set; }
     public Matrix4x4 Transform { get; set; }
     public Matrix4x4 Scale { get; set; }
@@ -28,7 +30,7 @@ public class RoadSegmentChunk : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + (uint)BinaryExtensions.GetP3DStringBytes(RoadDataSegment).Length + sizeof(float) * 16 + sizeof(float) * 16;
 
-    public RoadSegmentChunk(BinaryReader br) : base((uint)ChunkIdentifier.Road_Segment)
+    public RoadSegmentChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         RoadDataSegment = br.ReadP3DString();
@@ -36,7 +38,7 @@ public class RoadSegmentChunk : NamedChunk
         Scale = br.ReadMatrix4x4();
     }
 
-    public RoadSegmentChunk(string name, string roadDataSegment, Matrix4x4 transform, Matrix4x4 scale) : base((uint)ChunkIdentifier.Road_Segment)
+    public RoadSegmentChunk(string name, string roadDataSegment, Matrix4x4 transform, Matrix4x4 scale) : base(ChunkID)
     {
         Name = name;
         RoadDataSegment = roadDataSegment;

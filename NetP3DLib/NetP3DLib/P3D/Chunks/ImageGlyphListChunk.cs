@@ -5,9 +5,11 @@ using System.Linq;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Image_Glyph_List)]
+[ChunkAttributes(ChunkID)]
 public class ImageGlyphListChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Image_Glyph_List;
+    
     public uint NumGlyphs
     {
         get => (uint)Glyphs.Count;
@@ -45,7 +47,7 @@ public class ImageGlyphListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + (uint)Glyphs.Sum(x => x.DataBytes.Length);
 
-    public ImageGlyphListChunk(BinaryReader br) : base((uint)ChunkIdentifier.Image_Glyph_List)
+    public ImageGlyphListChunk(BinaryReader br) : base(ChunkID)
     {
         var numGlyphs = br.ReadInt32();
         Glyphs.Capacity = numGlyphs;
@@ -53,7 +55,7 @@ public class ImageGlyphListChunk : Chunk
             Glyphs.Add(new(br));
     }
 
-    public ImageGlyphListChunk(IList<Glyph> glyphs) : base((uint)ChunkIdentifier.Image_Glyph_List)
+    public ImageGlyphListChunk(IList<Glyph> glyphs) : base(ChunkID)
     {
         Glyphs.AddRange(glyphs);
     }

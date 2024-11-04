@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Light_Shadow)]
+[ChunkAttributes(ChunkID)]
 public class LightShadowChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Light_Shadow;
+    
     public uint Shadow { get; set; }
 
     public override byte[] DataBytes
@@ -22,12 +24,12 @@ public class LightShadowChunk : Chunk
     }
     public override uint DataLength => sizeof(uint);
 
-    public LightShadowChunk(BinaryReader br) : base((uint)ChunkIdentifier.Light_Shadow)
+    public LightShadowChunk(BinaryReader br) : base(ChunkID)
     {
         Shadow = br.ReadUInt32();
     }
 
-    public LightShadowChunk(uint shadow) : base((uint)ChunkIdentifier.Light_Shadow)
+    public LightShadowChunk(uint shadow) : base(ChunkID)
     {
         Shadow = shadow;
     }

@@ -4,9 +4,11 @@ using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Bounding_Box)]
+[ChunkAttributes(ChunkID)]
 public class BoundingBoxChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Bounding_Box;
+    
     public Vector3 Low { get; set; }
     public Vector3 High { get; set; }
 
@@ -24,13 +26,13 @@ public class BoundingBoxChunk : Chunk
     }
     public override uint DataLength => sizeof(float) * 3 + sizeof(float) * 3;
 
-    public BoundingBoxChunk(BinaryReader br) : base((uint)ChunkIdentifier.Bounding_Box)
+    public BoundingBoxChunk(BinaryReader br) : base(ChunkID)
     {
         Low = br.ReadVector3();
         High = br.ReadVector3();
     }
 
-    public BoundingBoxChunk(Vector3 low, Vector3 high) : base((uint)ChunkIdentifier.Bounding_Box)
+    public BoundingBoxChunk(Vector3 low, Vector3 high) : base(ChunkID)
     {
         Low = low;
         High = high;

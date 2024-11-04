@@ -5,9 +5,11 @@ using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Bounding_Sphere)]
+[ChunkAttributes(ChunkID)]
 public class BoundingSphereChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Bounding_Sphere;
+    
     public Vector3 Centre { get; set; }
     public float Radius { get; set; }
 
@@ -25,13 +27,13 @@ public class BoundingSphereChunk : Chunk
     }
     public override uint DataLength => sizeof(float) * 3 + sizeof(float);
 
-    public BoundingSphereChunk(BinaryReader br) : base((uint)ChunkIdentifier.Bounding_Sphere)
+    public BoundingSphereChunk(BinaryReader br) : base(ChunkID)
     {
         Centre = br.ReadVector3();
         Radius = br.ReadSingle();
     }
 
-    public BoundingSphereChunk(Vector3 centre, float radius) : base((uint)ChunkIdentifier.Bounding_Sphere)
+    public BoundingSphereChunk(Vector3 centre, float radius) : base(ChunkID)
     {
         Centre = centre;
         Radius = radius;

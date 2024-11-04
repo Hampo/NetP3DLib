@@ -5,9 +5,11 @@ using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Old_Frame_Controller_2)]
+[ChunkAttributes(ChunkID)]
 public class OldFrameControllerChunk2 : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Old_Frame_Controller_2;
+    
     public enum Types
     {
         Undefined,
@@ -50,7 +52,7 @@ public class OldFrameControllerChunk2 : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(HierarchyName).Length + (uint)BinaryExtensions.GetP3DStringBytes(AnimationName).Length;
 
-    public OldFrameControllerChunk2(BinaryReader br) : base((uint)ChunkIdentifier.Old_Frame_Controller_2)
+    public OldFrameControllerChunk2(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         Version = br.ReadUInt32();
@@ -59,7 +61,7 @@ public class OldFrameControllerChunk2 : NamedChunk
         AnimationName = br.ReadP3DString();
     }
 
-    public OldFrameControllerChunk2(string name, uint version, Types type, string hierarchyName, string animationName) : base((uint)ChunkIdentifier.Old_Frame_Controller_2)
+    public OldFrameControllerChunk2(string name, uint version, Types type, string hierarchyName, string animationName) : base(ChunkID)
     {
         Name = name;
         Version = version;

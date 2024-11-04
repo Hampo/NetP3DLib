@@ -5,9 +5,11 @@ using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Spline)]
+[ChunkAttributes(ChunkID)]
 public class SplineChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Spline;
+    
     public uint NumPositions
     {
         get => (uint)Positions.Count;
@@ -46,7 +48,7 @@ public class SplineChunk : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(float) * 3 * NumPositions;
 
-    public SplineChunk(BinaryReader br) : base((uint)ChunkIdentifier.Spline)
+    public SplineChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         var numPositions = br.ReadInt32();
@@ -55,7 +57,7 @@ public class SplineChunk : NamedChunk
             Positions.Add(br.ReadVector3());
     }
 
-    public SplineChunk(string name, IList<Vector3> positions) : base((uint)ChunkIdentifier.Spline)
+    public SplineChunk(string name, IList<Vector3> positions) : base(ChunkID)
     {
         Name = name;
         Positions.AddRange(positions);

@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Animation_Group)]
+[ChunkAttributes(ChunkID)]
 public class AnimationGroupChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Animation_Group;
+    
     public uint Version { get; set; }
     public uint GroupID { get; set; }
     public uint NumChannels => (uint)Children.Count;
@@ -28,7 +30,7 @@ public class AnimationGroupChunk : NamedChunk
     public override uint DataLength => sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(uint);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public AnimationGroupChunk(BinaryReader br) : base((uint)ChunkIdentifier.Animation_Group)
+    public AnimationGroupChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         Name = br.ReadP3DString();
@@ -36,7 +38,7 @@ public class AnimationGroupChunk : NamedChunk
         var numChannels = br.ReadUInt32();
     }
 
-    public AnimationGroupChunk(uint version, string name, uint groupID) : base((uint)ChunkIdentifier.Animation_Group)
+    public AnimationGroupChunk(uint version, string name, uint groupID) : base(ChunkID)
     {
         Version = version;
         Name = name;

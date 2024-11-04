@@ -5,9 +5,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Billboard_Quad)]
+[ChunkAttributes(ChunkID)]
 public class BillboardQuadChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Billboard_Quad;
+    
     public uint Version { get; set; }
     public uint CutOffEnabled { get; set; }
     public uint Perspective { get; set; }
@@ -38,7 +40,7 @@ public class BillboardQuadChunk : NamedChunk
     }
     public override uint DataLength => sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(uint) + 4 + sizeof(uint) + sizeof(float) + sizeof(float) + sizeof(float);
 
-    public BillboardQuadChunk(BinaryReader br) : base((uint)ChunkIdentifier.Billboard_Quad)
+    public BillboardQuadChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         Name = br.ReadP3DString();
@@ -51,7 +53,7 @@ public class BillboardQuadChunk : NamedChunk
         Distance = br.ReadSingle();
     }
 
-    public BillboardQuadChunk(uint version, string name, uint cutOffEnabled, uint perspective, string axisMode, Color colour, float width, float height, float distance) : base((uint)ChunkIdentifier.Billboard_Quad)
+    public BillboardQuadChunk(uint version, string name, uint cutOffEnabled, uint perspective, string axisMode, Color colour, float width, float height, float distance) : base(ChunkID)
     {
         Version = version;
         Name = name;

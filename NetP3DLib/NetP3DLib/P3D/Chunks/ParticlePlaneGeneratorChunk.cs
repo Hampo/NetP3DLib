@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Particle_Plane_Generator)]
+[ChunkAttributes(ChunkID)]
 public class ParticlePlaneGeneratorChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Particle_Plane_Generator;
+    
     public uint Version { get; set; }
     public float Width { get; set; }
     public float Height { get; set; }
@@ -32,7 +34,7 @@ public class ParticlePlaneGeneratorChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(float);
 
-    public ParticlePlaneGeneratorChunk(BinaryReader br) : base((uint)ChunkIdentifier.Particle_Plane_Generator)
+    public ParticlePlaneGeneratorChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         Width = br.ReadSingle();
@@ -42,7 +44,7 @@ public class ParticlePlaneGeneratorChunk : Chunk
         RadialVar = br.ReadSingle();
     }
 
-    public ParticlePlaneGeneratorChunk(uint version, float width, float height, float horizontalSpread, float verticalSpread, float radialVar) : base((uint)ChunkIdentifier.Particle_Plane_Generator)
+    public ParticlePlaneGeneratorChunk(uint version, float width, float height, float horizontalSpread, float verticalSpread, float radialVar) : base(ChunkID)
     {
         Version = version;
         Width = width;

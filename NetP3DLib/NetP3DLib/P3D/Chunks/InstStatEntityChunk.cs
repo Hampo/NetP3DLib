@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Inst_Stat_Entity)]
+[ChunkAttributes(ChunkID)]
 public class InstStatEntityChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Inst_Stat_Entity;
+    
     public uint Version { get; set; }
     public uint HasAlpha { get; set; }
 
@@ -25,14 +27,14 @@ public class InstStatEntityChunk : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(uint);
 
-    public InstStatEntityChunk(BinaryReader br) : base((uint)ChunkIdentifier.Inst_Stat_Entity)
+    public InstStatEntityChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         Version = br.ReadUInt32();
         HasAlpha = br.ReadUInt32();
     }
 
-    public InstStatEntityChunk(string name, uint version, uint hasAlpha) : base((uint)ChunkIdentifier.Inst_Stat_Entity)
+    public InstStatEntityChunk(string name, uint version, uint hasAlpha) : base(ChunkID)
     {
         Name = name;
         Version = version;

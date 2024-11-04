@@ -4,9 +4,11 @@ using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Old_Scenegraph_Light_Group)]
+[ChunkAttributes(ChunkID)]
 public class OldScenegraphLightGroupChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Old_Scenegraph_Light_Group;
+    
     public string LightGroupName { get; set; }
 
     public override byte[] DataBytes
@@ -23,13 +25,13 @@ public class OldScenegraphLightGroupChunk : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + (uint)BinaryExtensions.GetP3DStringBytes(LightGroupName).Length;
 
-    public OldScenegraphLightGroupChunk(BinaryReader br) : base((uint)ChunkIdentifier.Old_Scenegraph_Light_Group)
+    public OldScenegraphLightGroupChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         LightGroupName = br.ReadP3DString();
     }
 
-    public OldScenegraphLightGroupChunk(string name, string lightGroupName) : base((uint)ChunkIdentifier.Old_Scenegraph_Light_Group)
+    public OldScenegraphLightGroupChunk(string name, string lightGroupName) : base(ChunkID)
     {
         Name = name;
         LightGroupName = lightGroupName;

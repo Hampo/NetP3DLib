@@ -3,9 +3,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Collision_Volume_Owner_Name)]
+[ChunkAttributes(ChunkID)]
 public class CollisionVolumeOwnerNameChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Collision_Volume_Owner_Name;
+    
     public override byte[] DataBytes
     {
         get
@@ -19,12 +21,12 @@ public class CollisionVolumeOwnerNameChunk : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length;
 
-    public CollisionVolumeOwnerNameChunk(BinaryReader br) : base((uint)ChunkIdentifier.Collision_Volume_Owner_Name)
+    public CollisionVolumeOwnerNameChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
     }
 
-    public CollisionVolumeOwnerNameChunk(string name) : base((uint)ChunkIdentifier.Collision_Volume_Owner_Name)
+    public CollisionVolumeOwnerNameChunk(string name) : base(ChunkID)
     {
         Name = name;
     }

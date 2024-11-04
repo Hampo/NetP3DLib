@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Light_Cone_Param)]
+[ChunkAttributes(ChunkID)]
 public class LightConeParamChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Light_Cone_Param;
+    
     public float Phi { get; set; }
     public float Theta { get; set; }
     public float Falloff { get; set; }
@@ -28,7 +30,7 @@ public class LightConeParamChunk : Chunk
     }
     public override uint DataLength => sizeof(float) + sizeof(float) + sizeof(float) + sizeof(float);
 
-    public LightConeParamChunk(BinaryReader br) : base((uint)ChunkIdentifier.Light_Cone_Param)
+    public LightConeParamChunk(BinaryReader br) : base(ChunkID)
     {
         Phi = br.ReadSingle();
         Theta = br.ReadSingle();
@@ -36,7 +38,7 @@ public class LightConeParamChunk : Chunk
         Range = br.ReadSingle();
     }
 
-    public LightConeParamChunk(float phi, float theta, float falloff, float range) : base((uint)ChunkIdentifier.Light_Cone_Param)
+    public LightConeParamChunk(float phi, float theta, float falloff, float range) : base(ChunkID)
     {
         Phi = phi;
         Theta = theta;

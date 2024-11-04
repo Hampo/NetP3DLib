@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Composite_Drawable_Primitive)]
+[ChunkAttributes(ChunkID)]
 public class CompositeDrawablePrimitiveChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Composite_Drawable_Primitive;
+    
     public uint Version { get; set; }
     public uint CreateInstance { get; set; }
     // TODO: Type num
@@ -30,7 +32,7 @@ public class CompositeDrawablePrimitiveChunk : NamedChunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(uint);
 
-    public CompositeDrawablePrimitiveChunk(BinaryReader br) : base((uint)ChunkIdentifier.Composite_Drawable_Primitive)
+    public CompositeDrawablePrimitiveChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         CreateInstance = br.ReadUInt32();
@@ -39,7 +41,7 @@ public class CompositeDrawablePrimitiveChunk : NamedChunk
         SkeletonJointID = br.ReadUInt32();
     }
 
-    public CompositeDrawablePrimitiveChunk(uint version, uint createInstance, string name, uint type, uint skeletonJointId) : base((uint)ChunkIdentifier.Composite_Drawable_Primitive)
+    public CompositeDrawablePrimitiveChunk(uint version, uint createInstance, string name, uint type, uint skeletonJointId) : base(ChunkID)
     {
         Version = version;
         CreateInstance = createInstance;

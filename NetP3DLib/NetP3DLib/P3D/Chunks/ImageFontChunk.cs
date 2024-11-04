@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Image_Font)]
+[ChunkAttributes(ChunkID)]
 public class ImageFontChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Image_Font;
+    
     public uint Version { get; set; }
     public float FontSize { get; set; }
     public float FontWidth { get; set; }
@@ -31,7 +33,7 @@ public class ImageFontChunk : NamedChunk
     }
     public override uint DataLength => sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(float);
 
-    public ImageFontChunk(BinaryReader br) : base((uint)ChunkIdentifier.Image_Font)
+    public ImageFontChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         Name = br.ReadP3DString();
@@ -41,7 +43,7 @@ public class ImageFontChunk : NamedChunk
         FontBaseLine = br.ReadSingle();
     }
 
-    public ImageFontChunk(uint version, string name, float fontSize, float fontWidth, float fontHeight, float fontBaseLine) : base((uint)ChunkIdentifier.Image_Font)
+    public ImageFontChunk(uint version, string name, float fontSize, float fontWidth, float fontHeight, float fontBaseLine) : base(ChunkID)
     {
         Version = version;
         Name = name;

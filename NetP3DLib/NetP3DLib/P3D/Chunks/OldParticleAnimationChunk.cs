@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Old_Particle_Animation)]
+[ChunkAttributes(ChunkID)]
 public class OldParticleAnimationChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Old_Particle_Animation;
+    
     public uint Version { get; set; }
 
     public override byte[] DataBytes
@@ -22,12 +24,12 @@ public class OldParticleAnimationChunk : Chunk
     }
     public override uint DataLength => sizeof(uint);
 
-    public OldParticleAnimationChunk(BinaryReader br) : base((uint)ChunkIdentifier.Old_Particle_Animation)
+    public OldParticleAnimationChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
     }
 
-    public OldParticleAnimationChunk(uint version) : base((uint)ChunkIdentifier.Old_Particle_Animation)
+    public OldParticleAnimationChunk(uint version) : base(ChunkID)
     {
         Version = version;
     }

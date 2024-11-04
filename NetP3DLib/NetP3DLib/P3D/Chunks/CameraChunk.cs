@@ -5,9 +5,11 @@ using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Camera)]
+[ChunkAttributes(ChunkID)]
 public class CameraChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Camera;
+    
     public uint Version { get; set; }
     public float FOV { get; set; }
     public float AspectRatio { get; set; }
@@ -38,7 +40,7 @@ public class CameraChunk : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(float) * 3 + sizeof(float) * 3 + sizeof(float) * 3;
 
-    public CameraChunk(BinaryReader br) : base((uint)ChunkIdentifier.Camera)
+    public CameraChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         Version = br.ReadUInt32();
@@ -51,7 +53,7 @@ public class CameraChunk : NamedChunk
         Up = br.ReadVector3();
     }
 
-    public CameraChunk(string name, uint version, float fov, float aspectRatio, float nearClip, float farClip, Vector3 position, Vector3 look, Vector3 up) : base((uint)ChunkIdentifier.Camera)
+    public CameraChunk(string name, uint version, float fov, float aspectRatio, float nearClip, float farClip, Vector3 position, Vector3 look, Vector3 up) : base(ChunkID)
     {
         Name = name;
         Version = version;

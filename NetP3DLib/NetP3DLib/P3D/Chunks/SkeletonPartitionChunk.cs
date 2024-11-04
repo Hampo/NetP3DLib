@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Skeleton_Partition)]
+[ChunkAttributes(ChunkID)]
 public class SkeletonPartitionChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Skeleton_Partition;
+    
     public uint NumJointValues
     {
         get => (uint)JointBits.Count;
@@ -45,7 +47,7 @@ public class SkeletonPartitionChunk : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(uint) * NumJointValues;
 
-    public SkeletonPartitionChunk(BinaryReader br) : base((uint)ChunkIdentifier.Skeleton_Partition)
+    public SkeletonPartitionChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         var numJointValues = br.ReadInt32();
@@ -54,7 +56,7 @@ public class SkeletonPartitionChunk : NamedChunk
             JointBits.Add(br.ReadUInt32());
     }
 
-    public SkeletonPartitionChunk(string name, IList<uint> jointBits) : base((uint)ChunkIdentifier.Skeleton_Partition)
+    public SkeletonPartitionChunk(string name, IList<uint> jointBits) : base(ChunkID)
     {
         Name = name;
         JointBits.AddRange(jointBits);

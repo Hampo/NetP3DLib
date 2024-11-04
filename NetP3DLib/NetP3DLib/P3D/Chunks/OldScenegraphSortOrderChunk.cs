@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Old_Scenegraph_Sort_Order)]
+[ChunkAttributes(ChunkID)]
 public class OldScenegraphSortOrderChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Old_Scenegraph_Sort_Order;
+    
     public float SortOrder { get; set; }
 
     public override byte[] DataBytes
@@ -22,12 +24,12 @@ public class OldScenegraphSortOrderChunk : Chunk
     }
     public override uint DataLength => sizeof(float);
 
-    public OldScenegraphSortOrderChunk(BinaryReader br) : base((uint)ChunkIdentifier.Old_Scenegraph_Sort_Order)
+    public OldScenegraphSortOrderChunk(BinaryReader br) : base(ChunkID)
     {
         SortOrder = br.ReadSingle();
     }
 
-    public OldScenegraphSortOrderChunk(float sortOrder) : base((uint)ChunkIdentifier.Old_Scenegraph_Sort_Order)
+    public OldScenegraphSortOrderChunk(float sortOrder) : base(ChunkID)
     {
         SortOrder = sortOrder;
     }

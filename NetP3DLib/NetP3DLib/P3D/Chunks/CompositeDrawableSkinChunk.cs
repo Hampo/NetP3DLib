@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Composite_Drawable_Skin)]
+[ChunkAttributes(ChunkID)]
 public class CompositeDrawableSkinChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Composite_Drawable_Skin;
+    
     public uint IsTranslucent { get; set; }
 
     public override byte[] DataBytes
@@ -23,13 +25,13 @@ public class CompositeDrawableSkinChunk : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint);
 
-    public CompositeDrawableSkinChunk(BinaryReader br) : base((uint)ChunkIdentifier.Composite_Drawable_Skin)
+    public CompositeDrawableSkinChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         IsTranslucent = br.ReadUInt32();
     }
 
-    public CompositeDrawableSkinChunk(string name, uint isTranslucent) : base((uint)ChunkIdentifier.Composite_Drawable_Skin)
+    public CompositeDrawableSkinChunk(string name, uint isTranslucent) : base(ChunkID)
     {
         Name = name;
         IsTranslucent = isTranslucent;

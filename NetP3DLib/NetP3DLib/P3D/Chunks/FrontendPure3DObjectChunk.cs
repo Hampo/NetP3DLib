@@ -6,9 +6,11 @@ using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Frontend_Pure3D_Object)]
+[ChunkAttributes(ChunkID)]
 public class FrontendPure3DObjectChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Frontend_Pure3D_Object;
+    
     public enum Justifications : uint
     {
         Left,
@@ -54,7 +56,7 @@ public class FrontendPure3DObjectChunk : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(int) + sizeof(int) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(float) + (uint)BinaryExtensions.GetP3DStringBytes(Pure3DFilename).Length;
 
-    public FrontendPure3DObjectChunk(BinaryReader br) : base((uint)ChunkIdentifier.Frontend_Pure3D_Object)
+    public FrontendPure3DObjectChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         Version = br.ReadUInt32();
@@ -70,7 +72,7 @@ public class FrontendPure3DObjectChunk : NamedChunk
         Pure3DFilename = br.ReadP3DString();
     }
 
-    public FrontendPure3DObjectChunk(string name, uint version, int positionX, int positionY, uint dimensionX, uint dimensionY, Justifications justificationX, Justifications justificationY, Color colour, uint translucency, float rotationValue, string pure3DFilename) : base((uint)ChunkIdentifier.Frontend_Pure3D_Object)
+    public FrontendPure3DObjectChunk(string name, uint version, int positionX, int positionY, uint dimensionX, uint dimensionY, Justifications justificationX, Justifications justificationY, Color colour, uint translucency, float rotationValue, string pure3DFilename) : base(ChunkID)
     {
         Name = name;
         Version = version;

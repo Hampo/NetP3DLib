@@ -5,9 +5,11 @@ using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Expression_Group)]
+[ChunkAttributes(ChunkID)]
 public class ExpressionGroupChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Expression_Group;
+    
     public uint Version { get; set; }
     public string TargetName { get; set; }
     public uint NumStages
@@ -50,7 +52,7 @@ public class ExpressionGroupChunk : NamedChunk
     }
     public override uint DataLength => sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + (uint)BinaryExtensions.GetP3DStringBytes(TargetName).Length + sizeof(uint) + sizeof(uint) * NumStages;
 
-    public ExpressionGroupChunk(BinaryReader br) : base((uint)ChunkIdentifier.Expression_Group)
+    public ExpressionGroupChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         Name = br.ReadP3DString();
@@ -61,7 +63,7 @@ public class ExpressionGroupChunk : NamedChunk
             Stages.Add(br.ReadUInt32());
     }
 
-    public ExpressionGroupChunk(uint version, string name, string targetName, IList<uint> stages) : base((uint)ChunkIdentifier.Expression_Group)
+    public ExpressionGroupChunk(uint version, string name, string targetName, IList<uint> stages) : base(ChunkID)
     {
         Version = version;
         Name = name;

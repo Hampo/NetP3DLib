@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Inst_Particle_System)]
+[ChunkAttributes(ChunkID)]
 public class InstParticleSystemChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Inst_Particle_System;
+    
     public enum ParticleTypes
     {
         Null = -1,
@@ -52,13 +54,13 @@ public class InstParticleSystemChunk : Chunk
     }
     public override uint DataLength => sizeof(int) + sizeof(uint);
 
-    public InstParticleSystemChunk(BinaryReader br) : base((uint)ChunkIdentifier.Inst_Particle_System)
+    public InstParticleSystemChunk(BinaryReader br) : base(ChunkID)
     {
         ParticleType = (ParticleTypes)br.ReadInt32();
         MaxInstances = br.ReadUInt32();
     }
 
-    public InstParticleSystemChunk(ParticleTypes particleType, uint maxInstances) : base((uint)ChunkIdentifier.Inst_Particle_System)
+    public InstParticleSystemChunk(ParticleTypes particleType, uint maxInstances) : base(ChunkID)
     {
         ParticleType = particleType;
         MaxInstances = maxInstances;

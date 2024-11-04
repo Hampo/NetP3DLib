@@ -5,9 +5,11 @@ using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Old_Vector2_Offset_List)]
+[ChunkAttributes(ChunkID)]
 public class OldVector2OffsetListChunk : ParamChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Old_Vector2_Offset_List;
+    
     public uint Version { get; set; }
     public uint NumOffsets
     {
@@ -48,7 +50,7 @@ public class OldVector2OffsetListChunk : ParamChunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) + 4 + sizeof(float) * 2 * NumOffsets;
 
-    public OldVector2OffsetListChunk(BinaryReader br) : base((uint)ChunkIdentifier.Old_Vector2_Offset_List)
+    public OldVector2OffsetListChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         var numOffsets = br.ReadInt32();
@@ -58,7 +60,7 @@ public class OldVector2OffsetListChunk : ParamChunk
             Offsets.Add(br.ReadVector2());
     }
 
-    public OldVector2OffsetListChunk(uint version, string param, IList<Vector2> offsets) : base((uint)ChunkIdentifier.Old_Vector2_Offset_List)
+    public OldVector2OffsetListChunk(uint version, string param, IList<Vector2> offsets) : base(ChunkID)
     {
         Version = version;
         Param = param;

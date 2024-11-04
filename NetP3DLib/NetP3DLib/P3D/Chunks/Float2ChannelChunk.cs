@@ -5,9 +5,11 @@ using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Float_2_Channel)]
+[ChunkAttributes(ChunkID)]
 public class Float2ChannelChunk : ParamChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Float_2_Channel;
+    
     public uint Version { get; set; }
     public uint NumFrames
     {
@@ -73,7 +75,7 @@ public class Float2ChannelChunk : ParamChunk
     }
     public override uint DataLength => sizeof(uint) + 4 + sizeof(uint) + sizeof(ushort) * NumFrames + sizeof(float) * 2 * NumValues;
 
-    public Float2ChannelChunk(BinaryReader br) : base((uint)ChunkIdentifier.Float_2_Channel)
+    public Float2ChannelChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         Param = br.ReadFourCC();
@@ -86,7 +88,7 @@ public class Float2ChannelChunk : ParamChunk
             Values.Add(br.ReadVector2());
     }
 
-    public Float2ChannelChunk(uint version, string param, IList<ushort> frames, IList<Vector2> values) : base((uint)ChunkIdentifier.Float_2_Channel)
+    public Float2ChannelChunk(uint version, string param, IList<ushort> frames, IList<Vector2> values) : base(ChunkID)
     {
         Version = version;
         Param = param;

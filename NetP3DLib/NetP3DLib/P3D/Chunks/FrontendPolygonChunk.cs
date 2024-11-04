@@ -6,9 +6,11 @@ using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Frontend_Polygon)]
+[ChunkAttributes(ChunkID)]
 public class FrontendPolygonChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Frontend_Polygon;
+    
     public uint Version { get; set; }
     public uint Translucency { get; set; }
     public uint NumPoints
@@ -76,7 +78,7 @@ public class FrontendPolygonChunk : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) * 3 * NumPoints + sizeof(uint) * NumColours;
 
-    public FrontendPolygonChunk(BinaryReader br) : base((uint)ChunkIdentifier.Frontend_Polygon)
+    public FrontendPolygonChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         Version = br.ReadUInt32();
@@ -90,7 +92,7 @@ public class FrontendPolygonChunk : NamedChunk
             Colours.Add(br.ReadColor());
     }
 
-    public FrontendPolygonChunk(string name, uint version, uint translucency, IList<Vector3> points, IList<Color> colours) : base((uint)ChunkIdentifier.Frontend_Polygon)
+    public FrontendPolygonChunk(string name, uint version, uint translucency, IList<Vector3> points, IList<Color> colours) : base(ChunkID)
     {
         Name = name;
         Version = version;

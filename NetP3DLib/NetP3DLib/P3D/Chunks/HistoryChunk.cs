@@ -1,13 +1,15 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.History)]
+[ChunkAttributes(ChunkID)]
 public class HistoryChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.History;
+    
     public ushort NumHistory
     {
         get => (ushort)History.Count;
@@ -45,7 +47,7 @@ public class HistoryChunk : Chunk
     }
     public override uint DataLength => sizeof(ushort) + (uint)History.Sum(x => BinaryExtensions.GetP3DStringBytes(x).Length);
 
-    public HistoryChunk(BinaryReader br) : base((uint)ChunkIdentifier.History)
+    public HistoryChunk(BinaryReader br) : base(ChunkID)
     {
         ushort lineCount = br.ReadUInt16();
         History.Capacity = lineCount;
@@ -53,7 +55,7 @@ public class HistoryChunk : Chunk
             History.Add(br.ReadP3DString());
     }
 
-    public HistoryChunk(IList<string> history) : base((uint)ChunkIdentifier.History)
+    public HistoryChunk(IList<string> history) : base(ChunkID)
     {
         if (history.Any(x => x == null || x.Length > 255))
             throw new ArgumentException("All history lines must have a value, with a max length of 255 bytes.");

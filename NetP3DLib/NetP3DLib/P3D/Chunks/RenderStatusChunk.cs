@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Render_Status)]
+[ChunkAttributes(ChunkID)]
 public class RenderStatusChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Render_Status;
+    
     public uint CastShadow { get; set; }
 
     public override byte[] DataBytes
@@ -22,12 +24,12 @@ public class RenderStatusChunk : Chunk
     }
     public override uint DataLength => sizeof(uint);
 
-    public RenderStatusChunk(BinaryReader br) : base((uint)ChunkIdentifier.Render_Status)
+    public RenderStatusChunk(BinaryReader br) : base(ChunkID)
     {
         CastShadow = br.ReadUInt32();
     }
 
-    public RenderStatusChunk(uint castShadow) : base((uint)ChunkIdentifier.Render_Status)
+    public RenderStatusChunk(uint castShadow) : base(ChunkID)
     {
         CastShadow = castShadow;
     }

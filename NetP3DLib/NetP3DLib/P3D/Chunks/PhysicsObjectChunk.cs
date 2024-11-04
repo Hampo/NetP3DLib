@@ -5,9 +5,11 @@ using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Physics_Object)]
+[ChunkAttributes(ChunkID)]
 public class PhysicsObjectChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Physics_Object;
+    
     public uint Version { get; set; }
     public string MaterialName { get; set; }
     public uint NumJoints { get; set; }
@@ -32,7 +34,7 @@ public class PhysicsObjectChunk : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(MaterialName).Length + sizeof(uint) + sizeof(float) + sizeof(float);
 
-    public PhysicsObjectChunk(BinaryReader br) : base((uint)ChunkIdentifier.Physics_Object)
+    public PhysicsObjectChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         Version = br.ReadUInt32();
@@ -42,7 +44,7 @@ public class PhysicsObjectChunk : NamedChunk
         RestingSensitivity = br.ReadSingle();
     }
 
-    public PhysicsObjectChunk(string name, uint version, string materialName, uint numJoints, float volume, float restingSensitivity) : base((uint)ChunkIdentifier.Physics_Object)
+    public PhysicsObjectChunk(string name, uint version, string materialName, uint numJoints, float volume, float restingSensitivity) : base(ChunkID)
     {
         Name = name;
         Version = version;

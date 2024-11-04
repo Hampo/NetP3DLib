@@ -5,9 +5,11 @@ using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Follow_Camera_Data)]
+[ChunkAttributes(ChunkID)]
 public class FollowCameraDataChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Follow_Camera_Data;
+    
     public uint Index { get; set; }
     public float Rotation { get; set; }
     public float Elevation { get; set; }
@@ -31,7 +33,7 @@ public class FollowCameraDataChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(float) * 3;
 
-    public FollowCameraDataChunk(BinaryReader br) : base((uint)ChunkIdentifier.Follow_Camera_Data)
+    public FollowCameraDataChunk(BinaryReader br) : base(ChunkID)
     {
         Index = br.ReadUInt32();
         Rotation = br.ReadSingle();
@@ -40,7 +42,7 @@ public class FollowCameraDataChunk : Chunk
         TargetOffset = br.ReadVector3();
     }
 
-    public FollowCameraDataChunk(uint index, float rotation, float elevation, float magnitude, Vector3 targetOffset) : base((uint)ChunkIdentifier.Follow_Camera_Data)
+    public FollowCameraDataChunk(uint index, float rotation, float elevation, float magnitude, Vector3 targetOffset) : base(ChunkID)
     {
         Index = index;
         Rotation = rotation;

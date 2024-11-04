@@ -6,9 +6,11 @@ using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Entity_Channel)]
+[ChunkAttributes(ChunkID)]
 public class EntityChannelChunk : ParamChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Entity_Channel;
+    
     public uint Version { get; set; }
     public uint NumFrames
     {
@@ -74,7 +76,7 @@ public class EntityChannelChunk : ParamChunk
     }
     public override uint DataLength => sizeof(uint) + 4 + sizeof(uint) + sizeof(short) * NumValues + (uint)Values.Sum(x => BinaryExtensions.GetP3DStringBytes(x).Length);
 
-    public EntityChannelChunk(BinaryReader br) : base((uint)ChunkIdentifier.Entity_Channel)
+    public EntityChannelChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         Param = br.ReadFourCC();
@@ -87,7 +89,7 @@ public class EntityChannelChunk : ParamChunk
             Values.Add(br.ReadP3DString());
     }
 
-    public EntityChannelChunk(uint version, string param, IList<ushort> frames, IList<string> values) : base((uint)ChunkIdentifier.Entity_Channel)
+    public EntityChannelChunk(uint version, string param, IList<ushort> frames, IList<string> values) : base(ChunkID)
     {
         Version = version;
         Param = param;

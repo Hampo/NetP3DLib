@@ -5,9 +5,11 @@ using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Expression_Mixer)]
+[ChunkAttributes(ChunkID)]
 public class ExpressionMixerChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Expression_Mixer;
+    
     public uint Version { get; set; }
     public uint Type { get; set; }
     public string TargetName { get; set; }
@@ -30,7 +32,7 @@ public class ExpressionMixerChunk : NamedChunk
     }
     public override uint DataLength => sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(TargetName).Length + (uint)BinaryExtensions.GetP3DStringBytes(ExpressionGroupName).Length;
 
-    public ExpressionMixerChunk(BinaryReader br) : base((uint)ChunkIdentifier.Expression_Mixer)
+    public ExpressionMixerChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         Name = br.ReadP3DString();
@@ -39,7 +41,7 @@ public class ExpressionMixerChunk : NamedChunk
         ExpressionGroupName = br.ReadP3DString();
     }
 
-    public ExpressionMixerChunk(uint version, string name, uint type, string targetName, string expressionGroupName) : base((uint)ChunkIdentifier.Expression_Mixer)
+    public ExpressionMixerChunk(uint version, string name, uint type, string targetName, string expressionGroupName) : base(ChunkID)
     {
         Version = version;
         Name = name;

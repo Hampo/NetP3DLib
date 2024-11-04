@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Channel_Interpolation_Mode)]
+[ChunkAttributes(ChunkID)]
 public class ChannelInterpolationModeChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Channel_Interpolation_Mode;
+    
     public uint Version { get; set; }
     public uint Interpolate { get; set; }
 
@@ -24,13 +26,13 @@ public class ChannelInterpolationModeChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint);
 
-    public ChannelInterpolationModeChunk(BinaryReader br) : base((uint)ChunkIdentifier.Channel_Interpolation_Mode)
+    public ChannelInterpolationModeChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         Interpolate = br.ReadUInt32();
     }
 
-    public ChannelInterpolationModeChunk(uint version, uint interpolate) : base((uint)ChunkIdentifier.Channel_Interpolation_Mode)
+    public ChannelInterpolationModeChunk(uint version, uint interpolate) : base(ChunkID)
     {
         Version = version;
         Interpolate = interpolate;

@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Old_Scenegraph_Branch)]
+[ChunkAttributes(ChunkID)]
 public class OldScenegraphBranchChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Old_Scenegraph_Branch;
+    
     public uint NumChildren => (uint)Children.Count;
 
     public override byte[] DataBytes
@@ -24,13 +26,13 @@ public class OldScenegraphBranchChunk : NamedChunk
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public OldScenegraphBranchChunk(BinaryReader br) : base((uint)ChunkIdentifier.Old_Scenegraph_Branch)
+    public OldScenegraphBranchChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         var numChildren = br.ReadUInt32();
     }
 
-    public OldScenegraphBranchChunk(string name) : base((uint)ChunkIdentifier.Old_Scenegraph_Branch)
+    public OldScenegraphBranchChunk(string name) : base(ChunkID)
     {
         Name = name;
     }

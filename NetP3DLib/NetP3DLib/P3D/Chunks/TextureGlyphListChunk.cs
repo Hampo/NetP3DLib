@@ -6,9 +6,11 @@ using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Texture_Glyph_List)]
+[ChunkAttributes(ChunkID)]
 public class TextureGlyphListChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Texture_Glyph_List;
+    
     public uint NumGlyphs
     {
         get => (uint)Glyphs.Count;
@@ -46,7 +48,7 @@ public class TextureGlyphListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + (uint)Glyphs.Sum(x => x.DataBytes.Length);
 
-    public TextureGlyphListChunk(BinaryReader br) : base((uint)ChunkIdentifier.Texture_Glyph_List)
+    public TextureGlyphListChunk(BinaryReader br) : base(ChunkID)
     {
         var numGlyphs = br.ReadInt32();
         Glyphs.Capacity = numGlyphs;
@@ -54,7 +56,7 @@ public class TextureGlyphListChunk : Chunk
             Glyphs.Add(new(br));
     }
 
-    public TextureGlyphListChunk(IList<Glyph> glyphs) : base((uint)ChunkIdentifier.Texture_Glyph_List)
+    public TextureGlyphListChunk(IList<Glyph> glyphs) : base(ChunkID)
     {
         Glyphs.AddRange(glyphs);
     }

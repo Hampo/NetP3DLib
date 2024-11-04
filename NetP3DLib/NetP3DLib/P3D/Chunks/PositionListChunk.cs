@@ -5,9 +5,11 @@ using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Position_List)]
+[ChunkAttributes(ChunkID)]
 public class PositionListChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Position_List;
+    
     public uint NumPositions
     {
         get => (uint)Positions.Count;
@@ -45,7 +47,7 @@ public class PositionListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(float) * 3 * NumPositions;
 
-    public PositionListChunk(BinaryReader br) : base((uint)ChunkIdentifier.Position_List)
+    public PositionListChunk(BinaryReader br) : base(ChunkID)
     {
         var numPositions = br.ReadInt32();
         Positions.Capacity = numPositions;
@@ -53,7 +55,7 @@ public class PositionListChunk : Chunk
             Positions.Add(br.ReadVector3());
     }
 
-    public PositionListChunk(IList<Vector3> positions) : base((uint)ChunkIdentifier.Position_List)
+    public PositionListChunk(IList<Vector3> positions) : base(ChunkID)
     {
         Positions.AddRange(positions);
     }

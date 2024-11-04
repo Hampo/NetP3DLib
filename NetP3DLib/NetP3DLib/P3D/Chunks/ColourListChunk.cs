@@ -5,9 +5,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Colour_List)]
+[ChunkAttributes(ChunkID)]
 public class ColourListChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Colour_List;
+    
     public uint NumColours
     {
         get => (uint)Colours.Count;
@@ -45,7 +47,7 @@ public class ColourListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) * NumColours;
 
-    public ColourListChunk(BinaryReader br) : base((uint)ChunkIdentifier.Colour_List)
+    public ColourListChunk(BinaryReader br) : base(ChunkID)
     {
         var num = br.ReadInt32();
         Colours.Capacity = num;
@@ -53,7 +55,7 @@ public class ColourListChunk : Chunk
             Colours.Add(br.ReadColor());
     }
 
-    public ColourListChunk(IList<Color> colours) : base((uint)ChunkIdentifier.Colour_List)
+    public ColourListChunk(IList<Color> colours) : base(ChunkID)
     {
         Colours.AddRange(colours);
     }

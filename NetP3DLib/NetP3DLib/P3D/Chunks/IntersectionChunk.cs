@@ -5,9 +5,11 @@ using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Intersection)]
+[ChunkAttributes(ChunkID)]
 public class IntersectionChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Intersection;
+    
     public enum TrafficBehaviours : uint
     {
         NoStop,
@@ -34,7 +36,7 @@ public class IntersectionChunk : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(float) * 3 + sizeof(float) + sizeof(uint);
 
-    public IntersectionChunk(BinaryReader br) : base((uint)ChunkIdentifier.Intersection)
+    public IntersectionChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         Position = br.ReadVector3();
@@ -42,7 +44,7 @@ public class IntersectionChunk : NamedChunk
         TrafficBehaviour = (TrafficBehaviours)br.ReadUInt32();
     }
 
-    public IntersectionChunk(string name, Vector3 position, float radius, TrafficBehaviours trafficBehaviour) : base((uint)ChunkIdentifier.Intersection)
+    public IntersectionChunk(string name, Vector3 position, float radius, TrafficBehaviours trafficBehaviour) : base(ChunkID)
     {
         Name = name;
         Position = position;

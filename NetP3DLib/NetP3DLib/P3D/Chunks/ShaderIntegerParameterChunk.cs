@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Shader_Integer_Parameter)]
+[ChunkAttributes(ChunkID)]
 public class ShaderIntegerParameterChunk : ParamChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Shader_Integer_Parameter;
+    
     public uint Value { get; set; }
 
     public override byte[] DataBytes
@@ -23,13 +25,13 @@ public class ShaderIntegerParameterChunk : ParamChunk
     }
     public override uint DataLength => 4 + sizeof(uint);
 
-    public ShaderIntegerParameterChunk(BinaryReader br) : base((uint)ChunkIdentifier.Shader_Integer_Parameter)
+    public ShaderIntegerParameterChunk(BinaryReader br) : base(ChunkID)
     {
         Param = br.ReadFourCC();
         Value = br.ReadUInt32();
     }
 
-    public ShaderIntegerParameterChunk(string param, uint value) : base((uint)ChunkIdentifier.Shader_Integer_Parameter)
+    public ShaderIntegerParameterChunk(string param, uint value) : base(ChunkID)
     {
         Param = param;
         Value = value;

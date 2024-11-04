@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Light_Illumination_Type)]
+[ChunkAttributes(ChunkID)]
 public class LightIlluminationTypeChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Light_Illumination_Type;
+    
     public enum IlluminationTypes : uint
     {
         ZeroIlluminant = 1,
@@ -29,12 +31,12 @@ public class LightIlluminationTypeChunk : Chunk
     }
     public override uint DataLength => sizeof(uint);
 
-    public LightIlluminationTypeChunk(BinaryReader br) : base((uint)ChunkIdentifier.Light_Illumination_Type)
+    public LightIlluminationTypeChunk(BinaryReader br) : base(ChunkID)
     {
         IlluminationType = (IlluminationTypes)br.ReadUInt32();
     }
 
-    public LightIlluminationTypeChunk(IlluminationTypes illuminationType) : base((uint)ChunkIdentifier.Light_Illumination_Type)
+    public LightIlluminationTypeChunk(IlluminationTypes illuminationType) : base(ChunkID)
     {
         IlluminationType = illuminationType;
     }

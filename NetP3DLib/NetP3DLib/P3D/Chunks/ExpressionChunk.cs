@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Expression)]
+[ChunkAttributes(ChunkID)]
 public class ExpressionChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Expression;
+    
     public uint Version { get; set; }
     public uint NumKeys
     {
@@ -72,7 +74,7 @@ public class ExpressionChunk : NamedChunk
     }
     public override uint DataLength => sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(float) * NumKeys + sizeof(uint) * NumIndices;
 
-    public ExpressionChunk(BinaryReader br) : base((uint)ChunkIdentifier.Expression)
+    public ExpressionChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         Name = br.ReadP3DString();
@@ -85,7 +87,7 @@ public class ExpressionChunk : NamedChunk
             Indices.Add(br.ReadUInt32());
     }
 
-    public ExpressionChunk(uint version, string name, IList<float> keys, IList<uint> indices) : base((uint)ChunkIdentifier.Expression)
+    public ExpressionChunk(uint version, string name, IList<float> keys, IList<uint> indices) : base(ChunkID)
     {
         Version = version;
         Name = name;

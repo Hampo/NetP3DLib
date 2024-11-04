@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Sort_Order)]
+[ChunkAttributes(ChunkID)]
 public class SortOrderChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Sort_Order;
+    
     public uint Version { get; set; }
     public float SortOrder { get; set; }
 
@@ -24,13 +26,13 @@ public class SortOrderChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint);
 
-    public SortOrderChunk(BinaryReader br) : base((uint)ChunkIdentifier.Sort_Order)
+    public SortOrderChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         SortOrder = br.ReadSingle();
     }
 
-    public SortOrderChunk(uint version, float sortOrder) : base((uint)ChunkIdentifier.Sort_Order)
+    public SortOrderChunk(uint version, float sortOrder) : base(ChunkID)
     {
         Version = version;
         SortOrder = sortOrder;

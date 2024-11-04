@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Visibility_Anim_Channel)]
+[ChunkAttributes(ChunkID)]
 public class VisibilityAnimChannelChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Visibility_Anim_Channel;
+    
     public ushort StartState { get; set; }
     public uint NumFrames
     {
@@ -47,7 +49,7 @@ public class VisibilityAnimChannelChunk : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(ushort) + sizeof(uint) + sizeof(uint) * NumFrames;
 
-    public VisibilityAnimChannelChunk(BinaryReader br) : base((uint)ChunkIdentifier.Visibility_Anim_Channel)
+    public VisibilityAnimChannelChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         StartState = br.ReadUInt16();
@@ -57,7 +59,7 @@ public class VisibilityAnimChannelChunk : NamedChunk
             Frames.Add(br.ReadUInt32());
     }
 
-    public VisibilityAnimChannelChunk(string name, ushort startState, IList<uint> values) : base((uint)ChunkIdentifier.Visibility_Anim_Channel)
+    public VisibilityAnimChannelChunk(string name, ushort startState, IList<uint> values) : base(ChunkID)
     {
         Name = name;
         StartState = startState;

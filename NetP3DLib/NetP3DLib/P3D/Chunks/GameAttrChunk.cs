@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Game_Attr)]
+[ChunkAttributes(ChunkID)]
 public class GameAttrChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Game_Attr;
+    
     public uint Version { get; set; }
     public uint NumChildren => (uint)Children.Count;
 
@@ -26,14 +28,14 @@ public class GameAttrChunk : NamedChunk
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(uint);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public GameAttrChunk(BinaryReader br) : base((uint)ChunkIdentifier.Game_Attr)
+    public GameAttrChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         Version = br.ReadUInt32();
         var numChildren = br.ReadUInt32();
     }
 
-    public GameAttrChunk(string name, uint version) : base((uint)ChunkIdentifier.Game_Attr)
+    public GameAttrChunk(string name, uint version) : base(ChunkID)
     {
         Name = name;
         Version = version;

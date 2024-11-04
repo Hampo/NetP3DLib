@@ -4,9 +4,11 @@ using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Light_Direction)]
+[ChunkAttributes(ChunkID)]
 public class LightDirectionChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Light_Direction;
+    
     Vector3 Direction { get; set; }
 
     public override byte[] DataBytes
@@ -22,12 +24,12 @@ public class LightDirectionChunk : Chunk
     }
     public override uint DataLength => sizeof(float) * 3;
 
-    public LightDirectionChunk(BinaryReader br) : base((uint)ChunkIdentifier.Light_Direction)
+    public LightDirectionChunk(BinaryReader br) : base(ChunkID)
     {
         Direction = br.ReadVector3();
     }
 
-    public LightDirectionChunk(Vector3 direction) : base((uint)ChunkIdentifier.Light_Direction)
+    public LightDirectionChunk(Vector3 direction) : base(ChunkID)
     {
         Direction = direction;
     }

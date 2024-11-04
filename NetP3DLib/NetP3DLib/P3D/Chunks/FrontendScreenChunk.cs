@@ -5,9 +5,11 @@ using System.Linq;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Frontend_Screen)]
+[ChunkAttributes(ChunkID)]
 public class FrontendScreenChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Frontend_Screen;
+    
     public uint Version { get; set; }
     public uint NumPageNames
     {
@@ -48,7 +50,7 @@ public class FrontendScreenChunk : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(uint) + (uint)PageNames.Sum(x => BinaryExtensions.GetP3DStringBytes(x).Length);
 
-    public FrontendScreenChunk(BinaryReader br) : base((uint)ChunkIdentifier.Frontend_Screen)
+    public FrontendScreenChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         Version = br.ReadUInt32();
@@ -58,7 +60,7 @@ public class FrontendScreenChunk : NamedChunk
             PageNames.Add(br.ReadP3DString());
     }
 
-    public FrontendScreenChunk(string name, uint version, IList<string> pageNames) : base((uint)ChunkIdentifier.Frontend_Screen)
+    public FrontendScreenChunk(string name, uint version, IList<string> pageNames) : base(ChunkID)
     {
         Name = name;
         Version = version;

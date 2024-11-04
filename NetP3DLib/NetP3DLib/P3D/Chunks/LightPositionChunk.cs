@@ -4,9 +4,11 @@ using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Light_Position)]
+[ChunkAttributes(ChunkID)]
 public class LightPositionChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Light_Position;
+    
     public Vector3 Position;
 
     public override byte[] DataBytes
@@ -22,12 +24,12 @@ public class LightPositionChunk : Chunk
     }
     public override uint DataLength => sizeof(float) * 3;
 
-    public LightPositionChunk(BinaryReader br) : base((uint)ChunkIdentifier.Light_Position)
+    public LightPositionChunk(BinaryReader br) : base(ChunkID)
     {
         Position = br.ReadVector3();
     }
 
-    public LightPositionChunk(Vector3 position) : base((uint)ChunkIdentifier.Light_Position)
+    public LightPositionChunk(Vector3 position) : base(ChunkID)
     {
         Position = position;
     }

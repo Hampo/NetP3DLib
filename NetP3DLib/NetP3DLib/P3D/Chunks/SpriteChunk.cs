@@ -6,9 +6,11 @@ using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Sprite)]
+[ChunkAttributes(ChunkID)]
 public class SpriteChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Sprite;
+    
     public uint NativeX { get; set; }
     public uint NativeY { get; set; }
     public string Shader { get; set; }
@@ -38,7 +40,7 @@ public class SpriteChunk : NamedChunk
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Shader).Length + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public SpriteChunk(BinaryReader br) : base((uint)ChunkIdentifier.Sprite)
+    public SpriteChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         NativeX = br.ReadUInt32();
@@ -50,7 +52,7 @@ public class SpriteChunk : NamedChunk
         BlitBorder = br.ReadUInt32();
     }
 
-    public SpriteChunk(string name, uint nativeX, uint nativeY, string shader, uint imageWidth, uint imageHeight, uint blitBorder) : base((uint)ChunkIdentifier.Sprite)
+    public SpriteChunk(string name, uint nativeX, uint nativeY, string shader, uint imageWidth, uint imageHeight, uint blitBorder) : base(ChunkID)
     {
         Name = name;
         NativeX = nativeX;

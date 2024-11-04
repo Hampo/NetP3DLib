@@ -5,9 +5,11 @@ using System.Linq;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Skeleton_2)]
+[ChunkAttributes(ChunkID)]
 public class Skeleton2Chunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Skeleton_2;
+    
     public uint Version { get; set; }
     public uint NumJoints => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.Skeleton_Joint_2).Count();
     public uint NumPartitions => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.Skeleton_Partition).Count();
@@ -32,7 +34,7 @@ public class Skeleton2Chunk : NamedChunk
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public Skeleton2Chunk(BinaryReader br) : base((uint)ChunkIdentifier.Skeleton_2)
+    public Skeleton2Chunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         Version = br.ReadUInt32();
@@ -41,7 +43,7 @@ public class Skeleton2Chunk : NamedChunk
         NumLimbs = br.ReadUInt32();
     }
 
-    public Skeleton2Chunk(string name, uint version, uint numLimbs) : base((uint)ChunkIdentifier.Skeleton_2)
+    public Skeleton2Chunk(string name, uint version, uint numLimbs) : base(ChunkID)
     {
         Name = name;
         Version = version;

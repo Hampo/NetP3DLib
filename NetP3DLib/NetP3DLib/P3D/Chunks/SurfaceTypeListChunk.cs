@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Surface_Type_List)]
+[ChunkAttributes(ChunkID)]
 public class SurfaceTypeListChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Surface_Type_List;
+    
     public uint Version { get; set; }
     public uint NumTypes
     {
@@ -45,7 +47,7 @@ public class SurfaceTypeListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) + sizeof(byte) * NumTypes;
 
-    public SurfaceTypeListChunk(BinaryReader br) : base((uint)ChunkIdentifier.Surface_Type_List)
+    public SurfaceTypeListChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         var numTypes = br.ReadInt32();
@@ -53,7 +55,7 @@ public class SurfaceTypeListChunk : Chunk
         Types.AddRange(br.ReadBytes(numTypes));
     }
 
-    public SurfaceTypeListChunk(uint version, IList<byte> types) : base((uint)ChunkIdentifier.Surface_Type_List)
+    public SurfaceTypeListChunk(uint version, IList<byte> types) : base(ChunkID)
     {
         Version = version;
         Types.AddRange(types);

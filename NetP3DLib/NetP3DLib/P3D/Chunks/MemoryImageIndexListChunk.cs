@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Memory_Image_Index_List)]
+[ChunkAttributes(ChunkID)]
 public class MemoryImageIndexListChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Memory_Image_Index_List;
+    
     public uint Version { get; set; }
     public uint Param { get; set; }
     public uint NumIndices
@@ -48,7 +50,7 @@ public class MemoryImageIndexListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(ushort) * NumIndices;
 
-    public MemoryImageIndexListChunk(BinaryReader br) : base((uint)ChunkIdentifier.Memory_Image_Index_List)
+    public MemoryImageIndexListChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         Param = br.ReadUInt32();
@@ -58,7 +60,7 @@ public class MemoryImageIndexListChunk : Chunk
             Indices.Add(br.ReadUInt16());
     }
 
-    public MemoryImageIndexListChunk(uint version, uint param, IList<ushort> indices) : base((uint)ChunkIdentifier.Memory_Image_Index_List)
+    public MemoryImageIndexListChunk(uint version, uint param, IList<ushort> indices) : base(ChunkID)
     {
         Version = version;
         Param = param;

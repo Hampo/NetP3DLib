@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Volume_Image)]
+[ChunkAttributes(ChunkID)]
 public class VolumeImageChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Volume_Image;
+    
     public enum Formats
     {
         Raw = 0,
@@ -64,7 +66,7 @@ public class VolumeImageChunk : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint);
 
-    public VolumeImageChunk(BinaryReader br) : base((uint)ChunkIdentifier.Volume_Image)
+    public VolumeImageChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         Version = br.ReadUInt32();
@@ -77,7 +79,7 @@ public class VolumeImageChunk : NamedChunk
         Format = (Formats)br.ReadUInt32();
     }
 
-    public VolumeImageChunk(string name, uint version, uint width, uint height, uint depth, uint bpp, uint palettized, uint hasAlpha, Formats format) : base((uint)ChunkIdentifier.Volume_Image)
+    public VolumeImageChunk(string name, uint version, uint width, uint height, uint depth, uint bpp, uint palettized, uint hasAlpha, Formats format) : base(ChunkID)
     {
         Name = name;
         Version = version;

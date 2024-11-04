@@ -6,9 +6,11 @@ using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Old_Billboard_Quad_Group)]
+[ChunkAttributes(ChunkID)]
 public class OldBillboardQuadGroupChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Old_Billboard_Quad_Group;
+    
     public uint Version { get; set; }
     public string Shader { get; set; }
     public uint ZTest { get; set; }
@@ -36,7 +38,7 @@ public class OldBillboardQuadGroupChunk : NamedChunk
     public override uint DataLength => sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + (uint)BinaryExtensions.GetP3DStringBytes(Shader).Length + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public OldBillboardQuadGroupChunk(BinaryReader br) : base((uint)ChunkIdentifier.Old_Billboard_Quad_Group)
+    public OldBillboardQuadGroupChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         Name = br.ReadP3DString();
@@ -47,7 +49,7 @@ public class OldBillboardQuadGroupChunk : NamedChunk
         var numQuads = br.ReadUInt32();
     }
 
-    public OldBillboardQuadGroupChunk(uint version, string name, string shader, uint zTest, uint zWrite, uint fog) : base((uint)ChunkIdentifier.Old_Billboard_Quad_Group)
+    public OldBillboardQuadGroupChunk(uint version, string name, string shader, uint zTest, uint zWrite, uint fog) : base(ChunkID)
     {
         Version = version;
         Name = name;

@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Index_List)]
+[ChunkAttributes(ChunkID)]
 public class IndexListChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Index_List;
+    
     public uint NumIndices
     {
         get => (uint)Indices.Count;
@@ -44,7 +46,7 @@ public class IndexListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) * NumIndices;
 
-    public IndexListChunk(BinaryReader br) : base((uint)ChunkIdentifier.Index_List)
+    public IndexListChunk(BinaryReader br) : base(ChunkID)
     {
         var num = br.ReadInt32();
         Indices.Capacity = num;
@@ -52,7 +54,7 @@ public class IndexListChunk : Chunk
             Indices.Add(br.ReadUInt32());
     }
 
-    public IndexListChunk(IList<uint> indices) : base((uint)ChunkIdentifier.Index_List)
+    public IndexListChunk(IList<uint> indices) : base(ChunkID)
     {
         Indices.AddRange(indices);
     }

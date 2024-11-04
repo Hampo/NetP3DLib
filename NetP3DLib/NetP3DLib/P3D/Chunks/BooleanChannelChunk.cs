@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Boolean_Channel)]
+[ChunkAttributes(ChunkID)]
 public class BooleanChannelChunk : ParamChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Boolean_Channel;
+    
     public uint Version { get; set; }
     public ushort StartState { get; set; }
     public uint NumValues
@@ -49,7 +51,7 @@ public class BooleanChannelChunk : ParamChunk
     }
     public override uint DataLength => sizeof(uint) + 4 + sizeof(ushort) + sizeof(uint) + sizeof(ushort) * NumValues;
 
-    public BooleanChannelChunk(BinaryReader br) : base((uint)ChunkIdentifier.Boolean_Channel)
+    public BooleanChannelChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         Param = br.ReadFourCC();
@@ -60,7 +62,7 @@ public class BooleanChannelChunk : ParamChunk
             Values.Add(br.ReadUInt16());
     }
 
-    public BooleanChannelChunk(uint version, string param, ushort startState, IList<ushort> values) : base((uint)ChunkIdentifier.Boolean_Channel)
+    public BooleanChannelChunk(uint version, string param, ushort startState, IList<ushort> values) : base(ChunkID)
     {
         Version = version;
         Param = param;

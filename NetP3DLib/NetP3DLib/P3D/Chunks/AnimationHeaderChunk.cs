@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Animation_Header)]
+[ChunkAttributes(ChunkID)]
 public class AnimationHeaderChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Animation_Header;
+    
     public uint Version { get; set; }
     public uint NumGroups { get; set; }
 
@@ -24,13 +26,13 @@ public class AnimationHeaderChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint);
 
-    public AnimationHeaderChunk(BinaryReader br) : base((uint)ChunkIdentifier.Animation_Header)
+    public AnimationHeaderChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         NumGroups = br.ReadUInt32();
     }
 
-    public AnimationHeaderChunk(uint version, uint numGroups) : base((uint)ChunkIdentifier.Animation_Header)
+    public AnimationHeaderChunk(uint version, uint numGroups) : base(ChunkID)
     {
         Version = version;
         NumGroups = numGroups;

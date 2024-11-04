@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.World_Collision_Object)]
+[ChunkAttributes(ChunkID)]
 public class WorldCollisionObjectChunk : NamedChunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.World_Collision_Object;
+    
     public uint Version { get; set; }
 
     public override byte[] DataBytes
@@ -23,13 +25,13 @@ public class WorldCollisionObjectChunk : NamedChunk
     }
     public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(uint);
 
-    public WorldCollisionObjectChunk(BinaryReader br) : base((uint)ChunkIdentifier.World_Collision_Object)
+    public WorldCollisionObjectChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         Version = br.ReadUInt32();
     }
 
-    public WorldCollisionObjectChunk(string name, uint version) : base((uint)ChunkIdentifier.World_Collision_Object)
+    public WorldCollisionObjectChunk(string name, uint version) : base(ChunkID)
     {
         Name = name;
         Version = version;

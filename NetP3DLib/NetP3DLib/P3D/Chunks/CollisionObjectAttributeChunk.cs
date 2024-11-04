@@ -4,9 +4,11 @@ using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Collision_Object_Attribute)]
+[ChunkAttributes(ChunkID)]
 public class CollisionObjectAttributeChunk : Chunk
 {
+    public const uint ChunkID = (uint)ChunkIdentifier.Collision_Object_Attribute;
+    
     public ushort StaticAttribute { get; set; }
     public uint DefaultArea { get; set; }
     public ushort CanRoll { get; set; }
@@ -38,7 +40,7 @@ public class CollisionObjectAttributeChunk : Chunk
     }
     public override uint DataLength => sizeof(ushort) + sizeof(uint) + sizeof(ushort) + sizeof(ushort) + sizeof(ushort) + sizeof(ushort) + sizeof(uint) + sizeof(uint) + sizeof(uint);
 
-    public CollisionObjectAttributeChunk(BinaryReader br) : base((uint)ChunkIdentifier.Collision_Object_Attribute)
+    public CollisionObjectAttributeChunk(BinaryReader br) : base(ChunkID)
     {
         StaticAttribute = br.ReadUInt16();
         DefaultArea = br.ReadUInt32();
@@ -51,7 +53,7 @@ public class CollisionObjectAttributeChunk : Chunk
         ExtraAttribute3 = br.ReadUInt32();
     }
 
-    public CollisionObjectAttributeChunk(ushort staticAttribute, uint defaultArea, ushort canRoll, ushort canSlide, ushort canSpin, ushort canBounce, uint extraAttribute1, uint extraAttribute2, uint extraAttribute3) : base((uint)ChunkIdentifier.Collision_Object_Attribute)
+    public CollisionObjectAttributeChunk(ushort staticAttribute, uint defaultArea, ushort canRoll, ushort canSlide, ushort canSpin, ushort canBounce, uint extraAttribute1, uint extraAttribute2, uint extraAttribute3) : base(ChunkID)
     {
         StaticAttribute = staticAttribute;
         DefaultArea = defaultArea;
