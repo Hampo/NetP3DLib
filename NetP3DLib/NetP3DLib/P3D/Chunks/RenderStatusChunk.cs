@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class RenderStatusChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Render_Status;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Render_Status;
     
     public uint CastShadow { get; set; }
 

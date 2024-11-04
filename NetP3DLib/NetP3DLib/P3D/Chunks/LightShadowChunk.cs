@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class LightShadowChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Light_Shadow;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Light_Shadow;
     
     public uint Shadow { get; set; }
 

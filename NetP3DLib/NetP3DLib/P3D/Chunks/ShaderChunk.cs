@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class ShaderChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Shader;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Shader;
     
     public uint Version { get; set; }
     public string PddiShaderName { get; set; }

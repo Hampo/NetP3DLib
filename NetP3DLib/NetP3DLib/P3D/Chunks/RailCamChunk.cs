@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class RailCamChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Rail_Cam;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Rail_Cam;
     
     public enum Behaviours : uint
     {

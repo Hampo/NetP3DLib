@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class BoundingBoxChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Bounding_Box;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Bounding_Box;
     
     public Vector3 Low { get; set; }
     public Vector3 High { get; set; }

@@ -9,7 +9,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class TextureGlyphListChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Texture_Glyph_List;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Texture_Glyph_List;
     
     public uint NumGlyphs
     {

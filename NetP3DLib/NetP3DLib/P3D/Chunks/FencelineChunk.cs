@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class FencelineChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Fenceline;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Fenceline;
     
     public uint NumWalls => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.Wall).Count();
 

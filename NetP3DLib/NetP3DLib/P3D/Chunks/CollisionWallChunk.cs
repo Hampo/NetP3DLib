@@ -5,7 +5,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class CollisionWallChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Collision_Wall;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Collision_Wall;
     
     public override byte[] DataBytes
     {

@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class PhysicsInertiaMatrixChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Physics_Inertia_Matrix;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Physics_Inertia_Matrix;
     
     public SymmetricMatrix3x3 Matrix { get; set; }
 

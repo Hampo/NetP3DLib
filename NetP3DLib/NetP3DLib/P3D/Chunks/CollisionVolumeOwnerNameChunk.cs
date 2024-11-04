@@ -6,7 +6,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class CollisionVolumeOwnerNameChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Collision_Volume_Owner_Name;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Collision_Volume_Owner_Name;
     
     public override byte[] DataBytes
     {

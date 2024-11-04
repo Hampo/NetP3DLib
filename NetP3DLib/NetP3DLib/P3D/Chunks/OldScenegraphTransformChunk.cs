@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class OldScenegraphTransformChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Old_Scenegraph_Transform;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Scenegraph_Transform;
     
     public uint NumChildren => (uint)Children.Count;
     public Matrix4x4 Transform { get; set; }

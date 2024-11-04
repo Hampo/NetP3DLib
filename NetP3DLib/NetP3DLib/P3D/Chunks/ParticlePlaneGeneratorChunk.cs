@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class ParticlePlaneGeneratorChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Particle_Plane_Generator;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Particle_Plane_Generator;
     
     public uint Version { get; set; }
     public float Width { get; set; }

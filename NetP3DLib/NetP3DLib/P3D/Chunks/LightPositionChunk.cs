@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class LightPositionChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Light_Position;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Light_Position;
     
     public Vector3 Position;
 

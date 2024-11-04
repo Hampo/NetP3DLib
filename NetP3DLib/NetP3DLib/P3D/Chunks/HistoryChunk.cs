@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class HistoryChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.History;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.History;
     
     public ushort NumHistory
     {

@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class MultiControllerChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Multi_Controller;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Multi_Controller;
     
     public uint Version { get; set; }
     public float Length { get; set; }

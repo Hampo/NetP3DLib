@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class CompositeDrawableSkinChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Composite_Drawable_Skin;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Composite_Drawable_Skin;
     
     public uint IsTranslucent { get; set; }
 

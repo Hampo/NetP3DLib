@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class OldScenegraphLightGroupChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Old_Scenegraph_Light_Group;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Scenegraph_Light_Group;
     
     public string LightGroupName { get; set; }
 

@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class PhysicsJointChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Physics_Joint;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Physics_Joint;
     
     public uint Index { get; set; }
     public float Volume { get; set; }

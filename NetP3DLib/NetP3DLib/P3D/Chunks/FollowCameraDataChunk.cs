@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class FollowCameraDataChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Follow_Camera_Data;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Follow_Camera_Data;
     
     public uint Index { get; set; }
     public float Rotation { get; set; }

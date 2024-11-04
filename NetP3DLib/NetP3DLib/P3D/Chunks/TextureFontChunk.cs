@@ -9,7 +9,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class TextureFontChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Texture_Font;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Texture_Font;
     
     public uint Version { get; set; }
     public string Shader { get; set; }

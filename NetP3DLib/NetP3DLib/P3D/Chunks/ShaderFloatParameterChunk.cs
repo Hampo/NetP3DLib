@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class ShaderFloatParameterChunk : ParamChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Shader_Float_Parameter;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Shader_Float_Parameter;
     
     public float Value { get; set; }
 

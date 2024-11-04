@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class MeshStatsChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Mesh_Stats;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Mesh_Stats;
     
     public uint Version { get; set; }
     public uint IsRendered { get; set; }

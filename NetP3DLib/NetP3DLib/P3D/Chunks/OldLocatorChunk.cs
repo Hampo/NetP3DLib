@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class OldLocatorChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Old_Locator;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Locator;
     
     public uint Version { get; set; }
     public Vector3 Position { get; set; }

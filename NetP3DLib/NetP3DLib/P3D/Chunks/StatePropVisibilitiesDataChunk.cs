@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class StatePropVisibilitiesDataChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.State_Prop_Visibilities_Data;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.State_Prop_Visibilities_Data;
     
     public uint IsVisible { get; set; }
 

@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class SkeletonJointBonePreserveChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Skeleton_Joint_Bone_Preserve;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Skeleton_Joint_Bone_Preserve;
     
     public uint PreserveBoneLengths { get; set; }
 

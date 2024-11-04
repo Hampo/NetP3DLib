@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class ChannelInterpolationModeChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Channel_Interpolation_Mode;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Channel_Interpolation_Mode;
     
     public uint Version { get; set; }
     public uint Interpolate { get; set; }

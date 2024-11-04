@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class CollisionAxisAlignedBoundingBoxChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Collision_Axis_Aligned_Bounding_Box;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Collision_Axis_Aligned_Bounding_Box;
     
     public uint Nothing { get; set; }
 

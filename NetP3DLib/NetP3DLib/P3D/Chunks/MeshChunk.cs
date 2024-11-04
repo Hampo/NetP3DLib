@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class MeshChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Mesh;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Mesh;
     
     public uint Version { get; set; }
     public uint NumOldPrimitiveGroups => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.Old_Primitive_Group).Count();

@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class ExportInfoNamedIntegerChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Export_Info_Named_Integer;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Export_Info_Named_Integer;
     
     public uint Value { get; set; }
 

@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class MatrixListChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Matrix_List;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Matrix_List;
     
     public uint NumMatrices
     {

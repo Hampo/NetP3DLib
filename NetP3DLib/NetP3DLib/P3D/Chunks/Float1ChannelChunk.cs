@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class Float1ChannelChunk : ParamChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Float_1_Channel;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Float_1_Channel;
     
     public uint Version { get; set; }
     public uint NumFrames

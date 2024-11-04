@@ -68,6 +68,12 @@ public abstract class Chunk
     }
 
     /// <summary>
+    /// This constructor initialises an unknown chunk with the given <paramref name="chunkId"/>.
+    /// </summary>
+    /// <param name="chunkId">The chunk's identifier. See <seealso cref="ChunkIdentifier"/> for known identifiers.</param>
+    internal Chunk(ChunkIdentifier chunkId) : this((uint)chunkId) { }
+
+    /// <summary>
     /// Runs validation on this chunk and all <see cref="Children"/>. Throws an exception if any invalid data is found.
     /// </summary>
     /// <exception cref="System.IO.InvalidDataException">

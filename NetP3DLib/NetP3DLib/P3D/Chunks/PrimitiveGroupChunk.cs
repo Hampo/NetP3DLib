@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class PrimitiveGroupChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Primitive_Group;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Primitive_Group;
     
     public enum PrimitiveTypes : uint
     {

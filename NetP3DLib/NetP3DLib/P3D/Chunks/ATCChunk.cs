@@ -9,7 +9,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class ATCChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.ATC;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.ATC;
     
     public uint NumEntries
     {

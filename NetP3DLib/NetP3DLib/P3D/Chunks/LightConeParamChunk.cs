@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class LightConeParamChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Light_Cone_Param;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Light_Cone_Param;
     
     public float Phi { get; set; }
     public float Theta { get; set; }

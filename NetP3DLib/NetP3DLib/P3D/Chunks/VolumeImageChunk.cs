@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class VolumeImageChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Volume_Image;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Volume_Image;
     
     public enum Formats
     {

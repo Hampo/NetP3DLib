@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class ShaderColourParameterChunk : ParamChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Shader_Colour_Parameter;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Shader_Colour_Parameter;
     
     public Color Value { get; set; }
 

@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class InstStatPhysChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Inst_Stat_Phys;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Inst_Stat_Phys;
     
     public uint Version { get; set; }
     public uint HasAlpha { get; set; }

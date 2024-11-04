@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class BillboardQuadChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Billboard_Quad;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Billboard_Quad;
     
     public uint Version { get; set; }
     public uint CutOffEnabled { get; set; }

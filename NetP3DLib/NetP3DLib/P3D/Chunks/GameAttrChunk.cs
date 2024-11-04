@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class GameAttrChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Game_Attr;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Game_Attr;
     
     public uint Version { get; set; }
     public uint NumChildren => (uint)Children.Count;

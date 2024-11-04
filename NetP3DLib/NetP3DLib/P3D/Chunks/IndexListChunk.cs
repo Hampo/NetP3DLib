@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class IndexListChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Index_List;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Index_List;
     
     public uint NumIndices
     {

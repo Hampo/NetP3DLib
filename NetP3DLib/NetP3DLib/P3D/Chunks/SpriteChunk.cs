@@ -9,7 +9,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class SpriteChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Sprite;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Sprite;
     
     public uint NativeX { get; set; }
     public uint NativeY { get; set; }

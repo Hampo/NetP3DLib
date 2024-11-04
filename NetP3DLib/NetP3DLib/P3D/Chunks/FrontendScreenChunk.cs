@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class FrontendScreenChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Frontend_Screen;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Frontend_Screen;
     
     public uint Version { get; set; }
     public uint NumPageNames

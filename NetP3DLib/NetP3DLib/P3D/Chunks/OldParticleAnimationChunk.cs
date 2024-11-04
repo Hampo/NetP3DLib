@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class OldParticleAnimationChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Old_Particle_Animation;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Particle_Animation;
     
     public uint Version { get; set; }
 

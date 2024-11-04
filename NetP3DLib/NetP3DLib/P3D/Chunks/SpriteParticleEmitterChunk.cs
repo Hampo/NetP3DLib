@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class SpriteParticleEmitterChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Sprite_Particle_Emitter;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Sprite_Particle_Emitter;
     
     public uint Version { get; set; }
     public string ShaderName { get; set; }

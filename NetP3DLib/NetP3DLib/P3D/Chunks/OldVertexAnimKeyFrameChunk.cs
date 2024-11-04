@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class OldVertexAnimKeyFrameChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Old_Vertex_Anim_Key_Frame;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Vertex_Anim_Key_Frame;
     
     public uint Version { get; set; }
 

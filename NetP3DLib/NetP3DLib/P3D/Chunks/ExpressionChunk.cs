@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class ExpressionChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Expression;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Expression;
     
     public uint Version { get; set; }
     public uint NumKeys

@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class MultiControllerTrackChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Multi_Controller_Track;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Multi_Controller_Track;
     
     public uint Version { get; set; }
     public string Type { get; set; }

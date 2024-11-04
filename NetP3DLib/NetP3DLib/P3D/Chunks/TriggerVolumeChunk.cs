@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class TriggerVolumeChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Trigger_Volume;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Trigger_Volume;
     
     public uint IsRect { get; set; }
     public Vector3 HalfExtents { get; set; }

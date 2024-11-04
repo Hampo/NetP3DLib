@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class TextureChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Texture;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Texture;
     
     public uint Version { get; set; }
     public uint Width { get; set; }

@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class IntersectChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Intersect;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Intersect;
     
     public uint NumIndices
     {

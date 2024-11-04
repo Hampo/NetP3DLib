@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class OldExpressionOffsetsChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Old_Expression_Offsets;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Expression_Offsets;
     
     public uint NumPrimitiveGroups
     {

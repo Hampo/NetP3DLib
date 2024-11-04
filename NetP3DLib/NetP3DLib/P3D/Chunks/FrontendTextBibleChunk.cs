@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class FrontendTextBibleChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Frontend_Text_Bible;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Frontend_Text_Bible;
     
     public uint NumLanguages => (uint)Languages.Length;
     public string Languages => string.Concat(GetChunksOfType<FrontendLanguageChunk>().Select(x => x.Language));

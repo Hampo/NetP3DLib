@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class OldFrameControllerChunk2 : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Old_Frame_Controller_2;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Frame_Controller_2;
     
     public enum Types
     {

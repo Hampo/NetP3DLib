@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class StaticEntityChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Static_Entity;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Static_Entity;
     
     public uint Version { get; set; }
     public uint HasAlpha { get; set; }

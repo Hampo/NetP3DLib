@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class ImageFontChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Image_Font;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Image_Font;
     
     public uint Version { get; set; }
     public float FontSize { get; set; }

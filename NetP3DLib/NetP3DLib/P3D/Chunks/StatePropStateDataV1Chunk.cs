@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class StatePropStateDataV1Chunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.State_Prop_State_Data_V1;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.State_Prop_State_Data_V1;
     
     public uint AutoTransition { get; set; }
     public uint OutState { get; set; }

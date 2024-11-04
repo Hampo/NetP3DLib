@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class FrontendStringTextBibleChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Frontend_String_Text_Bible;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Frontend_String_Text_Bible;
     
     public string BibleName { get; set; }
     public string StringID { get; set; }

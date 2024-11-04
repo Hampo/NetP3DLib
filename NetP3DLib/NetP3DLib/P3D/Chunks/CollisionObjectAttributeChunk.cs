@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class CollisionObjectAttributeChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Collision_Object_Attribute;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Collision_Object_Attribute;
     
     public ushort StaticAttribute { get; set; }
     public uint DefaultArea { get; set; }

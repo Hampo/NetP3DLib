@@ -6,7 +6,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class ExportInfoChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Export_Info;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Export_Info;
     
     public override byte[] DataBytes
     {

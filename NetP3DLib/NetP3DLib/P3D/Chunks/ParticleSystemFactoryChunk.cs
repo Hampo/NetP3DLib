@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class ParticleSystemFactoryChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Particle_System_Factory;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Particle_System_Factory;
     
     public uint Version { get; set; }
     public float FrameRate { get; set; }

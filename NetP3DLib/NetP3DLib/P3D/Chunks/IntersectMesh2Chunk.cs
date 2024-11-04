@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class IntersectMesh2Chunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Intersect_Mesh_2;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Intersect_Mesh_2;
     
     public uint SurfaceType { get; set; }
 

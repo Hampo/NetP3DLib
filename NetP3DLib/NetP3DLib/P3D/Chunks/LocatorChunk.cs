@@ -10,7 +10,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class LocatorChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Locator;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Locator;
     
     public uint LocatorType => TypeData.LocatorType;
     public uint DataLen => TypeData.DataLen;

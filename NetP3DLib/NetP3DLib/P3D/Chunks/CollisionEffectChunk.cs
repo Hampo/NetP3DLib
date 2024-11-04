@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class CollisionEffectChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Collision_Effect;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Collision_Effect;
     
     public enum ClassTypes
     {

@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class IntersectionChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Intersection;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Intersection;
     
     public enum TrafficBehaviours : uint
     {

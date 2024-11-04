@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class WorldSphereChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.World_Sphere;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.World_Sphere;
     
     public uint Version { get; set; }
     public uint NumMeshes => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.Mesh).Count();

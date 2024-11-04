@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class RoadSegmentChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Road_Segment;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Road_Segment;
     
     public string RoadDataSegment { get; set; }
     public Matrix4x4 Transform { get; set; }

@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class OldBillboardDisplayInfoChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Old_Billboard_Display_Info;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Billboard_Display_Info;
     
     public uint Version { get; set; }
     public Vector4 Rotation { get; set; }

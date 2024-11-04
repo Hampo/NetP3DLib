@@ -9,7 +9,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class CompositeDrawable2Chunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Composite_Drawable_2;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Composite_Drawable_2;
     
     public uint Version { get; set; }
     public string SkeletonName { get; set; }

@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class AnimationSyncFrameChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Animation_Sync_Frame;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Animation_Sync_Frame;
     
     public uint Version { get; set; }
     public float SyncFrame { get; set; }

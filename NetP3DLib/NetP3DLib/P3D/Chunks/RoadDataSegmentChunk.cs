@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class RoadDataSegmentChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Road_Data_Segment;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Road_Data_Segment;
     
     public uint Type { get; set; }
     public uint Lanes { get; set; }

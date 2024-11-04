@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class FrontendTextStyleResourceChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Frontend_Text_Style_Resource;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Frontend_Text_Style_Resource;
     
     public uint Version { get; set; }
     public string Filename { get; set; }

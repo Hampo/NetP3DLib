@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class CompositeDrawablePrimitiveChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Composite_Drawable_Primitive;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Composite_Drawable_Primitive;
     
     public uint Version { get; set; }
     public uint CreateInstance { get; set; }

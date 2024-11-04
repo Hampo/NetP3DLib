@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class PathChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Path;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Path;
     
     public uint NumPositions
     {

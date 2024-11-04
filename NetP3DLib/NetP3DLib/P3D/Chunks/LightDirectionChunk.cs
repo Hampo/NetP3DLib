@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class LightDirectionChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Light_Direction;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Light_Direction;
     
     Vector3 Direction { get; set; }
 

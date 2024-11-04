@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class PhysicsObjectChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Physics_Object;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Physics_Object;
     
     public uint Version { get; set; }
     public string MaterialName { get; set; }

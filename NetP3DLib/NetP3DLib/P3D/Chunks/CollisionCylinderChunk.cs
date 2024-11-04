@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class CollisionCylinderChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Collision_Cylinder;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Collision_Cylinder;
     
     public float Radius { get; set; }
     public float HalfLength { get; set; }

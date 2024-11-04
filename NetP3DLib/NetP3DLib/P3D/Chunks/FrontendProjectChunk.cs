@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class FrontendProjectChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Frontend_Project;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Frontend_Project;
     
     public uint Version { get; set; }
     public uint ResolutionX { get; set; }

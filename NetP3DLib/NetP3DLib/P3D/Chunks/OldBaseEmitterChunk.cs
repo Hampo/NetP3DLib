@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class OldBaseEmitterChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Old_Base_Emitter;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Base_Emitter;
     
     public uint Version { get; set; }
     public string ParticleType { get; set; }

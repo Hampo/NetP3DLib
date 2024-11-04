@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class AnimatedObjectFactoryChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Animated_Object_Factory;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Animated_Object_Factory;
     
     public uint Version { get; set; }
     public string BaseAnimation { get; set; }

@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class TopologyChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Topology;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Topology;
     
     public uint NumTopology
     {

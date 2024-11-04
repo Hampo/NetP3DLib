@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class BillboardTransformChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Billboard_Transform;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Billboard_Transform;
     
     public uint Version { get; set; }
     public Quaternion Rotation { get; set; }

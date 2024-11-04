@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class SmartPropChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Smart_Prop;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Smart_Prop;
     
     public uint Version { get; set; }
     public string ObjectFactoryName { get; set; }

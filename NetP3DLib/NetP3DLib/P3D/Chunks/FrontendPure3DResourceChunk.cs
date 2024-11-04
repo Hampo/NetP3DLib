@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class FrontendPure3DResourceChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Frontend_Pure3D_Resource;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Frontend_Pure3D_Resource;
     
     public uint Version { get; set; }
     public string Filename { get; set; }

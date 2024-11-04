@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class SkeletonJointMirrorMapChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Skeleton_Joint_Mirror_Map;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Skeleton_Joint_Mirror_Map;
     
     public uint MappedJointIndex { get; set; }
     public float XAxisMap { get; set; }

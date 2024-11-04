@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class VertexCompressionHintChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Vertex_Compression_Hint;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Vertex_Compression_Hint;
     
     public uint Version { get; set; }
     public uint UV0Size { get; set; }

@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class ColourListChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Colour_List;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Colour_List;
     
     public uint NumColours
     {

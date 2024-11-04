@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class AnimationGroupListChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Animation_Group_List;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Animation_Group_List;
     
     public uint Version { get; set; }
     public uint NumGroups => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.Animation_Group).Count();

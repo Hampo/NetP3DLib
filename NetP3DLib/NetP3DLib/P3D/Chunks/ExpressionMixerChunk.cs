@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class ExpressionMixerChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Expression_Mixer;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Expression_Mixer;
     
     public uint Version { get; set; }
     public uint Type { get; set; }

@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class BreakableObjectChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Breakable_Object;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Breakable_Object;
     
     public enum Indexes : int
     {

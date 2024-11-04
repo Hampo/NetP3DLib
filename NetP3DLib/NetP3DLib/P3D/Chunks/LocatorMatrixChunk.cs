@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class LocatorMatrixChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Locator_Matrix;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Locator_Matrix;
     
     public Matrix4x4 Matrix { get; set; }
 

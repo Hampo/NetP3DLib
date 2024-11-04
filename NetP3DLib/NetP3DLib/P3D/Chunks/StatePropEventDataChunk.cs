@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class StatePropEventDataChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.State_Prop_Event_Data;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.State_Prop_Event_Data;
     
     public enum Events : uint
     {

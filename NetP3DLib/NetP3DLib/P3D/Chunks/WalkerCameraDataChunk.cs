@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class WalkerCameraDataChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Walker_Camera_Data;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Walker_Camera_Data;
     
     public uint Index { get; set; }
     public float MinMagnitude { get; set; }

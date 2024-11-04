@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class IntersectMeshChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Intersect_Mesh;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Intersect_Mesh;
     
     public uint NumMeshes => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.Intersect_Mesh_2).Count();
 

@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class BooleanChannelChunk : ParamChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Boolean_Channel;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Boolean_Channel;
     
     public uint Version { get; set; }
     public ushort StartState { get; set; }

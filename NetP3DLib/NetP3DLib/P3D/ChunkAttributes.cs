@@ -11,4 +11,6 @@ public class ChunkAttributes : Attribute
     {
         Identifier = identifier;
     }
+
+    public ChunkAttributes(ChunkIdentifier identifier) : this((uint)identifier) { }
 }

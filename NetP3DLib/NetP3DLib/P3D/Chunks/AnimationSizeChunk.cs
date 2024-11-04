@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class AnimationSizeChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Animation_Size;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Animation_Size;
     
     public uint Version { get; set; }
     public uint PC { get; set; }

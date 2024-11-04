@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class SurfaceTypeListChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Surface_Type_List;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Surface_Type_List;
     
     public uint Version { get; set; }
     public uint NumTypes

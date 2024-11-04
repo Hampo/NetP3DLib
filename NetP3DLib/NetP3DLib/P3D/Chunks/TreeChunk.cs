@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class TreeChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Tree;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Tree;
     
     public uint NumChildren => (uint)Children.Count;
     public Vector3 Minimum { get; set; }

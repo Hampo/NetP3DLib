@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class OldBillboardPerspectiveInfoChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Old_Billboard_Perspective_Info;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Billboard_Perspective_Info;
     
     public uint Version { get; set; }
     public uint Perspective { get; set; }

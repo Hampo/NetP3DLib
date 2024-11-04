@@ -9,6 +9,8 @@ public abstract class NamedChunk : Chunk
 
     public NamedChunk(uint ID) : base(ID) { }
 
+    public NamedChunk(ChunkIdentifier ID) : base(ID) { }
+
     public override void Validate()
     {
         if (Name == null)

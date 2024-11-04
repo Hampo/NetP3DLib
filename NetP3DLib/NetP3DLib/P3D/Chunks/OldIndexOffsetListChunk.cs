@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class OldIndexOffsetListChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Old_Index_Offset_List;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Index_Offset_List;
     
     public uint Version { get; set; }
     public uint NumOffsets

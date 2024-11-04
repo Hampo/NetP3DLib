@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class WeightListChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Weight_List;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Weight_List;
     
     public uint NumWeights
     {

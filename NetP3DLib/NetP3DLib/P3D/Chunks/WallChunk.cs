@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class WallChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Wall;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Wall;
     
     public Vector3 Start { get; set; }
     public Vector3 End { get; set; }

@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class PackedNormalListChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Packed_Normal_List;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Packed_Normal_List;
     
     public uint NumNormals
     {

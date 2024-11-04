@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class AnimDynaPhysWrapperChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Anim_Dyna_Phys_Wrapper;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Anim_Dyna_Phys_Wrapper;
     
     public uint Version { get; set; }
     public uint HasAlpha { get; set; }

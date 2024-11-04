@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class LightChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Light;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Light;
     
     public enum Types : uint
     {

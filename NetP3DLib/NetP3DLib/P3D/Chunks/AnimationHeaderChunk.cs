@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class AnimationHeaderChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Animation_Header;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Animation_Header;
     
     public uint Version { get; set; }
     public uint NumGroups { get; set; }

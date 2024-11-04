@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class CollisionMetaDataVectorChannelChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Collision_Meta_Data_Vector_Channel;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Collision_Meta_Data_Vector_Channel;
     
     public uint Version { get; set; }
     public uint NumIndices

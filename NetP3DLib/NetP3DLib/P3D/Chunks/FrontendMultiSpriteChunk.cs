@@ -9,7 +9,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class FrontendMultiSpriteChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Frontend_Multi_Sprite;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Frontend_Multi_Sprite;
     
     public enum Justifications : uint
     {

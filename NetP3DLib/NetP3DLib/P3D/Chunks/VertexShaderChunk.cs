@@ -6,7 +6,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class VertexShaderChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Vertex_Shader;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Vertex_Shader;
     
     public override byte[] DataBytes
     {

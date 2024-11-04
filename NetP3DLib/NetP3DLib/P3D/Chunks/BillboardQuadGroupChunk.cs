@@ -9,7 +9,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class BillboardQuadGroupChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Billboard_Quad_Group;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Billboard_Quad_Group;
     
     public uint Version { get; set; }
     public string Shader { get; set; }

@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class ImageGlyphListChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Image_Glyph_List;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Image_Glyph_List;
     
     public uint NumGlyphs
     {

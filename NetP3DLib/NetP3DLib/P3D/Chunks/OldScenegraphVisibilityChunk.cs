@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class OldScenegraphVisibilityChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Old_Scenegraph_Visibility;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Scenegraph_Visibility;
     
     public uint NumChildren => (uint)Children.Count;
     public uint IsVisible { get; set; }

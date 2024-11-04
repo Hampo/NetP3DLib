@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class OldScenegraphDrawableChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Old_Scenegraph_Drawable;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Scenegraph_Drawable;
     
     public string DrawableName { get; set; }
     public uint IsTranslucent { get; set; }

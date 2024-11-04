@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class OldSpriteEmitterChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Old_Sprite_Emitter;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Sprite_Emitter;
     
     public uint Version { get; set; }
     public string ShaderName { get; set; }

@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class ImageDataChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Image_Data;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Image_Data;
     
     public byte[] ImageData { get; set; }
 

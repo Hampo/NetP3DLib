@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class OldParticleInstancingInfoChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Old_Particle_Instancing_Info;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Particle_Instancing_Info;
     
     public uint Version { get; set; }
     public uint MaxInstances { get; set; }

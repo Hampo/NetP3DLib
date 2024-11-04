@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class OldScenegraphSortOrderChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Old_Scenegraph_Sort_Order;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Scenegraph_Sort_Order;
     
     public float SortOrder { get; set; }
 

@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class TreeNode2Chunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Tree_Node_2;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Tree_Node_2;
     
     public enum Axis : sbyte
     {

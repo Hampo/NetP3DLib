@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class GameAttributeMatrixParameterChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Game_Attribute_Matrix_Parameter;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Game_Attribute_Matrix_Parameter;
     
     public Matrix4x4 Value { get; set; }
 

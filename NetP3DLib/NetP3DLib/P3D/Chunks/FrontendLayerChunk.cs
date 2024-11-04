@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class FrontendLayerChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Frontend_Layer;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Frontend_Layer;
     
     public uint Version { get; set; }
     public uint Visible { get; set; }

@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class AnimationChannelCountChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Animation_Channel_Count;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Animation_Channel_Count;
     
     public uint Version { get; set; }
     public uint ChannelChunkID { get; set; }

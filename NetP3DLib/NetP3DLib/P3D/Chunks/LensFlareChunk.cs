@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class LensFlareChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Lens_Flare;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Lens_Flare;
     
     public uint Version { get; set; }
     public uint NumOldBillboardQuadGroups => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.Old_Billboard_Quad_Group).Count();

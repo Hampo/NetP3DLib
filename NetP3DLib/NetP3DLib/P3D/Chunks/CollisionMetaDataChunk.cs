@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class CollisionMetaDataChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Collision_Meta_Data;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Collision_Meta_Data;
     
     public uint Version { get; set; }
     public uint NumChannels => (uint)Children.Count; // TODO: Potentially calculate from channel chunks specifically

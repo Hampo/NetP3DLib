@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class VisibilityAnimChannelChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Visibility_Anim_Channel;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Visibility_Anim_Channel;
     
     public ushort StartState { get; set; }
     public uint NumFrames

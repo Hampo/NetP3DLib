@@ -9,7 +9,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class SkinChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Skin;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Skin;
     
     public uint Version { get; set; }
     public string SkeletonName { get; set; }

@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class AnimChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Anim;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Anim;
     
     public uint Version { get; set; }
     public uint HasAlpha { get; set; }

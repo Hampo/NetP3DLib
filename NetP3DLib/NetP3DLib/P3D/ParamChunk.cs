@@ -8,6 +8,8 @@ public abstract class ParamChunk : Chunk
 
     public ParamChunk(uint ID) : base(ID) { }
 
+    public ParamChunk(ChunkIdentifier ID) : base(ID) { }
+
     public override void Validate()
     {
         if (Param == null || Param.Length == 0)

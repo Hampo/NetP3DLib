@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class SortOrderChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Sort_Order;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Sort_Order;
     
     public uint Version { get; set; }
     public float SortOrder { get; set; }

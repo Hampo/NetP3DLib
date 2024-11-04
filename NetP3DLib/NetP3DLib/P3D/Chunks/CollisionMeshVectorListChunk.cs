@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class CollisionMeshVectorListChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Collision_Mesh_Vector_list;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Collision_Mesh_Vector_list;
     
     public uint NumVectors
     {

@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class BillboardTextureUVChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Billboard_Texture_UV;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Billboard_Texture_UV;
     
     public uint Version { get; set; }
     public uint RandomU { get; set; }

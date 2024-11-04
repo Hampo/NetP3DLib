@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class FrameControllerListChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Frame_Controller_List;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Frame_Controller_List;
     
     public uint Version { get; set; }
     public uint NumControllers => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.Frame_Controller).Count();

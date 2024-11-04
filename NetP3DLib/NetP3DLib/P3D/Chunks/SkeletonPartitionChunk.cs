@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class SkeletonPartitionChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Skeleton_Partition;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Skeleton_Partition;
     
     public uint NumJointValues
     {

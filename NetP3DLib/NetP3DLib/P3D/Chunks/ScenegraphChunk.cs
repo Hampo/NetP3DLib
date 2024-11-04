@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class ScenegraphChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Scenegraph;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Scenegraph;
     
     public uint Version { get; set; }
 

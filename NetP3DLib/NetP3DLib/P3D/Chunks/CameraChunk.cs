@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class CameraChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Camera;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Camera;
     
     public uint Version { get; set; }
     public float FOV { get; set; }

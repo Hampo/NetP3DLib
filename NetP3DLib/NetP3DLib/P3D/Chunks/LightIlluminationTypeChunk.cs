@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class LightIlluminationTypeChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Light_Illumination_Type;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Light_Illumination_Type;
     
     public enum IlluminationTypes : uint
     {

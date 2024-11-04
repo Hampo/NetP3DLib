@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class InstParticleSystemChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Inst_Particle_System;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Inst_Particle_System;
     
     public enum ParticleTypes
     {

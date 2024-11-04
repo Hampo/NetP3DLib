@@ -9,7 +9,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class FrontendLanguageChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Frontend_Language;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Frontend_Language;
     
     public char Language { get; set; }
     public uint NumEntries

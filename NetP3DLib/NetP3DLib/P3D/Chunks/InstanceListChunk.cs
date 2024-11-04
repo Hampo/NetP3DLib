@@ -6,7 +6,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class InstanceListChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Instance_List;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Instance_List;
     
     public override byte[] DataBytes
     {

@@ -7,7 +7,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class FrontendStringHardCodedChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Frontend_String_Hard_Coded;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Frontend_String_Hard_Coded;
     
     public string String { get; set; }
 

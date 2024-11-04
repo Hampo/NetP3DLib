@@ -8,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class CollisionVolumeChunk : Chunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Collision_Volume;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Collision_Volume;
     
     public uint ObjectReferenceIndex { get; set; }
     public int OwnerIndex { get; set; }

@@ -9,7 +9,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class LensFlareGroupChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Lens_Flare_Group;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Lens_Flare_Group;
     
     public uint Version { get; set; }
     public string ShaderName { get; set; }

@@ -9,7 +9,7 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class FrontendPolygonChunk : NamedChunk
 {
-    public const uint ChunkID = (uint)ChunkIdentifier.Frontend_Polygon;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Frontend_Polygon;
     
     public uint Version { get; set; }
     public uint Translucency { get; set; }
