@@ -23,7 +23,7 @@ public class WorldCollisionObjectChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(uint);
+    public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint);
 
     public WorldCollisionObjectChunk(BinaryReader br) : base(ChunkID)
     {
