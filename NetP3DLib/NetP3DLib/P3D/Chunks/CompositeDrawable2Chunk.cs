@@ -6,13 +6,12 @@ using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
-[ChunkAttributes((uint)ChunkIdentifier.Skin)]
-public class SkinChunk : NamedChunk
+[ChunkAttributes((uint)ChunkIdentifier.Composite_Drawable_2)]
+public class CompositeDrawable2Chunk : NamedChunk
 {
     public uint Version { get; set; }
     public string SkeletonName { get; set; }
-    public uint NumOldPrimitiveGroups => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.Old_Primitive_Group).Count();
-    public uint NumPrimitiveGroups => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.Primitive_Group).Count();
+    public uint NumPrimitives => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.Composite_Drawable_Primitive).Count();
 
     public override byte[] DataBytes
     {
@@ -20,29 +19,29 @@ public class SkinChunk : NamedChunk
         {
             List<byte> data = [];
 
-            data.AddRange(BinaryExtensions.GetP3DStringBytes(Name));
             data.AddRange(BitConverter.GetBytes(Version));
+            data.AddRange(BinaryExtensions.GetP3DStringBytes(Name));
             data.AddRange(BinaryExtensions.GetP3DStringBytes(SkeletonName));
-            data.AddRange(BitConverter.GetBytes(NumOldPrimitiveGroups + NumPrimitiveGroups));
+            data.AddRange(BitConverter.GetBytes(NumPrimitives));
 
             return [.. data];
         }
     }
-    public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(SkeletonName).Length + sizeof(uint);
+    public override uint DataLength => sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + (uint)BinaryExtensions.GetP3DStringBytes(SkeletonName).Length + sizeof(uint);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public SkinChunk(BinaryReader br) : base((uint)ChunkIdentifier.Skin)
+    public CompositeDrawable2Chunk(BinaryReader br) : base((uint)ChunkIdentifier.Composite_Drawable_2)
     {
-        Name = br.ReadP3DString();
         Version = br.ReadUInt32();
+        Name = br.ReadP3DString();
         SkeletonName = br.ReadP3DString();
-        var numPrimitiveGroups = br.ReadUInt32();
+        var numPrimitives = br.ReadUInt32();
     }
 
-    public SkinChunk(string name, uint version, string skeletonName) : base((uint)ChunkIdentifier.Skin)
+    public CompositeDrawable2Chunk(uint version, string name, string skeletonName) : base((uint)ChunkIdentifier.Composite_Drawable_2)
     {
-        Name = name;
         Version = version;
+        Name = name;
         SkeletonName = skeletonName;
     }
 
@@ -58,9 +57,9 @@ public class SkinChunk : NamedChunk
 
     internal override void WriteData(BinaryWriter bw)
     {
-        bw.WriteP3DString(Name);
         bw.Write(Version);
+        bw.WriteP3DString(Name);
         bw.WriteP3DString(SkeletonName);
-        bw.Write(NumOldPrimitiveGroups + NumPrimitiveGroups);
+        bw.Write(NumPrimitives);
     }
 }

@@ -167,7 +167,7 @@ public static class BinaryExtensions
     /// </summary>
     /// <param name="value">The value to get the bytes of.</param>
     /// <returns>A <c>byte[]</c> representing <paramref name="value"/>.</returns>
-    public static byte[] GetBytes(Vector2 value) => BitConverter.GetBytes(value.X).Concat(BitConverter.GetBytes(value.Y)).ToArray();
+    public static byte[] GetBytes(Vector2 value) => [.. BitConverter.GetBytes(value.X), .. BitConverter.GetBytes(value.Y)];
 
     /// <summary>
     /// Reads a <see cref="Vector2"/> from <paramref name="br"/>.
@@ -192,7 +192,7 @@ public static class BinaryExtensions
     /// </summary>
     /// <param name="value">The value to get the bytes of.</param>
     /// <returns>A <c>byte[]</c> representing <paramref name="value"/>.</returns>
-    public static byte[] GetBytes(Vector3 value) => BitConverter.GetBytes(value.X).Concat(BitConverter.GetBytes(value.Y)).Concat(BitConverter.GetBytes(value.Z)).ToArray();
+    public static byte[] GetBytes(Vector3 value) => [.. BitConverter.GetBytes(value.X), .. BitConverter.GetBytes(value.Y), .. BitConverter.GetBytes(value.Z)];
 
     /// <summary>
     /// Reads a <see cref="Vector3"/> from <paramref name="br"/>.
@@ -218,7 +218,7 @@ public static class BinaryExtensions
     /// </summary>
     /// <param name="value">The value to get the bytes of.</param>
     /// <returns>A <c>byte[]</c> representing <paramref name="value"/>.</returns>
-    public static byte[] GetBytes(Vector4 value) => BitConverter.GetBytes(value.W).Concat(BitConverter.GetBytes(value.X)).Concat(BitConverter.GetBytes(value.Y)).Concat(BitConverter.GetBytes(value.Z)).ToArray();
+    public static byte[] GetBytes(Vector4 value) => [.. BitConverter.GetBytes(value.W), .. BitConverter.GetBytes(value.X), .. BitConverter.GetBytes(value.Y), .. BitConverter.GetBytes(value.Z)];
 
     /// <summary>
     /// Reads a <see cref="Vector4"/> from <paramref name="br"/>.
@@ -248,11 +248,46 @@ public static class BinaryExtensions
     }
 
     /// <summary>
+    /// Gets the byte array for a <see cref="Quaternion"/>.
+    /// </summary>
+    /// <param name="value">The value to get the bytes of.</param>
+    /// <returns>A <c>byte[]</c> representing <paramref name="value"/>.</returns>
+    public static byte[] GetBytes(Quaternion value) => [.. BitConverter.GetBytes(value.W), .. BitConverter.GetBytes(value.X), .. BitConverter.GetBytes(value.Y), .. BitConverter.GetBytes(value.Z)];
+
+    /// <summary>
+    /// Reads a <see cref="Quaternion"/> from <paramref name="br"/>.
+    /// </summary>
+    /// <param name="br">The <c>BinaryReader</c> to read from.</param>
+    /// <returns>A <c>Quaternion</c>.</returns>
+    public static Quaternion ReadQuaternion(this BinaryReader br) => new(br.ReadSingle(), br.ReadSingle(), br.ReadSingle(), br.ReadSingle());
+
+    /// <summary>
+    /// Writes a <see cref="Quaternion"/> to <paramref name="bw"/>.
+    /// </summary>
+    /// <param name="bw">The <c>BinaryWriter</c> to write to.</param>
+    /// <param name="value">The value to write.</param>
+    public static void Write(this BinaryWriter bw, Quaternion value)
+    {
+        bw.Write(value.W);
+        bw.Write(value.X);
+        bw.Write(value.Y);
+        bw.Write(value.Z);
+    }
+
+    /// <summary>
     /// Gets the byte array for a <see cref="Matrix3x2"/>.
     /// </summary>
     /// <param name="value">The value to get the bytes of.</param>
     /// <returns>A <c>byte[]</c> representing <paramref name="value"/>.</returns>
-    public static byte[] GetBytes(Matrix3x2 value) => BitConverter.GetBytes(value.M11).Concat(BitConverter.GetBytes(value.M12)).Concat(BitConverter.GetBytes(value.M21)).Concat(BitConverter.GetBytes(value.M22)).Concat(BitConverter.GetBytes(value.M31)).Concat(BitConverter.GetBytes(value.M32)).ToArray();
+    public static byte[] GetBytes(Matrix3x2 value) =>
+    [
+        .. BitConverter.GetBytes(value.M11),
+        .. BitConverter.GetBytes(value.M12),
+        .. BitConverter.GetBytes(value.M21),
+        .. BitConverter.GetBytes(value.M22),
+        .. BitConverter.GetBytes(value.M31),
+        .. BitConverter.GetBytes(value.M32),
+    ];
 
     /// <summary>
     /// Reads a <see cref="Matrix3x2"/> from <paramref name="br"/>.
@@ -283,7 +318,15 @@ public static class BinaryExtensions
     /// </summary>
     /// <param name="value">The value to get the bytes of.</param>
     /// <returns>A <c>byte[]</c> representing <paramref name="value"/>.</returns>
-    public static byte[] GetBytes(SymmetricMatrix3x3 value) => BitConverter.GetBytes(value.XX).Concat(BitConverter.GetBytes(value.XY)).Concat(BitConverter.GetBytes(value.XZ)).Concat(BitConverter.GetBytes(value.YY)).Concat(BitConverter.GetBytes(value.YZ)).Concat(BitConverter.GetBytes(value.ZZ)).ToArray();
+    public static byte[] GetBytes(SymmetricMatrix3x3 value) =>
+    [
+        .. BitConverter.GetBytes(value.XX),
+        .. BitConverter.GetBytes(value.XY),
+        .. BitConverter.GetBytes(value.XZ),
+        .. BitConverter.GetBytes(value.YY),
+        .. BitConverter.GetBytes(value.YZ),
+        .. BitConverter.GetBytes(value.ZZ),
+    ];
 
     /// <summary>
     /// Reads a <see cref="SymmetricMatrix3x3"/> from <paramref name="br"/>.
@@ -314,7 +357,25 @@ public static class BinaryExtensions
     /// </summary>
     /// <param name="value">The value to get the bytes of.</param>
     /// <returns>A <c>byte[]</c> representing <paramref name="value"/>.</returns>
-    public static byte[] GetBytes(Matrix4x4 value) => BitConverter.GetBytes(value.M11).Concat(BitConverter.GetBytes(value.M12)).Concat(BitConverter.GetBytes(value.M13)).Concat(BitConverter.GetBytes(value.M14)).Concat(BitConverter.GetBytes(value.M21)).Concat(BitConverter.GetBytes(value.M22)).Concat(BitConverter.GetBytes(value.M23)).Concat(BitConverter.GetBytes(value.M24)).Concat(BitConverter.GetBytes(value.M31)).Concat(BitConverter.GetBytes(value.M32)).Concat(BitConverter.GetBytes(value.M33)).Concat(BitConverter.GetBytes(value.M34)).Concat(BitConverter.GetBytes(value.M41)).Concat(BitConverter.GetBytes(value.M42)).Concat(BitConverter.GetBytes(value.M43)).Concat(BitConverter.GetBytes(value.M44)).ToArray();
+    public static byte[] GetBytes(Matrix4x4 value) =>
+    [
+        .. BitConverter.GetBytes(value.M11),
+        .. BitConverter.GetBytes(value.M12),
+        .. BitConverter.GetBytes(value.M13),
+        .. BitConverter.GetBytes(value.M14),
+        .. BitConverter.GetBytes(value.M21),
+        .. BitConverter.GetBytes(value.M22),
+        .. BitConverter.GetBytes(value.M23),
+        .. BitConverter.GetBytes(value.M24),
+        .. BitConverter.GetBytes(value.M31),
+        .. BitConverter.GetBytes(value.M32),
+        .. BitConverter.GetBytes(value.M33),
+        .. BitConverter.GetBytes(value.M34),
+        .. BitConverter.GetBytes(value.M41),
+        .. BitConverter.GetBytes(value.M42),
+        .. BitConverter.GetBytes(value.M43),
+        .. BitConverter.GetBytes(value.M44),
+    ];
 
     /// <summary>
     /// Reads a <see cref="Matrix4x4"/> from <paramref name="br"/>.
