@@ -22,6 +22,7 @@ public enum ChunkIdentifier : uint
     Billboard_Quad_Group = 0x17006,
     Billboard_Texture_UV = 0x17009,
     Billboard_Transform = 0x17007,
+    Black_Magic = 0x1025,
     Boolean_Channel = 0x121108,
     Bounding_Box = 0x10003,
     Bounding_Sphere = 0x10004,
