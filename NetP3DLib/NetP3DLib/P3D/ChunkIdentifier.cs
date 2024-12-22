@@ -191,6 +191,7 @@ public enum ChunkIdentifier : uint
     Shader_Float_Parameter = 0x11004,
     Shader_Integer_Parameter = 0x11003,
     Shader_Texture_Parameter = 0x11002,
+    Shadow_Mesh = 0x1001A,
     Shadow_Skin = 0x10019,
     Skeleton = 0x4500,
     Skeleton_2 = 0x23000,
