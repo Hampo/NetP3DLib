@@ -1,6 +1,7 @@
 ﻿using NetP3DLib.P3D.Chunks;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 
@@ -15,6 +16,23 @@ public class P3DFile
     public const uint HEADER_SIZE = sizeof(uint) + sizeof(uint) + sizeof(uint); // ID + HeaderLength + ChunkLength
 
     public List<Chunk> Chunks { get; private set; } = [];
+    public ReadOnlyCollection<Chunk> AllChunks
+    {
+        get
+        {
+            List<Chunk> allChunks = [];
+            void AddChunks(List<Chunk> chunks)
+            {
+                foreach (var chunk in chunks)
+                {
+                    allChunks.Add(chunk);
+                    AddChunks(chunk.Children);
+                }
+            }
+            AddChunks(Chunks);
+            return allChunks.AsReadOnly();
+        }
+    }
 
     public uint Size => HEADER_SIZE + (uint)Chunks.Sum(x => x.Size);
     public byte[] Bytes
