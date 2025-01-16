@@ -277,6 +277,7 @@ public class P3DFile
         bw.Write(Size);
         foreach (Chunk chunk in Chunks)
             chunk.Write(bw);
+        bw.Flush();
     }
 
     public void Compress(string filePath, bool includeHistory = true, bool fast = false)
@@ -292,5 +293,6 @@ public class P3DFile
 
         var compressedBytes = LZR_Compression.CompressFile(this, includeHistory, fast);
         stream.Write(compressedBytes, 0, compressedBytes.Length);
+        stream.Flush();
     }
 }
