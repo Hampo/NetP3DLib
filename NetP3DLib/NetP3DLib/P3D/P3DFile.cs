@@ -23,6 +23,7 @@ public class P3DFile
             List<Chunk> allChunks = [];
             void AddChunks(List<Chunk> chunks)
             {
+                allChunks.Capacity += chunks.Count;
                 foreach (var chunk in chunks)
                 {
                     allChunks.Add(chunk);
