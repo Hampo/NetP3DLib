@@ -69,10 +69,10 @@ public class CompressedQuaternionChannelChunk : ParamChunk
                 data.AddRange(BitConverter.GetBytes(frame));
             foreach (var value in Values)
             {
-                short W = (short)Math.Round(value.W * 32767);
-                short X = (short)Math.Round(value.X * 32767);
-                short Y = (short)Math.Round(value.Y * 32767);
-                short Z = (short)Math.Round(value.Z * 32767);
+                short W = (short)Math.Round(value.W * short.MaxValue);
+                short X = (short)Math.Round(value.X * short.MaxValue);
+                short Y = (short)Math.Round(value.Y * short.MaxValue);
+                short Z = (short)Math.Round(value.Z * short.MaxValue);
                 data.AddRange(BitConverter.GetBytes(W));
                 data.AddRange(BitConverter.GetBytes(X));
                 data.AddRange(BitConverter.GetBytes(Y));
@@ -99,7 +99,7 @@ public class CompressedQuaternionChannelChunk : ParamChunk
             short X = br.ReadInt16();
             short Y = br.ReadInt16();
             short Z = br.ReadInt16();
-            Values.Add(new(X / 32767f, Y / 32767f, Z / 32767f, W / 32767f));
+            Values.Add(new(X / (float)short.MaxValue, Y / (float)short.MaxValue, Z / (float)short.MaxValue, W / (float)short.MaxValue));
         }
     }
 
@@ -128,10 +128,10 @@ public class CompressedQuaternionChannelChunk : ParamChunk
             bw.Write(frame);
         foreach (var value in Values)
         {
-            short W = (short)Math.Round(value.W * 32767);
-            short X = (short)Math.Round(value.X * 32767);
-            short Y = (short)Math.Round(value.Y * 32767);
-            short Z = (short)Math.Round(value.Z * 32767);
+            short W = (short)Math.Round(value.W * short.MaxValue);
+            short X = (short)Math.Round(value.X * short.MaxValue);
+            short Y = (short)Math.Round(value.Y * short.MaxValue);
+            short Z = (short)Math.Round(value.Z * short.MaxValue);
             bw.Write(W);
             bw.Write(X);
             bw.Write(Y);

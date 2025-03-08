@@ -69,9 +69,9 @@ public class CompressedQuaternionChannel2Chunk : ParamChunk
                 data.AddRange(BitConverter.GetBytes(frame));
             foreach (var value in Values)
             {
-                short X = (short)Math.Round(value.X * 32767);
-                short Y = (short)Math.Round(value.Y * 32767);
-                short Z = (short)Math.Round(value.Z * 32767);
+                short X = (short)Math.Round(value.X * short.MaxValue);
+                short Y = (short)Math.Round(value.Y * short.MaxValue);
+                short Z = (short)Math.Round(value.Z * short.MaxValue);
                 data.AddRange(BitConverter.GetBytes(X));
                 data.AddRange(BitConverter.GetBytes(Y));
                 data.AddRange(BitConverter.GetBytes(Z));
@@ -93,11 +93,16 @@ public class CompressedQuaternionChannel2Chunk : ParamChunk
             Frames.Add(br.ReadUInt16());
         for (uint i = 0; i < numFrames; i++)
         {
-            float X = br.ReadInt16() / 32767f;
-            float Y = br.ReadInt16() / 32767f;
-            float Z = br.ReadInt16() / 32767f;
-            float W = (float)Math.Sqrt(1 - Math.Pow(X, 2) - Math.Pow(Y, 2) - Math.Pow(Z, 2));
-            Values.Add(new(X, Y, Z, W));
+            var x = br.ReadInt16() / (double)short.MaxValue;
+            var y = br.ReadInt16() / (double)short.MaxValue;
+            var z = br.ReadInt16() / (double)short.MaxValue;
+
+            var sumOfSquares = x * x + y * y + z * z;
+            if (sumOfSquares > 1.0f)
+                throw new Exception($"Invalid Compressed Quaternion Channel 2.");
+            var w = Math.Sqrt(1 - sumOfSquares);
+
+            Values.Add(new((float)x, (float)y, (float)z, (float)w));
         }
     }
 
@@ -126,9 +131,9 @@ public class CompressedQuaternionChannel2Chunk : ParamChunk
             bw.Write(frame);
         foreach (var value in Values)
         {
-            short X = (short)Math.Round(value.X * 32767);
-            short Y = (short)Math.Round(value.Y * 32767);
-            short Z = (short)Math.Round(value.Z * 32767);
+            short X = (short)Math.Round(value.X * short.MaxValue);
+            short Y = (short)Math.Round(value.Y * short.MaxValue);
+            short Z = (short)Math.Round(value.Z * short.MaxValue);
             bw.Write(X);
             bw.Write(Y);
             bw.Write(Z);
