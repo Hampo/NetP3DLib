@@ -10,7 +10,7 @@ public class ChannelInterpolationModeChunk : Chunk
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Channel_Interpolation_Mode;
     
     public uint Version { get; set; }
-    public uint Interpolate { get; set; }
+    public int Interpolate { get; set; }
 
     public override byte[] DataBytes
     {
@@ -29,10 +29,10 @@ public class ChannelInterpolationModeChunk : Chunk
     public ChannelInterpolationModeChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
-        Interpolate = br.ReadUInt32();
+        Interpolate = br.ReadInt32();
     }
 
-    public ChannelInterpolationModeChunk(uint version, uint interpolate) : base(ChunkID)
+    public ChannelInterpolationModeChunk(uint version, int interpolate) : base(ChunkID)
     {
         Version = version;
         Interpolate = interpolate;
