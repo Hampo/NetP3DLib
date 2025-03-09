@@ -137,6 +137,8 @@ public abstract class Chunk
     /// <param name="bw">The <c>BinaryWriter</c> to write to.</param>
     internal abstract void WriteData(System.IO.BinaryWriter bw);
 
+    public override string ToString() => $"{GetChunkType(this)} (0x{ID:X})";
+
     /// <summary>
     /// This compares the current <see cref="Chunk"/> to another.
     /// </summary>
@@ -199,6 +201,17 @@ public abstract class Chunk
     /// <param name="right">The <see cref="Chunk"/> to compare to.</param>
     /// <returns>Returns <c>true</c> if <paramref name="left"/> is not equal to <paramref name="right"/>.</returns>
     public static bool operator !=(Chunk left, Chunk right) => !(left == right);
+
+    internal static string GetChunkType(Chunk chunk)
+    {
+        if (Enum.IsDefined(typeof(ChunkIdentifier), (ChunkIdentifier)chunk.ID))
+            return ((ChunkIdentifier)chunk.ID).ToString().Replace("_", " ");
+
+        var chunkType = chunk.GetType().Name;
+        if (chunkType.EndsWith("Chunk"))
+            chunkType = chunkType.Substring(0, chunkType.Length - 5);
+        return chunkType;
+    }
 }
 
 public class UnknownChunk : Chunk

@@ -20,4 +20,6 @@ public abstract class ParamChunk : Chunk
 
         base.Validate();
     }
+
+    public override string ToString() => $"\"{Param}\" ({GetChunkType(this)} (0x{ID:X}))";
 }

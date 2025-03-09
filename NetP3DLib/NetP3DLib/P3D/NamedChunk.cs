@@ -20,4 +20,6 @@ public abstract class NamedChunk : Chunk
 
         base.Validate();
     }
+
+    public override string ToString() => $"\"{Name}\" ({GetChunkType(this)} (0x{ID:X}))";
 }

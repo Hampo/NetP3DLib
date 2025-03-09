@@ -80,4 +80,6 @@ public class HistoryChunk : Chunk
         foreach (string item in History)
             bw.WriteP3DString(item);
     }
+
+    public override string ToString() => $"\"{History.FirstOrDefault() ?? ""}\" ({GetChunkType(this)} (0x{ID:X}))";
 }
