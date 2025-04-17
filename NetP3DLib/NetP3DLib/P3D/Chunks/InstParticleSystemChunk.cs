@@ -76,4 +76,6 @@ public class InstParticleSystemChunk : Chunk
         bw.Write((int)ParticleType);
         bw.Write(MaxInstances);
     }
+
+    public override string ToString() => $"{ParticleType} ({GetChunkType(this)} (0x{ID:X}))";
 }
