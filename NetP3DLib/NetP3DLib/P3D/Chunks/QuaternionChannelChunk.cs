@@ -54,7 +54,7 @@ public class QuaternionChannelChunk : ParamChunk
             NumFrames = value;
         }
     }
-    public List<Vector4> Values { get; } = [];
+    public List<Quaternion> Values { get; } = [];
 
     public override byte[] DataBytes
     {
@@ -85,10 +85,10 @@ public class QuaternionChannelChunk : ParamChunk
         for (var i = 0; i < numFrames; i++)
             Frames.Add(br.ReadUInt16());
         for (var i = 0; i < numFrames; i++)
-            Values.Add(br.ReadVector4());
+            Values.Add(br.ReadQuaternion());
     }
 
-    public QuaternionChannelChunk(uint version, string param, IList<ushort> frames, IList<Vector4> values) : base(ChunkID)
+    public QuaternionChannelChunk(uint version, string param, IList<ushort> frames, IList<Quaternion> values) : base(ChunkID)
     {
         Version = version;
         Param = param;

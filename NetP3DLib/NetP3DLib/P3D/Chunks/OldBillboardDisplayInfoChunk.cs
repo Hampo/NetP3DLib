@@ -11,7 +11,7 @@ public class OldBillboardDisplayInfoChunk : Chunk
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Billboard_Display_Info;
     
     public uint Version { get; set; }
-    public Vector4 Rotation { get; set; }
+    public Quaternion Rotation { get; set; }
     public string CutOffMode { get; set; }
     public Vector2 UVOffsetRange { get; set; }
     public float SourceRange { get; set; }
@@ -38,14 +38,14 @@ public class OldBillboardDisplayInfoChunk : Chunk
     public OldBillboardDisplayInfoChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
-        Rotation = br.ReadVector4();
+        Rotation = br.ReadQuaternion();
         CutOffMode = br.ReadFourCC();
         UVOffsetRange = br.ReadVector2();
         SourceRange = br.ReadSingle();
         EdgeRange = br.ReadSingle();
     }
 
-    public OldBillboardDisplayInfoChunk(uint version, Vector4 rotation, string cutOffMode, Vector2 uvOffsetRange, float sourceRange, float edgeRange) : base(ChunkID)
+    public OldBillboardDisplayInfoChunk(uint version, Quaternion rotation, string cutOffMode, Vector2 uvOffsetRange, float sourceRange, float edgeRange) : base(ChunkID)
     {
         Version = version;
         Rotation = rotation;

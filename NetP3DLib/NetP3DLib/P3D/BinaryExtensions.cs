@@ -259,7 +259,14 @@ public static class BinaryExtensions
     /// </summary>
     /// <param name="br">The <c>BinaryReader</c> to read from.</param>
     /// <returns>A <c>Quaternion</c>.</returns>
-    public static Quaternion ReadQuaternion(this BinaryReader br) => new(br.ReadSingle(), br.ReadSingle(), br.ReadSingle(), br.ReadSingle());
+    public static Quaternion ReadQuaternion(this BinaryReader br)
+    {
+        var w = br.ReadSingle();
+        var x = br.ReadSingle();
+        var y = br.ReadSingle();
+        var z = br.ReadSingle();
+        return new(x, y, z, w);
+    }
 
     /// <summary>
     /// Writes a <see cref="Quaternion"/> to <paramref name="bw"/>.
