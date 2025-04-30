@@ -11,7 +11,7 @@ public class Vector2DOFChannelChunk : ParamChunk
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Vector_2D_OF_Channel;
     
     public uint Version { get; set; }
-    public ushort Mapping { get; set; }
+    public Coordinate StaticIndex { get; set; }
     public Vector3 Constants { get; set; }
     public uint NumFrames
     {
@@ -66,7 +66,7 @@ public class Vector2DOFChannelChunk : ParamChunk
 
             data.AddRange(BitConverter.GetBytes(Version));
             data.AddRange(BinaryExtensions.GetFourCCBytes(Param));
-            data.AddRange(BitConverter.GetBytes(Mapping));
+            data.AddRange(BitConverter.GetBytes((ushort)StaticIndex));
             data.AddRange(BinaryExtensions.GetBytes(Constants));
             data.AddRange(BitConverter.GetBytes(NumFrames));
             foreach (var frame in Frames)
@@ -83,7 +83,7 @@ public class Vector2DOFChannelChunk : ParamChunk
     {
         Version = br.ReadUInt32();
         Param = br.ReadFourCC();
-        Mapping = br.ReadUInt16();
+        StaticIndex = (Coordinate)br.ReadUInt16();
         Constants = br.ReadVector3();
         var numFrames = br.ReadInt32();
         Frames.Capacity = numFrames;
@@ -94,14 +94,32 @@ public class Vector2DOFChannelChunk : ParamChunk
             Values.Add(br.ReadVector2());
     }
 
-    public Vector2DOFChannelChunk(uint version, string param, ushort mapping, Vector3 constants, IList<ushort> frames, IList<Vector2> values) : base(ChunkID)
+    public Vector2DOFChannelChunk(uint version, string param, Coordinate staticIndex, Vector3 constants, IList<ushort> frames, IList<Vector2> values) : base(ChunkID)
     {
         Version = version;
         Param = param;
-        Mapping = mapping;
+        StaticIndex = staticIndex;
         Constants = constants;
         Frames.AddRange(frames);
         Values.AddRange(values);
+    }
+
+    public List<Vector3> GetValues()
+    {
+        var values = new List<Vector3>(Values.Count);
+
+        Func<Vector2, Vector3> map = StaticIndex switch
+        {
+            Coordinate.X => v => new Vector3(Constants.X, v.X, v.Y),
+            Coordinate.Y => v => new Vector3(v.X, Constants.Y, v.Y),
+            Coordinate.Z => v => new Vector3(v.X, v.Y, Constants.Z),
+            _ => throw new InvalidDataException($"Invalid {nameof(StaticIndex)} value: {StaticIndex}"),
+        };
+
+        foreach (var v in Values)
+            values.Add(map(v));
+
+        return values;
     }
 
     public override void Validate()
@@ -116,7 +134,7 @@ public class Vector2DOFChannelChunk : ParamChunk
     {
         bw.Write(Version);
         bw.WriteFourCC(Param);
-        bw.Write(Mapping);
+        bw.Write((ushort)StaticIndex);
         bw.Write(Constants);
         bw.Write(NumFrames);
         foreach (var frame in Frames)

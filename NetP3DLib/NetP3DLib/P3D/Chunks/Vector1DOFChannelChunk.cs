@@ -11,7 +11,7 @@ public class Vector1DOFChannelChunk : ParamChunk
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Vector_1D_OF_Channel;
     
     public uint Version { get; set; }
-    public ushort Mapping { get; set; }
+    public Coordinate DynamicIndex { get; set; }
     public Vector3 Constants { get; set; }
     public uint NumFrames
     {
@@ -66,7 +66,7 @@ public class Vector1DOFChannelChunk : ParamChunk
 
             data.AddRange(BitConverter.GetBytes(Version));
             data.AddRange(BinaryExtensions.GetFourCCBytes(Param));
-            data.AddRange(BitConverter.GetBytes(Mapping));
+            data.AddRange(BitConverter.GetBytes((ushort)DynamicIndex));
             data.AddRange(BinaryExtensions.GetBytes(Constants));
             data.AddRange(BitConverter.GetBytes(NumFrames));
             foreach (var frame in Frames)
@@ -83,7 +83,7 @@ public class Vector1DOFChannelChunk : ParamChunk
     {
         Version = br.ReadUInt32();
         Param = br.ReadFourCC();
-        Mapping = br.ReadUInt16();
+        DynamicIndex = (Coordinate)br.ReadUInt16();
         Constants = br.ReadVector3();
         var numFrames = br.ReadInt32();
         Frames.Capacity = numFrames;
@@ -94,14 +94,32 @@ public class Vector1DOFChannelChunk : ParamChunk
             Values.Add(br.ReadSingle());
     }
 
-    public Vector1DOFChannelChunk(uint version, string param, ushort mapping, Vector3 constants, IList<ushort> frames, IList<float> values) : base(ChunkID)
+    public Vector1DOFChannelChunk(uint version, string param, Coordinate dynamicIndex, Vector3 constants, IList<ushort> frames, IList<float> values) : base(ChunkID)
     {
         Version = version;
         Param = param;
-        Mapping = mapping;
+        DynamicIndex = dynamicIndex;
         Constants = constants;
         Frames.AddRange(frames);
         Values.AddRange(values);
+    }
+
+    public List<Vector3> GetValues()
+    {
+        var values = new List<Vector3>(Values.Count);
+
+        Func<float, Vector3> map = DynamicIndex switch
+        {
+            Coordinate.X => v => new Vector3(v, Constants.Y, Constants.Z),
+            Coordinate.Y => v => new Vector3(Constants.X, v, Constants.Z),
+            Coordinate.Z => v => new Vector3(Constants.X, Constants.Y, v),
+            _ => throw new InvalidDataException($"Invalid {nameof(DynamicIndex)} value: {DynamicIndex}"),
+        };
+
+        foreach (var v in Values)
+            values.Add(map(v));
+
+        return values;
     }
 
     public override void Validate()
@@ -116,7 +134,7 @@ public class Vector1DOFChannelChunk : ParamChunk
     {
         bw.Write(Version);
         bw.WriteFourCC(Param);
-        bw.Write(Mapping);
+        bw.Write((ushort)DynamicIndex);
         bw.Write(Constants);
         bw.Write(NumFrames);
         foreach (var frame in Frames)
