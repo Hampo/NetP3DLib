@@ -9,7 +9,7 @@ public class LightDirectionChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Light_Direction;
     
-    Vector3 Direction { get; set; }
+    public Vector3 Direction { get; set; }
 
     public override byte[] DataBytes
     {
