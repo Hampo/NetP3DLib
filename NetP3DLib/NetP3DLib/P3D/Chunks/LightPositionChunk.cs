@@ -9,7 +9,7 @@ public class LightPositionChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Light_Position;
     
-    public Vector3 Position;
+    public Vector3 Position { get; set; }
 
     public override byte[] DataBytes
     {
