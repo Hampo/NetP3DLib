@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace NetP3DLib;
+﻿namespace NetP3DLib;
 
 public enum Endianness
 {
