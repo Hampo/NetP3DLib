@@ -9,6 +9,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class HistoryChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.History;
+    public const int MAX_HISTORY_LINES = 256;
     
     public ushort NumHistory
     {
@@ -65,8 +66,8 @@ public class HistoryChunk : Chunk
 
     public override void Validate()
     {
-        if (History.Count > ushort.MaxValue)
-            throw new InvalidDataException($"The max number of history lines is {ushort.MaxValue}.");
+        if (History.Count > MAX_HISTORY_LINES)
+            throw new InvalidDataException($"The max number of history lines is {MAX_HISTORY_LINES}.");
 
         if (History.Any(x => x == null || x.Length > 255))
             throw new InvalidDataException("All history lines must have a value, with a max length of 255 bytes.");

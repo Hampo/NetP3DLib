@@ -9,7 +9,8 @@ namespace NetP3DLib.P3D.Chunks;
 public class PathChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Path;
-    
+    public const int MIN_POSITIONS = 2;
+
     public uint NumPositions
     {
         get => (uint)Positions.Count;
@@ -62,6 +63,9 @@ public class PathChunk : Chunk
 
     public override void Validate()
     {
+        if (Positions.Count < MIN_POSITIONS)
+            throw new InvalidDataException($"The min number of positions is {MIN_POSITIONS}.");
+
         base.Validate();
     }
 
