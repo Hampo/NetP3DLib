@@ -18,6 +18,7 @@ public class RoadChunk : NamedChunk
     public byte Speed { get; set; }
     public byte Intelligence { get; set; }
     public byte Shortcut { get; set; }
+    private byte Padding { get; set; }
 
     public override byte[] DataBytes
     {
@@ -33,7 +34,7 @@ public class RoadChunk : NamedChunk
             data.Add(Speed);
             data.Add(Intelligence);
             data.Add(Shortcut);
-            data.Add(0);
+            data.Add(Padding);
 
             return [.. data];
         }
@@ -51,7 +52,7 @@ public class RoadChunk : NamedChunk
         Speed = br.ReadByte();
         Intelligence = br.ReadByte();
         Shortcut = br.ReadByte();
-        var padding = br.ReadByte();
+        Padding = br.ReadByte();
     }
 
     public RoadChunk(string name, uint type, string startIntersection, string endIntersection, uint maximumCars, byte speed, byte intelligence, byte shortcut) : base(ChunkID)
@@ -64,6 +65,7 @@ public class RoadChunk : NamedChunk
         Speed = speed;
         Intelligence = intelligence;
         Shortcut = shortcut;
+        Padding = 0;
     }
 
     public override void Validate()
@@ -96,6 +98,6 @@ public class RoadChunk : NamedChunk
         bw.Write(Speed);
         bw.Write(Intelligence);
         bw.Write(Shortcut);
-        bw.Write((byte)0);
+        bw.Write(Padding);
     }
 }
