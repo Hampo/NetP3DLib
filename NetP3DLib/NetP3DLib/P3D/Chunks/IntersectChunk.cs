@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
@@ -120,6 +121,17 @@ public class IntersectChunk : Chunk
 
     public override void Validate()
     {
+        if (Indices.Count % 3 != 0)
+            throw new InvalidDataException($"The number of {nameof(Indices)} must be divisible by 3.");
+        
+        for (var i = 0; i < Indices.Count; i++)
+            if (Indices[i] >= Positions.Count)
+                throw new InvalidDataException($"The {nameof(Indices)} at index {i} is out of bound of the {nameof(Positions)} list.");
+
+        var numTriangles = Indices.Count / 3;
+        if (Normals.Count != numTriangles)
+            throw new InvalidDataException($"The number of {nameof(Normals)} does not match the number of triangles ({numTriangles}).");
+
         base.Validate();
     }
 
