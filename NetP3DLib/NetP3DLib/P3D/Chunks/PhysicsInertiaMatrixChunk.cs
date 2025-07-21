@@ -1,4 +1,5 @@
 using NetP3DLib.Numerics;
+using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
 using System.Collections.Generic;
 using System.IO;

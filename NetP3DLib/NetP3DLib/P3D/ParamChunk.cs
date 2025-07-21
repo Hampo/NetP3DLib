@@ -1,4 +1,5 @@
-﻿using NetP3DLib.P3D.Exceptions;
+﻿using NetP3DLib.P3D.Enums;
+using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
 
 namespace NetP3DLib.P3D;

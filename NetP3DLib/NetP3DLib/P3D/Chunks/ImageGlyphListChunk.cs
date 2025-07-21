@@ -1,3 +1,4 @@
+using NetP3DLib.P3D.Enums;
 using System;
 using System.Collections.Generic;
 using System.IO;

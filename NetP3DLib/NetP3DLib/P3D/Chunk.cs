@@ -2,6 +2,7 @@
 using System.Linq;
 using System;
 using System.Diagnostics;
+using NetP3DLib.P3D.Enums;
 
 namespace NetP3DLib.P3D;
 

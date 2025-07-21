@@ -1,4 +1,4 @@
-﻿namespace NetP3DLib.P3D;
+﻿namespace NetP3DLib.P3D.Enums;
 
 public enum ChunkIdentifier : uint
 {
@@ -209,9 +209,11 @@ public enum ChunkIdentifier : uint
     Sprite_Particle_Emitter = 0x15900,
     State_Prop_Callback_Data = 0x8020005,
     State_Prop_Data_V1 = 0x8020000,
+    State_Prop_Data_V2 = 0x802000A,
     State_Prop_Event_Data = 0x8020004,
     State_Prop_Frame_Controller_Data = 0x8020003,
     State_Prop_State_Data_V1 = 0x8020001,
+    State_Prop_State_Data_V2 = 0x8020009,
     State_Prop_Visibilities_Data = 0x8020002,
     Static_Entity = 0x3F00000,
     Static_Phys = 0x3F00001,

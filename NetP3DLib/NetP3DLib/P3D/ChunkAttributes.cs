@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NetP3DLib.P3D.Enums;
+using System;
 
 namespace NetP3DLib.P3D;
 

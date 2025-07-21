@@ -1,3 +1,4 @@
+using NetP3DLib.P3D.Enums;
 using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;

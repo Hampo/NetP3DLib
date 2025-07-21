@@ -1,4 +1,4 @@
-﻿namespace NetP3DLib.P3D;
+﻿namespace NetP3DLib.P3D.Enums;
 public enum Coordinate : ushort
 {
     X,
