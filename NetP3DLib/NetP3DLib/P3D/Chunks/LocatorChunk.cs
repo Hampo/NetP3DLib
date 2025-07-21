@@ -168,6 +168,11 @@ public class LocatorChunk : NamedChunk
         {
             Data.AddRange(data);
         }
+
+        public override string ToString()
+        {
+            return $"[{string.Join(", ", Data)}]";
+        }
     }
     
     /// <summary>
@@ -302,6 +307,11 @@ public class LocatorChunk : NamedChunk
             Event = @event;
             Parameter = parameter;
         }
+
+        public override string ToString()
+        {
+            return $"Event = {Event}, Parameter = {Parameter?.ToString() ?? "null"}";
+        }
     }
 
     /// <summary>
@@ -322,6 +332,11 @@ public class LocatorChunk : NamedChunk
         {
             Key = key;
         }
+
+        public override string ToString()
+        {
+            return $"Key = {Key}";
+        }
     }
 
     /// <summary>
@@ -335,6 +350,11 @@ public class LocatorChunk : NamedChunk
 
         public Type2LocatorData() : base(2)
         { }
+
+        public override string ToString()
+        {
+            return string.Empty;
+        }
     }
 
     /// <summary>
@@ -392,6 +412,11 @@ public class LocatorChunk : NamedChunk
             ParkedCar = parkedCar;
             FreeCar = freeCar;
         }
+
+        public override string ToString()
+        {
+            return $"Rotation = {Rotation}, ParkedCar = {ParkedCar?.ToString() ?? "null"}, FreeCar = {FreeCar}";
+        }
     }
 
     /// <summary>
@@ -405,6 +430,11 @@ public class LocatorChunk : NamedChunk
 
         public Type4LocatorData() : base(4)
         { }
+
+        public override string ToString()
+        {
+            return string.Empty;
+        }
     }
 
     /// <summary>
@@ -424,6 +454,11 @@ public class LocatorChunk : NamedChunk
         public Type5LocatorData(string dynaLoadData) : base(5)
         {
             DynaLoadData = dynaLoadData;
+        }
+
+        public override string ToString()
+        {
+            return DynaLoadData;
         }
     }
 
@@ -447,6 +482,11 @@ public class LocatorChunk : NamedChunk
         public Type6LocatorData(uint occlusions) : base(6)
         {
             Occlusions = occlusions;
+        }
+
+        public override string ToString()
+        {
+            return $"Occlusions = {Occlusions?.ToString() ?? "null"}";
         }
     }
 
@@ -498,6 +538,11 @@ public class LocatorChunk : NamedChunk
             Up = up;
             Front = front;
         }
+
+        public override string ToString()
+        {
+            return $"InteriorName = {InteriorName}, Right = {Right}, Up = {Up}, Front = {Front}";
+        }
     }
 
     /// <summary>
@@ -536,6 +581,11 @@ public class LocatorChunk : NamedChunk
             Right = right;
             Up = up;
             Front = front;
+        }
+
+        public override string ToString()
+        {
+            return $"Right = {Right}, Up = {Up}, Front = {Front}";
         }
     }
 
@@ -587,6 +637,11 @@ public class LocatorChunk : NamedChunk
             ButtonInput = buttonInput;
             ShouldTransform = shouldTransform;
         }
+
+        public override string ToString()
+        {
+            return $"ObjectName = {ObjectName}, JointName = {JointName}, ActionName = {ActionName}, ButtonInput = {ButtonInput}, ShouldTransform = {ShouldTransform}";
+        }
     }
 
     /// <summary>
@@ -618,6 +673,11 @@ public class LocatorChunk : NamedChunk
             Type = type;
             Rate = rate;
         }
+
+        public override string ToString()
+        {
+            return $"FOV = {FOV}, Type = {Type}, Rate = {Rate}";
+        }
     }
 
     /// <summary>
@@ -630,6 +690,11 @@ public class LocatorChunk : NamedChunk
 
         public Type11LocatorData() : base(11)
         { }
+
+        public override string ToString()
+        {
+            return string.Empty;
+        }
     }
 
     /// <summary>
@@ -735,6 +800,11 @@ public class LocatorChunk : NamedChunk
             CutInOut = cutInOut;
             Data = data;
         }
+
+        public override string ToString()
+        {
+            return $"TargetPosition = {TargetPosition}, FOV = {FOV}, TargetLag = {TargetLag}, FollowPlayer = {FollowPlayer}, TransitionTargetRate = {TransitionTargetRate?.ToString() ?? "null"}, Flags = {Flags?.ToString() ?? "null"}, CutInOut = {CutInOut?.ToString() ?? "null"}, Data = {Data?.ToString() ?? "null"}";
+        }
     }
 
     /// <summary>
@@ -756,6 +826,11 @@ public class LocatorChunk : NamedChunk
         {
             GroupNum = groupNum;
         }
+
+        public override string ToString()
+        {
+            return $"GroupNum = {GroupNum}";
+        }
     }
 
     /// <summary>
@@ -768,5 +843,10 @@ public class LocatorChunk : NamedChunk
 
         public Type14LocatorData() : base(14)
         { }
+
+        public override string ToString()
+        {
+            return string.Empty;
+        }
     }
 }
