@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text;
 
-namespace NetP3DLib;
+namespace NetP3DLib.IO;
 
 public class EndianAwareBinaryWriter : BinaryWriter
 {
@@ -66,8 +66,8 @@ public class EndianAwareBinaryWriter : BinaryWriter
 
     private void WriteForEndianness(byte[] bytesToWrite, Endianness endianness)
     {
-        if ((endianness == Endianness.Little && !BitConverter.IsLittleEndian)
-            || (endianness == Endianness.Big && BitConverter.IsLittleEndian))
+        if (endianness == Endianness.Little && !BitConverter.IsLittleEndian
+            || endianness == Endianness.Big && BitConverter.IsLittleEndian)
         {
             Array.Reverse(bytesToWrite);
         }

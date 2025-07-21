@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text;
 
-namespace NetP3DLib;
+namespace NetP3DLib.IO;
 
 public class EndianAwareBinaryReader : BinaryReader
 {
@@ -63,8 +63,8 @@ public class EndianAwareBinaryReader : BinaryReader
     {
         var bytesRead = ReadBytes(bytesToRead);
 
-        if ((endianness == Endianness.Little && !BitConverter.IsLittleEndian)
-            || (endianness == Endianness.Big && BitConverter.IsLittleEndian))
+        if (endianness == Endianness.Little && !BitConverter.IsLittleEndian
+            || endianness == Endianness.Big && BitConverter.IsLittleEndian)
         {
             Array.Reverse(bytesRead);
         }

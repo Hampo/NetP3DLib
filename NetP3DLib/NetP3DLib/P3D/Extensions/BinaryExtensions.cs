@@ -1,4 +1,5 @@
-﻿using NetP3DLib.Numerics;
+﻿using NetP3DLib.IO;
+using NetP3DLib.Numerics;
 using NetP3DLib.P3D.Exceptions;
 using System;
 using System.Drawing;
