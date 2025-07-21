@@ -1,6 +1,5 @@
 ﻿using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
-using System.IO;
 
 namespace NetP3DLib.P3D;
 
