@@ -59,7 +59,7 @@ public class FrontendLanguageChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => (uint)DataBytes.Length;
+    public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + 1 + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) * (uint)Entries.Count + sizeof(uint) * (uint)Entries.Count + (uint)Encoding.Unicode.GetBytes(BuildData().Buffer).Length;//(uint)DataBytes.Length;
 
     public FrontendLanguageChunk(BinaryReader br) : base(ChunkID)
     {
