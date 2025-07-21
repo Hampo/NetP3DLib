@@ -1,3 +1,4 @@
+using NetP3DLib.P3D.Extensions;
 using System.Collections.Generic;
 using System.IO;
 
@@ -24,7 +25,7 @@ public class AnimObjWrapperChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(byte) + sizeof(byte);
+    public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(byte) + sizeof(byte);
 
     public AnimObjWrapperChunk(BinaryReader br) : base(ChunkID)
     {
@@ -38,11 +39,6 @@ public class AnimObjWrapperChunk : NamedChunk
         Name = name;
         Version = version;
         HasAlpha = hasAlpha;
-    }
-
-    public override void Validate()
-    {
-        base.Validate();
     }
 
     internal override void WriteData(BinaryWriter bw)

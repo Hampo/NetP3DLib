@@ -1,3 +1,5 @@
+using NetP3DLib.P3D.Exceptions;
+using NetP3DLib.P3D.Extensions;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -24,7 +26,7 @@ public class FrontendStringTextBibleChunk : Chunk
             return [.. data];
         }
     }
-    public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(BibleName).Length + (uint)BinaryExtensions.GetP3DStringBytes(StringID).Length;
+    public override uint DataLength => BinaryExtensions.GetP3DStringLength(BibleName) + BinaryExtensions.GetP3DStringLength(StringID);
 
     public FrontendStringTextBibleChunk(BinaryReader br) : base(ChunkID)
     {
@@ -40,15 +42,11 @@ public class FrontendStringTextBibleChunk : Chunk
 
     public override void Validate()
     {
-        if (BibleName == null)
-            throw new InvalidDataException($"{nameof(BibleName)} cannot be null.");
-        if (Encoding.UTF8.GetBytes(BibleName).Length > 255)
-            throw new InvalidDataException($"The max length of {nameof(BibleName)} is 255 bytes.");
+        if (!BibleName.IsValidP3DString())
+            throw new InvalidP3DStringException(nameof(BibleName), BibleName);
 
-        if (StringID == null)
-            throw new InvalidDataException($"{nameof(StringID)} cannot be null.");
-        if (Encoding.UTF8.GetBytes(StringID).Length > 255)
-            throw new InvalidDataException($"The max length of {nameof(StringID)} is 255 bytes.");
+        if (!StringID.IsValidP3DString())
+            throw new InvalidP3DStringException(nameof(StringID), StringID);
 
         base.Validate();
     }

@@ -1,3 +1,5 @@
+using NetP3DLib.P3D.Exceptions;
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -124,10 +126,8 @@ public class MultiControllerTracksChunk : Chunk
 
         public void Validate()
         {
-            if (Name == null)
-                throw new InvalidDataException($"{nameof(Name)} cannot be null.");
-            if (Encoding.UTF8.GetBytes(Name).Length > 255)
-                throw new InvalidDataException($"The max length of {nameof(Name)} is 255 bytes.");
+            if (!Name.IsValidP3DString())
+                throw new InvalidP3DStringException(nameof(Name), Name);
         }
 
         internal void Write(BinaryWriter bw)

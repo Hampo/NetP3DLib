@@ -1,3 +1,5 @@
+using NetP3DLib.P3D.Exceptions;
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -36,7 +38,7 @@ public class FrontendProjectChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(uint) + sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Platform).Length + (uint)BinaryExtensions.GetP3DStringBytes(PagePath).Length + (uint)BinaryExtensions.GetP3DStringBytes(ResourcePath).Length + (uint)BinaryExtensions.GetP3DStringBytes(ScreenPath).Length;
+    public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint) + sizeof(uint) + BinaryExtensions.GetP3DStringLength(Platform) + BinaryExtensions.GetP3DStringLength(PagePath) + BinaryExtensions.GetP3DStringLength(ResourcePath) + BinaryExtensions.GetP3DStringLength(ScreenPath);
 
     public FrontendProjectChunk(BinaryReader br) : base(ChunkID)
     {
@@ -64,25 +66,17 @@ public class FrontendProjectChunk : NamedChunk
 
     public override void Validate()
     {
-        if (Platform == null)
-            throw new InvalidDataException($"{nameof(Platform)} cannot be null.");
-        if (Encoding.UTF8.GetBytes(Platform).Length > 255)
-            throw new InvalidDataException($"The max length of {nameof(Platform)} is 255 bytes.");
+        if (!Platform.IsValidP3DString())
+            throw new InvalidP3DStringException(nameof(Platform), Platform);
 
-        if (PagePath == null)
-            throw new InvalidDataException($"{nameof(PagePath)} cannot be null.");
-        if (Encoding.UTF8.GetBytes(PagePath).Length > 255)
-            throw new InvalidDataException($"The max length of {nameof(PagePath)} is 255 bytes.");
+        if (!PagePath.IsValidP3DString())
+            throw new InvalidP3DStringException(nameof(PagePath), PagePath);
 
-        if (ResourcePath == null)
-            throw new InvalidDataException($"{nameof(ResourcePath)} cannot be null.");
-        if (Encoding.UTF8.GetBytes(ResourcePath).Length > 255)
-            throw new InvalidDataException($"The max length of {nameof(ResourcePath)} is 255 bytes.");
+        if (!ResourcePath.IsValidP3DString())
+            throw new InvalidP3DStringException(nameof(ResourcePath), ResourcePath);
 
-        if (ScreenPath == null)
-            throw new InvalidDataException($"{nameof(ScreenPath)} cannot be null.");
-        if (Encoding.UTF8.GetBytes(ScreenPath).Length > 255)
-            throw new InvalidDataException($"The max length of {nameof(ScreenPath)} is 255 bytes.");
+        if (!ScreenPath.IsValidP3DString())
+            throw new InvalidP3DStringException(nameof(ScreenPath), ScreenPath);
 
         base.Validate();
     }

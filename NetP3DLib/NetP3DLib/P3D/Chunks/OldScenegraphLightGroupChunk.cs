@@ -1,3 +1,5 @@
+using NetP3DLib.P3D.Exceptions;
+using NetP3DLib.P3D.Extensions;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -23,7 +25,7 @@ public class OldScenegraphLightGroupChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + (uint)BinaryExtensions.GetP3DStringBytes(LightGroupName).Length;
+    public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + BinaryExtensions.GetP3DStringLength(LightGroupName);
 
     public OldScenegraphLightGroupChunk(BinaryReader br) : base(ChunkID)
     {
@@ -39,10 +41,8 @@ public class OldScenegraphLightGroupChunk : NamedChunk
 
     public override void Validate()
     {
-        if (LightGroupName == null)
-            throw new InvalidDataException($"{nameof(LightGroupName)} cannot be null.");
-        if (Encoding.UTF8.GetBytes(LightGroupName).Length > 255)
-            throw new InvalidDataException($"The max length of {nameof(LightGroupName)} is 255 bytes.");
+        if (!LightGroupName.IsValidP3DString())
+            throw new InvalidP3DStringException(nameof(LightGroupName), LightGroupName);
 
         base.Validate();
     }

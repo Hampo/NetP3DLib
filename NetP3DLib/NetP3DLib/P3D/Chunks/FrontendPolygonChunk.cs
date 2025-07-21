@@ -1,3 +1,4 @@
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -76,7 +77,7 @@ public class FrontendPolygonChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) * 3 * NumPoints + sizeof(uint) * NumColours;
+    public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) * 3 * NumPoints + sizeof(uint) * NumColours;
 
     public FrontendPolygonChunk(BinaryReader br) : base(ChunkID)
     {

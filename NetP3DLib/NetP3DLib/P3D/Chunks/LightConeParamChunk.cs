@@ -46,11 +46,6 @@ public class LightConeParamChunk : Chunk
         Range = range;
     }
 
-    public override void Validate()
-    {
-        base.Validate();
-    }
-
     internal override void WriteData(BinaryWriter bw)
     {
         bw.Write(Phi);

@@ -1,3 +1,4 @@
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,7 +24,7 @@ public class OldVertexAnimKeyFrameChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Name).Length;
+    public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name);
 
     public OldVertexAnimKeyFrameChunk(BinaryReader br) : base(ChunkID)
     {
@@ -35,11 +36,6 @@ public class OldVertexAnimKeyFrameChunk : NamedChunk
     {
         Version = version;
         Name = name;
-    }
-
-    public override void Validate()
-    {
-        base.Validate();
     }
 
     internal override void WriteData(BinaryWriter bw)

@@ -59,11 +59,6 @@ public class TopologyChunk : Chunk
         Topologies.AddRange(entries);
     }
 
-    public override void Validate()
-    {
-        base.Validate();
-    }
-
     internal override void WriteData(BinaryWriter bw)
     {
         bw.Write(NumTopology);

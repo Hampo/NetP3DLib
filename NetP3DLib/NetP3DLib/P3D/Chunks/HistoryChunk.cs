@@ -1,3 +1,5 @@
+using NetP3DLib.P3D.Exceptions;
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -58,9 +60,6 @@ public class HistoryChunk : Chunk
 
     public HistoryChunk(IList<string> history) : base(ChunkID)
     {
-        if (history.Any(x => x == null || x.Length > 255))
-            throw new ArgumentException("All history lines must have a value, with a max length of 255 bytes.");
-
         History.AddRange(history);
     }
 
@@ -69,8 +68,9 @@ public class HistoryChunk : Chunk
         if (History.Count > MAX_HISTORY_LINES)
             throw new InvalidDataException($"The max number of history lines is {MAX_HISTORY_LINES}.");
 
-        if (History.Any(x => x == null || x.Length > 255))
-            throw new InvalidDataException("All history lines must have a value, with a max length of 255 bytes.");
+        foreach (var history in History)
+            if (!history.IsValidP3DString())
+                throw new InvalidP3DStringException(nameof(History), history);
 
         base.Validate();
     }

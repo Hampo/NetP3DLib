@@ -1,3 +1,5 @@
+using NetP3DLib.P3D.Exceptions;
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -39,7 +41,7 @@ public class RoadChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(StartIntersection).Length + (uint)BinaryExtensions.GetP3DStringBytes(EndIntersection).Length + sizeof(uint) + sizeof(byte) + sizeof(byte) + sizeof(byte) + sizeof(byte);
+    public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + BinaryExtensions.GetP3DStringLength(StartIntersection) + BinaryExtensions.GetP3DStringLength(EndIntersection) + sizeof(uint) + sizeof(byte) + sizeof(byte) + sizeof(byte) + sizeof(byte);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
     public RoadChunk(BinaryReader br) : base(ChunkID)
@@ -70,15 +72,11 @@ public class RoadChunk : NamedChunk
 
     public override void Validate()
     {
-        if (StartIntersection == null)
-            throw new InvalidDataException($"{nameof(StartIntersection)} cannot be null.");
-        if (Encoding.UTF8.GetBytes(StartIntersection).Length > 255)
-            throw new InvalidDataException($"The max length of {nameof(StartIntersection)} is 255 bytes.");
+        if (!StartIntersection.IsValidP3DString())
+            throw new InvalidP3DStringException(nameof(StartIntersection), StartIntersection);
 
-        if (EndIntersection == null)
-            throw new InvalidDataException($"{nameof(EndIntersection)} cannot be null.");
-        if (Encoding.UTF8.GetBytes(EndIntersection).Length > 255)
-            throw new InvalidDataException($"The max length of {nameof(EndIntersection)} is 255 bytes.");
+        if (!EndIntersection.IsValidP3DString())
+            throw new InvalidP3DStringException(nameof(EndIntersection), EndIntersection);
 
         if (Children.Count == 0)
             throw new InvalidDataException($"There must be at least one Road Segment child chunk.");

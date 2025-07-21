@@ -1,3 +1,4 @@
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -58,11 +59,6 @@ public class NormalListChunk : Chunk
     public NormalListChunk(IList<Vector3> normals) : base(ChunkID)
     {
         Normals.AddRange(normals);
-    }
-
-    public override void Validate()
-    {
-        base.Validate();
     }
 
     internal override void WriteData(BinaryWriter bw)

@@ -1,3 +1,4 @@
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -47,7 +48,7 @@ public class VisibilityAnimChannelChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(ushort) + sizeof(uint) + sizeof(uint) * NumFrames;
+    public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(ushort) + sizeof(uint) + sizeof(uint) * NumFrames;
 
     public VisibilityAnimChannelChunk(BinaryReader br) : base(ChunkID)
     {
@@ -64,11 +65,6 @@ public class VisibilityAnimChannelChunk : NamedChunk
         Name = name;
         StartState = startState;
         Frames.AddRange(values);
-    }
-
-    public override void Validate()
-    {
-        base.Validate();
     }
 
     internal override void WriteData(BinaryWriter bw)

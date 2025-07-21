@@ -1,3 +1,5 @@
+using NetP3DLib.P3D.Exceptions;
+using NetP3DLib.P3D.Extensions;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -22,7 +24,7 @@ public class FrontendStringHardCodedChunk : Chunk
             return [.. data];
         }
     }
-    public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(String).Length;
+    public override uint DataLength => BinaryExtensions.GetP3DStringLength(String);
 
     public FrontendStringHardCodedChunk(BinaryReader br) : base(ChunkID)
     {
@@ -36,10 +38,8 @@ public class FrontendStringHardCodedChunk : Chunk
 
     public override void Validate()
     {
-        if (String == null)
-            throw new InvalidDataException($"{nameof(String)} cannot be null.");
-        if (Encoding.UTF8.GetBytes(String).Length > 255)
-            throw new InvalidDataException($"The max length of {nameof(String)} is 255 bytes.");
+        if (!String.IsValidP3DString())
+            throw new InvalidP3DStringException(nameof(String), String);
 
         base.Validate();
     }

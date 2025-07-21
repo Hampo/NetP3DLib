@@ -1,3 +1,5 @@
+using NetP3DLib.P3D.Exceptions;
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -31,7 +33,7 @@ public class ShadowSkinChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(SkeletonName).Length + sizeof(uint) + sizeof(uint);
+    public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + BinaryExtensions.GetP3DStringLength(SkeletonName) + sizeof(uint) + sizeof(uint);
 
     public ShadowSkinChunk(BinaryReader br) : base(ChunkID)
     {
@@ -53,10 +55,8 @@ public class ShadowSkinChunk : NamedChunk
 
     public override void Validate()
     {
-        if (SkeletonName == null)
-            throw new InvalidDataException($"{nameof(SkeletonName)} cannot be null.");
-        if (Encoding.UTF8.GetBytes(SkeletonName).Length > 255)
-            throw new InvalidDataException($"The max length of {nameof(SkeletonName)} is 255 bytes.");
+        if (!SkeletonName.IsValidP3DString())
+            throw new InvalidP3DStringException(nameof(SkeletonName), SkeletonName);
 
         base.Validate();
     }

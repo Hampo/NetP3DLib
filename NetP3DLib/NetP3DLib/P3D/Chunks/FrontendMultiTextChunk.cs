@@ -1,3 +1,5 @@
+using NetP3DLib.P3D.Exceptions;
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -64,7 +66,7 @@ public class FrontendMultiTextChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(int) + sizeof(int) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(float) + (uint)BinaryExtensions.GetP3DStringBytes(TextStyleName).Length + sizeof(byte) + sizeof(uint) + sizeof(int) + sizeof(int) + sizeof(uint);
+    public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(int) + sizeof(int) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(float) + BinaryExtensions.GetP3DStringLength(TextStyleName) + sizeof(byte) + sizeof(uint) + sizeof(int) + sizeof(int) + sizeof(uint);
 
     public FrontendMultiTextChunk(BinaryReader br) : base(ChunkID)
     {
@@ -110,10 +112,8 @@ public class FrontendMultiTextChunk : NamedChunk
 
     public override void Validate()
     {
-        if (TextStyleName == null)
-            throw new InvalidDataException($"{nameof(TextStyleName)} cannot be null.");
-        if (Encoding.UTF8.GetBytes(TextStyleName).Length > 255)
-            throw new InvalidDataException($"The max length of {nameof(TextStyleName)} is 255 bytes.");
+        if (!TextStyleName.IsValidP3DString())
+            throw new InvalidP3DStringException(nameof(TextStyleName), TextStyleName);
 
         base.Validate();
     }

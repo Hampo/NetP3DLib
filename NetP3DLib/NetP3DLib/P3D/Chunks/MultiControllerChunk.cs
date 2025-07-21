@@ -1,3 +1,4 @@
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -30,7 +31,7 @@ public class MultiControllerChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(float) + sizeof(float) + sizeof(uint);
+    public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(float) + sizeof(float) + sizeof(uint);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
     public MultiControllerChunk(BinaryReader br) : base(ChunkID)
@@ -48,11 +49,6 @@ public class MultiControllerChunk : NamedChunk
         Version = version;
         Length = length;
         Framerate = framerate;
-    }
-
-    public override void Validate()
-    {
-        base.Validate();
     }
 
     internal override void WriteData(BinaryWriter bw)

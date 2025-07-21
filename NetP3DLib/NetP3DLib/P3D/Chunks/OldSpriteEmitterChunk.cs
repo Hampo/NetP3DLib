@@ -1,3 +1,5 @@
+using NetP3DLib.P3D.Exceptions;
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -36,7 +38,7 @@ public class OldSpriteEmitterChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + (uint)BinaryExtensions.GetP3DStringBytes(ShaderName).Length + 4 + sizeof(float) + 4 + sizeof(uint) + sizeof(uint);
+    public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + BinaryExtensions.GetP3DStringLength(ShaderName) + 4 + sizeof(float) + 4 + sizeof(uint) + sizeof(uint);
 
     public OldSpriteEmitterChunk(BinaryReader br) : base(ChunkID)
     {
@@ -64,20 +66,14 @@ public class OldSpriteEmitterChunk : NamedChunk
 
     public override void Validate()
     {
-        if (ShaderName == null)
-            throw new InvalidDataException($"{nameof(ShaderName)} cannot be null.");
-        if (Encoding.UTF8.GetBytes(ShaderName).Length > 255)
-            throw new InvalidDataException($"The max length of {nameof(ShaderName)} is 255 bytes.");
+        if (!ShaderName.IsValidP3DString())
+            throw new InvalidP3DStringException(nameof(ShaderName), ShaderName);
 
-        if (AngleMode == null || AngleMode.Length == 0)
-            throw new InvalidDataException($"{nameof(AngleMode)} must be at least 1 char.");
-        if (AngleMode.Length > 4)
-            throw new InvalidDataException($"The max length of {nameof(AngleMode)} is 4 chars.");
+        if (!AngleMode.IsValidFourCC())
+            throw new InvalidFourCCException(nameof(AngleMode), AngleMode);
 
-        if (TextureAnimMode == null || TextureAnimMode.Length == 0)
-            throw new InvalidDataException($"{nameof(TextureAnimMode)} must be at least 1 char.");
-        if (TextureAnimMode.Length > 4)
-            throw new InvalidDataException($"The max length of {nameof(TextureAnimMode)} is 4 chars.");
+        if (!TextureAnimMode.IsValidFourCC())
+            throw new InvalidFourCCException(nameof(TextureAnimMode), TextureAnimMode);
 
         base.Validate();
     }

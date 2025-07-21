@@ -1,3 +1,4 @@
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -50,7 +51,7 @@ public class RailCamChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(float) + sizeof(float) + sizeof(uint) + sizeof(float) + sizeof(uint) + sizeof(float) + sizeof(float) * 3 + sizeof(float) * 3 + sizeof(float) + sizeof(float);
+    public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(float) + sizeof(float) + sizeof(uint) + sizeof(float) + sizeof(uint) + sizeof(float) + sizeof(float) * 3 + sizeof(float) * 3 + sizeof(float) + sizeof(float);
 
     public RailCamChunk(BinaryReader br) : base(ChunkID)
     {
@@ -82,11 +83,6 @@ public class RailCamChunk : NamedChunk
         AxisPlay = axisPlay;
         PositionLag = positionLag;
         TargetLag = targetLag;
-    }
-
-    public override void Validate()
-    {
-        base.Validate();
     }
 
     internal override void WriteData(BinaryWriter bw)

@@ -1,3 +1,4 @@
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -49,11 +50,6 @@ public class FollowCameraDataChunk : Chunk
         Elevation = elevation;
         Magnitude = magnitude;
         TargetOffset = targetOffset;
-    }
-
-    public override void Validate()
-    {
-        base.Validate();
     }
 
     internal override void WriteData(BinaryWriter bw)

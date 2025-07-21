@@ -63,11 +63,6 @@ public class OldIndexOffsetListChunk : Chunk
         Offsets.AddRange(offsets);
     }
 
-    public override void Validate()
-    {
-        base.Validate();
-    }
-
     internal override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);

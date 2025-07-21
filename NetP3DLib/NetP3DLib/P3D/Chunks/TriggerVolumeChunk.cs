@@ -1,3 +1,4 @@
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -28,7 +29,7 @@ public class TriggerVolumeChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(float) * 3 + sizeof(float) * 16;
+    public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(float) * 3 + sizeof(float) * 16;
 
     public TriggerVolumeChunk(BinaryReader br) : base(ChunkID)
     {
@@ -44,11 +45,6 @@ public class TriggerVolumeChunk : NamedChunk
         IsRect = isRect;
         HalfExtents = halfExtents;
         Matrix = matrix;
-    }
-
-    public override void Validate()
-    {
-        base.Validate();
     }
 
     internal override void WriteData(BinaryWriter bw)

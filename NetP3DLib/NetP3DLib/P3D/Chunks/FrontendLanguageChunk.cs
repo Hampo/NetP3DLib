@@ -1,3 +1,4 @@
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -59,7 +60,7 @@ public class FrontendLanguageChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + 1 + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) * (uint)Entries.Count + sizeof(uint) * (uint)Entries.Count + (uint)Encoding.Unicode.GetBytes(BuildData().Buffer).Length;//(uint)DataBytes.Length;
+    public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + 1 + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) * (uint)Entries.Count + sizeof(uint) * (uint)Entries.Count + (uint)Encoding.Unicode.GetBytes(BuildData().Buffer).Length;//(uint)DataBytes.Length;
 
     public FrontendLanguageChunk(BinaryReader br) : base(ChunkID)
     {
@@ -102,11 +103,6 @@ public class FrontendLanguageChunk : NamedChunk
         Entries.Capacity = entries.Count;
         foreach (var entry in entries)
             Entries.Add(new(GetNameHash(entry.Key), entry.Value));
-    }
-
-    public override void Validate()
-    {
-        base.Validate();
     }
 
     internal override void WriteData(BinaryWriter bw)

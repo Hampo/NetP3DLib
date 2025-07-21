@@ -34,11 +34,6 @@ public class CompositeDrawableSkinListChunk : Chunk
     public CompositeDrawableSkinListChunk() : base(ChunkID)
     { }
 
-    public override void Validate()
-    {
-        base.Validate();
-    }
-
     internal override void WriteData(BinaryWriter bw)
     {
         bw.Write(NumElements);

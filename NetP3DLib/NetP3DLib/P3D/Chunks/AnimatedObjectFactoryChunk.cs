@@ -1,3 +1,5 @@
+using NetP3DLib.P3D.Exceptions;
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -28,7 +30,7 @@ public class AnimatedObjectFactoryChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + (uint)BinaryExtensions.GetP3DStringBytes(BaseAnimation).Length + sizeof(uint);
+    public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + BinaryExtensions.GetP3DStringLength(BaseAnimation) + sizeof(uint);
 
     public AnimatedObjectFactoryChunk(BinaryReader br) : base(ChunkID)
     {
@@ -48,10 +50,8 @@ public class AnimatedObjectFactoryChunk : NamedChunk
 
     public override void Validate()
     {
-        if (BaseAnimation == null)
-            throw new InvalidDataException($"{nameof(BaseAnimation)} cannot be null.");
-        if (Encoding.UTF8.GetBytes(BaseAnimation).Length > 255)
-            throw new InvalidDataException($"The max length of {nameof(BaseAnimation)} is 255 bytes.");
+        if (!BaseAnimation.IsValidP3DString())
+            throw new InvalidP3DStringException(nameof(BaseAnimation), BaseAnimation);
 
         base.Validate();
     }

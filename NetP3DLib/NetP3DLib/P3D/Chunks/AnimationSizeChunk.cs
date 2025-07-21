@@ -50,11 +50,6 @@ public class AnimationSizeChunk : Chunk
         GC = gc;
     }
 
-    public override void Validate()
-    {
-        base.Validate();
-    }
-
     internal override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);

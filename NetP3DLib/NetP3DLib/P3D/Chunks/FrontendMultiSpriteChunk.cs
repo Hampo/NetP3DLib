@@ -1,3 +1,5 @@
+using NetP3DLib.P3D.Exceptions;
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -76,7 +78,7 @@ public class FrontendMultiSpriteChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(int) + sizeof(int) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(float) + sizeof(uint) + (uint)ImageNames.Sum(x => BinaryExtensions.GetP3DStringBytes(x).Length);
+    public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(int) + sizeof(int) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(float) + sizeof(uint) + (uint)ImageNames.Sum(x => BinaryExtensions.GetP3DStringBytes(x).Length);
 
     public FrontendMultiSpriteChunk(BinaryReader br) : base(ChunkID)
     {
@@ -115,8 +117,9 @@ public class FrontendMultiSpriteChunk : NamedChunk
 
     public override void Validate()
     {
-        if (ImageNames.Any(x => x == null || x.Length > 255))
-            throw new InvalidDataException($"All {nameof(ImageNames)} must have a value, with a max length of 255 bytes.");
+        foreach (var imageName in ImageNames)
+            if (!imageName.IsValidP3DString())
+                throw new InvalidP3DStringException(nameof(ImageNames), imageName);
 
         base.Validate();
     }

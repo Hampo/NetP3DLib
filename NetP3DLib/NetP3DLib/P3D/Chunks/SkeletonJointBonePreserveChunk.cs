@@ -34,11 +34,6 @@ public class SkeletonJointBonePreserveChunk : Chunk
         PreserveBoneLengths = preserveBoneLengths;
     }
 
-    public override void Validate()
-    {
-        base.Validate();
-    }
-
     internal override void WriteData(BinaryWriter bw)
     {
         bw.Write(PreserveBoneLengths);

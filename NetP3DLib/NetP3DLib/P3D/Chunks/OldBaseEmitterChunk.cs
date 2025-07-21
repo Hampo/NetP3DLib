@@ -1,3 +1,5 @@
+using NetP3DLib.P3D.Exceptions;
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -41,7 +43,7 @@ public class OldBaseEmitterChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + 4 + 4 + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(float) + sizeof(float);
+    public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + 4 + 4 + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(float) + sizeof(float);
 
     public OldBaseEmitterChunk(BinaryReader br) : base(ChunkID)
     {
@@ -75,17 +77,10 @@ public class OldBaseEmitterChunk : NamedChunk
 
     public override void Validate()
     {
-        if (ParticleType == null || ParticleType.Length == 0)
-            throw new InvalidDataException($"{nameof(ParticleType)} must be at least 1 char.");
+        if (!ParticleType.IsValidFourCC())
+            throw new InvalidFourCCException(nameof(ParticleType), ParticleType);
 
-        if (ParticleType.Length > 4)
-            throw new InvalidDataException($"The max length of {nameof(ParticleType)} is 4 chars.");
-
-        if (GeneratorType == null || GeneratorType.Length == 0)
-            throw new InvalidDataException($"{nameof(GeneratorType)} must be at least 1 char.");
-
-        if (GeneratorType.Length > 4)
-            throw new InvalidDataException($"The max length of {nameof(GeneratorType)} is 4 chars.");
+        if (!GeneratorType.IsValidFourCC())
 
         base.Validate();
     }

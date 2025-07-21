@@ -1,3 +1,5 @@
+using NetP3DLib.P3D.Exceptions;
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -48,7 +50,7 @@ public class SpriteParticleEmitterChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + (uint)BinaryExtensions.GetP3DStringBytes(ShaderName).Length + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(float);
+    public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + BinaryExtensions.GetP3DStringLength(ShaderName) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(float);
 
     public SpriteParticleEmitterChunk(BinaryReader br) : base(ChunkID)
     {
@@ -88,10 +90,8 @@ public class SpriteParticleEmitterChunk : NamedChunk
 
     public override void Validate()
     {
-        if (ShaderName == null)
-            throw new InvalidDataException($"{nameof(ShaderName)} cannot be null.");
-        if (Encoding.UTF8.GetBytes(ShaderName).Length > 255)
-            throw new InvalidDataException($"The max length of {nameof(ShaderName)} is 255 bytes.");
+        if (!ShaderName.IsValidP3DString())
+            throw new InvalidP3DStringException(nameof(ShaderName), ShaderName);
 
         base.Validate();
     }

@@ -34,11 +34,6 @@ public class CollisionAxisAlignedBoundingBoxChunk : Chunk
         Nothing = 0;
     }
 
-    public override void Validate()
-    {
-        base.Validate();
-    }
-
     internal override void WriteData(BinaryWriter bw)
     {
         bw.Write(Nothing);

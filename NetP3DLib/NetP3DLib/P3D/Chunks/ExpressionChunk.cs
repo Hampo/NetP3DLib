@@ -1,3 +1,4 @@
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -72,7 +73,7 @@ public class ExpressionChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(float) * NumKeys + sizeof(uint) * NumIndices;
+    public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(float) * NumKeys + sizeof(uint) * NumIndices;
 
     public ExpressionChunk(BinaryReader br) : base(ChunkID)
     {

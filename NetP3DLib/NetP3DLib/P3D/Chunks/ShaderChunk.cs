@@ -1,3 +1,5 @@
+using NetP3DLib.P3D.Exceptions;
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -34,7 +36,7 @@ public class ShaderChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(PddiShaderName).Length + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint);
+    public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + BinaryExtensions.GetP3DStringLength(PddiShaderName) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
     public ShaderChunk(BinaryReader br) : base(ChunkID)
@@ -60,10 +62,8 @@ public class ShaderChunk : NamedChunk
 
     public override void Validate()
     {
-        if (PddiShaderName == null)
-            throw new InvalidDataException($"{nameof(PddiShaderName)} cannot be null.");
-        if (Encoding.UTF8.GetBytes(PddiShaderName).Length > 255)
-            throw new InvalidDataException($"The max length of {nameof(PddiShaderName)} is 255 bytes.");
+        if (!PddiShaderName.IsValidP3DString())
+            throw new InvalidP3DStringException(nameof(PddiShaderName), PddiShaderName);
 
         base.Validate();
     }

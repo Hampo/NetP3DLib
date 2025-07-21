@@ -38,11 +38,6 @@ public class AnimationSyncFrameChunk : Chunk
         SyncFrame = syncFrame;
     }
 
-    public override void Validate()
-    {
-        base.Validate();
-    }
-
     internal override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);

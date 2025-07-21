@@ -1,3 +1,4 @@
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -28,7 +29,7 @@ public class ShadowMeshChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(uint) + sizeof(uint);
+    public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint) + sizeof(uint);
 
     public ShadowMeshChunk(BinaryReader br) : base(ChunkID)
     {
@@ -44,11 +45,6 @@ public class ShadowMeshChunk : NamedChunk
         Version = version;
         NumVertices = numVertices;
         NumTriangles = numTriangles;
-    }
-
-    public override void Validate()
-    {
-        base.Validate();
     }
 
     internal override void WriteData(BinaryWriter bw)

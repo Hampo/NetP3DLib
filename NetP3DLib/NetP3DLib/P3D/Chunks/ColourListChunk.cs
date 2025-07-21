@@ -1,3 +1,4 @@
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -58,11 +59,6 @@ public class ColourListChunk : Chunk
     public ColourListChunk(IList<Color> colours) : base(ChunkID)
     {
         Colours.AddRange(colours);
-    }
-
-    public override void Validate()
-    {
-        base.Validate();
     }
 
     internal override void WriteData(BinaryWriter bw)

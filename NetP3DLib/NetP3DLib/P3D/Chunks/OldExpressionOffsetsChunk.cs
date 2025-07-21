@@ -64,11 +64,6 @@ public class OldExpressionOffsetsChunk : Chunk
         PrimitiveGroupIndices.AddRange(primitiveGroupIndices);
     }
 
-    public override void Validate()
-    {
-        base.Validate();
-    }
-
     internal override void WriteData(BinaryWriter bw)
     {
         bw.Write(NumPrimitiveGroups);

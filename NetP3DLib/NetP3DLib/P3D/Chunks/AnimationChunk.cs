@@ -1,3 +1,5 @@
+using NetP3DLib.P3D.Exceptions;
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -31,7 +33,7 @@ public class AnimationChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + 4 + sizeof(float) + sizeof(float) + sizeof(uint);
+    public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + 4 + sizeof(float) + sizeof(float) + sizeof(uint);
 
     public AnimationChunk(BinaryReader br) : base(ChunkID)
     {
@@ -55,8 +57,8 @@ public class AnimationChunk : NamedChunk
 
     public override void Validate()
     {
-        if (AnimationType.Length > 4)
-            throw new InvalidDataException($"The max length of {nameof(AnimationType)} is 4 chars.");
+        if (!AnimationType.IsValidFourCC())
+            throw new InvalidFourCCException(nameof(AnimationType), AnimationType);
 
         base.Validate();
     }

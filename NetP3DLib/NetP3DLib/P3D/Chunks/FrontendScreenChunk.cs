@@ -1,7 +1,10 @@
+using NetP3DLib.P3D.Exceptions;
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -48,7 +51,7 @@ public class FrontendScreenChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(uint) + (uint)PageNames.Sum(x => BinaryExtensions.GetP3DStringBytes(x).Length);
+    public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint) + (uint)PageNames.Sum(x => BinaryExtensions.GetP3DStringBytes(x).Length);
 
     public FrontendScreenChunk(BinaryReader br) : base(ChunkID)
     {
@@ -69,8 +72,9 @@ public class FrontendScreenChunk : NamedChunk
 
     public override void Validate()
     {
-        if (PageNames.Any(x => x == null || x.Length > 255))
-            throw new InvalidDataException($"All {nameof(PageNames)} must have a value, with a max length of 255 bytes.");
+        foreach (var pageName in PageNames)
+            if (!pageName.IsValidP3DString())
+                throw new InvalidP3DStringException(nameof(PageNames), pageName);
 
         base.Validate();
     }

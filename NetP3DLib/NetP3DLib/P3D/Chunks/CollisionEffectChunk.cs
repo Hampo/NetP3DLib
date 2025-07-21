@@ -1,3 +1,5 @@
+using NetP3DLib.P3D.Exceptions;
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -42,7 +44,7 @@ public class CollisionEffectChunk : Chunk
             return [.. data];
         }
     }
-    public override uint DataLength => sizeof(uint) + sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(SoundResourceDataName).Length;
+    public override uint DataLength => sizeof(uint) + sizeof(uint) + BinaryExtensions.GetP3DStringLength(SoundResourceDataName);
 
     public CollisionEffectChunk(BinaryReader br) : base(ChunkID)
     {
@@ -60,10 +62,8 @@ public class CollisionEffectChunk : Chunk
 
     public override void Validate()
     {
-        if (SoundResourceDataName == null)
-            throw new InvalidDataException($"{nameof(SoundResourceDataName)} cannot be null.");
-        if (Encoding.UTF8.GetBytes(SoundResourceDataName).Length > 255)
-            throw new InvalidDataException($"The max length of {nameof(SoundResourceDataName)} is 255 bytes.");
+        if (!SoundResourceDataName.IsValidP3DString())
+            throw new InvalidP3DStringException(nameof(SoundResourceDataName), SoundResourceDataName);
 
         base.Validate();
     }

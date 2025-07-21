@@ -59,11 +59,6 @@ public class CollisionMeshTriangleListChunk : Chunk
         Triangles.AddRange(entries);
     }
 
-    public override void Validate()
-    {
-        base.Validate();
-    }
-
     internal override void WriteData(BinaryWriter bw)
     {
         bw.Write(NumTriangles);

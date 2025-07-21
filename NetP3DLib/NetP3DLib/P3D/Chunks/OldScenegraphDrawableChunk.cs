@@ -1,3 +1,5 @@
+using NetP3DLib.P3D.Exceptions;
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -26,7 +28,7 @@ public class OldScenegraphDrawableChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + (uint)BinaryExtensions.GetP3DStringBytes(DrawableName).Length + sizeof(uint);
+    public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + BinaryExtensions.GetP3DStringLength(DrawableName) + sizeof(uint);
 
     public OldScenegraphDrawableChunk(BinaryReader br) : base(ChunkID)
     {
@@ -44,10 +46,8 @@ public class OldScenegraphDrawableChunk : NamedChunk
 
     public override void Validate()
     {
-        if (DrawableName == null)
-            throw new InvalidDataException($"{nameof(DrawableName)} cannot be null.");
-        if (Encoding.UTF8.GetBytes(DrawableName).Length > 255)
-            throw new InvalidDataException($"The max length of {nameof(DrawableName)} is 255 bytes.");
+        if (!DrawableName.IsValidP3DString())
+            throw new InvalidP3DStringException(nameof(DrawableName), DrawableName);
 
         base.Validate();
     }

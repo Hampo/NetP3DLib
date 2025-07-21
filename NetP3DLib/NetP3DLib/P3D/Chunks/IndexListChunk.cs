@@ -59,11 +59,6 @@ public class IndexListChunk : Chunk
         Indices.AddRange(indices);
     }
 
-    public override void Validate()
-    {
-        base.Validate();
-    }
-
     internal override void WriteData(BinaryWriter bw)
     {
         bw.Write(NumIndices);

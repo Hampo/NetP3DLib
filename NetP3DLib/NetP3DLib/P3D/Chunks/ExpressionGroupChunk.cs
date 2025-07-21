@@ -1,3 +1,5 @@
+using NetP3DLib.P3D.Exceptions;
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -50,7 +52,7 @@ public class ExpressionGroupChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + (uint)BinaryExtensions.GetP3DStringBytes(TargetName).Length + sizeof(uint) + sizeof(uint) * NumStages;
+    public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + BinaryExtensions.GetP3DStringLength(TargetName) + sizeof(uint) + sizeof(uint) * NumStages;
 
     public ExpressionGroupChunk(BinaryReader br) : base(ChunkID)
     {
@@ -73,10 +75,8 @@ public class ExpressionGroupChunk : NamedChunk
 
     public override void Validate()
     {
-        if (TargetName == null)
-            throw new InvalidDataException($"{nameof(TargetName)} cannot be null.");
-        if (Encoding.UTF8.GetBytes(TargetName).Length > 255)
-            throw new InvalidDataException($"The max length of {nameof(TargetName)} is 255 bytes.");
+        if (!TargetName.IsValidP3DString())
+            throw new InvalidP3DStringException(nameof(TargetName), TargetName);
 
         base.Validate();
     }

@@ -1,3 +1,5 @@
+using NetP3DLib.P3D.Exceptions;
+using NetP3DLib.P3D.Extensions;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -23,7 +25,7 @@ public class CompositeDrawableChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + (uint)BinaryExtensions.GetP3DStringBytes(SkeletonName).Length;
+    public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + BinaryExtensions.GetP3DStringLength(SkeletonName);
 
     public CompositeDrawableChunk(BinaryReader br) : base(ChunkID)
     {
@@ -39,10 +41,8 @@ public class CompositeDrawableChunk : NamedChunk
 
     public override void Validate()
     {
-        if (SkeletonName == null)
-            throw new InvalidDataException($"{nameof(SkeletonName)} cannot be null.");
-        if (Encoding.UTF8.GetBytes(SkeletonName).Length > 255)
-            throw new InvalidDataException($"The max length of {nameof(SkeletonName)} is 255 bytes.");
+        if (!SkeletonName.IsValidP3DString())
+            throw new InvalidP3DStringException(nameof(SkeletonName), SkeletonName);
 
         base.Validate();
     }

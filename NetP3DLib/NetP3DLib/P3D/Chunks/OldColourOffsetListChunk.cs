@@ -1,3 +1,4 @@
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -62,11 +63,6 @@ public class OldColourOffsetListChunk : Chunk
     {
         Version = version;
         Offsets.AddRange(offsets);
-    }
-
-    public override void Validate()
-    {
-        base.Validate();
     }
 
     internal override void WriteData(BinaryWriter bw)

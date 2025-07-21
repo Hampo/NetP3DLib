@@ -1,3 +1,5 @@
+using NetP3DLib.P3D.Exceptions;
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -104,10 +106,8 @@ public class EntityChannelChunk : ParamChunk
 
         foreach (var value in Values)
         {
-            if (value == null)
-                throw new InvalidDataException($"No item in {nameof(Values)} can be null.");
-            if (Encoding.UTF8.GetBytes(value).Length > 255)
-                throw new InvalidDataException($"The max length of any item in {nameof(Values)} is 255 bytes.");
+            if (!value.IsValidP3DString())
+                throw new InvalidP3DStringException(nameof(Values), value);
         }
 
         base.Validate();

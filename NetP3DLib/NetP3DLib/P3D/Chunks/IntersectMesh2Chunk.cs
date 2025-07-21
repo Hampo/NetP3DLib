@@ -34,11 +34,6 @@ public class IntersectMesh2Chunk : Chunk
         SurfaceType = surfaceType;
     }
 
-    public override void Validate()
-    {
-        base.Validate();
-    }
-
     internal override void WriteData(BinaryWriter bw)
     {
         bw.Write(SurfaceType);

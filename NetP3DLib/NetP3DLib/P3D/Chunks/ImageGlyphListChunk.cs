@@ -60,11 +60,6 @@ public class ImageGlyphListChunk : Chunk
         Glyphs.AddRange(glyphs);
     }
 
-    public override void Validate()
-    {
-        base.Validate();
-    }
-
     internal override void WriteData(BinaryWriter bw)
     {
         bw.Write(NumGlyphs);

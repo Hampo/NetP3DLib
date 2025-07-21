@@ -1,3 +1,5 @@
+using NetP3DLib.P3D.Exceptions;
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -54,7 +56,7 @@ public class FrontendPure3DObjectChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(int) + sizeof(int) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(float) + (uint)BinaryExtensions.GetP3DStringBytes(Pure3DFilename).Length;
+    public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(int) + sizeof(int) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(float) + BinaryExtensions.GetP3DStringLength(Pure3DFilename);
 
     public FrontendPure3DObjectChunk(BinaryReader br) : base(ChunkID)
     {
@@ -90,10 +92,8 @@ public class FrontendPure3DObjectChunk : NamedChunk
 
     public override void Validate()
     {
-        if (Pure3DFilename == null)
-            throw new InvalidDataException($"{nameof(Pure3DFilename)} cannot be null.");
-        if (Encoding.UTF8.GetBytes(Pure3DFilename).Length > 255)
-            throw new InvalidDataException($"The max length of {nameof(Pure3DFilename)} is 255 bytes.");
+        if (!Pure3DFilename.IsValidP3DString())
+            throw new InvalidP3DStringException(nameof(Pure3DFilename), Pure3DFilename);
 
         base.Validate();
     }

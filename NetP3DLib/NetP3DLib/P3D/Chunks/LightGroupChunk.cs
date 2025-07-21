@@ -1,3 +1,5 @@
+using NetP3DLib.P3D.Exceptions;
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -47,7 +49,7 @@ public class LightGroupChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + (uint)Lights.Sum(x => BinaryExtensions.GetP3DStringBytes(x).Length);
+    public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + (uint)Lights.Sum(x => BinaryExtensions.GetP3DStringBytes(x).Length);
 
     public LightGroupChunk(BinaryReader br) : base(ChunkID)
     {
@@ -67,12 +69,8 @@ public class LightGroupChunk : NamedChunk
     public override void Validate()
     {
         foreach (var light in Lights)
-        {
-            if (light == null)
-                throw new InvalidDataException($"No entry in {nameof(Lights)} can be null.");
-            if (Encoding.UTF8.GetBytes(light).Length > 255)
-                    throw new InvalidDataException($"The max length of an entry in {nameof(Lights)} is 255 bytes.");
-        }
+            if (!light.IsValidP3DString())
+                throw new InvalidP3DStringException(nameof(Lights), light);
 
         base.Validate();
     }

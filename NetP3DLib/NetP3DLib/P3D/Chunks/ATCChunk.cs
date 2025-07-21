@@ -1,8 +1,11 @@
+using NetP3DLib.P3D.Exceptions;
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Xml.Linq;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -134,20 +137,14 @@ public class ATCChunk : Chunk
 
         public void Validate()
         {
-            if (SoundResourceDataName == null)
-                throw new InvalidDataException($"{nameof(SoundResourceDataName)} cannot be null.");
-            if (Encoding.UTF8.GetBytes(SoundResourceDataName).Length > 255)
-                throw new InvalidDataException($"The max length of {nameof(SoundResourceDataName)} is 255 bytes.");
+            if (!SoundResourceDataName.IsValidP3DString())
+                throw new InvalidP3DStringException(nameof(SoundResourceDataName), SoundResourceDataName);
 
-            if (Particle == null)
-                throw new InvalidDataException($"{nameof(Particle)} cannot be null.");
-            if (Encoding.UTF8.GetBytes(Particle).Length > 255)
-                throw new InvalidDataException($"The max length of {nameof(Particle)} is 255 bytes.");
+            if (!Particle.IsValidP3DString())
+                throw new InvalidP3DStringException(nameof(Particle), Particle);
 
-            if (BreakableObject == null)
-                throw new InvalidDataException($"{nameof(BreakableObject)} cannot be null.");
-            if (Encoding.UTF8.GetBytes(BreakableObject).Length > 255)
-                throw new InvalidDataException($"The max length of {nameof(BreakableObject)} is 255 bytes.");
+            if (!BreakableObject.IsValidP3DString())
+                throw new InvalidP3DStringException(nameof(BreakableObject), BreakableObject);
         }
 
         internal void Write(BinaryWriter bw)

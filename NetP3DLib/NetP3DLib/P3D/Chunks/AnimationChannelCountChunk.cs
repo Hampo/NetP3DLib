@@ -67,11 +67,6 @@ public class AnimationChannelCountChunk : Chunk
         NumKeys.AddRange(numKeys);
     }
 
-    public override void Validate()
-    {
-        base.Validate();
-    }
-
     internal override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);

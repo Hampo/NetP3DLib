@@ -1,3 +1,5 @@
+using NetP3DLib.P3D.Exceptions;
+using NetP3DLib.P3D.Extensions;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -23,7 +25,7 @@ public class ExportInfoNamedStringChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + (uint)BinaryExtensions.GetP3DStringBytes(Value).Length;
+    public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + BinaryExtensions.GetP3DStringLength(Value);
 
     public ExportInfoNamedStringChunk(BinaryReader br) : base(ChunkID)
     {
@@ -39,10 +41,8 @@ public class ExportInfoNamedStringChunk : NamedChunk
 
     public override void Validate()
     {
-        if (Value == null)
-            throw new InvalidDataException($"{nameof(Value)} cannot be null.");
-        if (Encoding.UTF8.GetBytes(Value).Length > 255)
-            throw new InvalidDataException($"The max length of {nameof(Value)} is 255 bytes.");
+        if (!Value.IsValidP3DString())
+            throw new InvalidP3DStringException(nameof(Value), Value);
 
         base.Validate();
     }

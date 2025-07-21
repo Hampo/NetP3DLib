@@ -35,11 +35,6 @@ public class CompositeDrawableSortOrderChunk : Chunk
         SortOrder = sortOrder;
     }
 
-    public override void Validate()
-    {
-        base.Validate();
-    }
-
     internal override void WriteData(BinaryWriter bw)
     {
         bw.Write(SortOrder);

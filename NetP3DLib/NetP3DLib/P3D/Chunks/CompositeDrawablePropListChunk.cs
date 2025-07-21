@@ -34,11 +34,6 @@ public class CompositeDrawablePropListChunk : Chunk
     public CompositeDrawablePropListChunk() : base(ChunkID)
     { }
 
-    public override void Validate()
-    {
-        base.Validate();
-    }
-
     internal override void WriteData(BinaryWriter bw)
     {
         bw.Write(NumElements);

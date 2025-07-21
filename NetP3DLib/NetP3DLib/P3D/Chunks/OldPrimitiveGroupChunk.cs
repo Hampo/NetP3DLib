@@ -1,3 +1,5 @@
+using NetP3DLib.P3D.Exceptions;
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -77,7 +79,7 @@ public class OldPrimitiveGroupChunk : Chunk
             return [.. data];
         }
     }
-    public override uint DataLength => sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(ShaderName).Length + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint);
+    public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(ShaderName) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint);
 
     public OldPrimitiveGroupChunk(BinaryReader br) : base(ChunkID)
     {
@@ -144,10 +146,8 @@ public class OldPrimitiveGroupChunk : Chunk
 
     public override void Validate()
     {
-        if (ShaderName == null)
-            throw new InvalidDataException($"{nameof(ShaderName)} cannot be null.");
-        if (Encoding.UTF8.GetBytes(ShaderName).Length > 255)
-            throw new InvalidDataException($"The max length of {nameof(ShaderName)} is 255 bytes.");
+        if (!ShaderName.IsValidP3DString())
+            throw new InvalidP3DStringException(nameof(ShaderName), ShaderName);
 
         var expectedVertextType = GetVertexType() & ~VertexTypes.Position; // Hacky fix for "The Simpsons: Road Rage" as the Position List didn't exist then. "The Simpsons: Hit & Run" hardcodedly adds the Position List type to all Old Primitive Groups.
         if ((VertexType & expectedVertextType) != expectedVertextType)

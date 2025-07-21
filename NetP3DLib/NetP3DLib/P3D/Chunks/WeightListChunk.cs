@@ -1,3 +1,4 @@
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -58,11 +59,6 @@ public class WeightListChunk : Chunk
     public WeightListChunk(IList<Vector3> weights) : base(ChunkID)
     {
         Weights.AddRange(weights);
-    }
-
-    public override void Validate()
-    {
-        base.Validate();
     }
 
     internal override void WriteData(BinaryWriter bw)

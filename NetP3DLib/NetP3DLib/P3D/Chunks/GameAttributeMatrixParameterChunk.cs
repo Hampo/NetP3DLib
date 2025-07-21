@@ -1,3 +1,4 @@
+using NetP3DLib.P3D.Extensions;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
@@ -23,7 +24,7 @@ public class GameAttributeMatrixParameterChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(float) * 16;
+    public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(float) * 16;
 
     public GameAttributeMatrixParameterChunk(BinaryReader br) : base(ChunkID)
     {
@@ -35,11 +36,6 @@ public class GameAttributeMatrixParameterChunk : NamedChunk
     {
         Name = name;
         Value = value;
-    }
-
-    public override void Validate()
-    {
-        base.Validate();
     }
 
     internal override void WriteData(BinaryWriter bw)

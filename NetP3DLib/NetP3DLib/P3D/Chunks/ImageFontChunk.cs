@@ -1,3 +1,4 @@
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -31,7 +32,7 @@ public class ImageFontChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(float);
+    public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(float);
 
     public ImageFontChunk(BinaryReader br) : base(ChunkID)
     {
@@ -51,11 +52,6 @@ public class ImageFontChunk : NamedChunk
         FontWidth = fontWidth;
         FontHeight = fontHeight;
         FontBaseLine = fontBaseLine;
-    }
-
-    public override void Validate()
-    {
-        base.Validate();
     }
 
     internal override void WriteData(BinaryWriter bw)

@@ -1,7 +1,10 @@
+using NetP3DLib.P3D.Exceptions;
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
+using static NetP3DLib.P3D.Chunks.InstParticleSystemChunk;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -57,8 +60,8 @@ public class OldBillboardDisplayInfoChunk : Chunk
 
     public override void Validate()
     {
-        if (CutOffMode.Length > 4)
-            throw new InvalidDataException($"The max length of {nameof(CutOffMode)} is 4 chars.");
+        if (!CutOffMode.IsValidFourCC())
+            throw new InvalidFourCCException(nameof(CutOffMode), CutOffMode);
 
         base.Validate();
     }

@@ -69,11 +69,6 @@ public class BreakableObjectChunk : Chunk
         MaxInstances = maxInstances;
     }
 
-    public override void Validate()
-    {
-        base.Validate();
-    }
-
     internal override void WriteData(BinaryWriter bw)
     {
         bw.Write((int)Index);

@@ -1,3 +1,4 @@
+using NetP3DLib.P3D.Extensions;
 using System.Collections.Generic;
 using System.IO;
 
@@ -19,7 +20,7 @@ public class VertexShaderChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length;
+    public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name);
 
     public VertexShaderChunk(BinaryReader br) : base(ChunkID)
     {
@@ -29,11 +30,6 @@ public class VertexShaderChunk : NamedChunk
     public VertexShaderChunk(string vertextShaderName) : base(ChunkID)
     {
         Name = vertextShaderName;
-    }
-
-    public override void Validate()
-    {
-        base.Validate();
     }
 
     internal override void WriteData(BinaryWriter bw)

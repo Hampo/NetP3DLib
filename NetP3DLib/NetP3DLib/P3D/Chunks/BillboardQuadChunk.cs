@@ -1,3 +1,5 @@
+using NetP3DLib.P3D.Exceptions;
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -38,7 +40,7 @@ public class BillboardQuadChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(uint) + 4 + sizeof(uint) + sizeof(float) + sizeof(float) + sizeof(float);
+    public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint) + 4 + sizeof(uint) + sizeof(float) + sizeof(float) + sizeof(float);
 
     public BillboardQuadChunk(BinaryReader br) : base(ChunkID)
     {
@@ -68,8 +70,8 @@ public class BillboardQuadChunk : NamedChunk
 
     public override void Validate()
     {
-        if (AxisMode.Length > 4)
-            throw new InvalidDataException($"The max length of {nameof(AxisMode)} is 4 chars.");
+        if (!AxisMode.IsValidFourCC())
+            throw new InvalidFourCCException(nameof(AxisMode), AxisMode);
 
         base.Validate();
     }

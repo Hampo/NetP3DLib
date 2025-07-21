@@ -1,3 +1,4 @@
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -82,11 +83,6 @@ public class OldOffsetListChunk : Chunk
         KeyIndex = keyIndex;
         Offsets.AddRange(offsets);
         HasPrimGroupIndex = false;
-    }
-
-    public override void Validate()
-    {
-        base.Validate();
     }
 
     internal override void WriteData(BinaryWriter bw)

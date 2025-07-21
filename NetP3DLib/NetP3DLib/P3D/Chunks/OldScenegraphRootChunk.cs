@@ -23,11 +23,6 @@ public class OldScenegraphRootChunk : Chunk
     public OldScenegraphRootChunk() : base(ChunkID)
     { }
 
-    public override void Validate()
-    {
-        base.Validate();
-    }
-
     internal override void WriteData(BinaryWriter bw)
     { }
 }

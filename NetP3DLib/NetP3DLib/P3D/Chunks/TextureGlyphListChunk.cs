@@ -1,3 +1,4 @@
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -59,11 +60,6 @@ public class TextureGlyphListChunk : Chunk
     public TextureGlyphListChunk(IList<Glyph> glyphs) : base(ChunkID)
     {
         Glyphs.AddRange(glyphs);
-    }
-
-    public override void Validate()
-    {
-        base.Validate();
     }
 
     internal override void WriteData(BinaryWriter bw)

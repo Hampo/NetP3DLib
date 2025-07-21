@@ -66,11 +66,6 @@ public class CollisionObjectAttributeChunk : Chunk
         ExtraAttribute3 = extraAttribute3;
     }
 
-    public override void Validate()
-    {
-        base.Validate();
-    }
-
     internal override void WriteData(BinaryWriter bw)
     {
         bw.Write(StaticAttribute);

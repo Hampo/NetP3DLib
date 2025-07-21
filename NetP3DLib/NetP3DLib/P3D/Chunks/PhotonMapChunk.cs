@@ -1,3 +1,4 @@
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -98,7 +99,7 @@ public class PhotonMapChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(uint) + (uint)Lights.Sum(x => BinaryExtensions.GetP3DStringBytes(x).Length) + sizeof(float) * NumLights + sizeof(uint) + (uint)Photons.Sum(x => x.DataBytes.Length);
+    public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint) + (uint)Lights.Sum(x => BinaryExtensions.GetP3DStringBytes(x).Length) + sizeof(float) * NumLights + sizeof(uint) + (uint)Photons.Sum(x => x.DataBytes.Length);
 
     public PhotonMapChunk(BinaryReader br) : base(ChunkID)
     {

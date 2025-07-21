@@ -1,3 +1,4 @@
+using NetP3DLib.P3D.Extensions;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -23,7 +24,7 @@ public class GameAttributeColourParameterChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint);
+    public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint);
 
     public GameAttributeColourParameterChunk(BinaryReader br) : base(ChunkID)
     {
@@ -35,11 +36,6 @@ public class GameAttributeColourParameterChunk : NamedChunk
     {
         Name = name;
         Value = value;
-    }
-
-    public override void Validate()
-    {
-        base.Validate();
     }
 
     internal override void WriteData(BinaryWriter bw)

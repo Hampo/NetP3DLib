@@ -66,11 +66,6 @@ public class MemoryImageVertexDescriptionChunk : Chunk
         Description.AddRange(vertex);
     }
 
-    public override void Validate()
-    {
-        base.Validate();
-    }
-
     internal override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);

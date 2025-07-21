@@ -1,3 +1,4 @@
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -55,11 +56,6 @@ public class BillboardTextureUVChunk : Chunk
         UV2 = uv2;
         UV3 = uv3;
         UVOffset = uvOffset;
-    }
-
-    public override void Validate()
-    {
-        base.Validate();
     }
 
     internal override void WriteData(BinaryWriter bw)

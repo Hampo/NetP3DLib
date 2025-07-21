@@ -1,3 +1,4 @@
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -41,7 +42,7 @@ public class StatePropEventDataChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(uint);
+    public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint);
 
     public StatePropEventDataChunk(BinaryReader br) : base(ChunkID)
     {
@@ -55,11 +56,6 @@ public class StatePropEventDataChunk : NamedChunk
         Name = name;
         ToState = toState;
         Event = @event;
-    }
-
-    public override void Validate()
-    {
-        base.Validate();
     }
 
     internal override void WriteData(BinaryWriter bw)

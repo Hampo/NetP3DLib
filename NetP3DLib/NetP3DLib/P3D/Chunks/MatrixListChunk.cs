@@ -1,3 +1,4 @@
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -58,11 +59,6 @@ public class MatrixListChunk : Chunk
     public MatrixListChunk(IList<Color> matrices) : base(ChunkID)
     {
         Matrices.AddRange(matrices);
-    }
-
-    public override void Validate()
-    {
-        base.Validate();
     }
 
     internal override void WriteData(BinaryWriter bw)

@@ -1,4 +1,5 @@
 using NetP3DLib.Numerics;
+using NetP3DLib.P3D.Extensions;
 using System.Collections.Generic;
 using System.IO;
 
@@ -32,11 +33,6 @@ public class PhysicsInertiaMatrixChunk : Chunk
     public PhysicsInertiaMatrixChunk(SymmetricMatrix3x3 matrix) : base(ChunkID)
     {
         Matrix = matrix;
-    }
-
-    public override void Validate()
-    {
-        base.Validate();
     }
 
     internal override void WriteData(BinaryWriter bw)

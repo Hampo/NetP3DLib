@@ -1,3 +1,5 @@
+using NetP3DLib.P3D.Exceptions;
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -32,7 +34,7 @@ public class TextureAnimationChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(float) + sizeof(uint);
+    public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(float) + sizeof(uint);
 
     public TextureAnimationChunk(BinaryReader br) : base(ChunkID)
     {
@@ -56,10 +58,8 @@ public class TextureAnimationChunk : NamedChunk
 
     public override void Validate()
     {
-        if (MaterialName == null)
-            throw new InvalidDataException($"{nameof(MaterialName)} cannot be null.");
-        if (Encoding.UTF8.GetBytes(MaterialName).Length > 255)
-            throw new InvalidDataException($"The max length of {nameof(MaterialName)} is 255 bytes.");
+        if (!MaterialName.IsValidP3DString())
+            throw new InvalidP3DStringException(nameof(MaterialName), MaterialName);
 
         base.Validate();
     }

@@ -1,3 +1,5 @@
+using NetP3DLib.P3D.Exceptions;
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -37,7 +39,7 @@ public class TextureFontChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + (uint)BinaryExtensions.GetP3DStringBytes(Shader).Length + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(uint);
+    public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + BinaryExtensions.GetP3DStringLength(Shader) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(uint);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
     public TextureFontChunk(BinaryReader br) : base(ChunkID)
@@ -65,10 +67,8 @@ public class TextureFontChunk : NamedChunk
 
     public override void Validate()
     {
-        if (Shader == null)
-            throw new InvalidDataException($"{nameof(Shader)} cannot be null.");
-        if (Encoding.UTF8.GetBytes(Shader).Length > 255)
-            throw new InvalidDataException($"The max length of {nameof(Shader)} is 255 bytes.");
+        if (!Shader.IsValidP3DString())
+            throw new InvalidP3DStringException(nameof(Shader), Shader);
 
         base.Validate();
     }

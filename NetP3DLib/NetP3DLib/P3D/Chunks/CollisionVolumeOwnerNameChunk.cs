@@ -1,3 +1,4 @@
+using NetP3DLib.P3D.Extensions;
 using System.Collections.Generic;
 using System.IO;
 
@@ -19,7 +20,7 @@ public class CollisionVolumeOwnerNameChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length;
+    public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name);
 
     public CollisionVolumeOwnerNameChunk(BinaryReader br) : base(ChunkID)
     {
@@ -29,11 +30,6 @@ public class CollisionVolumeOwnerNameChunk : NamedChunk
     public CollisionVolumeOwnerNameChunk(string name) : base(ChunkID)
     {
         Name = name;
-    }
-
-    public override void Validate()
-    {
-        base.Validate();
     }
 
     internal override void WriteData(BinaryWriter bw)

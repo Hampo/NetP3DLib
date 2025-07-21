@@ -1,3 +1,5 @@
+using NetP3DLib.P3D.Exceptions;
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -36,7 +38,7 @@ public class FrameControllerChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + 4 + 4 + sizeof(uint) + sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(HierarchyName).Length + (uint)BinaryExtensions.GetP3DStringBytes(AnimationName).Length;
+    public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + 4 + 4 + sizeof(uint) + sizeof(uint) + BinaryExtensions.GetP3DStringLength(HierarchyName) + BinaryExtensions.GetP3DStringLength(AnimationName);
 
     public FrameControllerChunk(BinaryReader br) : base(ChunkID)
     {
@@ -64,25 +66,17 @@ public class FrameControllerChunk : NamedChunk
 
     public override void Validate()
     {
-        if (Type == null || Type.Length == 0)
-            throw new InvalidDataException($"{nameof(Type)} must be at least 1 char.");
-        if (Type.Length > 4)
-            throw new InvalidDataException($"The max length of {nameof(Type)} is 4 chars.");
+        if (!Type.IsValidFourCC())
+            throw new InvalidFourCCException(nameof(Type), Type);
 
-        if (CycleMode == null || CycleMode.Length == 0)
-            throw new InvalidDataException($"{nameof(CycleMode)} must be at least 1 char.");
-        if (CycleMode.Length > 4)
-            throw new InvalidDataException($"The max length of {nameof(CycleMode)} is 4 chars.");
+        if (!CycleMode.IsValidFourCC())
+            throw new InvalidFourCCException(nameof(CycleMode), CycleMode);
 
-        if (HierarchyName == null)
-            throw new InvalidDataException($"{nameof(HierarchyName)} cannot be null.");
-        if (Encoding.UTF8.GetBytes(HierarchyName).Length > 255)
-            throw new InvalidDataException($"The max length of {nameof(HierarchyName)} is 255 bytes.");
+        if (!HierarchyName.IsValidP3DString())
+            throw new InvalidP3DStringException(nameof(HierarchyName), HierarchyName);
 
-        if (AnimationName == null)
-            throw new InvalidDataException($"{nameof(AnimationName)} cannot be null.");
-        if (Encoding.UTF8.GetBytes(AnimationName).Length > 255)
-            throw new InvalidDataException($"The max length of {nameof(AnimationName)} is 255 bytes.");
+        if (!AnimationName.IsValidP3DString())
+            throw new InvalidP3DStringException(nameof(AnimationName), AnimationName);
 
         base.Validate();
     }

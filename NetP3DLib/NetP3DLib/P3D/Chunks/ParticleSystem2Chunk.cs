@@ -1,3 +1,5 @@
+using NetP3DLib.P3D.Exceptions;
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -26,7 +28,7 @@ public class ParticleSystem2Chunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + (uint)BinaryExtensions.GetP3DStringBytes(FactoryName).Length;
+    public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + BinaryExtensions.GetP3DStringLength(FactoryName);
 
     public ParticleSystem2Chunk(BinaryReader br) : base(ChunkID)
     {
@@ -44,10 +46,8 @@ public class ParticleSystem2Chunk : NamedChunk
 
     public override void Validate()
     {
-        if (FactoryName == null)
-            throw new InvalidDataException($"{nameof(FactoryName)} cannot be null.");
-        if (Encoding.UTF8.GetBytes(FactoryName).Length > 255)
-            throw new InvalidDataException($"The max length of {nameof(FactoryName)} is 255 bytes.");
+        if (!FactoryName.IsValidP3DString())
+            throw new InvalidP3DStringException(nameof(FactoryName), FactoryName);
 
         base.Validate();
     }

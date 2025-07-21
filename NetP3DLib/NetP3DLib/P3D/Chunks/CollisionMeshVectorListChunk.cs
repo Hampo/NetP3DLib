@@ -1,3 +1,4 @@
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -58,11 +59,6 @@ public class CollisionMeshVectorListChunk : Chunk
     public CollisionMeshVectorListChunk(IList<Vector3> vectors) : base(ChunkID)
     {
         Vectors.AddRange(vectors);
-    }
-
-    public override void Validate()
-    {
-        base.Validate();
     }
 
     internal override void WriteData(BinaryWriter bw)

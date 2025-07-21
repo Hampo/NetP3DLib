@@ -1,3 +1,5 @@
+using NetP3DLib.P3D.Exceptions;
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -25,7 +27,7 @@ public class MultiControllerTrackChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + 4;
+    public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + 4;
 
     public MultiControllerTrackChunk(BinaryReader br) : base(ChunkID)
     {
@@ -43,11 +45,8 @@ public class MultiControllerTrackChunk : NamedChunk
 
     public override void Validate()
     {
-        if (Type == null || Type.Length == 0)
-            throw new InvalidDataException($"{nameof(Type)} must be at least 1 char.");
-
-        if (Type.Length > 4)
-            throw new InvalidDataException($"The max length of {nameof(Type)} is 4 chars.");
+        if (!Type.IsValidFourCC())
+            throw new InvalidFourCCException(nameof(Type), Type);
 
         base.Validate();
     }

@@ -1,3 +1,5 @@
+using NetP3DLib.P3D.Exceptions;
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -50,7 +52,7 @@ public class OldFrameControllerChunk2 : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(HierarchyName).Length + (uint)BinaryExtensions.GetP3DStringBytes(AnimationName).Length;
+    public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint) + BinaryExtensions.GetP3DStringLength(HierarchyName) + BinaryExtensions.GetP3DStringLength(AnimationName);
 
     public OldFrameControllerChunk2(BinaryReader br) : base(ChunkID)
     {
@@ -72,15 +74,11 @@ public class OldFrameControllerChunk2 : NamedChunk
 
     public override void Validate()
     {
-        if (HierarchyName == null)
-            throw new InvalidDataException($"{nameof(HierarchyName)} cannot be null.");
-        if (Encoding.UTF8.GetBytes(HierarchyName).Length > 255)
-            throw new InvalidDataException($"The max length of {nameof(HierarchyName)} is 255 bytes.");
+        if (!HierarchyName.IsValidP3DString())
+            throw new InvalidP3DStringException(nameof(HierarchyName), HierarchyName);
 
-        if (AnimationName == null)
-            throw new InvalidDataException($"{nameof(AnimationName)} cannot be null.");
-        if (Encoding.UTF8.GetBytes(AnimationName).Length > 255)
-            throw new InvalidDataException($"The max length of {nameof(AnimationName)} is 255 bytes.");
+        if (!AnimationName.IsValidP3DString())
+            throw new InvalidP3DStringException(nameof(AnimationName), AnimationName);
 
         base.Validate();
     }

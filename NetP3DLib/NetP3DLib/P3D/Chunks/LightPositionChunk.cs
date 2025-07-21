@@ -1,3 +1,4 @@
+using NetP3DLib.P3D.Extensions;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
@@ -32,11 +33,6 @@ public class LightPositionChunk : Chunk
     public LightPositionChunk(Vector3 position) : base(ChunkID)
     {
         Position = position;
-    }
-
-    public override void Validate()
-    {
-        base.Validate();
     }
 
     internal override void WriteData(BinaryWriter bw)

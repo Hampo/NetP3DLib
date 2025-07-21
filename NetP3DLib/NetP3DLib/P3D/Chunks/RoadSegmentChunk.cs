@@ -1,3 +1,5 @@
+using NetP3DLib.P3D.Exceptions;
+using NetP3DLib.P3D.Extensions;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
@@ -28,7 +30,7 @@ public class RoadSegmentChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + (uint)BinaryExtensions.GetP3DStringBytes(RoadDataSegment).Length + sizeof(float) * 16 + sizeof(float) * 16;
+    public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + BinaryExtensions.GetP3DStringLength(RoadDataSegment) + sizeof(float) * 16 + sizeof(float) * 16;
 
     public RoadSegmentChunk(BinaryReader br) : base(ChunkID)
     {
@@ -48,10 +50,8 @@ public class RoadSegmentChunk : NamedChunk
 
     public override void Validate()
     {
-        if (RoadDataSegment == null)
-            throw new InvalidDataException($"{nameof(RoadDataSegment)} cannot be null.");
-        if (Encoding.UTF8.GetBytes(RoadDataSegment).Length > 255)
-            throw new InvalidDataException($"The max length of {nameof(RoadDataSegment)} is 255 bytes.");
+        if (!RoadDataSegment.IsValidP3DString())
+            throw new InvalidP3DStringException(nameof(RoadDataSegment), RoadDataSegment);
 
         base.Validate();
     }

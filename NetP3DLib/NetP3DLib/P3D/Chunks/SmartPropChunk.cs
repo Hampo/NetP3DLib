@@ -1,3 +1,5 @@
+using NetP3DLib.P3D.Exceptions;
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -38,7 +40,7 @@ public class SmartPropChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + (uint)BinaryExtensions.GetP3DStringBytes(ObjectFactoryName).Length + (uint)BinaryExtensions.GetP3DStringBytes(Material).Length + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint);
+    public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + BinaryExtensions.GetP3DStringLength(ObjectFactoryName) + BinaryExtensions.GetP3DStringLength(Material) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint);
 
     public SmartPropChunk(BinaryReader br) : base(ChunkID)
     {
@@ -68,15 +70,11 @@ public class SmartPropChunk : NamedChunk
 
     public override void Validate()
     {
-        if (ObjectFactoryName == null)
-            throw new InvalidDataException($"{nameof(ObjectFactoryName)} cannot be null.");
-        if (Encoding.UTF8.GetBytes(ObjectFactoryName).Length > 255)
-            throw new InvalidDataException($"The max length of {nameof(ObjectFactoryName)} is 255 bytes.");
+        if (!ObjectFactoryName.IsValidP3DString())
+            throw new InvalidP3DStringException(nameof(ObjectFactoryName), ObjectFactoryName);
 
-        if (Material == null)
-            throw new InvalidDataException($"{nameof(Material)} cannot be null.");
-        if (Encoding.UTF8.GetBytes(Material).Length > 255)
-            throw new InvalidDataException($"The max length of {nameof(Material)} is 255 bytes.");
+        if (!Material.IsValidP3DString())
+            throw new InvalidP3DStringException(nameof(Material), Material);
 
         base.Validate();
     }

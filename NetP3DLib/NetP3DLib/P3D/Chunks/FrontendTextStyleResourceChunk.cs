@@ -1,3 +1,5 @@
+using NetP3DLib.P3D.Exceptions;
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -28,7 +30,7 @@ public class FrontendTextStyleResourceChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => (uint)BinaryExtensions.GetP3DStringBytes(Name).Length + sizeof(uint) + (uint)BinaryExtensions.GetP3DStringBytes(Filename).Length + (uint)BinaryExtensions.GetP3DStringBytes(InventoryName).Length;
+    public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + BinaryExtensions.GetP3DStringLength(Filename) + BinaryExtensions.GetP3DStringLength(InventoryName);
 
     public FrontendTextStyleResourceChunk(BinaryReader br) : base(ChunkID)
     {
@@ -48,15 +50,11 @@ public class FrontendTextStyleResourceChunk : NamedChunk
 
     public override void Validate()
     {
-        if (Filename == null)
-            throw new InvalidDataException($"{nameof(Filename)} cannot be null.");
-        if (Encoding.UTF8.GetBytes(Filename).Length > 255)
-            throw new InvalidDataException($"The max length of {nameof(Filename)} is 255 bytes.");
+        if (!Filename.IsValidP3DString())
+            throw new InvalidP3DStringException(nameof(Filename), Filename);
 
-        if (InventoryName == null)
-            throw new InvalidDataException($"{nameof(InventoryName)} cannot be null.");
-        if (Encoding.UTF8.GetBytes(InventoryName).Length > 255)
-            throw new InvalidDataException($"The max length of {nameof(InventoryName)} is 255 bytes.");
+        if (!InventoryName.IsValidP3DString())
+            throw new InvalidP3DStringException(nameof(InventoryName), InventoryName);
 
         base.Validate();
     }

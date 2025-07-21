@@ -1,3 +1,4 @@
+using NetP3DLib.P3D.Extensions;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
@@ -32,11 +33,6 @@ public class LightDirectionChunk : Chunk
     public LightDirectionChunk(Vector3 direction) : base(ChunkID)
     {
         Direction = direction;
-    }
-
-    public override void Validate()
-    {
-        base.Validate();
     }
 
     internal override void WriteData(BinaryWriter bw)

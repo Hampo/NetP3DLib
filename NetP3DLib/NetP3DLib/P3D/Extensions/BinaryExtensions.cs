@@ -1,12 +1,12 @@
 ﻿using NetP3DLib.Numerics;
+using NetP3DLib.P3D.Exceptions;
 using System;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Numerics;
 using System.Text;
 
-namespace NetP3DLib.P3D;
+namespace NetP3DLib.P3D.Extensions;
 
 public static class BinaryExtensions
 {
@@ -29,10 +29,11 @@ public static class BinaryExtensions
     /// <exception cref="ArgumentException">Throws an exception if <paramref name="value"/> is too long.</exception>
     public static byte[] GetP3DStringBytes(string value)
     {
+        if (!value.IsValidP3DString())
+            throw new InvalidP3DStringException(nameof(value), value);
+
         byte[] bytes = Encoding.UTF8.GetBytes(value);
         int length = bytes.Length;
-        if (length > 255)
-            throw new ArgumentException($"Max length is 255. Given length is {length}.", nameof(value));
 
         if (length < 252)
         {
@@ -45,6 +46,31 @@ public static class BinaryExtensions
         buffer[0] = (byte)length;
         bytes.CopyTo(buffer, 1);
         return buffer;
+    }
+
+    /// <summary>
+    /// Gets the byte length for a Pure3D string.
+    /// <para>The format is 1 byte for the string length, followed by that many bytes representing the string.</para>
+    /// <para>This uses <c>Simpsons: Hit &amp; Run</c> padding that does not include the length byte.</para>
+    /// </summary>
+    /// <param name="value">The value to get the length of.</param>
+    /// <returns>A <c>uint</c> representing the length of <paramref name="value"/>.</returns>
+    /// <exception cref="ArgumentException">Throws an exception if <paramref name="value"/> is too long.</exception>
+    public static uint GetP3DStringLength(string value)
+    {
+        if (!value.IsValidP3DString())
+            throw new InvalidP3DStringException(nameof(value), value);
+
+        int length = Encoding.UTF8.GetByteCount(value);
+
+        if (length < 252)
+        {
+            int diff = length & 3;
+            if (diff > 0)
+                length += 4 - diff;
+        }
+
+        return (uint)length + 1;
     }
 
     /// <summary>
@@ -70,10 +96,11 @@ public static class BinaryExtensions
     /// <exception cref="ArgumentException">Throws an exception if <paramref name="value"/> is too long.</exception>
     public static void WriteP3DString(this BinaryWriter bw, string value)
     {
+        if (!value.IsValidP3DString())
+            throw new InvalidP3DStringException(nameof(value), value);
+
         byte[] bytes = Encoding.UTF8.GetBytes(value);
         int length = bytes.Length;
-        if (length > 255)
-            throw new ArgumentException($"Max length is 255. Given length is {length}.", nameof(value));
 
         if (length < 252)
         {
@@ -97,13 +124,13 @@ public static class BinaryExtensions
     /// <exception cref="ArgumentException">Throws an exception if <paramref name="value"/> is too long.</exception>
     public static byte[] GetFourCCBytes(string value)
     {
-        if (value.Length > 4)
-            throw new ArgumentException($"Max length is 4. Given length is {value.Length}.", nameof(value));
+        if (!value.IsValidFourCC())
+            throw new InvalidFourCCException(nameof(value), value);
 
         char[] c = [(char)0, (char)0, (char)0, (char)0];
         value.ToCharArray().CopyTo(c, 0);
 
-        return BitConverter.GetBytes((c[3] << 24) | (c[2] << 16) | (c[1] << 8) | c[0]);
+        return BitConverter.GetBytes(c[3] << 24 | c[2] << 16 | c[1] << 8 | c[0]);
     }
 
     /// <summary>
@@ -117,9 +144,9 @@ public static class BinaryExtensions
         char[] chars =
         [
             (char)(val & 0xFF),
-            (char)((val >> 8) & 0xFF),
-            (char)((val >> 16) & 0xFF),
-            (char)((val >> 24) & 0xFF),
+            (char)(val >> 8 & 0xFF),
+            (char)(val >> 16 & 0xFF),
+            (char)(val >> 24 & 0xFF),
         ];
         return new string(chars).TrimEnd('\0');
     }
@@ -132,13 +159,13 @@ public static class BinaryExtensions
     /// <exception cref="ArgumentException">Throws an exception if <paramref name="value"/> is too long.</exception>
     public static void WriteFourCC(this BinaryWriter bw, string value)
     {
-        if (value.Length > 4)
-            throw new ArgumentException($"Max length is 4. Given length is {value.Length}.", nameof(value));
+        if (!value.IsValidFourCC())
+            throw new InvalidFourCCException(nameof(value), value);
 
         char[] c = [(char)0, (char)0, (char)0, (char)0];
         value.ToCharArray().CopyTo(c, 0);
 
-        bw.Write((c[3] << 24) | (c[2] << 16) | (c[1] << 8) | c[0]);
+        bw.Write(c[3] << 24 | c[2] << 16 | c[1] << 8 | c[0]);
     }
 
     /// <summary>

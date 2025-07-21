@@ -1,3 +1,4 @@
+using NetP3DLib.P3D.Extensions;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -35,11 +36,6 @@ public class ShaderColourParameterChunk : ParamChunk
     {
         Param = param;
         Value = value;
-    }
-
-    public override void Validate()
-    {
-        base.Validate();
     }
 
     internal override void WriteData(BinaryWriter bw)
