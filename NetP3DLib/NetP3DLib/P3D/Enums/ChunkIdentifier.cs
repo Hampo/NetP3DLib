@@ -132,6 +132,7 @@ public enum ChunkIdentifier : uint
     Memory_Image_Vertex_Description = 0x10014,
     Mesh = 0x10000,
     Mesh_Stats = 0x1001D,
+    Multi_Colour_List = 0x1001C,
     Multi_Controller = 0x48A0,
     Multi_Controller_2 = 0x121202,
     Multi_Controller_Track = 0x121203,

@@ -107,7 +107,7 @@ public class OldPrimitiveGroupChunk : Chunk
         { (uint)ChunkIdentifier.Packed_Normal_List, VertexTypes.Normals },
         { (uint)ChunkIdentifier.Normal_List, VertexTypes.Normals },
         { (uint)ChunkIdentifier.Colour_List, VertexTypes.Colours },
-        //{ (uint)ChunkIdentifier.Multi_Colour_List, VertexTypes.Colours2 },
+        { (uint)ChunkIdentifier.Multi_Colour_List, VertexTypes.Colours2 },
         { (uint)ChunkIdentifier.Matrix_List, VertexTypes.Matrices },
         { (uint)ChunkIdentifier.Matrix_Palette, VertexTypes.Matrices },
         { (uint)ChunkIdentifier.Weight_List, VertexTypes.Weights },
