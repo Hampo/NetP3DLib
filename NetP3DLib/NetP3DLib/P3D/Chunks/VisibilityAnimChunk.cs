@@ -74,4 +74,6 @@ public class VisibilityAnimChunk : NamedChunk
         bw.Write(FrameRate);
         bw.Write(NumChannels);
     }
+
+    internal override Chunk CloneSelf() => new VisibilityAnimChunk(Name, SceneName, Version, NumFrames, FrameRate);
 }

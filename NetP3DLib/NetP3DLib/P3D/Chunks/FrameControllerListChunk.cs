@@ -45,4 +45,6 @@ public class FrameControllerListChunk : Chunk
         bw.Write(Version);
         bw.Write(NumControllers);
     }
+
+    internal override Chunk CloneSelf() => new FrameControllerListChunk(Version);
 }

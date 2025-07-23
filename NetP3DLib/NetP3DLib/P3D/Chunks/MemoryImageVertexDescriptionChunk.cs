@@ -74,4 +74,6 @@ public class MemoryImageVertexDescriptionChunk : Chunk
         bw.Write(DescriptionSize);
         bw.Write(Description.ToArray());
     }
+
+    internal override Chunk CloneSelf() => new MemoryImageVertexDescriptionChunk(Version, Param, Description);
 }

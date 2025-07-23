@@ -50,4 +50,6 @@ public class OldLocatorChunk : NamedChunk
         bw.Write(Version);
         bw.Write(Position);
     }
+
+    internal override Chunk CloneSelf() => new OldLocatorChunk(Name, Version, Position);
 }

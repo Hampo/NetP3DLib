@@ -49,4 +49,6 @@ public class AnimChunk : NamedChunk
         bw.Write(Version);
         bw.Write(HasAlpha);
     }
+
+    internal override Chunk CloneSelf() => new AnimChunk(Name, Version, HasAlpha);
 }

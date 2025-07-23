@@ -73,4 +73,6 @@ public class OldColourOffsetListChunk : Chunk
         foreach (var offset in Offsets)
             bw.Write(offset);
     }
+
+    internal override Chunk CloneSelf() => new OldColourOffsetListChunk(Version, Offsets);
 }

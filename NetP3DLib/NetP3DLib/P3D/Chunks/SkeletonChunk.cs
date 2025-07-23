@@ -50,4 +50,6 @@ public class SkeletonChunk : NamedChunk
         bw.Write(Version);
         bw.Write(NumJoints);
     }
+
+    internal override Chunk CloneSelf() => new SkeletonChunk(Name, Version);
 }

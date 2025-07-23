@@ -79,4 +79,6 @@ public class OldBillboardQuadGroupChunk : NamedChunk
         bw.Write(Fog);
         bw.Write(NumQuads);
     }
+
+    internal override Chunk CloneSelf() => new OldBillboardQuadGroupChunk(Version, Name, Shader, ZTest, ZWrite, Fog);
 }

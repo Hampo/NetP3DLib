@@ -51,4 +51,6 @@ public class BillboardTransformChunk : Chunk
         bw.Write(Rotation);
         bw.Write(Translation);
     }
+
+    internal override Chunk CloneSelf() => new BillboardTransformChunk(Version, Rotation, Translation);
 }

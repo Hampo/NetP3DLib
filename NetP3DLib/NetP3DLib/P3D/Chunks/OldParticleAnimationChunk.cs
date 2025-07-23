@@ -39,4 +39,6 @@ public class OldParticleAnimationChunk : Chunk
     {
         bw.Write(Version);
     }
+
+    internal override Chunk CloneSelf() => new OldParticleAnimationChunk(Version);
 }

@@ -70,4 +70,6 @@ public class RoadDataSegmentChunk : NamedChunk
         bw.Write(Top);
         bw.Write(Bottom);
     }
+
+    internal override Chunk CloneSelf() => new RoadDataSegmentChunk(Name, Type, Lanes, HasShoulder, Direction, Top, Bottom);
 }

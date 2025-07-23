@@ -52,4 +52,6 @@ public class ShaderTextureParameterChunk : ParamChunk
         bw.WriteFourCC(Param);
         bw.WriteP3DString(Value);
     }
+
+    internal override Chunk CloneSelf() => new ShaderTextureParameterChunk(Param, Value);
 }

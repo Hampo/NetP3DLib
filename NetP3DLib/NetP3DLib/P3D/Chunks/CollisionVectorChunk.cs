@@ -40,4 +40,6 @@ public class CollisionVectorChunk : Chunk
     {
         bw.Write(Vector);
     }
+
+    internal override Chunk CloneSelf() => new CollisionVectorChunk(Vector);
 }

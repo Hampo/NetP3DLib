@@ -72,4 +72,6 @@ public class SplineChunk : NamedChunk
         foreach (var pos in Positions)
             bw.Write(pos);
     }
+
+    internal override Chunk CloneSelf() => new SplineChunk(Name, Positions);
 }

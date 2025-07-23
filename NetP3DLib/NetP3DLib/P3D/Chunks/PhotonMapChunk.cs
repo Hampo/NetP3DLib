@@ -150,6 +150,14 @@ public class PhotonMapChunk : NamedChunk
             photon.Write(bw);
     }
 
+    internal override Chunk CloneSelf()
+    {
+        var photons = new List<Photon>(Photons.Count);
+        foreach (var photon in Photons)
+            photons.Add(photon.Clone());
+        return new PhotonMapChunk(Name, Version, Lights, LightScales, photons);
+    }
+
     public class Photon
     {
         public Vector3 Position { get; set; }
@@ -239,6 +247,8 @@ public class PhotonMapChunk : NamedChunk
             bw.Write(NumScatterings);
             bw.Write(LightIndex);
         }
+
+        internal Photon Clone() => new(Position, Plane, Theta, Phi, RedPower, GreenPower, BluePower, AlphaPower, NumScatterings, LightIndex);
 
         public override string ToString()
         {

@@ -77,4 +77,6 @@ public class OldVector2OffsetListChunk : ParamChunk
         foreach (var offset in Offsets)
             bw.Write(offset);
     }
+
+    internal override Chunk CloneSelf() => new OldVector2OffsetListChunk(Version, Param, Offsets);
 }

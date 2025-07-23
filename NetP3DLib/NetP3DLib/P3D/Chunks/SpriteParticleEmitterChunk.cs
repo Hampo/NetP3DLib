@@ -113,4 +113,6 @@ public class SpriteParticleEmitterChunk : NamedChunk
         bw.Write(TranslationalCohesion);
         bw.Write(RotationalCohesion);
     }
+
+    internal override Chunk CloneSelf() => new SpriteParticleEmitterChunk(Version, Name, ShaderName, UpdateMode, ZTest, ZWrite, MaxParticles, InfiniteLife, NumTextureFrames, TextureFrameRate, InitialAngle, InitialAngleVariance, TranslationalCohesion, RotationalCohesion);
 }

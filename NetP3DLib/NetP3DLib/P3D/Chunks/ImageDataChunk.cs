@@ -50,4 +50,6 @@ public class ImageDataChunk : Chunk
         bw.Write(ImageData.Length);
         bw.Write(ImageData);
     }
+
+    internal override Chunk CloneSelf() => new ImageDataChunk(ImageData);
 }

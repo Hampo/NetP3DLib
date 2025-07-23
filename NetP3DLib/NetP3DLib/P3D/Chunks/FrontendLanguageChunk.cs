@@ -124,6 +124,14 @@ public class FrontendLanguageChunk : NamedChunk
         bw.Write(bufferBytes);
     }
 
+    internal override Chunk CloneSelf()
+    {
+        var entries = new List<Entry>(Entries.Count);
+        foreach (var entry in Entries)
+            entries.Add(entry.Clone());
+        return new FrontendLanguageChunk(Name, Language, Modulo, entries);
+    }
+
     private (List<uint> Hashes, List<uint> Offsets, string Buffer) BuildData()
     {
         List<uint> hashes = new(Entries.Count);
@@ -196,6 +204,8 @@ public class FrontendLanguageChunk : NamedChunk
             Hash = 0;
             Value = string.Empty;
         }
+
+        public Entry Clone() => new(Hash, Value);
 
         public override string ToString()
         {

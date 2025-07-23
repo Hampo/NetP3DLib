@@ -89,4 +89,6 @@ public class OldSpriteEmitterChunk : NamedChunk
         bw.Write(NumTextureFrames);
         bw.Write(TextureFrameRate);
     }
+
+    internal override Chunk CloneSelf() => new OldSpriteEmitterChunk(Version, Name, ShaderName, AngleMode, Angle, TextureAnimMode, NumTextureFrames, TextureFrameRate);
 }

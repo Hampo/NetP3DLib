@@ -81,4 +81,6 @@ public class LightChunk : NamedChunk
         bw.Write(Squared);
         bw.Write(Enabled);
     }
+
+    internal override Chunk CloneSelf() => new LightChunk(Name, Version, Type, Colour, Constant, Linear, Squared, Enabled);
 }

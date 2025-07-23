@@ -39,4 +39,6 @@ public class IntersectMesh2Chunk : Chunk
     {
         bw.Write(SurfaceType);
     }
+
+    internal override Chunk CloneSelf() => new IntersectMesh2Chunk(SurfaceType);
 }

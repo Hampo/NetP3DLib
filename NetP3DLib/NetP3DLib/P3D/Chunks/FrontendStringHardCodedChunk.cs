@@ -48,4 +48,6 @@ public class FrontendStringHardCodedChunk : Chunk
     {
         bw.WriteP3DString(String);
     }
+
+    internal override Chunk CloneSelf() => new FrontendStringHardCodedChunk(String);
 }

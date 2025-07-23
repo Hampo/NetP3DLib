@@ -58,4 +58,6 @@ public class ParticleSystem2Chunk : NamedChunk
         bw.WriteP3DString(Name);
         bw.WriteP3DString(FactoryName);
     }
+
+    internal override Chunk CloneSelf() => new ParticleSystem2Chunk(Version, Name, FactoryName);
 }

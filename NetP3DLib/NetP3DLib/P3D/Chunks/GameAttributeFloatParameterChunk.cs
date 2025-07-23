@@ -44,4 +44,6 @@ public class GameAttributeFloatParameterChunk : NamedChunk
         bw.WriteP3DString(Name);
         bw.Write(Value);
     }
+
+    internal override Chunk CloneSelf() => new GameAttributeFloatParameterChunk(Name, Value);
 }

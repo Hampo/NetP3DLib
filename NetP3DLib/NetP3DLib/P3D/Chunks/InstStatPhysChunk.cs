@@ -49,4 +49,6 @@ public class InstStatPhysChunk : NamedChunk
         bw.Write(Version);
         bw.Write(HasAlpha);
     }
+
+    internal override Chunk CloneSelf() => new InstStatPhysChunk(Name, Version, HasAlpha);
 }

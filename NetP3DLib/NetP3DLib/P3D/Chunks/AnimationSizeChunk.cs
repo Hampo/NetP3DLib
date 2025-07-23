@@ -59,4 +59,6 @@ public class AnimationSizeChunk : Chunk
         bw.Write(XBOX);
         bw.Write(GC);
     }
+
+    internal override Chunk CloneSelf() => new AnimationSizeChunk(Version, PC, PS2, XBOX, GC);
 }

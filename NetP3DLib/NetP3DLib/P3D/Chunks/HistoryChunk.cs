@@ -83,5 +83,7 @@ public class HistoryChunk : Chunk
             bw.WriteP3DString(item);
     }
 
+    internal override Chunk CloneSelf() => new HistoryChunk(History);
+
     public override string ToString() => $"\"{History.FirstOrDefault() ?? ""}\" ({GetChunkType(this)} (0x{ID:X}))";
 }

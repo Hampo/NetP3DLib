@@ -39,4 +39,6 @@ public class OldGeneratorAnimationChunk : Chunk
     {
         bw.Write(Version);
     }
+
+    internal override Chunk CloneSelf() => new OldGeneratorAnimationChunk(Version);
 }

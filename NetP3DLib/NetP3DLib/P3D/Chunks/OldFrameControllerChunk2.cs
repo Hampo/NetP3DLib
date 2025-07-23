@@ -91,4 +91,6 @@ public class OldFrameControllerChunk2 : NamedChunk
         bw.WriteP3DString(HierarchyName);
         bw.WriteP3DString(AnimationName);
     }
+
+    internal override Chunk CloneSelf() => new OldFrameControllerChunk2(Name, Version, Type, HierarchyName, AnimationName);
 }

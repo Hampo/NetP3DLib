@@ -70,4 +70,6 @@ public class BillboardTextureUVChunk : Chunk
         bw.Write(UV3);
         bw.Write(UVOffset);
     }
+
+    internal override Chunk CloneSelf() => new BillboardTextureUVChunk(Version, RandomU, RandomV, UV0, UV1, UV2, UV3, UVOffset);
 }

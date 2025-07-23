@@ -123,4 +123,6 @@ public class EntityChannelChunk : ParamChunk
         foreach (var value in Values)
             bw.WriteP3DString(value);
     }
+
+    internal override Chunk CloneSelf() => new EntityChannelChunk(Version, Param, Frames, Values);
 }

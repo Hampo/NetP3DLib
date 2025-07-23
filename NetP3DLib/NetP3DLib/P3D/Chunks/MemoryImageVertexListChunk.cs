@@ -74,4 +74,6 @@ public class MemoryImageVertexListChunk : Chunk
         bw.Write(VertexSize);
         bw.Write(Vertex.ToArray());
     }
+
+    internal override Chunk CloneSelf() => new MemoryImageVertexListChunk(Version, Param, Vertex);
 }

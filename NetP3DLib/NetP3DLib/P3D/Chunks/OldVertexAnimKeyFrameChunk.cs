@@ -44,4 +44,6 @@ public class OldVertexAnimKeyFrameChunk : NamedChunk
         bw.Write(Version);
         bw.WriteP3DString(Name);
     }
+
+    internal override Chunk CloneSelf() => new OldVertexAnimKeyFrameChunk(Version, Name);
 }

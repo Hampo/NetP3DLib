@@ -89,4 +89,6 @@ public class LensFlareGroupChunk : NamedChunk
         bw.Write(EdgeRadius);
         bw.Write(NumLensFlares);
     }
+
+    internal override Chunk CloneSelf() => new LensFlareGroupChunk(Version, Name, ShaderName, ZTest, ZWrite, Fog, SourceRadius, EdgeRadius);
 }

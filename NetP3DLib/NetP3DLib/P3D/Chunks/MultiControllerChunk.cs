@@ -60,4 +60,6 @@ public class MultiControllerChunk : NamedChunk
         bw.Write(Framerate);
         bw.Write(NumTracks);
     }
+
+    internal override Chunk CloneSelf() => new MultiControllerChunk(Name, Version, Length, Framerate);
 }

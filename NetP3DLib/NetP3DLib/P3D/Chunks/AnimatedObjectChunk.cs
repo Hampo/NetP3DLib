@@ -63,4 +63,6 @@ public class AnimatedObjectChunk : NamedChunk
         bw.WriteP3DString(FactoryName);
         bw.Write(StartingAnimation);
     }
+
+    internal override Chunk CloneSelf() => new AnimatedObjectChunk(Version, Name, FactoryName, StartingAnimation);
 }

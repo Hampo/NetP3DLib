@@ -92,4 +92,6 @@ public class FrontendProjectChunk : NamedChunk
         bw.WriteP3DString(ResourcePath);
         bw.WriteP3DString(ScreenPath);
     }
+
+    internal override Chunk CloneSelf() => new FrontendProjectChunk(Name, Version, ResolutionX, ResolutionY, Platform, PagePath, ResourcePath, ScreenPath);
 }

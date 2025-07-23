@@ -67,6 +67,14 @@ public class MatrixListChunk : Chunk
             mat.Write(bw);
     }
 
+    internal override Chunk CloneSelf()
+    {
+        var matrices = new List<Matrix>(Matrices.Count);
+        foreach (var matrix in Matrices)
+            matrices.Add(matrix.Clone());
+        return new MatrixListChunk(matrices);
+    }
+
     public class Matrix
     {
         public byte A { get; set; }
@@ -107,6 +115,8 @@ public class MatrixListChunk : Chunk
             bw.Write(B);
             bw.Write(A);
         }
+
+        internal Matrix Clone() => new(A, B, C, D);
 
         public override string ToString()
         {

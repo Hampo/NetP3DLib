@@ -54,4 +54,6 @@ public class WorldSphereChunk : NamedChunk
         bw.Write(NumMeshes);
         bw.Write(NumOldBillboardQuadGroups);
     }
+
+    internal override Chunk CloneSelf() => new WorldSphereChunk(Name, Version);
 }

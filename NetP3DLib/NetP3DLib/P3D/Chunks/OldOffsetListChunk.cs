@@ -96,6 +96,14 @@ public class OldOffsetListChunk : Chunk
             bw.Write(PrimGroupIndex);
     }
 
+    internal override Chunk CloneSelf()
+    {
+        var offsets = new List<OffsetEntry>(Offsets.Count);
+        foreach (var offset in Offsets)
+            offsets.Add(offset.Clone());
+        return new OldOffsetListChunk(KeyIndex, offsets);
+    }
+
     public class OffsetEntry
     {
         public uint Index { get; set; }
@@ -137,6 +145,8 @@ public class OldOffsetListChunk : Chunk
             bw.Write(Index);
             bw.Write(Offset);
         }
+
+        internal OffsetEntry Clone() => new(Index, Offset);
 
         public override string ToString()
         {

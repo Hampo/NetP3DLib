@@ -101,4 +101,6 @@ public class RailCamChunk : NamedChunk
         bw.Write(PositionLag);
         bw.Write(TargetLag);
     }
+
+    internal override Chunk CloneSelf() => new RailCamChunk(Name, Behaviour, MinRadius, MaxRadius, TrackRail, TrackDist, ReverseSense, FOV, TargetOffset, AxisPlay, PositionLag, TargetLag);
 }

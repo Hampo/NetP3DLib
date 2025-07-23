@@ -26,4 +26,6 @@ public class CollisionWallChunk : Chunk
 
     internal override void WriteData(BinaryWriter bw)
     { }
+
+    internal override Chunk CloneSelf() => new CollisionWallChunk();
 }

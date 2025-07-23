@@ -58,4 +58,6 @@ public class FrontendImageResourceChunk : NamedChunk
         bw.Write(Version);
         bw.WriteP3DString(Filename);
     }
+
+    internal override Chunk CloneSelf() => new FrontendImageResourceChunk(Name, Version, Filename);
 }

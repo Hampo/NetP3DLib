@@ -54,4 +54,6 @@ public class AnimationGroupChunk : NamedChunk
         bw.Write(GroupID);
         bw.Write(NumChannels);
     }
+
+    internal override Chunk CloneSelf() => new AnimationGroupChunk(Version, Name, GroupID);
 }

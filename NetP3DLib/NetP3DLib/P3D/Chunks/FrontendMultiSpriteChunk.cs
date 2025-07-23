@@ -142,4 +142,6 @@ public class FrontendMultiSpriteChunk : NamedChunk
         foreach (var imageName in ImageNames)
             bw.WriteP3DString(imageName);
     }
+
+    internal override Chunk CloneSelf() => new FrontendMultiSpriteChunk(Name, Version, PositionX, PositionY, DimensionX, DimensionY, JustificationX, JustificationY, Colour, Translucency, RotationValue, ImageNames);
 }

@@ -49,4 +49,6 @@ public class FrontendTextBibleChunk : NamedChunk
         bw.Write(NumLanguages);
         bw.WriteP3DString(Languages);
     }
+
+    internal override Chunk CloneSelf() => new FrontendTextBibleChunk(Name);
 }

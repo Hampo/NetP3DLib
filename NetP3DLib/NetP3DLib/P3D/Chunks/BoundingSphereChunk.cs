@@ -46,4 +46,6 @@ public class BoundingSphereChunk : Chunk
         bw.Write(Centre);
         bw.Write(Radius);
     }
+
+    internal override Chunk CloneSelf() => new BoundingSphereChunk(Centre, Radius);
 }

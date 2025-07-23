@@ -39,4 +39,6 @@ public class SkeletonJointBonePreserveChunk : Chunk
     {
         bw.Write(PreserveBoneLengths);
     }
+
+    internal override Chunk CloneSelf() => new SkeletonJointBonePreserveChunk(PreserveBoneLengths);
 }

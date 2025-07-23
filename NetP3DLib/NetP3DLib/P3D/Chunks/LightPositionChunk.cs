@@ -40,4 +40,6 @@ public class LightPositionChunk : Chunk
     {
         bw.Write(Position);
     }
+
+    internal override Chunk CloneSelf() => new LightPositionChunk(Position);
 }

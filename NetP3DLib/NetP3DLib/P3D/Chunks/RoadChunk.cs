@@ -98,4 +98,6 @@ public class RoadChunk : NamedChunk
         bw.Write(Shortcut);
         bw.Write(Padding);
     }
+
+    internal override Chunk CloneSelf() => new RoadChunk(Name, Type, StartIntersection, EndIntersection, MaximumCars, Speed, Intelligence, Shortcut);
 }

@@ -110,4 +110,6 @@ public class VertexAnimKeyFrameListChunk : Chunk
         foreach (var keyFrameCount in KeyFrameCounts)
             bw.Write(keyFrameCount);
     }
+
+    internal override Chunk CloneSelf() => new VertexAnimKeyFrameListChunk(Version, KeyFrameIds, KeyFrameCounts);
 }

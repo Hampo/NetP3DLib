@@ -75,4 +75,6 @@ public class SkeletonJointChunk : NamedChunk
         bw.Write(TwistAxis);
         bw.Write(RestPose);
     }
+
+    internal override Chunk CloneSelf() => new SkeletonJointChunk(Name, Parent, DOF, FreeAxis, PrimaryAxis, SecondaryAxis, TwistAxis, RestPose);
 }

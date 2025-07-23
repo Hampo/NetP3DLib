@@ -54,4 +54,6 @@ public class FrontendPageChunk : NamedChunk
         bw.Write(ResolutionX);
         bw.Write(ResolutionY);
     }
+
+    internal override Chunk CloneSelf() => new FrontendPageChunk(Name, Version, ResolutionX, ResolutionY);
 }

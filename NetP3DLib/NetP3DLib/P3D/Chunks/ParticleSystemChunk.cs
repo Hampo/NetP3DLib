@@ -76,4 +76,6 @@ public class ParticleSystemChunk : NamedChunk
         bw.Write(Translation);
         bw.Write(NumEmitters);
     }
+
+    internal override Chunk CloneSelf() => new ParticleSystemChunk(Version, Name, FrameRate, NumFrames, IsCyclic, Rotation, Translation);
 }

@@ -49,4 +49,6 @@ public class GameAttrChunk : NamedChunk
         bw.Write(Version);
         bw.Write(NumChildren);
     }
+
+    internal override Chunk CloneSelf() => new GameAttrChunk(Name, Version);
 }

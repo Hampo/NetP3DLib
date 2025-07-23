@@ -40,4 +40,6 @@ public class LightDirectionChunk : Chunk
     {
         bw.Write(Direction);
     }
+
+    internal override Chunk CloneSelf() => new LightDirectionChunk(Direction);
 }

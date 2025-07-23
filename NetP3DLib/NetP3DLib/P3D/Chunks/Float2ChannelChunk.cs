@@ -116,4 +116,6 @@ public class Float2ChannelChunk : ParamChunk
         foreach (var value in Values)
             bw.Write(value);
     }
+
+    internal override Chunk CloneSelf() => new Float2ChannelChunk(Version, Param, Frames, Values);
 }

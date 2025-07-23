@@ -73,4 +73,6 @@ public class UVListChunk : Chunk
         foreach (var pos in UVs)
             bw.Write(pos);
     }
+
+    internal override Chunk CloneSelf() => new UVListChunk(Channel, UVs);
 }

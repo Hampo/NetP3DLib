@@ -44,4 +44,6 @@ public class CompositeDrawableSkinChunk : NamedChunk
         bw.WriteP3DString(Name);
         bw.Write(IsTranslucent);
     }
+
+    internal override Chunk CloneSelf() => new CompositeDrawableSkinChunk(Name, IsTranslucent);
 }

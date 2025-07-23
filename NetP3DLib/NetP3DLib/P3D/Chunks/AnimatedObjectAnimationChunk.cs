@@ -54,4 +54,6 @@ public class AnimatedObjectAnimationChunk : NamedChunk
         bw.Write(FrameRate);
         bw.Write(NumOldFrameControllers);
     }
+
+    internal override Chunk CloneSelf() => new AnimatedObjectAnimationChunk(Version, Name, FrameRate, NumOldFrameControllers);
 }

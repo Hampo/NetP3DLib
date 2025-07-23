@@ -65,4 +65,6 @@ public class StatePropCallbackDataChunk : NamedChunk
         bw.Write((uint)Event);
         bw.Write(OnFrame);
     }
+
+    internal override Chunk CloneSelf() => new StatePropCallbackDataChunk(Name, Event, OnFrame);
 }

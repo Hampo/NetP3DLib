@@ -60,4 +60,6 @@ public class CompositeDrawablePrimitiveChunk : NamedChunk
         bw.Write(Type);
         bw.Write(SkeletonJointID);
     }
+
+    internal override Chunk CloneSelf() => new CompositeDrawablePrimitiveChunk(Version, CreateInstance, Name, Type, SkeletonJointID);
 }

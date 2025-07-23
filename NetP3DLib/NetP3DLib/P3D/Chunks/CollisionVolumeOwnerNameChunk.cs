@@ -37,4 +37,6 @@ public class CollisionVolumeOwnerNameChunk : NamedChunk
     {
         bw.WriteP3DString(Name);
     }
+
+    internal override Chunk CloneSelf() => new CollisionVolumeOwnerNameChunk(Name);
 }

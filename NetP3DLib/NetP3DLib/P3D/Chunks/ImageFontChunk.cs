@@ -64,4 +64,6 @@ public class ImageFontChunk : NamedChunk
         bw.Write(FontHeight);
         bw.Write(FontBaseLine);
     }
+
+    internal override Chunk CloneSelf() => new ImageFontChunk(Version, Name, FontSize, FontWidth, FontHeight, FontBaseLine);
 }

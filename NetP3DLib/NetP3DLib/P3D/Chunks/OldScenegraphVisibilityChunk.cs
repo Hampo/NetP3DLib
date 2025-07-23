@@ -49,4 +49,6 @@ public class OldScenegraphVisibilityChunk : NamedChunk
         bw.Write(NumChildren);
         bw.Write(IsVisible);
     }
+
+    internal override Chunk CloneSelf() => new OldScenegraphVisibilityChunk(Name, IsVisible);
 }

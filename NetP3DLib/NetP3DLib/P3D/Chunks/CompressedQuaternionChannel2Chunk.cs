@@ -141,4 +141,6 @@ public class CompressedQuaternionChannel2Chunk : ParamChunk
             bw.Write(Z);
         }
     }
+
+    internal override Chunk CloneSelf() => new CompressedQuaternionChannel2Chunk(Version, Param, Frames, Values);
 }

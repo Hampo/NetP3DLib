@@ -46,4 +46,6 @@ public class LightIlluminationTypeChunk : Chunk
     {
         bw.Write((uint)IlluminationType);
     }
+
+    internal override Chunk CloneSelf() => new LightIlluminationTypeChunk(IlluminationType);
 }

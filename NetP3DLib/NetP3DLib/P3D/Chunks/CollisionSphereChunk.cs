@@ -39,4 +39,6 @@ public class CollisionSphereChunk : Chunk
     {
         bw.Write(Radius);
     }
+
+    internal override Chunk CloneSelf() => new CollisionSphereChunk(Radius);
 }

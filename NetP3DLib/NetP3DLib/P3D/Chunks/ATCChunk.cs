@@ -78,6 +78,14 @@ public class ATCChunk : Chunk
             entry.Write(bw);
     }
 
+    internal override Chunk CloneSelf()
+    {
+        var entries = new List<Entry>(Entries.Count);
+        foreach (var entry in Entries)
+            entries.Add(entry.Clone());
+        return new ATCChunk(entries);
+    }
+
     public class Entry
     {
         public string SoundResourceDataName { get; set; }
@@ -155,6 +163,8 @@ public class ATCChunk : Chunk
             bw.Write(Mass);
             bw.Write(Elasticity);
         }
+
+        internal Entry Clone() => new(SoundResourceDataName, Particle, BreakableObject, Friction, Mass, Elasticity);
 
         public override string ToString()
         {

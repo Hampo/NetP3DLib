@@ -52,4 +52,6 @@ public class CompositeDrawableChunk : NamedChunk
         bw.WriteP3DString(Name);
         bw.WriteP3DString(SkeletonName);
     }
+
+    internal override Chunk CloneSelf() => new CompositeDrawableChunk(Name, SkeletonName);
 }

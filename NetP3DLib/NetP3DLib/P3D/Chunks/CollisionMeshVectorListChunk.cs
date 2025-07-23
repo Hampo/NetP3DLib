@@ -68,4 +68,6 @@ public class CollisionMeshVectorListChunk : Chunk
         foreach (var pos in Vectors)
             bw.Write(pos);
     }
+
+    internal override Chunk CloneSelf() => new CollisionMeshVectorListChunk(Vectors);
 }

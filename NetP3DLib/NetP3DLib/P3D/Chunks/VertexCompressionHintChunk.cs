@@ -74,4 +74,6 @@ public class VertexCompressionHintChunk : Chunk
         bw.Write(ColourSize);
         bw.Write(PositionSize);
     }
+
+    internal override Chunk CloneSelf() => new VertexCompressionHintChunk(Version, UV0Size, UV1Size, UV2Size, UV3Size, NormalSize, ColourSize, PositionSize);
 }

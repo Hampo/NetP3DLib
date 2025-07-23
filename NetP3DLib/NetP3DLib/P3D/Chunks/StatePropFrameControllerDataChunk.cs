@@ -69,4 +69,6 @@ public class StatePropFrameControllerDataChunk : NamedChunk
         bw.Write(MaxFrame);
         bw.Write(RelativeSpeed);
     }
+
+    internal override Chunk CloneSelf() => new StatePropFrameControllerDataChunk(Name, Cyclic, NumCycles, HoldFrame, MinFrame, MaxFrame, RelativeSpeed);
 }

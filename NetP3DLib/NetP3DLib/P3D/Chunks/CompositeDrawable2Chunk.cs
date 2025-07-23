@@ -64,4 +64,6 @@ public class CompositeDrawable2Chunk : NamedChunk
         bw.WriteP3DString(SkeletonName);
         bw.Write(NumPrimitives);
     }
+
+    internal override Chunk CloneSelf() => new CompositeDrawable2Chunk(Version, Name, SkeletonName);
 }

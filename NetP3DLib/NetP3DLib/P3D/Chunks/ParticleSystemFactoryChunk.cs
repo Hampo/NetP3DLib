@@ -75,4 +75,6 @@ public class ParticleSystemFactoryChunk : NamedChunk
         bw.Write(EnableSorting);
         bw.Write(NumEmitters);
     }
+
+    internal override Chunk CloneSelf() => new ParticleSystemFactoryChunk(Version, Name, FrameRate, NumAnimFrames, NumOLFrames, CycleAnim, EnableSorting);
 }

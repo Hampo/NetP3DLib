@@ -115,4 +115,6 @@ public class IntegerChannelChunk : ParamChunk
         foreach (var value in Values)
             bw.Write(value);
     }
+
+    internal override Chunk CloneSelf() => new IntegerChannelChunk(Version, Param, Frames, Values);
 }

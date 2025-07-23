@@ -40,4 +40,6 @@ public class CollisionOrientedBoundingBoxChunk : Chunk
     {
         bw.Write(HalfExtents);
     }
+
+    internal override Chunk CloneSelf() => new CollisionOrientedBoundingBoxChunk(HalfExtents);
 }

@@ -78,4 +78,6 @@ public class ShaderChunk : NamedChunk
         bw.Write(VertexMask);
         bw.Write(NumParams);
     }
+
+    internal override Chunk CloneSelf() => new ShaderChunk(Name, Version, PddiShaderName, HasTranslucency, VertexNeeds, VertexMask);
 }

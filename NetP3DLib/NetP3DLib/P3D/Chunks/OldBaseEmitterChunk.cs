@@ -100,4 +100,6 @@ public class OldBaseEmitterChunk : NamedChunk
         bw.Write(RotationalCohesion);
         bw.Write(TranslationCohesion);
     }
+
+    internal override Chunk CloneSelf() => new OldBaseEmitterChunk(Version, Name, ParticleType, GeneratorType, ZTest, ZWrite, Fog, MaxParticles, InfiniteLife, RotationalCohesion, TranslationCohesion);
 }

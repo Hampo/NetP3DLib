@@ -39,4 +39,6 @@ public class OldEmitterAnimationChunk : Chunk
     {
         bw.Write(Version);
     }
+
+    internal override Chunk CloneSelf() => new OldEmitterAnimationChunk(Version);
 }

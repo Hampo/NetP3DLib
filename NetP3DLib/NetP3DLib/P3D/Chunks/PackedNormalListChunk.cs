@@ -62,4 +62,6 @@ public class PackedNormalListChunk : Chunk
         bw.Write(NumNormals);
         bw.Write(Normals.ToArray());
     }
+
+    internal override Chunk CloneSelf() => new PackedNormalListChunk(Normals);
 }

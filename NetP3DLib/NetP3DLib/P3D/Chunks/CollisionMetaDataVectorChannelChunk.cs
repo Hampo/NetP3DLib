@@ -116,4 +116,6 @@ public class CollisionMetaDataVectorChannelChunk : NamedChunk
         foreach (var value in Values)
             bw.Write(value);
     }
+
+    internal override Chunk CloneSelf() => new CollisionMetaDataVectorChannelChunk(Version, Name, Indices, Values);
 }

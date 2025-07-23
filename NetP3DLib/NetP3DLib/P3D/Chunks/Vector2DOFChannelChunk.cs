@@ -144,4 +144,6 @@ public class Vector2DOFChannelChunk : ParamChunk
         foreach (var value in Values)
             bw.Write(value);
     }
+
+    internal override Chunk CloneSelf() => new Vector2DOFChannelChunk(Version, Param, StaticIndex, Constants, Frames, Values);
 }

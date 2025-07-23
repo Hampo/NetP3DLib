@@ -40,4 +40,6 @@ public class LocatorMatrixChunk : Chunk
     {
         bw.Write(Matrix);
     }
+
+    internal override Chunk CloneSelf() => new LocatorMatrixChunk(Matrix);
 }

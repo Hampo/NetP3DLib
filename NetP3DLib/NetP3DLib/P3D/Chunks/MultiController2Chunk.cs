@@ -84,4 +84,6 @@ public class MultiController2Chunk : NamedChunk
         bw.Write(FrameRate);
         bw.Write(NumTracks);
     }
+
+    internal override Chunk CloneSelf() => new MultiController2Chunk(Version, Name, CycleMode, NumCycles, InfiniteCycle, NumFrames, FrameRate);
 }

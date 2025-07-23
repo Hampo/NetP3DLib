@@ -76,4 +76,6 @@ public class VisibilityAnimChannelChunk : NamedChunk
         foreach (var value in Frames)
             bw.Write(value);
     }
+
+    internal override Chunk CloneSelf() => new VisibilityAnimChannelChunk(Name, StartState, Frames);
 }

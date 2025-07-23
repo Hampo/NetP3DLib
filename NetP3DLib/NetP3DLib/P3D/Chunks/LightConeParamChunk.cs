@@ -54,4 +54,6 @@ public class LightConeParamChunk : Chunk
         bw.Write(Falloff);
         bw.Write(Range);
     }
+
+    internal override Chunk CloneSelf() => new LightConeParamChunk(Phi, Theta, Falloff, Range);
 }

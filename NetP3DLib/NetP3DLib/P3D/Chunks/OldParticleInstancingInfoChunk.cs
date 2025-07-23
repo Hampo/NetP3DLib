@@ -44,4 +44,6 @@ public class OldParticleInstancingInfoChunk : Chunk
         bw.Write(Version);
         bw.Write(MaxInstances);
     }
+
+    internal override Chunk CloneSelf() => new OldParticleInstancingInfoChunk(Version, MaxInstances);
 }

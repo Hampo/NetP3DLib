@@ -79,4 +79,6 @@ public class ExpressionMixerChunk : NamedChunk
         bw.WriteP3DString(TargetName);
         bw.WriteP3DString(ExpressionGroupName);
     }
+
+    internal override Chunk CloneSelf() => new ExpressionMixerChunk(Version, Name, Type, TargetName, ExpressionGroupName);
 }

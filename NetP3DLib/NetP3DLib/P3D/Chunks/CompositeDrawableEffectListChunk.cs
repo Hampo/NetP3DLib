@@ -39,4 +39,6 @@ public class CompositeDrawableEffectListChunk : Chunk
     {
         bw.Write(NumElements);
     }
+
+    internal override Chunk CloneSelf() => new CompositeDrawableEffectListChunk();
 }

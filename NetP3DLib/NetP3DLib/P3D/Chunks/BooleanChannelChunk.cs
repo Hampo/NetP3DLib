@@ -81,4 +81,6 @@ public class BooleanChannelChunk : ParamChunk
         foreach (var value in Values)
             bw.Write(value);
     }
+
+    internal override Chunk CloneSelf() => new BooleanChannelChunk(Version, Param, StartState, Values);
 }

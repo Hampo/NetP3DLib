@@ -76,4 +76,6 @@ public class AnimationChannelCountChunk : Chunk
         foreach (var key in NumKeys)
             bw.Write(key);
     }
+
+    internal override Chunk CloneSelf() => new AnimationChannelCountChunk(Version, ChannelChunkID, NumKeys);
 }

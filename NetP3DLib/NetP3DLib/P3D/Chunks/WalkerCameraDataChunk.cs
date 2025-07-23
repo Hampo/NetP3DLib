@@ -61,4 +61,6 @@ public class WalkerCameraDataChunk : Chunk
         bw.Write(Elevation);
         bw.Write(TargetOffset);
     }
+
+    internal override Chunk CloneSelf() => new WalkerCameraDataChunk(Index, MinMagnitude, MaxMagnitude, Elevation, TargetOffset);
 }

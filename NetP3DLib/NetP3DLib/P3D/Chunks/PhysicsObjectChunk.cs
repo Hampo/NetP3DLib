@@ -73,4 +73,6 @@ public class PhysicsObjectChunk : NamedChunk
         bw.Write(Volume);
         bw.Write(RestingSensitivity);
     }
+
+    internal override Chunk CloneSelf() => new PhysicsObjectChunk(Name, Version, MaterialName, NumJoints, Volume, RestingSensitivity);
 }

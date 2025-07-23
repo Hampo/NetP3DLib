@@ -50,4 +50,6 @@ public class CollisionVolumeChunk : Chunk
         bw.Write(OwnerIndex);
         bw.Write(NumSubVolumes);
     }
+
+    internal override Chunk CloneSelf() => new CollisionVolumeChunk(ObjectReferenceIndex, OwnerIndex);
 }

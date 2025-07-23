@@ -74,4 +74,6 @@ public class CollisionEffectChunk : Chunk
         bw.Write(PhyPropID);
         bw.WriteP3DString(SoundResourceDataName);
     }
+
+    internal override Chunk CloneSelf() => new CollisionEffectChunk(ClassType, PhyPropID, SoundResourceDataName);
 }

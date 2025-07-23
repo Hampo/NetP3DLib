@@ -84,4 +84,6 @@ public class TextureFontChunk : NamedChunk
         bw.Write(FontBaseLine);
         bw.Write(NumTextures);
     }
+
+    internal override Chunk CloneSelf() => new TextureFontChunk(Version, Name, Shader, FontSize, FontWidth, FontHeight, FontBaseLine);
 }

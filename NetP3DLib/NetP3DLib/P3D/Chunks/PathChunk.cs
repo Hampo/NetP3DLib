@@ -77,4 +77,6 @@ public class PathChunk : Chunk
         foreach (var pos in Positions)
             bw.Write(pos);
     }
+
+    internal override Chunk CloneSelf() => new PathChunk(Positions);
 }

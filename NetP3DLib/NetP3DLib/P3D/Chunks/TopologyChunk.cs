@@ -67,6 +67,14 @@ public class TopologyChunk : Chunk
             entry.Write(bw);
     }
 
+    internal override Chunk CloneSelf()
+    {
+        var topologies = new List<Topology>(Topologies.Count);
+        foreach (var topology in Topologies)
+            topologies.Add(topology.Clone());
+        return new TopologyChunk(topologies);
+    }
+
     public class Topology
     {
         public const uint Size = sizeof(ushort) + sizeof(ushort) + sizeof(ushort) + sizeof(ushort) + sizeof(ushort) + sizeof(ushort);
@@ -134,6 +142,8 @@ public class TopologyChunk : Chunk
             bw.Write(N1);
             bw.Write(N2);
         }
+
+        internal Topology Clone() => new(V0, V1, V2, N0, N1, N2);
 
         public override string ToString()
         {

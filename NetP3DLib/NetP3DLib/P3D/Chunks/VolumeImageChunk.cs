@@ -106,4 +106,6 @@ public class VolumeImageChunk : NamedChunk
         bw.Write(HasAlpha);
         bw.Write((uint)Format);
     }
+
+    internal override Chunk CloneSelf() => new VolumeImageChunk(Name, Version, Width, Height, Depth, Bpp, Palettized, HasAlpha, Format);
 }

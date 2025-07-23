@@ -44,4 +44,6 @@ public class StaticPhysChunk : NamedChunk
         bw.WriteP3DString(Name);
         bw.Write(Version);
     }
+
+    internal override Chunk CloneSelf() => new StaticPhysChunk(Name, Version);
 }

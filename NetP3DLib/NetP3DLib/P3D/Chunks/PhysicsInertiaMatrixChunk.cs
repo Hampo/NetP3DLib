@@ -40,4 +40,6 @@ public class PhysicsInertiaMatrixChunk : Chunk
     {
         bw.Write(Matrix);
     }
+
+    internal override Chunk CloneSelf() => new PhysicsInertiaMatrixChunk(Matrix);
 }

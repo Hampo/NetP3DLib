@@ -72,4 +72,6 @@ public class OldExpressionOffsetsChunk : Chunk
         foreach (var index in PrimitiveGroupIndices)
             bw.Write(index);
     }
+
+    internal override Chunk CloneSelf() => new OldExpressionOffsetsChunk(PrimitiveGroupIndices);
 }

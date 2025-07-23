@@ -70,6 +70,14 @@ public class TextureGlyphListChunk : Chunk
             glyph.Write(bw);
     }
 
+    internal override Chunk CloneSelf()
+    {
+        var glyphs = new List<Glyph>(Glyphs.Count);
+        foreach (var glyph in Glyphs)
+            glyphs.Add(glyph.Clone());
+        return new TextureGlyphListChunk(glyphs);
+    }
+
     public class Glyph
     {
         public uint TextureNum { get; set; }
@@ -147,6 +155,8 @@ public class TextureGlyphListChunk : Chunk
             bw.Write(Advance);
             bw.Write(Code);
         }
+
+        internal Glyph Clone() => new(TextureNum, BottomLeft, TopRight, LeftBearing, RightBearing, Width, Advance, Code);
 
         public override string ToString()
         {

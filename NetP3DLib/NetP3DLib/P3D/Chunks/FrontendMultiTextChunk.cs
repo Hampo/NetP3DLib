@@ -138,4 +138,6 @@ public class FrontendMultiTextChunk : NamedChunk
         bw.Write(ShadowOffsetY);
         bw.Write(CurrentText);
     }
+
+    internal override Chunk CloneSelf() => new FrontendMultiTextChunk(Name, Version, PositionX, PositionY, DimensionX, DimensionY, JustificationX, JustificationY, Colour, Translucency, RotationValue, TextStyleName, ShadowEnabled, ShadowColour, ShadowOffsetX, ShadowOffsetY, CurrentText);
 }

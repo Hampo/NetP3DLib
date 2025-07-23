@@ -37,4 +37,6 @@ public class ExportInfoChunk : NamedChunk
     {
         bw.WriteP3DString(Name);
     }
+
+    internal override Chunk CloneSelf() => new ExportInfoChunk(Name);
 }

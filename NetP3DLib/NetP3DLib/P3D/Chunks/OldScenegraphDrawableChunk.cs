@@ -58,4 +58,6 @@ public class OldScenegraphDrawableChunk : NamedChunk
         bw.WriteP3DString(DrawableName);
         bw.Write(IsTranslucent);
     }
+
+    internal override Chunk CloneSelf() => new OldScenegraphDrawableChunk(Name, DrawableName, IsTranslucent);
 }

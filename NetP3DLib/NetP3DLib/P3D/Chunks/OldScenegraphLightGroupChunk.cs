@@ -52,4 +52,6 @@ public class OldScenegraphLightGroupChunk : NamedChunk
         bw.WriteP3DString(Name);
         bw.WriteP3DString(LightGroupName);
     }
+
+    internal override Chunk CloneSelf() => new OldScenegraphLightGroupChunk(Name, LightGroupName);
 }

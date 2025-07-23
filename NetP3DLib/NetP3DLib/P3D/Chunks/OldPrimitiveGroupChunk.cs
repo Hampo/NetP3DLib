@@ -167,5 +167,7 @@ public class OldPrimitiveGroupChunk : Chunk
         bw.Write(NumMatrices);
     }
 
+    internal override Chunk CloneSelf() => new OldPrimitiveGroupChunk(Version, ShaderName, PrimitiveType, NumVertices, NumIndices, NumMatrices);
+
     public override string ToString() => $"{ShaderName} ({GetChunkType(this)} (0x{ID:X}))";
 }

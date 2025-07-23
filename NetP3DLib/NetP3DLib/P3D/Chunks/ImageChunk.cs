@@ -101,4 +101,6 @@ public class ImageChunk : NamedChunk
         bw.Write(HasAlpha);
         bw.Write((uint)Format);
     }
+
+    internal override Chunk CloneSelf() => new ImageChunk(Name, Version, Width, Height, Bpp, Palettized, HasAlpha, Format);
 }

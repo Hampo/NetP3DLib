@@ -66,4 +66,6 @@ public class MatrixPaletteChunk : Chunk
         foreach (var mat in Matrices)
             bw.Write(mat);
     }
+
+    internal override Chunk CloneSelf() => new MatrixPaletteChunk(Matrices);
 }

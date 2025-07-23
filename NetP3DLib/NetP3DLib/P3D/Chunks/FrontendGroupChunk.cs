@@ -49,4 +49,6 @@ public class FrontendGroupChunk : NamedChunk
         bw.Write(Version);
         bw.Write(HasAlpha);
     }
+
+    internal override Chunk CloneSelf() => new FrontendGroupChunk(Name, Version, HasAlpha);
 }

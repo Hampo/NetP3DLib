@@ -39,4 +39,6 @@ public class FencelineChunk : Chunk
     {
         bw.Write(NumWalls);
     }
+
+    internal override Chunk CloneSelf() => new FencelineChunk();
 }

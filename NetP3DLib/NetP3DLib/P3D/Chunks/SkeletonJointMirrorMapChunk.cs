@@ -54,4 +54,6 @@ public class SkeletonJointMirrorMapChunk : Chunk
         bw.Write(YAxisMap);
         bw.Write(ZAxisMap);
     }
+
+    internal override Chunk CloneSelf() => new SkeletonJointMirrorMapChunk(MappedJointIndex, XAxisMap, YAxisMap, ZAxisMap);
 }

@@ -63,4 +63,6 @@ public class RoadSegmentChunk : NamedChunk
         bw.Write(Transform);
         bw.Write(Scale);
     }
+
+    internal override Chunk CloneSelf() => new RoadSegmentChunk(Name, RoadDataSegment, Transform, Scale);
 }

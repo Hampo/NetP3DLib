@@ -115,4 +115,6 @@ public class ExpressionChunk : NamedChunk
         foreach (var index in Indices)
             bw.Write(index);
     }
+
+    internal override Chunk CloneSelf() => new ExpressionChunk(Version, Name, Keys, Indices);
 }

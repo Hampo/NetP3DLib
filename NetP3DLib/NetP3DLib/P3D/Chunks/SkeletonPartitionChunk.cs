@@ -71,4 +71,6 @@ public class SkeletonPartitionChunk : NamedChunk
         foreach (var jointBit in JointBits)
             bw.Write(jointBit);
     }
+
+    internal override Chunk CloneSelf() => new SkeletonPartitionChunk(Name, JointBits);
 }

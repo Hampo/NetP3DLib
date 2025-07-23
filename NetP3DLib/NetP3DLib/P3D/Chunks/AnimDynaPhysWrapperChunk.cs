@@ -49,4 +49,6 @@ public class AnimDynaPhysWrapperChunk : NamedChunk
         bw.Write(Version);
         bw.Write(HasAlpha);
     }
+
+    internal override Chunk CloneSelf() => new AnimDynaPhysWrapperChunk(Name, Version, HasAlpha);
 }

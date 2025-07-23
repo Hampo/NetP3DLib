@@ -148,4 +148,6 @@ public class IntersectChunk : Chunk
         foreach (var normal in Normals)
             bw.Write(normal);
     }
+
+    internal override Chunk CloneSelf() => new IntersectChunk(Indices, Positions, Normals);
 }

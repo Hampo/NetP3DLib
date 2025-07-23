@@ -90,4 +90,6 @@ public class ExpressionGroupChunk : NamedChunk
         foreach (var stage in Stages)
             bw.Write(stage);
     }
+
+    internal override Chunk CloneSelf() => new ExpressionGroupChunk(Version, Name, TargetName, Stages);
 }

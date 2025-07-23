@@ -75,4 +75,6 @@ public class BreakableObjectChunk : Chunk
         bw.Write((int)Index);
         bw.Write(MaxInstances);
     }
+
+    internal override Chunk CloneSelf() => new BreakableObjectChunk(Index, MaxInstances);
 }

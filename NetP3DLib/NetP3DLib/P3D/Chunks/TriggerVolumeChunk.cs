@@ -55,4 +55,6 @@ public class TriggerVolumeChunk : NamedChunk
         bw.Write(HalfExtents);
         bw.Write(Matrix);
     }
+
+    internal override Chunk CloneSelf() => new TriggerVolumeChunk(Name, IsRect, HalfExtents, Matrix);
 }

@@ -44,4 +44,6 @@ public class GameAttributeVectorParameterChunk : NamedChunk
         bw.WriteP3DString(Name);
         bw.Write(Value);
     }
+
+    internal override Chunk CloneSelf() => new GameAttributeVectorParameterChunk(Name, Value);
 }

@@ -44,4 +44,6 @@ public class OldScenegraphBranchChunk : NamedChunk
         bw.WriteP3DString(Name);
         bw.Write(NumChildren);
     }
+
+    internal override Chunk CloneSelf() => new OldScenegraphBranchChunk(Name);
 }

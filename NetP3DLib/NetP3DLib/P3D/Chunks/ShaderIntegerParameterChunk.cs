@@ -44,4 +44,6 @@ public class ShaderIntegerParameterChunk : ParamChunk
         bw.WriteFourCC(Param);
         bw.Write(Value);
     }
+
+    internal override Chunk CloneSelf() => new ShaderIntegerParameterChunk(Param, Value);
 }

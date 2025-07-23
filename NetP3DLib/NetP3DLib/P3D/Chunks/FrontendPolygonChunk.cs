@@ -122,4 +122,6 @@ public class FrontendPolygonChunk : NamedChunk
         foreach (var colour in Colours)
             bw.Write(colour);
     }
+
+    internal override Chunk CloneSelf() => new FrontendPolygonChunk(Name, Version, Translucency, Points, Colours);
 }

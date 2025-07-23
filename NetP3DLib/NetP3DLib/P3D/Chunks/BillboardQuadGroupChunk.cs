@@ -84,4 +84,6 @@ public class BillboardQuadGroupChunk : NamedChunk
         bw.Write(OcclusionCulling);
         bw.Write(NumQuads);
     }
+
+    internal override Chunk CloneSelf() => new BillboardQuadGroupChunk(Version, Name, Shader, CutOffEnabled, ZTest, ZWrite, OcclusionCulling);
 }

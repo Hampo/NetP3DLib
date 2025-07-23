@@ -44,4 +44,6 @@ public class OldBillboardPerspectiveInfoChunk : Chunk
         bw.Write(Version);
         bw.Write(Perspective);
     }
+
+    internal override Chunk CloneSelf() => new OldBillboardPerspectiveInfoChunk(Version, Perspective);
 }

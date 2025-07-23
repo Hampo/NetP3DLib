@@ -68,4 +68,6 @@ public class ColourListChunk : Chunk
         foreach (var colour in Colours)
             bw.Write(colour);
     }
+
+    internal override Chunk CloneSelf() => new ColourListChunk(Colours);
 }

@@ -44,4 +44,6 @@ public class CollisionMetaDataChunk : Chunk
         bw.Write(Version);
         bw.Write(NumChannels);
     }
+
+    internal override Chunk CloneSelf() => new CollisionMetaDataChunk(Version);
 }

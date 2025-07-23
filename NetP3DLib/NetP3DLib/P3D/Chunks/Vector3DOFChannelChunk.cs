@@ -116,4 +116,6 @@ public class Vector3DOFChannelChunk : ParamChunk
         foreach (var value in Values)
             bw.Write(value);
     }
+
+    internal override Chunk CloneSelf() => new Vector3DOFChannelChunk(Version, Param, Frames, Values);
 }

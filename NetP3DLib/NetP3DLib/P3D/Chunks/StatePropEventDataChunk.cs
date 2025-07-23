@@ -65,4 +65,6 @@ public class StatePropEventDataChunk : NamedChunk
         bw.Write(ToState);
         bw.Write((uint)Event);
     }
+
+    internal override Chunk CloneSelf() => new StatePropEventDataChunk(Name, ToState, Event);
 }

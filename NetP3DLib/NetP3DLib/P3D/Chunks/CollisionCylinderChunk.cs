@@ -49,4 +49,6 @@ public class CollisionCylinderChunk : Chunk
         bw.Write(HalfLength);
         bw.Write(FlatEnd);
     }
+
+    internal override Chunk CloneSelf() => new CollisionCylinderChunk(Radius, HalfLength, FlatEnd);
 }

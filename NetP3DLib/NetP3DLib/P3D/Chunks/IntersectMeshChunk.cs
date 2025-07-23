@@ -45,4 +45,6 @@ public class IntersectMeshChunk : NamedChunk
         bw.WriteP3DString(Name);
         bw.Write(NumMeshes);
     }
+
+    internal override Chunk CloneSelf() => new IntersectMeshChunk(Name);
 }

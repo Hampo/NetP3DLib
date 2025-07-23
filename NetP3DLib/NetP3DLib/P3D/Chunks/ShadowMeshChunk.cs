@@ -55,4 +55,6 @@ public class ShadowMeshChunk : NamedChunk
         bw.Write(NumVertices);
         bw.Write(NumTriangles);
     }
+
+    internal override Chunk CloneSelf() => new ShadowMeshChunk(Name, Version, NumVertices, NumTriangles);
 }

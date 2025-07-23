@@ -68,4 +68,6 @@ public class NormalListChunk : Chunk
         foreach (var pos in Normals)
             bw.Write(pos);
     }
+
+    internal override Chunk CloneSelf() => new NormalListChunk(Normals);
 }

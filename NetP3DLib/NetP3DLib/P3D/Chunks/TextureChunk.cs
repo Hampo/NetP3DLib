@@ -83,4 +83,6 @@ public class TextureChunk : NamedChunk
         bw.Write(Usage);
         bw.Write(Priority);
     }
+
+    internal override Chunk CloneSelf() => new TextureChunk(Name, Version, Width, Height, Bpp, AlphaDepth, NumMipMaps, TextureType, Usage, Priority);
 }

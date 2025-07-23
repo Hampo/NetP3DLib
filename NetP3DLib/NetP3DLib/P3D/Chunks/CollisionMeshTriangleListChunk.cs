@@ -67,6 +67,14 @@ public class CollisionMeshTriangleListChunk : Chunk
             entry.Write(bw);
     }
 
+    internal override Chunk CloneSelf()
+    {
+        var triangles = new List<Triangle>(Triangles.Count);
+        foreach (var triangle in Triangles)
+            triangles.Add(triangle.Clone());
+        return new CollisionMeshTriangleListChunk(triangles);
+    }
+
     public class Triangle
     {
         public const uint Size = sizeof(ushort) + sizeof(ushort) + sizeof(ushort) + sizeof(ushort);
@@ -122,6 +130,8 @@ public class CollisionMeshTriangleListChunk : Chunk
             bw.Write(Index2);
             bw.Write(Flags);
         }
+
+        internal Triangle Clone() => new(Index0, Index1, Index2, Flags);
 
         public override string ToString()
         {

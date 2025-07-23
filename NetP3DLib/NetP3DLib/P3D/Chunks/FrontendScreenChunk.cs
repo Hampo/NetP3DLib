@@ -87,4 +87,6 @@ public class FrontendScreenChunk : NamedChunk
         foreach (var pageName in PageNames)
             bw.WriteP3DString(pageName);
     }
+
+    internal override Chunk CloneSelf() => new FrontendScreenChunk(Name, Version, PageNames);
 }

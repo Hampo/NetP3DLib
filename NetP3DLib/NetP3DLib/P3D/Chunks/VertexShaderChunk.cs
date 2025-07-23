@@ -37,4 +37,6 @@ public class VertexShaderChunk : NamedChunk
     {
         bw.WriteP3DString(Name);
     }
+
+    internal override Chunk CloneSelf() => new VertexShaderChunk(Name);
 }

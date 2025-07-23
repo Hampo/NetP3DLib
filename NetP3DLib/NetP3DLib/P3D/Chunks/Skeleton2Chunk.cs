@@ -60,4 +60,6 @@ public class Skeleton2Chunk : NamedChunk
         bw.Write(NumPartitions);
         bw.Write(NumLimbs);
     }
+
+    internal override Chunk CloneSelf() => new Skeleton2Chunk(Name, Version, NumLimbs);
 }

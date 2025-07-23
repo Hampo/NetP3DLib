@@ -69,4 +69,6 @@ public class CollisionObjectChunk : NamedChunk
         bw.Write(NumSubObjects);
         bw.Write(NumOwners);
     }
+
+    internal override Chunk CloneSelf() => new CollisionObjectChunk(Name, Version, MaterialName, NumSubObjects);
 }

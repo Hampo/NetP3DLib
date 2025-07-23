@@ -78,6 +78,14 @@ public class Vector2OffsetListChunk : ParamChunk
             offset.Write(bw);
     }
 
+    internal override Chunk CloneSelf()
+    {
+        var offsets = new List<Vector2Offset>(Offsets.Count);
+        foreach (var offset in Offsets)
+            offsets.Add(offset.Clone());
+        return new Vector2OffsetListChunk(Version, Param, offsets);
+    }
+
     public class Vector2Offset
     {
         public const uint Size = sizeof(uint) + sizeof(float) * 2;
@@ -121,6 +129,8 @@ public class Vector2OffsetListChunk : ParamChunk
             bw.Write(Index);
             bw.Write(Offset);
         }
+
+        internal Vector2Offset Clone() => new(Index, Offset);
 
         public override string ToString()
         {

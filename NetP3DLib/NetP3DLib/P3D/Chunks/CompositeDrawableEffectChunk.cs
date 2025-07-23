@@ -49,4 +49,6 @@ public class CompositeDrawableEffectChunk : NamedChunk
         bw.Write(IsTranslucent);
         bw.Write(SkeletonJointId);
     }
+
+    internal override Chunk CloneSelf() => new CompositeDrawableEffectChunk(Name, IsTranslucent, SkeletonJointId);
 }

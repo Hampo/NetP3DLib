@@ -51,4 +51,6 @@ public class TreeChunk : Chunk
         bw.Write(Minimum);
         bw.Write(Maximum);
     }
+
+    internal override Chunk CloneSelf() => new TreeChunk(Minimum, Maximum);
 }

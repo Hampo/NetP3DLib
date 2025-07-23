@@ -39,4 +39,6 @@ public class CompositeDrawableSortOrderChunk : Chunk
     {
         bw.Write(SortOrder);
     }
+
+    internal override Chunk CloneSelf() => new CompositeDrawableSortOrderChunk(SortOrder);
 }

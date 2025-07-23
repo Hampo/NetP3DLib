@@ -61,4 +61,6 @@ public class CollisionMeshTreeChunk : Chunk
         bw.Write(Low);
         bw.Write(High);
     }
+
+    internal override Chunk CloneSelf() => new CollisionMeshTreeChunk(Version, FirstNode, HierarchyIndex, Low, High);
 }

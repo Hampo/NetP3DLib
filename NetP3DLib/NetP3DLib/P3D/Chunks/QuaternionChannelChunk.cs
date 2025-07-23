@@ -116,4 +116,6 @@ public class QuaternionChannelChunk : ParamChunk
         foreach (var value in Values)
             bw.Write(value);
     }
+
+    internal override Chunk CloneSelf() => new QuaternionChannelChunk(Version, Param, Frames, Values);
 }

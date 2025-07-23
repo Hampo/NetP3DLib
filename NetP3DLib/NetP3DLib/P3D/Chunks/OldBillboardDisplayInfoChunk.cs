@@ -75,4 +75,6 @@ public class OldBillboardDisplayInfoChunk : Chunk
         bw.Write(SourceRange);
         bw.Write(EdgeRange);
     }
+
+    internal override Chunk CloneSelf() => new OldBillboardDisplayInfoChunk(Version, Rotation, CutOffMode, UVOffsetRange, SourceRange, EdgeRange);
 }

@@ -79,4 +79,6 @@ public class CollisionObjectAttributeChunk : Chunk
         bw.Write(ExtraAttribute2);
         bw.Write(ExtraAttribute3);
     }
+
+    internal override Chunk CloneSelf() => new CollisionObjectAttributeChunk(StaticAttribute, DefaultArea, CanRoll, CanSlide, CanSpin, CanBounce, ExtraAttribute1, ExtraAttribute2, ExtraAttribute3);
 }

@@ -39,4 +39,6 @@ public class CollisionAxisAlignedBoundingBoxChunk : Chunk
     {
         bw.Write(Nothing);
     }
+
+    internal override Chunk CloneSelf() => new CollisionAxisAlignedBoundingBoxChunk();
 }

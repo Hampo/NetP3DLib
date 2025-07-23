@@ -48,4 +48,6 @@ public class AnimObjWrapperChunk : NamedChunk
         bw.Write(Version);
         bw.Write(HasAlpha);
     }
+
+    internal override Chunk CloneSelf() => new AnimObjWrapperChunk(Name, Version, HasAlpha);
 }

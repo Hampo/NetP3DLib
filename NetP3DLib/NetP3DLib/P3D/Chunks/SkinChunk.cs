@@ -65,4 +65,6 @@ public class SkinChunk : NamedChunk
         bw.WriteP3DString(SkeletonName);
         bw.Write(NumOldPrimitiveGroups + NumPrimitiveGroups);
     }
+
+    internal override Chunk CloneSelf() => new SkinChunk(Name, Version, SkeletonName);
 }

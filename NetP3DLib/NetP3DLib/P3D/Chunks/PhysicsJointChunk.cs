@@ -64,4 +64,6 @@ public class PhysicsJointChunk : Chunk
         bw.Write(MinAngle);
         bw.Write(DOF);
     }
+
+    internal override Chunk CloneSelf() => new PhysicsJointChunk(Index, Volume, Stiffness, MaxAngle, MinAngle, DOF);
 }

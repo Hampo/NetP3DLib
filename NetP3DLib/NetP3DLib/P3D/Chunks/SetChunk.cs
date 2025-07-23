@@ -58,4 +58,6 @@ public class SetChunk : NamedChunk
         bw.Write(Version);
         bw.Write(NumTextures);
     }
+
+    internal override Chunk CloneSelf() => new SetChunk(Name, Version);
 }

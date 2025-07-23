@@ -69,4 +69,6 @@ public class StatePropDataV1Chunk : NamedChunk
         bw.WriteP3DString(ObjectFactoryName);
         bw.Write(NumStates);
     }
+
+    internal override Chunk CloneSelf() => new StatePropDataV1Chunk(Version, Name, ObjectFactoryName);
 }

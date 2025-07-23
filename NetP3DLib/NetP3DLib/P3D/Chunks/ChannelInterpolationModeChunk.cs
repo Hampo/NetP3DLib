@@ -44,4 +44,6 @@ public class ChannelInterpolationModeChunk : Chunk
         bw.Write(Version);
         bw.Write(Interpolate);
     }
+
+    internal override Chunk CloneSelf() => new ChannelInterpolationModeChunk(Version, Interpolate);
 }

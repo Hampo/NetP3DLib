@@ -187,5 +187,7 @@ public class PrimitiveGroupChunk : Chunk
         bw.Write(VertexAnimationMask);
     }
 
+    internal override Chunk CloneSelf() => new PrimitiveGroupChunk(Version, ShaderName, PrimitiveType, NumVertices, NumIndices, NumMatrices, MemoryImaged, Optimized, VertexAnimated, VertexAnimationMask);
+
     public override string ToString() => $"{ShaderName} ({GetChunkType(this)} (0x{ID:X}))";
 }

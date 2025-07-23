@@ -50,4 +50,6 @@ public class WallChunk : Chunk
         bw.Write(End);
         bw.Write(Normal);
     }
+
+    internal override Chunk CloneSelf() => new WallChunk(Start, End, Normal);
 }

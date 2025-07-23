@@ -49,4 +49,6 @@ public class VertexAnimKeyFrameChunk : Chunk
         bw.Write(KeyFrameId);
         bw.Write(PrimGroupIndex);
     }
+
+    internal override Chunk CloneSelf() => new VertexAnimKeyFrameChunk(Version, KeyFrameId, PrimGroupIndex);
 }

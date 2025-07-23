@@ -50,4 +50,6 @@ public class SkeletonJoint2Chunk : NamedChunk
         bw.Write(Parent);
         bw.Write(RestPose);
     }
+
+    internal override Chunk CloneSelf() => new SkeletonJoint2Chunk(Name, Parent, RestPose);
 }

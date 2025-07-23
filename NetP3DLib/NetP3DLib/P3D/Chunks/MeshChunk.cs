@@ -50,4 +50,6 @@ public class MeshChunk : NamedChunk
         bw.Write(Version);
         bw.Write(NumOldPrimitiveGroups);
     }
+
+    internal override Chunk CloneSelf() => new MeshChunk(Name, Version);
 }

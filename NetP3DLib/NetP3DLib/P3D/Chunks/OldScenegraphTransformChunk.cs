@@ -50,4 +50,6 @@ public class OldScenegraphTransformChunk : NamedChunk
         bw.Write(NumChildren);
         bw.Write(Transform);
     }
+
+    internal override Chunk CloneSelf() => new OldScenegraphTransformChunk(Name, Transform);
 }

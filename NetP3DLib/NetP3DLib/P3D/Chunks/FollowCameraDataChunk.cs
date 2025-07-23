@@ -61,4 +61,6 @@ public class FollowCameraDataChunk : Chunk
         bw.Write(Magnitude);
         bw.Write(TargetOffset);
     }
+
+    internal override Chunk CloneSelf() => new FollowCameraDataChunk(Index, Rotation, Elevation, Magnitude, TargetOffset);
 }

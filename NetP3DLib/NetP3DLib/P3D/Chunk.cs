@@ -114,6 +114,14 @@ public abstract class Chunk
             chunk.Write(bw);
     }
 
+    public Chunk Clone()
+    {
+        var chunk = CloneSelf();
+        foreach (var child in Children)
+            chunk.Children.Add(child.Clone());
+        return chunk;
+    }
+
     public T GetFirstChunkOfType<T>() where T : Chunk => Children.OfType<T>()?.FirstOrDefault();
 
     public T GetFirstChunkOfType<T>(string name) where T : NamedChunk => Children.OfType<T>()?.FirstOrDefault(x => x.Name.Equals(name));
@@ -138,6 +146,12 @@ public abstract class Chunk
     /// </summary>
     /// <param name="bw">The <c>BinaryWriter</c> to write to.</param>
     internal abstract void WriteData(System.IO.BinaryWriter bw);
+
+    /// <summary>
+    /// Creates a clone of the current chunk.
+    /// </summary>
+    /// <returns>A duplicate of the current chunk.</returns>
+    internal abstract Chunk CloneSelf();
 
     public override string ToString() => $"{GetChunkType(this)} (0x{ID:X})";
 
@@ -240,4 +254,6 @@ public class UnknownChunk : Chunk
     }
 
     internal override void WriteData(System.IO.BinaryWriter bw) => bw.Write(Data);
+
+    internal override Chunk CloneSelf() => new UnknownChunk(ID, Data);
 }

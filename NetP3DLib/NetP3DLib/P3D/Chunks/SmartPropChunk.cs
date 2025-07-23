@@ -91,4 +91,6 @@ public class SmartPropChunk : NamedChunk
         bw.Write(SimulationCost);
         bw.Write(NumStates);
     }
+
+    internal override Chunk CloneSelf() => new SmartPropChunk(Version, Name, ObjectFactoryName, Material, MaterialEnum, NumBreakables, RenderingCost, SimulationCost, NumStates);
 }

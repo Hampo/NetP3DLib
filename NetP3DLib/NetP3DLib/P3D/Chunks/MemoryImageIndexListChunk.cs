@@ -76,4 +76,6 @@ public class MemoryImageIndexListChunk : Chunk
         foreach (var index in Indices)
             bw.Write(index);
     }
+
+    internal override Chunk CloneSelf() => new MemoryImageIndexListChunk(Version, Param, Indices);
 }

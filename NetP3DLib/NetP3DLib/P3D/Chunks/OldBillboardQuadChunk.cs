@@ -110,4 +110,6 @@ public class OldBillboardQuadChunk : NamedChunk
         bw.Write(Distance);
         bw.Write(UVOffset);
     }
+
+    internal override Chunk CloneSelf() => new OldBillboardQuadChunk(Version, Name, BillboardMode, Translation, Colour, UV0, UV1, UV2, UV3, Width, Height, Distance, UVOffset);
 }

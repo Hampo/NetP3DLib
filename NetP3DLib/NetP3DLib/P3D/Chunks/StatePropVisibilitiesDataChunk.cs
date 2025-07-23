@@ -44,4 +44,6 @@ public class StatePropVisibilitiesDataChunk : NamedChunk
         bw.WriteP3DString(Name);
         bw.Write(IsVisible);
     }
+
+    internal override Chunk CloneSelf() => new StatePropVisibilitiesDataChunk(Name, IsVisible);
 }

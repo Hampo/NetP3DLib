@@ -45,4 +45,6 @@ public class BoundingBoxChunk : Chunk
         bw.Write(Low);
         bw.Write(High);
     }
+
+    internal override Chunk CloneSelf() => new BoundingBoxChunk(Low, High);
 }

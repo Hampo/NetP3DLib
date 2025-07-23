@@ -39,4 +39,6 @@ public class LightShadowChunk : Chunk
     {
         bw.Write(Shadow);
     }
+
+    internal override Chunk CloneSelf() => new LightShadowChunk(Shadow);
 }

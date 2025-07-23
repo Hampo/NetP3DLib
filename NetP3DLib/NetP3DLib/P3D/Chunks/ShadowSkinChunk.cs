@@ -69,4 +69,6 @@ public class ShadowSkinChunk : NamedChunk
         bw.Write(NumVertices);
         bw.Write(NumTriangles);
     }
+
+    internal override Chunk CloneSelf() => new ShadowSkinChunk(Name, Version, SkeletonName, NumVertices, NumTriangles);
 }

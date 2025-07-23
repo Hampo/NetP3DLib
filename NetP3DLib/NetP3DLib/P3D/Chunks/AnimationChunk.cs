@@ -73,4 +73,6 @@ public class AnimationChunk : NamedChunk
         bw.Write(FrameRate);
         bw.Write(Cyclic);
     }
+
+    internal override Chunk CloneSelf() => new AnimationChunk(Version, Name, AnimationType, NumFrames, FrameRate, Cyclic);
 }

@@ -66,4 +66,6 @@ public class FrontendTextBibleResourceChunk : NamedChunk
         bw.WriteP3DString(Filename);
         bw.WriteP3DString(InventoryName);
     }
+
+    internal override Chunk CloneSelf() => new FrontendTextBibleResourceChunk(Name, Version, Filename, InventoryName);
 }

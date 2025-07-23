@@ -68,4 +68,6 @@ public class PositionListChunk : Chunk
         foreach (var pos in Positions)
             bw.Write(pos);
     }
+
+    internal override Chunk CloneSelf() => new PositionListChunk(Positions);
 }

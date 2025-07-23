@@ -59,4 +59,6 @@ public class FrontendLayerChunk : NamedChunk
         bw.Write(Editable);
         bw.Write(Alpha);
     }
+
+    internal override Chunk CloneSelf() => new FrontendLayerChunk(Name, Version, Visible, Editable, Alpha);
 }

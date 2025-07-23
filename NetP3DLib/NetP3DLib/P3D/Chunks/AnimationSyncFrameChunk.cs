@@ -44,4 +44,6 @@ public class AnimationSyncFrameChunk : Chunk
         bw.Write(Version);
         bw.Write(SyncFrame);
     }
+
+    internal override Chunk CloneSelf() => new AnimationSyncFrameChunk(Version, SyncFrame);
 }

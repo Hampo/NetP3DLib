@@ -116,4 +116,6 @@ public class ColourChannelChunk : ParamChunk
         foreach (var value in Values)
             bw.Write(value);
     }
+
+    internal override Chunk CloneSelf() => new ColourChannelChunk(Version, Param, Frames, Values);
 }

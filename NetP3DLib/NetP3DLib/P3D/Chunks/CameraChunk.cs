@@ -80,4 +80,6 @@ public class CameraChunk : NamedChunk
         bw.Write(Look);
         bw.Write(Up);
     }
+
+    internal override Chunk CloneSelf() => new CameraChunk(Name, Version, FOV, AspectRatio, NearClip, FarClip, Position, Look, Up);
 }

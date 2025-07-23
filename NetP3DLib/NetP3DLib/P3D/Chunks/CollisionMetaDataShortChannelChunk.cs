@@ -115,4 +115,6 @@ public class CollisionMetaDataShortChannelChunk : NamedChunk
         foreach (var value in Values)
             bw.Write(value);
     }
+
+    internal override Chunk CloneSelf() => new CollisionMetaDataShortChannelChunk(Version, Name, Indices, Values);
 }

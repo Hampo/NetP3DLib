@@ -40,4 +40,6 @@ public class PhysicsVectorChunk : Chunk
     {
         bw.Write(Vector);
     }
+
+    internal override Chunk CloneSelf() => new PhysicsVectorChunk(Vector);
 }

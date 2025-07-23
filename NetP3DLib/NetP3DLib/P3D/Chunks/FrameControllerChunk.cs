@@ -92,4 +92,6 @@ public class FrameControllerChunk : NamedChunk
         bw.WriteP3DString(HierarchyName);
         bw.WriteP3DString(AnimationName);
     }
+
+    internal override Chunk CloneSelf() => new FrameControllerChunk(Version, Name, Type, CycleMode, NumCycles, InfiniteCycle, HierarchyName, AnimationName);
 }

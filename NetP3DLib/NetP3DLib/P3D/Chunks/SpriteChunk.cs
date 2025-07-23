@@ -84,4 +84,6 @@ public class SpriteChunk : NamedChunk
         bw.Write(ImageCount);
         bw.Write(BlitBorder);
     }
+
+    internal override Chunk CloneSelf() => new SpriteChunk(Name, NativeX, NativeY, Shader, ImageWidth, ImageHeight, BlitBorder);
 }

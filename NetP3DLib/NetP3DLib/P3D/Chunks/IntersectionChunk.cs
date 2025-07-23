@@ -61,4 +61,6 @@ public class IntersectionChunk : NamedChunk
         bw.Write(Radius);
         bw.Write((uint)TrafficBehaviour);
     }
+
+    internal override Chunk CloneSelf() => new IntersectionChunk(Name, Position, Radius, TrafficBehaviour);
 }

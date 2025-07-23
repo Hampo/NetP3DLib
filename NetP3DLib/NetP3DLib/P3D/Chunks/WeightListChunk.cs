@@ -68,4 +68,6 @@ public class WeightListChunk : Chunk
         foreach (var weight in Weights)
             bw.Write(weight);
     }
+
+    internal override Chunk CloneSelf() => new WeightListChunk(Weights);
 }

@@ -68,6 +68,14 @@ public class ImageGlyphListChunk : Chunk
             glyph.Write(bw);
     }
 
+    internal override Chunk CloneSelf()
+    {
+        var glyphs = new List<Glyph>(Glyphs.Count);
+        foreach (var glyph in Glyphs)
+            glyphs.Add(glyph.Clone());
+        return new ImageGlyphListChunk(glyphs);
+    }
+
     public class Glyph
     {
         public ushort XOrigin { get; set; }
@@ -133,6 +141,8 @@ public class ImageGlyphListChunk : Chunk
             bw.Write(Advance);
             bw.Write(Code);
         }
+
+        internal Glyph Clone() => new(XOrigin, LeftBearing, RightBearing, Width, Advance, Code);
 
         public override string ToString()
         {

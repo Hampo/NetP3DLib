@@ -44,4 +44,6 @@ public class WorldCollisionObjectChunk : NamedChunk
         bw.WriteP3DString(Name);
         bw.Write(Version);
     }
+
+    internal override Chunk CloneSelf() =>  new WorldCollisionObjectChunk(Name, Version);
 }

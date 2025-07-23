@@ -66,4 +66,6 @@ public class IndexListChunk : Chunk
         foreach (var index in Indices)
             bw.Write(index);
     }
+
+    internal override Chunk CloneSelf() => new IndexListChunk(Indices);
 }

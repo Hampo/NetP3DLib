@@ -39,4 +39,6 @@ public class CollisionVolumeOwnerChunk : Chunk
     {
         bw.Write(NumNames);
     }
+
+    internal override Chunk CloneSelf() => new CollisionVolumeOwnerChunk();
 }

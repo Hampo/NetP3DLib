@@ -39,4 +39,6 @@ public class RenderStatusChunk : Chunk
     {
         bw.Write(CastShadow);
     }
+
+    internal override Chunk CloneSelf() => new RenderStatusChunk(CastShadow);
 }

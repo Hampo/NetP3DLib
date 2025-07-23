@@ -26,4 +26,6 @@ public class BlackMagicChunk : Chunk
 
     internal override void WriteData(BinaryWriter bw)
     { }
+
+    internal override Chunk CloneSelf() => new BlackMagicChunk();
 }

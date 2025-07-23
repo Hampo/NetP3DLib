@@ -78,6 +78,14 @@ public class MultiControllerTracksChunk : Chunk
             track.Write(bw);
     }
 
+    internal override Chunk CloneSelf()
+    {
+        var tracks = new List<Track>(Tracks.Count);
+        foreach (var track in Tracks)
+            tracks.Add(track.Clone());
+        return new MultiControllerTracksChunk(tracks);
+    }
+
     public class Track
     {
         public string Name { get; set; }
@@ -137,6 +145,8 @@ public class MultiControllerTracksChunk : Chunk
             bw.Write(EndTime);
             bw.Write(Scale);
         }
+
+        internal Track Clone() => new(Name, StartTime, EndTime, Scale);
 
         public override string ToString()
         {

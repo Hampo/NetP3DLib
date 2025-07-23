@@ -95,6 +95,8 @@ public class StatePropStateDataV1Chunk : NamedChunk
         bw.Write(OutFrame);
     }
 
+    internal override Chunk CloneSelf() => new StatePropStateDataV1Chunk(Name, AutoTransition, OutState, OutFrame);
+
     private static readonly List<uint> ChunkSortPriority = [
         (uint)ChunkIdentifier.State_Prop_Visibilities_Data,
         (uint)ChunkIdentifier.State_Prop_Frame_Controller_Data,

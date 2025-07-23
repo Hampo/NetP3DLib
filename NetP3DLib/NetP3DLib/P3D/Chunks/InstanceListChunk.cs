@@ -37,4 +37,6 @@ public class InstanceListChunk : NamedChunk
     {
         bw.WriteP3DString(Name);
     }
+
+    internal override Chunk CloneSelf() => new InstanceListChunk(Name);
 }

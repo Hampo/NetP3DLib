@@ -68,4 +68,6 @@ public class SurfaceTypeListChunk : Chunk
         bw.Write(NumTypes);
         bw.Write(Types.ToArray());
     }
+
+    internal override Chunk CloneSelf() => new SurfaceTypeListChunk(Version, Types);
 }

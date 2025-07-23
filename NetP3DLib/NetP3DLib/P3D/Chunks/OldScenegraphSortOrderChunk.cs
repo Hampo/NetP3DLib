@@ -39,4 +39,6 @@ public class OldScenegraphSortOrderChunk : Chunk
     {
         bw.Write(SortOrder);
     }
+
+    internal override Chunk CloneSelf() => new OldScenegraphSortOrderChunk(SortOrder);
 }

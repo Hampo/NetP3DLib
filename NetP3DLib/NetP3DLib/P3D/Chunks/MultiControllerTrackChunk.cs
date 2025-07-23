@@ -58,4 +58,6 @@ public class MultiControllerTrackChunk : NamedChunk
         bw.WriteP3DString(Name);
         bw.WriteFourCC(Type);
     }
+
+    internal override Chunk CloneSelf() => new MultiControllerTrackChunk(Version, Name, Type);
 }

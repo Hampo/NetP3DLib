@@ -66,4 +66,6 @@ public class FrontendTextStyleResourceChunk : NamedChunk
         bw.WriteP3DString(Filename);
         bw.WriteP3DString(InventoryName);
     }
+
+    internal override Chunk CloneSelf() => new FrontendTextStyleResourceChunk(Name, Version, Filename, InventoryName);
 }

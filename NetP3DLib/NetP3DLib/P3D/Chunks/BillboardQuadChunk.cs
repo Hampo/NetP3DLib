@@ -89,4 +89,6 @@ public class BillboardQuadChunk : NamedChunk
         bw.Write(Height);
         bw.Write(Distance);
     }
+
+    internal override Chunk CloneSelf() => new BillboardQuadChunk(Version, Name, CutOffEnabled, Perspective, AxisMode, Colour, Width, Height, Distance);
 }

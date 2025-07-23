@@ -50,4 +50,6 @@ public class LensFlareChunk : NamedChunk
         bw.Write(Version);
         bw.Write(NumOldBillboardQuadGroups);
     }
+
+    internal override Chunk CloneSelf() => new LensFlareChunk(Name, Version);
 }

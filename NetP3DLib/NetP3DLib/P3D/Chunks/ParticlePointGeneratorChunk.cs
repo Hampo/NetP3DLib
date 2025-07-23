@@ -54,4 +54,6 @@ public class ParticlePointGeneratorChunk : Chunk
         bw.Write(VerticalSpread);
         bw.Write(RadialVar);
     }
+
+    internal override Chunk CloneSelf() => new ParticlePointGeneratorChunk(Version, HorizontalSpread, VerticalSpread, RadialVar);
 }

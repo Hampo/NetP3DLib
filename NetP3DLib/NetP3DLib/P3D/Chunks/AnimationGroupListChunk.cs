@@ -45,4 +45,6 @@ public class AnimationGroupListChunk : Chunk
         bw.Write(Version);
         bw.Write(NumGroups);
     }
+
+    internal override Chunk CloneSelf() => new AnimationGroupListChunk(Version);
 }

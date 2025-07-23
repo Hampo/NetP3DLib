@@ -82,4 +82,6 @@ public class FrontendPure3DResourceChunk : NamedChunk
         bw.WriteP3DString(CameraName);
         bw.WriteP3DString(AnimationName);
     }
+
+    internal override Chunk CloneSelf() => new FrontendPure3DResourceChunk(Name, Version, Filename, InventoryName, CameraName, AnimationName);
 }

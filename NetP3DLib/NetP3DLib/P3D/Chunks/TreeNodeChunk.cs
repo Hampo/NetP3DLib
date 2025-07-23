@@ -44,4 +44,6 @@ public class TreeNodeChunk : Chunk
         bw.Write(NumChildren);
         bw.Write(ParentOffset);
     }
+
+    internal override Chunk CloneSelf() => new TreeNodeChunk(NumChildren, ParentOffset);
 }

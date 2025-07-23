@@ -113,4 +113,6 @@ public class FrontendPure3DObjectChunk : NamedChunk
         bw.Write(RotationValue);
         bw.WriteP3DString(Pure3DFilename);
     }
+
+    internal override Chunk CloneSelf() => new FrontendPure3DObjectChunk(Name, Version, PositionX, PositionY, DimensionX, DimensionY, JustificationX, JustificationY, Colour, Translucency, RotationValue, Pure3DFilename);
 }

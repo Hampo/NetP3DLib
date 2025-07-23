@@ -71,4 +71,6 @@ public class OldIndexOffsetListChunk : Chunk
         foreach (var offset in Offsets)
             bw.Write(offset);
     }
+
+    internal override Chunk CloneSelf() => new OldIndexOffsetListChunk(Version, Offsets);
 }

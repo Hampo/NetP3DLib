@@ -44,4 +44,6 @@ public class SortOrderChunk : Chunk
         bw.Write(Version);
         bw.Write(SortOrder);
     }
+
+    internal override Chunk CloneSelf() => new SortOrderChunk(Version, SortOrder);
 }

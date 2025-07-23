@@ -39,4 +39,6 @@ public class CompositeDrawablePropListChunk : Chunk
     {
         bw.Write(NumElements);
     }
+
+    internal override Chunk CloneSelf() => new CompositeDrawablePropListChunk();
 }

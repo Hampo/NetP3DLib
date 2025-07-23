@@ -82,4 +82,6 @@ public class LightGroupChunk : NamedChunk
         foreach (var light in Lights)
             bw.WriteP3DString(light);
     }
+
+    internal override Chunk CloneSelf() => new LightGroupChunk(Name, Lights);
 }

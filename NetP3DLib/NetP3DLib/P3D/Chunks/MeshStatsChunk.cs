@@ -53,4 +53,6 @@ public class MeshStatsChunk : NamedChunk
         bw.Write(IsRendered);
         bw.Write(IsCollision);
     }
+
+    internal override Chunk CloneSelf() => new MeshStatsChunk(Version, Name, IsRendered, IsCollision);
 }

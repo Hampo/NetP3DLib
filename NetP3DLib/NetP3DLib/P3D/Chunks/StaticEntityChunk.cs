@@ -49,4 +49,6 @@ public class StaticEntityChunk : NamedChunk
         bw.Write(Version);
         bw.Write(HasAlpha);
     }
+
+    internal override Chunk CloneSelf() => new StaticEntityChunk(Name, Version, HasAlpha);
 }

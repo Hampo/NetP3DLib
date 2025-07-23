@@ -92,4 +92,6 @@ public class TreeNode2Chunk : Chunk
         bw.Write(PathSegmentEntityLimit);
         bw.Write(AnimEntityLimit);
     }
+
+    internal override Chunk CloneSelf() => new TreeNode2Chunk(SplitAxis, SplitPosition, StaticEntityLimit, StaticPhysEntityLimit, IntersectEntityLimit, DynaPhysEntityLimit, FenceEntityLimit, RoadSegmentEntityLimit, PathSegmentEntityLimit, AnimEntityLimit);
 }

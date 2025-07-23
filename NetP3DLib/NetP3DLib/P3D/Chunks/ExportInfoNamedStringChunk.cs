@@ -52,4 +52,6 @@ public class ExportInfoNamedStringChunk : NamedChunk
         bw.WriteP3DString(Name);
         bw.WriteP3DString(Value);
     }
+
+    internal override Chunk CloneSelf() => new ExportInfoNamedStringChunk(Name, Value);
 }

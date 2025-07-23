@@ -39,4 +39,6 @@ public class CompositeDrawableSkinListChunk : Chunk
     {
         bw.Write(NumElements);
     }
+
+    internal override Chunk CloneSelf() => new CompositeDrawableSkinListChunk();
 }
