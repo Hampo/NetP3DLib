@@ -11,9 +11,17 @@ namespace NetP3DLib.P3D.Chunks;
 public class ExpressionMixerChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Expression_Mixer;
+
+    public enum MixerType : uint
+    {
+        Undefined,
+        Pose,
+        HSplineOffset,
+        VertexOffset,
+    }
     
     public uint Version { get; set; }
-    public uint Type { get; set; }
+    public MixerType Type { get; set; }
     public string TargetName { get; set; }
     public string ExpressionGroupName { get; set; }
 
@@ -25,7 +33,7 @@ public class ExpressionMixerChunk : NamedChunk
 
             data.AddRange(BitConverter.GetBytes(Version));
             data.AddRange(BinaryExtensions.GetP3DStringBytes(Name));
-            data.AddRange(BitConverter.GetBytes(Type));
+            data.AddRange(BitConverter.GetBytes((uint)Type));
             data.AddRange(BinaryExtensions.GetP3DStringBytes(TargetName));
             data.AddRange(BinaryExtensions.GetP3DStringBytes(ExpressionGroupName));
 
@@ -38,12 +46,12 @@ public class ExpressionMixerChunk : NamedChunk
     {
         Version = br.ReadUInt32();
         Name = br.ReadP3DString();
-        Type = br.ReadUInt32();
+        Type = (MixerType)br.ReadUInt32();
         TargetName = br.ReadP3DString();
         ExpressionGroupName = br.ReadP3DString();
     }
 
-    public ExpressionMixerChunk(uint version, string name, uint type, string targetName, string expressionGroupName) : base(ChunkID)
+    public ExpressionMixerChunk(uint version, string name, MixerType type, string targetName, string expressionGroupName) : base(ChunkID)
     {
         Version = version;
         Name = name;
@@ -67,7 +75,7 @@ public class ExpressionMixerChunk : NamedChunk
     {
         bw.Write(Version);
         bw.WriteP3DString(Name);
-        bw.Write(Type);
+        bw.Write((uint)Type);
         bw.WriteP3DString(TargetName);
         bw.WriteP3DString(ExpressionGroupName);
     }
