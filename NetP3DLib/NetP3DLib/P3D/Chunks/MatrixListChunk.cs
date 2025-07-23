@@ -1,8 +1,6 @@
 using NetP3DLib.P3D.Enums;
-using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
@@ -32,7 +30,7 @@ public class MatrixListChunk : Chunk
             }
         }
     }
-    public List<Color> Matrices { get; } = [];
+    public List<Matrix> Matrices { get; } = [];
 
     public override byte[] DataBytes
     {
@@ -42,7 +40,7 @@ public class MatrixListChunk : Chunk
 
             data.AddRange(BitConverter.GetBytes(NumMatrices));
             foreach (var mat in Matrices)
-                data.AddRange(BinaryExtensions.GetBytes(mat));
+                data.AddRange(mat.DataBytes);
 
             return [.. data];
         }
@@ -54,10 +52,10 @@ public class MatrixListChunk : Chunk
         var numMatrices = br.ReadInt32();
         Matrices.Capacity = numMatrices;
         for (int i = 0; i < numMatrices; i++)
-            Matrices.Add(br.ReadColor());
+            Matrices.Add(new(br));
     }
 
-    public MatrixListChunk(IList<Color> matrices) : base(ChunkID)
+    public MatrixListChunk(IList<Matrix> matrices) : base(ChunkID)
     {
         Matrices.AddRange(matrices);
     }
@@ -66,6 +64,53 @@ public class MatrixListChunk : Chunk
     {
         bw.Write(NumMatrices);
         foreach (var mat in Matrices)
-            bw.Write(mat);
+            mat.Write(bw);
+    }
+
+    public class Matrix
+    {
+        public byte A { get; set; }
+        public byte B { get; set; }
+        public byte C { get; set; }
+        public byte D { get; set; }
+
+        public byte[] DataBytes => [D, C, B, A];
+
+        public Matrix(BinaryReader br)
+        {
+            D = br.ReadByte();
+            C = br.ReadByte();
+            B = br.ReadByte();
+            A = br.ReadByte();
+        }
+
+        public Matrix(byte a, byte b, byte c, byte d)
+        {
+            A = a;
+            B = b;
+            C = c;
+            D = d;
+        }
+
+        public Matrix()
+        {
+            A = 0;
+            B = 0;
+            C = 0;
+            D = 0;
+        }
+
+        internal void Write(BinaryWriter bw)
+        {
+            bw.Write(D);
+            bw.Write(C);
+            bw.Write(B);
+            bw.Write(A);
+        }
+
+        public override string ToString()
+        {
+            return $"{A} | {B} | {C} | {D}";
+        }
     }
 }
