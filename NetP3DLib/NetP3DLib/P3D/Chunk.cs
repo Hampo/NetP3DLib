@@ -236,7 +236,7 @@ public class UnknownChunk : Chunk
     {
         ID = chunkId;
 
-        Data = data;
+        Data = (byte[])data.Clone();
     }
 
     internal override void WriteData(System.IO.BinaryWriter bw) => bw.Write(Data);

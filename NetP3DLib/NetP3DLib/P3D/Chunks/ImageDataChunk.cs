@@ -34,7 +34,7 @@ public class ImageDataChunk : Chunk
 
     public ImageDataChunk(byte[] imageData) : base(ChunkID)
     {
-        ImageData = imageData;
+        ImageData = (byte[])imageData.Clone();
     }
 
     public override void Validate()
