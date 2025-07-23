@@ -28,9 +28,9 @@ public class VertexShaderChunk : NamedChunk
         Name = br.ReadP3DString();
     }
 
-    public VertexShaderChunk(string vertextShaderName) : base(ChunkID)
+    public VertexShaderChunk(string name) : base(ChunkID)
     {
-        Name = vertextShaderName;
+        Name = name;
     }
 
     internal override void WriteData(BinaryWriter bw)

@@ -37,7 +37,7 @@ public class SkeletonJoint2Chunk : NamedChunk
         RestPose = br.ReadMatrix4x4();
     }
 
-    public SkeletonJoint2Chunk(string name, uint parent, int dof, int freeAxis, int primaryAxis, int secondaryAxis, int twistAxis, Matrix4x4 restPose) : base(ChunkID)
+    public SkeletonJoint2Chunk(string name, uint parent, Matrix4x4 restPose) : base(ChunkID)
     {
         Name = name;
         Parent = parent;

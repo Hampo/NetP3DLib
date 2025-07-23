@@ -60,11 +60,11 @@ public class MemoryImageVertexDescriptionChunk : Chunk
             Description.Add(br.ReadByte());
     }
 
-    public MemoryImageVertexDescriptionChunk(uint version, uint param, IList<byte> vertex) : base(ChunkID)
+    public MemoryImageVertexDescriptionChunk(uint version, uint param, IList<byte> description) : base(ChunkID)
     {
         Version = version;
         Param = param;
-        Description.AddRange(vertex);
+        Description.AddRange(description);
     }
 
     internal override void WriteData(BinaryWriter bw)

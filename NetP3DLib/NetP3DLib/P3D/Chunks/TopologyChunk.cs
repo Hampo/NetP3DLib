@@ -55,9 +55,9 @@ public class TopologyChunk : Chunk
             Topologies.Add(new(br));
     }
 
-    public TopologyChunk(IList<Topology> entries) : base(ChunkID)
+    public TopologyChunk(IList<Topology> topologies) : base(ChunkID)
     {
-        Topologies.AddRange(entries);
+        Topologies.AddRange(topologies);
     }
 
     internal override void WriteData(BinaryWriter bw)

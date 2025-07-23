@@ -61,11 +61,11 @@ public class VisibilityAnimChannelChunk : NamedChunk
             Frames.Add(br.ReadUInt32());
     }
 
-    public VisibilityAnimChannelChunk(string name, ushort startState, IList<uint> values) : base(ChunkID)
+    public VisibilityAnimChannelChunk(string name, ushort startState, IList<uint> frames) : base(ChunkID)
     {
         Name = name;
         StartState = startState;
-        Frames.AddRange(values);
+        Frames.AddRange(frames);
     }
 
     internal override void WriteData(BinaryWriter bw)

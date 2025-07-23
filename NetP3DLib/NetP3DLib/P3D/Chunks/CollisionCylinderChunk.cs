@@ -36,10 +36,10 @@ public class CollisionCylinderChunk : Chunk
         FlatEnd = br.ReadUInt16();
     }
 
-    public CollisionCylinderChunk(float cylinderRadius, float length, ushort flatEnd) : base(ChunkID)
+    public CollisionCylinderChunk(float radius, float halfLength, ushort flatEnd) : base(ChunkID)
     {
-        Radius = cylinderRadius;
-        HalfLength = length;
+        Radius = radius;
+        HalfLength = halfLength;
         FlatEnd = flatEnd;
     }
 

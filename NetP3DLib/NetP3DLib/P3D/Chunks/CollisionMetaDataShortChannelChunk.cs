@@ -89,11 +89,11 @@ public class CollisionMetaDataShortChannelChunk : NamedChunk
             Values.Add(br.ReadUInt16());
     }
 
-    public CollisionMetaDataShortChannelChunk(uint version, string name, IList<ushort> frames, IList<ushort> values) : base(ChunkID)
+    public CollisionMetaDataShortChannelChunk(uint version, string name, IList<ushort> indices, IList<ushort> values) : base(ChunkID)
     {
         Version = version;
         Name = name;
-        Indices.AddRange(frames);
+        Indices.AddRange(indices);
         Values.AddRange(values);
     }
 
@@ -110,8 +110,8 @@ public class CollisionMetaDataShortChannelChunk : NamedChunk
         bw.Write(Version);
         bw.WriteP3DString(Name);
         bw.Write(NumIndices);
-        foreach (var frame in Indices)
-            bw.Write(frame);
+        foreach (var index in Indices)
+            bw.Write(index);
         foreach (var value in Values)
             bw.Write(value);
     }
