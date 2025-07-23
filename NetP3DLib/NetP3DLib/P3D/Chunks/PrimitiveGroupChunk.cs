@@ -57,7 +57,7 @@ public class PrimitiveGroupChunk : Chunk
     public uint Version { get; set; }
     public string ShaderName { get; set; }
     public PrimitiveTypes PrimitiveType { get; set; }
-    public VertexTypes VertexType { get; set; }
+    public VertexTypes VertexType => GetVertexType();
     public uint NumVertices { get; set; }
     public uint NumIndices { get; set; }
     public uint NumMatrices { get; set; }
@@ -89,12 +89,13 @@ public class PrimitiveGroupChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(ShaderName) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint);
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
     public PrimitiveGroupChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         ShaderName = br.ReadP3DString();
         PrimitiveType = (PrimitiveTypes)br.ReadUInt32();
-        VertexType = (VertexTypes)br.ReadUInt32();
+        var vertexType = (VertexTypes)br.ReadUInt32();
         NumVertices = br.ReadUInt32();
         NumIndices = br.ReadUInt32();
         NumMatrices = br.ReadUInt32();
@@ -104,12 +105,11 @@ public class PrimitiveGroupChunk : Chunk
         VertexAnimationMask = br.ReadUInt32();
     }
 
-    public PrimitiveGroupChunk(uint version, string shaderName, PrimitiveTypes primitiveType, VertexTypes vertexType, uint numVertices, uint numIndices, uint numMatrices, uint memoryImaged, uint optimized, uint vertexAnimated, uint vertexAnimationMask) : base(ChunkID)
+    public PrimitiveGroupChunk(uint version, string shaderName, PrimitiveTypes primitiveType, uint numVertices, uint numIndices, uint numMatrices, uint memoryImaged, uint optimized, uint vertexAnimated, uint vertexAnimationMask) : base(ChunkID)
     {
         Version = version;
         ShaderName = shaderName;
         PrimitiveType = primitiveType;
-        VertexType = vertexType;
         NumVertices = numVertices;
         NumIndices = numIndices;
         NumMatrices = numMatrices;
@@ -152,7 +152,7 @@ public class PrimitiveGroupChunk : Chunk
         }
 
         if (uvN > 8)
-            throw new InvalidDataException("Old Primitive Groups can only have a maximum of 8 UV Lists.");
+            throw new InvalidDataException("Primitive Groups can only have a maximum of 8 UV Lists.");
 
         if (uvN > 0)
             vertexType |= (VertexTypes)uvN;
@@ -165,9 +165,9 @@ public class PrimitiveGroupChunk : Chunk
 		if (!ShaderName.IsValidP3DString())
 			throw new InvalidP3DStringException(nameof(ShaderName), ShaderName);
 
-		var expectedVertextType = GetVertexType() & ~VertexTypes.Position; // Hacky fix for "The Simpsons: Road Rage" as the Position List didn't exist then. "The Simpsons: Hit & Run" hardcodedly adds the Position List type to all Old Primitive Groups.
-        if ((VertexType & expectedVertextType) != expectedVertextType)
-            throw new InvalidDataException($"The {nameof(VertexType)} \"{VertexType}\" does not match expected value \"{expectedVertextType}\"");
+		//var expectedVertextType = GetVertexType() & ~VertexTypes.Position; // Hacky fix for "The Simpsons: Road Rage" as the Position List didn't exist then. "The Simpsons: Hit & Run" hardcodedly adds the Position List type to all Old Primitive Groups.
+  //      if ((VertexType & expectedVertextType) != expectedVertextType)
+  //          throw new InvalidDataException($"The {nameof(VertexType)} \"{VertexType}\" does not match expected value \"{expectedVertextType}\"");
 
         base.Validate();
     }
