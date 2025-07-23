@@ -88,6 +88,8 @@ public class LocatorChunk : NamedChunk
         bw.Write(TriggerCount);
     }
 
+    public override string ToString() => $"\"{Name}\" ({GetChunkType(this)} Type {LocatorType} (0x{ID:X}))";
+
     public abstract class LocatorData
     {
         public uint LocatorType { get; }
