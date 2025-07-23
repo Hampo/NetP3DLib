@@ -61,6 +61,28 @@ public class StatePropStateDataV1Chunk : NamedChunk
         OutFrame = outFrame;
     }
 
+    public override void Validate()
+    {
+        if (Children.Count == 0)
+            throw new InvalidDataException($"There must be at least one child chunk.");
+
+        var currentIndex = 0;
+        foreach (var child in Children)
+        {
+            var expectedIndex = ChunkSortPriority.IndexOf(child.ID);
+
+            if (expectedIndex == -1)
+                throw new InvalidDataException($"Invalid child chunk: {child}.");
+
+            if (expectedIndex < currentIndex)
+                throw new InvalidDataException($"Child chunk {child} is out of order. Expected order: {string.Join(", ", ChunkSortPriority)}.");
+
+            currentIndex = expectedIndex;
+        }
+
+        base.Validate();
+    }
+
     internal override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
@@ -73,7 +95,7 @@ public class StatePropStateDataV1Chunk : NamedChunk
         bw.Write(OutFrame);
     }
 
-    private static readonly HashSet<uint> ChunkSortPriority = [
+    private static readonly List<uint> ChunkSortPriority = [
         (uint)ChunkIdentifier.State_Prop_Visibilities_Data,
         (uint)ChunkIdentifier.State_Prop_Frame_Controller_Data,
         (uint)ChunkIdentifier.State_Prop_Event_Data,
@@ -81,7 +103,7 @@ public class StatePropStateDataV1Chunk : NamedChunk
     ];
     /// <summary>
     /// Children must be in the order: <c>Visibilities</c>; <c>Frame Controllers</c>; <c>Events</c>; <c>Callbacks</c>.
-    /// <para>This function sort child chunks in the correct order.</para>
+    /// <para>This function sorts child chunks into the correct order.</para>
     /// </summary>
     public void SortChildren()
     {
