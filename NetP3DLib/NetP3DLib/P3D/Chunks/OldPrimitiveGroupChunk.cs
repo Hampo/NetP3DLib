@@ -166,4 +166,6 @@ public class OldPrimitiveGroupChunk : Chunk
         bw.Write(NumIndices);
         bw.Write(NumMatrices);
     }
+
+    public override string ToString() => $"{ShaderName} ({GetChunkType(this)} (0x{ID:X}))";
 }

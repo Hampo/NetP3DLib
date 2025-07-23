@@ -186,4 +186,6 @@ public class PrimitiveGroupChunk : Chunk
         bw.Write(VertexAnimated);
         bw.Write(VertexAnimationMask);
     }
+
+    public override string ToString() => $"{ShaderName} ({GetChunkType(this)} (0x{ID:X}))";
 }

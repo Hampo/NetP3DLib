@@ -56,4 +56,6 @@ public class FrontendStringTextBibleChunk : Chunk
         bw.WriteP3DString(BibleName);
         bw.WriteP3DString(StringID);
     }
+
+    public override string ToString() => $"{StringID} ({GetChunkType(this)} (0x{ID:X}))";
 }
