@@ -118,6 +118,95 @@ public static class BinaryExtensions
     }
 
     /// <summary>
+    /// Gets the byte array for a Pure3D string.
+    /// <para>The format is 1 byte for the string length, followed by that many bytes representing the string.</para>
+    /// <para>This uses <c>Simpsons: Hit &amp; Run</c> padding that does not include the length byte.</para>
+    /// </summary>
+    /// <param name="value">The value to get the bytes of.</param>
+    /// <returns>A <c>byte[]</c> representing <paramref name="value"/>.</returns>
+    /// <exception cref="ArgumentException">Throws an exception if <paramref name="value"/> is too long.</exception>
+    public static byte[] GetP3DLongStringBytes(string value)
+    {
+        if (!value.IsValidP3DLongString())
+            throw new InvalidP3DLongStringException(nameof(value), value);
+
+        byte[] bytes = Encoding.UTF8.GetBytes(value);
+        int length = bytes.Length;
+
+        int diff = length & 3;
+        if (diff > 0)
+            length += 4 - diff;
+
+        byte[] buffer = new byte[length + 4];
+        BitConverter.GetBytes(length).CopyTo(buffer, 0);
+        bytes.CopyTo(buffer, 4);
+        return buffer;
+    }
+
+    /// <summary>
+    /// Gets the byte length for a Pure3D string.
+    /// <para>The format is 1 byte for the string length, followed by that many bytes representing the string.</para>
+    /// <para>This uses <c>Simpsons: Hit &amp; Run</c> padding that does not include the length byte.</para>
+    /// </summary>
+    /// <param name="value">The value to get the length of.</param>
+    /// <returns>A <c>uint</c> representing the length of <paramref name="value"/>.</returns>
+    /// <exception cref="ArgumentException">Throws an exception if <paramref name="value"/> is too long.</exception>
+    public static uint GetP3DLongStringLength(string value)
+    {
+        if (!value.IsValidP3DLongString())
+            throw new InvalidP3DLongStringException(nameof(value), value);
+
+        int length = Encoding.UTF8.GetByteCount(value);
+
+        int diff = length & 3;
+        if (diff > 0)
+            length += 4 - diff;
+
+        return (uint)length + 4;
+    }
+
+    /// <summary>
+    /// Reads a Pure3D string from <paramref name="br"/>.
+    /// <para>The format is 1 byte for the string length, followed by that many bytes representing the string.</para>
+    /// </summary>
+    /// <param name="br">The <c>BinaryReader</c> to read from.</param>
+    /// <returns>A <c>string</c> with trailing <c>null</c> bytes trimmed.</returns>
+    public static string ReadP3DLongString(this BinaryReader br)
+    {
+        int valueLength = br.ReadInt32();
+        byte[] valueBytes = br.ReadBytes(valueLength);
+        string value = Encoding.UTF8.GetString(valueBytes);
+        return value.TrimEnd('\0');
+    }
+
+    /// <summary>
+    /// Writes a Pure3D string to <paramref name="bw"/>.
+    /// <para>The format is 1 byte for the string length, followed by that many bytes representing the string.</para>
+    /// </summary>
+    /// <param name="bw">The <c>BinaryWriter</c> to write to.</param>
+    /// <param name="value">The value to write.</param>
+    /// <exception cref="ArgumentException">Throws an exception if <paramref name="value"/> is too long.</exception>
+    public static void WriteP3DLongString(this BinaryWriter bw, string value)
+    {
+        if (!value.IsValidP3DLongString())
+            throw new InvalidP3DLongStringException(nameof(value), value);
+
+        byte[] bytes = Encoding.UTF8.GetBytes(value);
+        int length = bytes.Length;
+
+
+        int diff = length & 3;
+        if (diff > 0)
+            length += 4 - diff;
+
+        bw.Write(length);
+        bw.Write(bytes, 0, bytes.Length);
+        int padding = length - bytes.Length;
+        for (int i = 0; i < padding; i++)
+            bw.Write((byte)0);
+    }
+
+    /// <summary>
     /// Gets the byte array for a FourCC string.
     /// </summary>
     /// <param name="value">The value to get the bytes of.</param>

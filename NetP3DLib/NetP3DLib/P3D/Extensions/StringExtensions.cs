@@ -12,6 +12,17 @@ public static class StringExtensions
 
         return true;
     }
+
+    public static bool IsValidP3DLongString(this string str)
+    {
+        if (str == null)
+            return false;
+        if (Encoding.UTF8.GetByteCount(str) > int.MaxValue - 4)
+            return false;
+
+        return true;
+    }
+
     public static bool IsValidFourCC(this string str)
     {
         if (str == null)

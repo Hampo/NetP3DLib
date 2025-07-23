@@ -190,6 +190,7 @@ public enum ChunkIdentifier : uint
     Set = 0x3000110,
     Shader = 0x11000,
     Shader_Colour_Parameter = 0x11005,
+    Shader_Definition = 0x11001,
     Shader_Float_Parameter = 0x11004,
     Shader_Integer_Parameter = 0x11003,
     Shader_Texture_Parameter = 0x11002,
