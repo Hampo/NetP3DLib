@@ -12,7 +12,7 @@ public class BooleanChannelChunk : ParamChunk
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Boolean_Channel;
     
     public uint Version { get; set; }
-    public ushort StartState { get; set; }
+    public bool StartState { get; set; }
     public uint NumValues
     {
         get => (uint)Values.Count;
@@ -43,7 +43,7 @@ public class BooleanChannelChunk : ParamChunk
 
             data.AddRange(BitConverter.GetBytes(Version));
             data.AddRange(BinaryExtensions.GetFourCCBytes(Param));
-            data.AddRange(BitConverter.GetBytes(StartState));
+            data.AddRange(BitConverter.GetBytes((ushort)(StartState ? 1 : 0)));
             data.AddRange(BitConverter.GetBytes(NumValues));
             foreach (var value in Values)
                 data.AddRange(BitConverter.GetBytes(value));
@@ -57,14 +57,14 @@ public class BooleanChannelChunk : ParamChunk
     {
         Version = br.ReadUInt32();
         Param = br.ReadFourCC();
-        StartState = br.ReadUInt16();
+        StartState = br.ReadUInt16() == 1;
         var numValues = br.ReadInt32();
         Values = new(numValues);
         for (int i = 0; i < numValues; i++)
             Values.Add(br.ReadUInt16());
     }
 
-    public BooleanChannelChunk(uint version, string param, ushort startState, IList<ushort> values) : base(ChunkID)
+    public BooleanChannelChunk(uint version, string param, bool startState, IList<ushort> values) : base(ChunkID)
     {
         Version = version;
         Param = param;
@@ -76,7 +76,7 @@ public class BooleanChannelChunk : ParamChunk
     {
         bw.Write(Version);
         bw.WriteFourCC(Param);
-        bw.Write(StartState);
+        bw.Write((ushort)(StartState ? 1 : 0));
         bw.Write(NumValues);
         foreach (var value in Values)
             bw.Write(value);
