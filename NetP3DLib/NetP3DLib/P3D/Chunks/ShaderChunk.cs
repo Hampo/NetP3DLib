@@ -11,17 +11,52 @@ namespace NetP3DLib.P3D.Chunks;
 public class ShaderChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Shader;
-    
+
+    [Flags]
+    public enum VertexMasks : uint
+    {
+        None = 0,
+        UVs = 1,
+        UVs2 = 2,
+        UVs3 = 3,
+        UVs4 = 4,
+        UVs5 = 5,
+        UVs6 = 6,
+        UVs7 = 7,
+        UVs8 = 8,
+        UVMask = 15,
+        Normals = 1 << 4,
+        Colours = 1 << 5,
+        Specular = 1 << 6,
+        Matrices = 1 << 7,
+        Weights = 1 << 8,
+        Size = 1 << 9,
+        W = 1 << 10,
+        BiNormal = 1 << 11,
+        Tangent = 1 << 12,
+        Position = 1 << 13,
+        Colours2 = 1 << 14,
+        ColourCount1 = 1 << 15,
+        ColourCount2 = 2 << 15,
+        ColourCount3 = 3 << 15,
+        ColourCount4 = 4 << 15,
+        ColourCount5 = 5 << 15,
+        ColourCount6 = 6 << 15,
+        ColourCount7 = 7 << 15,
+        ColourMask = 7 << 15,
+        ColourMaskOffset = 15,
+    }
+
     public uint Version { get; set; }
     public string PddiShaderName { get; set; }
-    public uint VertexNeeds { get; set; }
     private uint hasTranslucency;
     public bool HasTranslucency
     {
         get => hasTranslucency != 0;
         set => hasTranslucency = value ? 1u : 0u;
     }
-    public uint VertexMask { get; set; }
+    public VertexMasks VertexNeeds { get; set; }
+    public VertexMasks VertexMask { get; set; }
     public uint NumParams => (uint)Children.Count;
 
     public override byte[] DataBytes
@@ -33,9 +68,9 @@ public class ShaderChunk : NamedChunk
             data.AddRange(BinaryExtensions.GetP3DStringBytes(Name));
             data.AddRange(BitConverter.GetBytes(Version));
             data.AddRange(BinaryExtensions.GetP3DStringBytes(PddiShaderName));
-            data.AddRange(BitConverter.GetBytes(VertexNeeds));
             data.AddRange(BitConverter.GetBytes(hasTranslucency));
-            data.AddRange(BitConverter.GetBytes(VertexMask));
+            data.AddRange(BitConverter.GetBytes((uint)VertexNeeds));
+            data.AddRange(BitConverter.GetBytes((uint)~VertexMask));
             data.AddRange(BitConverter.GetBytes(NumParams));
 
             return [.. data];
@@ -49,13 +84,13 @@ public class ShaderChunk : NamedChunk
         Name = br.ReadP3DString();
         Version = br.ReadUInt32();
         PddiShaderName = br.ReadP3DString();
-        VertexNeeds = br.ReadUInt32();
         hasTranslucency = br.ReadUInt32();
-        VertexMask = br.ReadUInt32();
+        VertexNeeds = (VertexMasks)br.ReadUInt32();
+        VertexMask = (VertexMasks)~br.ReadUInt32();
         var numParams = br.ReadUInt32();
     }
 
-    public ShaderChunk(string name, uint version, string pddiShaderName, bool hasTranslucency, uint vertexNeeds, uint vertexMask) : base(ChunkID)
+    public ShaderChunk(string name, uint version, string pddiShaderName, bool hasTranslucency, VertexMasks vertexNeeds, VertexMasks vertexMask) : base(ChunkID)
     {
         Name = name;
         Version = version;
@@ -78,9 +113,9 @@ public class ShaderChunk : NamedChunk
         bw.WriteP3DString(Name);
         bw.Write(Version);
         bw.WriteP3DString(PddiShaderName);
-        bw.Write(VertexNeeds);
         bw.Write(hasTranslucency);
-        bw.Write(VertexMask);
+        bw.Write((uint)VertexNeeds);
+        bw.Write((uint)~VertexMask);
         bw.Write(NumParams);
     }
 
