@@ -12,15 +12,44 @@ namespace NetP3DLib.P3D.Chunks;
 public class RoadChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Road;
-    
+    private const uint SpeedMask = 0x000000FF;
+    private const uint IntelligenceMask = 0x0000FF00;
+    private const uint ShortcutMask = 0x00010000;
+
     public uint Type { get; set; }
     public string StartIntersection { get; set; }
     public string EndIntersection { get; set; }
     public uint MaximumCars { get; set; }
-    public byte Speed { get; set; }
-    public byte Intelligence { get; set; }
-    public byte Shortcut { get; set; }
-    private byte Padding { get; set; }
+    private uint bitmask;
+    public byte Speed
+    {
+        get => (byte)(bitmask & SpeedMask);
+        set
+        {
+            bitmask &= ~SpeedMask;
+            bitmask |= value;
+        }
+    }
+    public byte Intelligence
+    {
+        get => (byte)((bitmask & IntelligenceMask) >> 8);
+        set
+        {
+            bitmask &= ~IntelligenceMask;
+            bitmask |= (uint)(value << 8);
+        }
+    }
+    public bool Shortcut
+    {
+        get => (bitmask & ShortcutMask) != 0;
+        set
+        {
+            if (value)
+                bitmask |= ShortcutMask;
+            else
+                bitmask &= ~ShortcutMask;
+        }
+    }
 
     public override byte[] DataBytes
     {
@@ -33,10 +62,7 @@ public class RoadChunk : NamedChunk
             data.AddRange(BinaryExtensions.GetP3DStringBytes(StartIntersection));
             data.AddRange(BinaryExtensions.GetP3DStringBytes(EndIntersection));
             data.AddRange(BitConverter.GetBytes(MaximumCars));
-            data.Add(Speed);
-            data.Add(Intelligence);
-            data.Add(Shortcut);
-            data.Add(Padding);
+            data.AddRange(BitConverter.GetBytes(bitmask));
 
             return [.. data];
         }
@@ -51,23 +77,20 @@ public class RoadChunk : NamedChunk
         StartIntersection = br.ReadP3DString();
         EndIntersection = br.ReadP3DString();
         MaximumCars = br.ReadUInt32();
-        Speed = br.ReadByte();
-        Intelligence = br.ReadByte();
-        Shortcut = br.ReadByte();
-        Padding = br.ReadByte();
+        bitmask = br.ReadUInt32();
     }
 
-    public RoadChunk(string name, uint type, string startIntersection, string endIntersection, uint maximumCars, byte speed, byte intelligence, byte shortcut) : base(ChunkID)
+    public RoadChunk(string name, uint type, string startIntersection, string endIntersection, uint maximumCars, byte speed, byte intelligence, bool shortcut) : base(ChunkID)
     {
         Name = name;
         Type = type;
         StartIntersection = startIntersection;
         EndIntersection = endIntersection;
         MaximumCars = maximumCars;
+        bitmask = 0;
         Speed = speed;
         Intelligence = intelligence;
         Shortcut = shortcut;
-        Padding = 0;
     }
 
     public override void Validate()
@@ -93,10 +116,7 @@ public class RoadChunk : NamedChunk
         bw.WriteP3DString(StartIntersection);
         bw.WriteP3DString(EndIntersection);
         bw.Write(MaximumCars);
-        bw.Write(Speed);
-        bw.Write(Intelligence);
-        bw.Write(Shortcut);
-        bw.Write(Padding);
+        bw.Write(bitmask);
     }
 
     internal override Chunk CloneSelf() => new RoadChunk(Name, Type, StartIntersection, EndIntersection, MaximumCars, Speed, Intelligence, Shortcut);
