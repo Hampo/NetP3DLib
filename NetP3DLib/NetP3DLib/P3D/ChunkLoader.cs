@@ -17,9 +17,7 @@ namespace NetP3DLib.P3D;
 
 public static class ChunkLoader
 {
-    public static readonly Dictionary<uint, Type> ChunkTypes;
-
-    private static readonly Dictionary<Type, Func<BinaryReader, Chunk>> ConstructorCache = [];
+    public static readonly Dictionary<uint, (Type, Func<BinaryReader, Chunk>)> ChunkTypes;
 #if DEBUG
     public static HashSet<uint> UnknownChunks = [];
 #endif
@@ -105,8 +103,7 @@ public static class ChunkLoader
             var param = Expression.Parameter(typeof(BinaryReader), "br");
             var newExpr = Expression.New(ctor, param);
             var lambda = Expression.Lambda<Func<BinaryReader, Chunk>>(newExpr, param);
-            ConstructorCache[chunkType] = lambda.Compile();
-            ChunkTypes[chunkAttriutes.Identifier] = chunkType;
+            ChunkTypes[chunkAttriutes.Identifier] = (chunkType, lambda.Compile());
         }
     }
 
@@ -126,8 +123,10 @@ public static class ChunkLoader
         Chunk c;
 
         uint actualHeaderSize = headerSize;
-        if (ChunkTypes.TryGetValue(chunkId, out Type chunkType))
+        if (ChunkTypes.TryGetValue(chunkId, out var entry))
         {
+            var (chunkType, chunkConstructor) = entry;
+
             Endianness endianness;
             if (br is EndianAwareBinaryReader eabr)
                 endianness = eabr.Endianness;
@@ -136,7 +135,7 @@ public static class ChunkLoader
 
             using MemoryStream ms = new(headerData);
             using EndianAwareBinaryReader br2 = new(ms, endianness);
-            c = ConstructorCache[chunkType](br2);
+            c = chunkConstructor(br2);
             actualHeaderSize = (uint)ms.Position;
         }
         else
