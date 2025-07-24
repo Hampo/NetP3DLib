@@ -118,9 +118,6 @@ public class MatrixListChunk : Chunk
 
         internal Matrix Clone() => new(A, B, C, D);
 
-        public override string ToString()
-        {
-            return $"{A} | {B} | {C} | {D}";
-        }
+        public override string ToString() => $"{A} | {B} | {C} | {D}";
     }
 }

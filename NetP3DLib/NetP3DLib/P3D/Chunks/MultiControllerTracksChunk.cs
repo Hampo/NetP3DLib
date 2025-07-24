@@ -158,9 +158,6 @@ public class MultiControllerTracksChunk : Chunk
 
         internal Track Clone() => new(Name, StartTime, EndTime, Scale);
 
-        public override string ToString()
-        {
-            return $"{Name} | {StartTime} | {EndTime} | {Scale}";
-        }
+        public override string ToString() => $"{Name} | {StartTime} | {EndTime} | {Scale}";
     }
 }

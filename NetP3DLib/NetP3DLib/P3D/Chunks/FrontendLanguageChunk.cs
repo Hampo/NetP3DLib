@@ -207,9 +207,6 @@ public class FrontendLanguageChunk : NamedChunk
 
         public Entry Clone() => new(Hash, Value);
 
-        public override string ToString()
-        {
-            return $"0x{Hash:X} | {Value}";
-        }
+        public override string ToString() => $"0x{Hash:X} | {Value}";
     }
 }

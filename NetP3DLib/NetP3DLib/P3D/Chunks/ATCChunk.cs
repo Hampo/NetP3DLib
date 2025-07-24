@@ -174,9 +174,6 @@ public class ATCChunk : Chunk
 
         internal Entry Clone() => new(SoundResourceDataName, Particle, BreakableObject, Friction, Mass, Elasticity);
 
-        public override string ToString()
-        {
-            return $"{SoundResourceDataName} | {Particle} | {BreakableObject} | {Friction} | {Mass} | {Elasticity}";
-        }
+        public override string ToString() => $"{SoundResourceDataName} | {Particle} | {BreakableObject} | {Friction} | {Mass} | {Elasticity}";
     }
 }

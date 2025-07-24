@@ -133,9 +133,6 @@ public class CollisionMeshTriangleListChunk : Chunk
 
         internal Triangle Clone() => new(Index0, Index1, Index2, Flags);
 
-        public override string ToString()
-        {
-            return $"{Index0} | {Index1} | {Index2} | {Flags}";
-        }
+        public override string ToString() => $"{Index0} | {Index1} | {Index2} | {Flags}";
     }
 }

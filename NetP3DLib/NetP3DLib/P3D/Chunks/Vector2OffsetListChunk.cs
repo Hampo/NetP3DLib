@@ -132,9 +132,6 @@ public class Vector2OffsetListChunk : ParamChunk
 
         internal Vector2Offset Clone() => new(Index, Offset);
 
-        public override string ToString()
-        {
-            return $"{Index} | {Offset}";
-        }
+        public override string ToString() => $"{Index} | {Offset}";
     }
 }

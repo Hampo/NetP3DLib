@@ -150,9 +150,6 @@ public class OldOffsetListChunk : Chunk
 
         internal OffsetEntry Clone() => new(Index, Offset);
 
-        public override string ToString()
-        {
-            return $"{Index} | {Offset}";
-        }
+        public override string ToString() => $"{Index} | {Offset}";
     }
 }

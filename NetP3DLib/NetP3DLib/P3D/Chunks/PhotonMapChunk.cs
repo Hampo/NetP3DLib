@@ -260,9 +260,6 @@ public class PhotonMapChunk : NamedChunk
 
         internal Photon Clone() => new(Position, Plane, Theta, Phi, RedPower, GreenPower, BluePower, AlphaPower, NumScatterings, LightIndex);
 
-        public override string ToString()
-        {
-            return $"{Position} | {Plane} | {Theta} | {Phi} | {RedPower} | {GreenPower} | {BluePower} | {AlphaPower} | {NumScatterings} | {LightIndex}";
-        }
+        public override string ToString() => $"{Position} | {Plane} | {Theta} | {Phi} | {RedPower} | {GreenPower} | {BluePower} | {AlphaPower} | {NumScatterings} | {LightIndex}";
     }
 }

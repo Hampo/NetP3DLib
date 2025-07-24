@@ -59,5 +59,5 @@ public class FrontendStringTextBibleChunk : Chunk
 
     internal override Chunk CloneSelf() => new FrontendStringTextBibleChunk(BibleName, StringID);
 
-    public override string ToString() => $"{StringID} ({GetChunkType(this)} (0x{ID:X}))";
+    public override string ToString() => $"\"{StringID}\" ({GetChunkType(this)} (0x{ID:X}))";
 }

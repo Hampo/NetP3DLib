@@ -159,9 +159,6 @@ public class TextureGlyphListChunk : Chunk
 
         internal Glyph Clone() => new(TextureNum, BottomLeft, TopRight, LeftBearing, RightBearing, Width, Advance, Code);
 
-        public override string ToString()
-        {
-            return $"{TextureNum} | {BottomLeft} | {TopRight} | {LeftBearing} | {RightBearing} | {Width} | {Advance} | {Code}";
-        }
+        public override string ToString() => $"{TextureNum} | {BottomLeft} | {TopRight} | {LeftBearing} | {RightBearing} | {Width} | {Advance} | {Code}";
     }
 }

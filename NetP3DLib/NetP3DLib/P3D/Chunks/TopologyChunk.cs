@@ -145,9 +145,6 @@ public class TopologyChunk : Chunk
 
         internal Topology Clone() => new(V0, V1, V2, N0, N1, N2);
 
-        public override string ToString()
-        {
-            return $"{V0} | {V1} | {V2} | {N0} | {N1} | {N2}";
-        }
+        public override string ToString() => $"{V0} | {V1} | {V2} | {N0} | {N1} | {N2}";
     }
 }

@@ -174,10 +174,7 @@ public class LocatorChunk : NamedChunk
 
         internal override LocatorData Clone() => new UnknownLocatorData(LocatorType, Data);
 
-        public override string ToString()
-        {
-            return $"[{string.Join(", ", Data)}]";
-        }
+        public override string ToString() => $"[{string.Join(", ", Data)}]";
     }
     
     /// <summary>
@@ -315,10 +312,7 @@ public class LocatorChunk : NamedChunk
 
         internal override LocatorData Clone() => Parameter.HasValue ? new Type0LocatorData(Event, Parameter.Value) : new Type0LocatorData(Event);
 
-        public override string ToString()
-        {
-            return $"Event = {Event}, Parameter = {Parameter?.ToString() ?? "null"}";
-        }
+        public override string ToString() => $"Event = {Event}, Parameter = {Parameter?.ToString() ?? "null"}";
     }
 
     /// <summary>
@@ -342,10 +336,7 @@ public class LocatorChunk : NamedChunk
 
         internal override LocatorData Clone() => new Type1LocatorData(Key);
 
-        public override string ToString()
-        {
-            return $"Key = {Key}";
-        }
+        public override string ToString() => $"Key = {Key}";
     }
 
     /// <summary>
@@ -362,10 +353,7 @@ public class LocatorChunk : NamedChunk
 
         internal override LocatorData Clone() => new Type2LocatorData();
 
-        public override string ToString()
-        {
-            return string.Empty;
-        }
+        public override string ToString() => string.Empty;
     }
 
     /// <summary>
@@ -426,10 +414,7 @@ public class LocatorChunk : NamedChunk
 
         internal override LocatorData Clone() => ParkedCar.HasValue ? new Type3LocatorData(Rotation, ParkedCar.Value, FreeCar) : new Type3LocatorData(Rotation);
 
-        public override string ToString()
-        {
-            return $"Rotation = {Rotation}, ParkedCar = {ParkedCar?.ToString() ?? "null"}, FreeCar = {FreeCar}";
-        }
+        public override string ToString() => $"Rotation = {Rotation}, ParkedCar = {ParkedCar?.ToString() ?? "null"}, FreeCar = {FreeCar}";
     }
 
     /// <summary>
@@ -446,10 +431,7 @@ public class LocatorChunk : NamedChunk
 
         internal override LocatorData Clone() => new Type4LocatorData();
 
-        public override string ToString()
-        {
-            return string.Empty;
-        }
+        public override string ToString() => string.Empty;
     }
 
     /// <summary>
@@ -473,10 +455,7 @@ public class LocatorChunk : NamedChunk
 
         internal override LocatorData Clone() => new Type5LocatorData(DynaLoadData);
 
-        public override string ToString()
-        {
-            return DynaLoadData;
-        }
+        public override string ToString() => $"DynaLoadData = {DynaLoadData}";
     }
 
     /// <summary>
@@ -503,10 +482,7 @@ public class LocatorChunk : NamedChunk
 
         internal override LocatorData Clone() => Occlusions.HasValue ? new Type6LocatorData(Occlusions.Value) : new Type6LocatorData();
 
-        public override string ToString()
-        {
-            return $"Occlusions = {Occlusions?.ToString() ?? "null"}";
-        }
+        public override string ToString() => $"Occlusions = {Occlusions?.ToString() ?? "null"}";
     }
 
     /// <summary>
@@ -560,10 +536,7 @@ public class LocatorChunk : NamedChunk
 
         internal override LocatorData Clone() => new Type7LocatorData(InteriorName, Right, Up, Front);
 
-        public override string ToString()
-        {
-            return $"InteriorName = {InteriorName}, Right = {Right}, Up = {Up}, Front = {Front}";
-        }
+        public override string ToString() => $"InteriorName = {InteriorName}, Right = {Right}, Up = {Up}, Front = {Front}";
     }
 
     /// <summary>
@@ -606,10 +579,7 @@ public class LocatorChunk : NamedChunk
 
         internal override LocatorData Clone() => new Type8LocatorData(Right, Up, Front);
 
-        public override string ToString()
-        {
-            return $"Right = {Right}, Up = {Up}, Front = {Front}";
-        }
+        public override string ToString() => $"Right = {Right}, Up = {Up}, Front = {Front}";
     }
 
     /// <summary>
@@ -663,10 +633,7 @@ public class LocatorChunk : NamedChunk
 
         internal override LocatorData Clone() => new Type9LocatorData(ObjectName, JointName, ActionName, ButtonInput, ShouldTransform);
 
-        public override string ToString()
-        {
-            return $"ObjectName = {ObjectName}, JointName = {JointName}, ActionName = {ActionName}, ButtonInput = {ButtonInput}, ShouldTransform = {ShouldTransform}";
-        }
+        public override string ToString() => $"ObjectName = {ObjectName}, JointName = {JointName}, ActionName = {ActionName}, ButtonInput = {ButtonInput}, ShouldTransform = {ShouldTransform}";
     }
 
     /// <summary>
@@ -701,10 +668,7 @@ public class LocatorChunk : NamedChunk
 
         internal override LocatorData Clone() => new Type10LocatorData(FOV, Type, Rate);
 
-        public override string ToString()
-        {
-            return $"FOV = {FOV}, Type = {Type}, Rate = {Rate}";
-        }
+        public override string ToString() => $"FOV = {FOV}, Type = {Type}, Rate = {Rate}";
     }
 
     /// <summary>
@@ -720,10 +684,7 @@ public class LocatorChunk : NamedChunk
 
         internal override LocatorData Clone() => new Type11LocatorData();
 
-        public override string ToString()
-        {
-            return string.Empty;
-        }
+        public override string ToString() => string.Empty;
     }
 
     /// <summary>
@@ -845,10 +806,7 @@ public class LocatorChunk : NamedChunk
                 new Type12LocatorData(TargetPosition, FOV, TargetLag, FollowPlayer)
         };
 
-        public override string ToString()
-        {
-            return $"TargetPosition = {TargetPosition}, FOV = {FOV}, TargetLag = {TargetLag}, FollowPlayer = {FollowPlayer}, TransitionTargetRate = {TransitionTargetRate?.ToString() ?? "null"}, Flags = {Flags?.ToString() ?? "null"}, CutInOut = {CutInOut?.ToString() ?? "null"}, Data = {Data?.ToString() ?? "null"}";
-        }
+        public override string ToString() => $"TargetPosition = {TargetPosition}, FOV = {FOV}, TargetLag = {TargetLag}, FollowPlayer = {FollowPlayer}, TransitionTargetRate = {TransitionTargetRate?.ToString() ?? "null"}, Flags = {Flags?.ToString() ?? "null"}, CutInOut = {CutInOut?.ToString() ?? "null"}, Data = {Data?.ToString() ?? "null"}";
     }
 
     /// <summary>
@@ -873,10 +831,7 @@ public class LocatorChunk : NamedChunk
 
         internal override LocatorData Clone() => new Type13LocatorData(GroupNum);
 
-        public override string ToString()
-        {
-            return $"GroupNum = {GroupNum}";
-        }
+        public override string ToString() => $"GroupNum = {GroupNum}";
     }
 
     /// <summary>
@@ -892,9 +847,6 @@ public class LocatorChunk : NamedChunk
 
         internal override LocatorData Clone() => new Type14LocatorData();
 
-        public override string ToString()
-        {
-            return string.Empty;
-        }
+        public override string ToString() => string.Empty;
     }
 }

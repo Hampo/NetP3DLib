@@ -145,9 +145,6 @@ public class ImageGlyphListChunk : Chunk
 
         internal Glyph Clone() => new(XOrigin, LeftBearing, RightBearing, Width, Advance, Code);
 
-        public override string ToString()
-        {
-            return $"{XOrigin} | {LeftBearing} | {RightBearing} | {Width} | {Advance} | {Code}";
-        }
+        public override string ToString() => $"{XOrigin} | {LeftBearing} | {RightBearing} | {Width} | {Advance} | {Code}";
     }
 }

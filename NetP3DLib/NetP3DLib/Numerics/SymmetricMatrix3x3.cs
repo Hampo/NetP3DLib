@@ -262,11 +262,7 @@ public struct SymmetricMatrix3x3
             );
     }*/
 
-    public override string ToString()
-    {
-        return string.Format(System.Globalization.CultureInfo.CurrentCulture, "[XX:{0} XY:{1} XZ:{2}] [YY:{3} YZ:{4}] [ZZ:{5}]",
-            this.XX, this.XY, this.XZ, this.YY, this.YZ, this.ZZ);
-    }
+    public override readonly string ToString() => string.Format(System.Globalization.CultureInfo.CurrentCulture, "[XX:{0} XY:{1} XZ:{2}] [YY:{3} YZ:{4}] [ZZ:{5}]", this.XX, this.XY, this.XZ, this.YY, this.YZ, this.ZZ);
 
     public string ToString(string Format)
     {
