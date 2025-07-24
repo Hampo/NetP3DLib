@@ -11,6 +11,13 @@ namespace NetP3DLib.P3D.Chunks;
 public class ExpressionGroupChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Expression_Group;
+
+    public enum Stage : uint
+    {
+        Stage1,
+        Stage2,
+        Stage3,
+    }
     
     public uint Version { get; set; }
     public string TargetName { get; set; }
@@ -34,7 +41,7 @@ public class ExpressionGroupChunk : NamedChunk
             }
         }
     }
-    public List<uint> Stages { get; } = [];
+    public List<Stage> Stages { get; } = [];
 
     public override byte[] DataBytes
     {
@@ -47,7 +54,7 @@ public class ExpressionGroupChunk : NamedChunk
             data.AddRange(BinaryExtensions.GetP3DStringBytes(TargetName));
             data.AddRange(BitConverter.GetBytes(NumStages));
             foreach (var stage in Stages)
-                data.AddRange(BitConverter.GetBytes(stage));
+                data.AddRange(BitConverter.GetBytes((uint)stage));
 
             return [.. data];
         }
@@ -62,10 +69,10 @@ public class ExpressionGroupChunk : NamedChunk
         var numStages = br.ReadInt32();
         Stages = new(numStages);
         for (int i = 0; i < numStages; i++)
-            Stages.Add(br.ReadUInt32());
+            Stages.Add((Stage)br.ReadUInt32());
     }
 
-    public ExpressionGroupChunk(uint version, string name, string targetName, IList<uint> stages) : base(ChunkID)
+    public ExpressionGroupChunk(uint version, string name, string targetName, IList<Stage> stages) : base(ChunkID)
     {
         Version = version;
         Name = name;
@@ -88,7 +95,7 @@ public class ExpressionGroupChunk : NamedChunk
         bw.WriteP3DString(TargetName);
         bw.Write(NumStages);
         foreach (var stage in Stages)
-            bw.Write(stage);
+            bw.Write((uint)stage);
     }
 
     internal override Chunk CloneSelf() => new ExpressionGroupChunk(Version, Name, TargetName, Stages);

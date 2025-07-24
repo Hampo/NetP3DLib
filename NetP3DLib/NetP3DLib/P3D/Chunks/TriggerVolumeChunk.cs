@@ -12,7 +12,13 @@ public class TriggerVolumeChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Trigger_Volume;
     
-    public uint IsRect { get; set; }
+    public enum Types
+    {
+        Sphere,
+        Rectangle
+    }
+
+    public Types Type { get; set; }
     public Vector3 HalfExtents { get; set; }
     public Matrix4x4 Matrix { get; set; }
 
@@ -23,7 +29,7 @@ public class TriggerVolumeChunk : NamedChunk
             List<byte> data = [];
 
             data.AddRange(BinaryExtensions.GetP3DStringBytes(Name));
-            data.AddRange(BitConverter.GetBytes(IsRect));
+            data.AddRange(BitConverter.GetBytes((uint)Type));
             data.AddRange(BinaryExtensions.GetBytes(HalfExtents));
             data.AddRange(BinaryExtensions.GetBytes(Matrix));
 
@@ -35,15 +41,15 @@ public class TriggerVolumeChunk : NamedChunk
     public TriggerVolumeChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
-        IsRect = br.ReadUInt32();
+        Type = (Types)br.ReadUInt32();
         HalfExtents = br.ReadVector3();
         Matrix = br.ReadMatrix4x4();
     }
 
-    public TriggerVolumeChunk(string name, uint isRect, Vector3 halfExtents, Matrix4x4 matrix) : base(ChunkID)
+    public TriggerVolumeChunk(string name, Types type, Vector3 halfExtents, Matrix4x4 matrix) : base(ChunkID)
     {
         Name = name;
-        IsRect = isRect;
+        Type = type;
         HalfExtents = halfExtents;
         Matrix = matrix;
     }
@@ -51,10 +57,10 @@ public class TriggerVolumeChunk : NamedChunk
     internal override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
-        bw.Write(IsRect);
+        bw.Write((uint)Type);
         bw.Write(HalfExtents);
         bw.Write(Matrix);
     }
 
-    internal override Chunk CloneSelf() => new TriggerVolumeChunk(Name, IsRect, HalfExtents, Matrix);
+    internal override Chunk CloneSelf() => new TriggerVolumeChunk(Name, Type, HalfExtents, Matrix);
 }
