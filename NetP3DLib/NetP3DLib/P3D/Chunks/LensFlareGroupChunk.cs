@@ -15,9 +15,24 @@ public class LensFlareGroupChunk : NamedChunk
     
     public uint Version { get; set; }
     public string ShaderName { get; set; }
-    public uint ZTest { get; set; }
-    public uint ZWrite { get; set; }
-    public uint Fog { get; set; }
+    private uint zTest;
+    public bool ZTest
+    {
+        get => zTest == 1;
+        set => zTest = value ? 1u : 0u;
+    }
+    private uint zWrite;
+    public bool ZWrite
+    {
+        get => zWrite == 1;
+        set => zWrite = value ? 1u : 0u;
+    }
+    private uint fog;
+    public bool Fog
+    {
+        get => fog == 1;
+        set => fog = value ? 1u : 0u;
+    }
     public float SourceRadius { get; set; }
     public float EdgeRadius { get; set; }
     public uint NumLensFlares => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.Lens_Flare).Count();
@@ -31,9 +46,9 @@ public class LensFlareGroupChunk : NamedChunk
             data.AddRange(BitConverter.GetBytes(Version));
             data.AddRange(BinaryExtensions.GetP3DStringBytes(Name));
             data.AddRange(BinaryExtensions.GetP3DStringBytes(ShaderName));
-            data.AddRange(BitConverter.GetBytes(ZTest));
-            data.AddRange(BitConverter.GetBytes(ZWrite));
-            data.AddRange(BitConverter.GetBytes(Fog));
+            data.AddRange(BitConverter.GetBytes(zTest));
+            data.AddRange(BitConverter.GetBytes(zWrite));
+            data.AddRange(BitConverter.GetBytes(fog));
             data.AddRange(BitConverter.GetBytes(SourceRadius));
             data.AddRange(BitConverter.GetBytes(EdgeRadius));
             data.AddRange(BitConverter.GetBytes(NumLensFlares));
@@ -49,15 +64,15 @@ public class LensFlareGroupChunk : NamedChunk
         Version = br.ReadUInt32();
         Name = br.ReadP3DString();
         ShaderName = br.ReadP3DString();
-        ZTest = br.ReadUInt32();
-        ZWrite = br.ReadUInt32();
-        Fog = br.ReadUInt32();
+        zTest = br.ReadUInt32();
+        zWrite = br.ReadUInt32();
+        fog = br.ReadUInt32();
         SourceRadius = br.ReadSingle();
         EdgeRadius = br.ReadSingle();
         var numLensFlares = br.ReadUInt32();
     }
 
-    public LensFlareGroupChunk(uint version, string name, string shaderName, uint zTest, uint zWrite, uint fog, float sourceRadius, float edgeRadius) : base(ChunkID)
+    public LensFlareGroupChunk(uint version, string name, string shaderName, bool zTest, bool zWrite, bool fog, float sourceRadius, float edgeRadius) : base(ChunkID)
     {
         Version = version;
         Name = name;
@@ -82,9 +97,9 @@ public class LensFlareGroupChunk : NamedChunk
         bw.Write(Version);
         bw.WriteP3DString(Name);
         bw.WriteP3DString(ShaderName);
-        bw.Write(ZTest);
-        bw.Write(ZWrite);
-        bw.Write(Fog);
+        bw.Write(zTest);
+        bw.Write(zWrite);
+        bw.Write(fog);
         bw.Write(SourceRadius);
         bw.Write(EdgeRadius);
         bw.Write(NumLensFlares);

@@ -12,7 +12,12 @@ public class CollisionCylinderChunk : Chunk
     
     public float Radius { get; set; }
     public float HalfLength { get; set; }
-    public ushort FlatEnd { get; set; }
+    private ushort flatEnd;
+    public bool FlatEnd
+    {
+        get => flatEnd != 0;
+        set => flatEnd = (ushort)(value ? 1 : 0);
+    }
 
     public override byte[] DataBytes
     {
@@ -22,7 +27,7 @@ public class CollisionCylinderChunk : Chunk
 
             data.AddRange(BitConverter.GetBytes(Radius));
             data.AddRange(BitConverter.GetBytes(HalfLength));
-            data.AddRange(BitConverter.GetBytes(FlatEnd));
+            data.AddRange(BitConverter.GetBytes(flatEnd));
 
             return [.. data];
         }
@@ -33,10 +38,10 @@ public class CollisionCylinderChunk : Chunk
     {
         Radius = br.ReadSingle();
         HalfLength = br.ReadSingle();
-        FlatEnd = br.ReadUInt16();
+        flatEnd = br.ReadUInt16();
     }
 
-    public CollisionCylinderChunk(float radius, float halfLength, ushort flatEnd) : base(ChunkID)
+    public CollisionCylinderChunk(float radius, float halfLength, bool flatEnd) : base(ChunkID)
     {
         Radius = radius;
         HalfLength = halfLength;
@@ -47,7 +52,7 @@ public class CollisionCylinderChunk : Chunk
     {
         bw.Write(Radius);
         bw.Write(HalfLength);
-        bw.Write(FlatEnd);
+        bw.Write(flatEnd);
     }
 
     internal override Chunk CloneSelf() => new CollisionCylinderChunk(Radius, HalfLength, FlatEnd);

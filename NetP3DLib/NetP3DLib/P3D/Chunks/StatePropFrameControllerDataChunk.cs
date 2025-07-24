@@ -11,9 +11,19 @@ public class StatePropFrameControllerDataChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.State_Prop_Frame_Controller_Data;
     
-    public uint Cyclic { get; set; }
+    private uint cyclic;
+    public bool Cyclic
+    {
+        get => cyclic != 0;
+        set => cyclic = value ? 1u : 0u;
+    }
     public uint NumCycles { get; set; }
-    public uint HoldFrame { get; set; }
+    private uint holdFrame;
+    public bool HoldFrame
+    {
+        get => holdFrame != 0;
+        set => holdFrame = value ? 1u : 0u;
+    }
     public float MinFrame { get; set; }
     public float MaxFrame { get; set; }
     public float RelativeSpeed { get; set; }
@@ -25,9 +35,9 @@ public class StatePropFrameControllerDataChunk : NamedChunk
             List<byte> data = [];
 
             data.AddRange(BinaryExtensions.GetP3DStringBytes(Name));
-            data.AddRange(BitConverter.GetBytes(Cyclic));
+            data.AddRange(BitConverter.GetBytes(cyclic));
             data.AddRange(BitConverter.GetBytes(NumCycles));
-            data.AddRange(BitConverter.GetBytes(HoldFrame));
+            data.AddRange(BitConverter.GetBytes(holdFrame));
             data.AddRange(BitConverter.GetBytes(MinFrame));
             data.AddRange(BitConverter.GetBytes(MaxFrame));
             data.AddRange(BitConverter.GetBytes(RelativeSpeed));
@@ -40,15 +50,15 @@ public class StatePropFrameControllerDataChunk : NamedChunk
     public StatePropFrameControllerDataChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
-        Cyclic = br.ReadUInt32();
+        cyclic = br.ReadUInt32();
         NumCycles = br.ReadUInt32();
-        HoldFrame = br.ReadUInt32();
+        holdFrame = br.ReadUInt32();
         MinFrame = br.ReadSingle();
         MaxFrame = br.ReadSingle();
         RelativeSpeed = br.ReadSingle();
     }
 
-    public StatePropFrameControllerDataChunk(string name, uint cyclic, uint numCycles, uint holdFrame, float minFrame, float maxFrame, float relativeSpeed) : base(ChunkID)
+    public StatePropFrameControllerDataChunk(string name, bool cyclic, uint numCycles, bool holdFrame, float minFrame, float maxFrame, float relativeSpeed) : base(ChunkID)
     {
         Name = name;
         Cyclic = cyclic;
@@ -62,9 +72,9 @@ public class StatePropFrameControllerDataChunk : NamedChunk
     internal override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
-        bw.Write(Cyclic);
+        bw.Write(cyclic);
         bw.Write(NumCycles);
-        bw.Write(HoldFrame);
+        bw.Write(holdFrame);
         bw.Write(MinFrame);
         bw.Write(MaxFrame);
         bw.Write(RelativeSpeed);

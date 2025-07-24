@@ -12,7 +12,12 @@ public class InstStatEntityChunk : NamedChunk
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Inst_Stat_Entity;
     
     public uint Version { get; set; }
-    public uint HasAlpha { get; set; }
+    private uint hasAlpha;
+    public bool HasAlpha
+    {
+        get => hasAlpha != 0;
+        set => hasAlpha = value ? 1u : 0u;
+    }
 
     public override byte[] DataBytes
     {
@@ -22,7 +27,7 @@ public class InstStatEntityChunk : NamedChunk
 
             data.AddRange(BinaryExtensions.GetP3DStringBytes(Name));
             data.AddRange(BitConverter.GetBytes(Version));
-            data.AddRange(BitConverter.GetBytes(HasAlpha));
+            data.AddRange(BitConverter.GetBytes(hasAlpha));
 
             return [.. data];
         }
@@ -33,10 +38,10 @@ public class InstStatEntityChunk : NamedChunk
     {
         Name = br.ReadP3DString();
         Version = br.ReadUInt32();
-        HasAlpha = br.ReadUInt32();
+        hasAlpha = br.ReadUInt32();
     }
 
-    public InstStatEntityChunk(string name, uint version, uint hasAlpha) : base(ChunkID)
+    public InstStatEntityChunk(string name, uint version, bool hasAlpha) : base(ChunkID)
     {
         Name = name;
         Version = version;
@@ -47,7 +52,7 @@ public class InstStatEntityChunk : NamedChunk
     {
         bw.WriteP3DString(Name);
         bw.Write(Version);
-        bw.Write(HasAlpha);
+        bw.Write(hasAlpha);
     }
 
     internal override Chunk CloneSelf() => new InstStatEntityChunk(Name, Version, HasAlpha);

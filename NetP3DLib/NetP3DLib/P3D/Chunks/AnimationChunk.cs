@@ -16,7 +16,12 @@ public class AnimationChunk : NamedChunk
     public string AnimationType { get; set; }
     public float NumFrames { get; set; }
     public float FrameRate { get; set; }
-    public uint Cyclic { get; set; }
+    private uint cyclic;
+    public bool Cyclic
+    {
+        get => cyclic == 1;
+        set => cyclic = value ? 1u : 0u;
+    }
 
     public override byte[] DataBytes
     {
@@ -29,7 +34,7 @@ public class AnimationChunk : NamedChunk
             data.AddRange(BinaryExtensions.GetFourCCBytes(AnimationType));
             data.AddRange(BitConverter.GetBytes(NumFrames));
             data.AddRange(BitConverter.GetBytes(FrameRate));
-            data.AddRange(BitConverter.GetBytes(Cyclic));
+            data.AddRange(BitConverter.GetBytes(cyclic));
 
             return [.. data];
         }
@@ -43,10 +48,10 @@ public class AnimationChunk : NamedChunk
         AnimationType = br.ReadFourCC();
         NumFrames = br.ReadSingle();
         FrameRate = br.ReadSingle();
-        Cyclic = br.ReadUInt32();
+        cyclic = br.ReadUInt32();
     }
 
-    public AnimationChunk(uint version, string name, string animationType, float numFrames, float frameRate, uint cyclic) : base(ChunkID)
+    public AnimationChunk(uint version, string name, string animationType, float numFrames, float frameRate, bool cyclic) : base(ChunkID)
     {
         Version = version;
         Name = name;
@@ -71,7 +76,7 @@ public class AnimationChunk : NamedChunk
         bw.WriteFourCC(AnimationType);
         bw.Write(NumFrames);
         bw.Write(FrameRate);
-        bw.Write(Cyclic);
+        bw.Write(cyclic);
     }
 
     internal override Chunk CloneSelf() => new AnimationChunk(Version, Name, AnimationType, NumFrames, FrameRate, Cyclic);

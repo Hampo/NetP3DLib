@@ -14,8 +14,13 @@ public class ShaderChunk : NamedChunk
     
     public uint Version { get; set; }
     public string PddiShaderName { get; set; }
-    public uint HasTranslucency { get; set; }
     public uint VertexNeeds { get; set; }
+    private uint hasTranslucency;
+    public bool HasTranslucency
+    {
+        get => hasTranslucency != 0;
+        set => hasTranslucency = value ? 1u : 0u;
+    }
     public uint VertexMask { get; set; }
     public uint NumParams => (uint)Children.Count;
 
@@ -28,8 +33,8 @@ public class ShaderChunk : NamedChunk
             data.AddRange(BinaryExtensions.GetP3DStringBytes(Name));
             data.AddRange(BitConverter.GetBytes(Version));
             data.AddRange(BinaryExtensions.GetP3DStringBytes(PddiShaderName));
-            data.AddRange(BitConverter.GetBytes(HasTranslucency));
             data.AddRange(BitConverter.GetBytes(VertexNeeds));
+            data.AddRange(BitConverter.GetBytes(hasTranslucency));
             data.AddRange(BitConverter.GetBytes(VertexMask));
             data.AddRange(BitConverter.GetBytes(NumParams));
 
@@ -44,13 +49,13 @@ public class ShaderChunk : NamedChunk
         Name = br.ReadP3DString();
         Version = br.ReadUInt32();
         PddiShaderName = br.ReadP3DString();
-        HasTranslucency = br.ReadUInt32();
         VertexNeeds = br.ReadUInt32();
+        hasTranslucency = br.ReadUInt32();
         VertexMask = br.ReadUInt32();
         var numParams = br.ReadUInt32();
     }
 
-    public ShaderChunk(string name, uint version, string pddiShaderName, uint hasTranslucency, uint vertexNeeds, uint vertexMask) : base(ChunkID)
+    public ShaderChunk(string name, uint version, string pddiShaderName, bool hasTranslucency, uint vertexNeeds, uint vertexMask) : base(ChunkID)
     {
         Name = name;
         Version = version;
@@ -73,8 +78,8 @@ public class ShaderChunk : NamedChunk
         bw.WriteP3DString(Name);
         bw.Write(Version);
         bw.WriteP3DString(PddiShaderName);
-        bw.Write(HasTranslucency);
         bw.Write(VertexNeeds);
+        bw.Write(hasTranslucency);
         bw.Write(VertexMask);
         bw.Write(NumParams);
     }

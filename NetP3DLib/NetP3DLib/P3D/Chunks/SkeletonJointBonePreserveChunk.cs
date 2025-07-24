@@ -9,8 +9,13 @@ namespace NetP3DLib.P3D.Chunks;
 public class SkeletonJointBonePreserveChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Skeleton_Joint_Bone_Preserve;
-    
-    public uint PreserveBoneLengths { get; set; }
+
+    private uint preserveBoneLengths;
+    public bool PreserveBoneLengths
+    {
+        get => preserveBoneLengths != 0;
+        set => preserveBoneLengths = value ? 1u : 0u;
+    }
 
     public override byte[] DataBytes
     {
@@ -18,7 +23,7 @@ public class SkeletonJointBonePreserveChunk : Chunk
         {
             List<byte> data = [];
 
-            data.AddRange(BitConverter.GetBytes(PreserveBoneLengths));
+            data.AddRange(BitConverter.GetBytes(preserveBoneLengths));
 
             return [.. data];
         }
@@ -27,17 +32,17 @@ public class SkeletonJointBonePreserveChunk : Chunk
 
     public SkeletonJointBonePreserveChunk(BinaryReader br) : base(ChunkID)
     {
-        PreserveBoneLengths = br.ReadUInt32();
+        preserveBoneLengths = br.ReadUInt32();
     }
 
-    public SkeletonJointBonePreserveChunk(uint preserveBoneLengths) : base(ChunkID)
+    public SkeletonJointBonePreserveChunk(bool preserveBoneLengths) : base(ChunkID)
     {
         PreserveBoneLengths = preserveBoneLengths;
     }
 
     internal override void WriteData(BinaryWriter bw)
     {
-        bw.Write(PreserveBoneLengths);
+        bw.Write(preserveBoneLengths);
     }
 
     internal override Chunk CloneSelf() => new SkeletonJointBonePreserveChunk(PreserveBoneLengths);

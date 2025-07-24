@@ -12,7 +12,12 @@ public class OldScenegraphVisibilityChunk : NamedChunk
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Scenegraph_Visibility;
     
     public uint NumChildren => (uint)Children.Count;
-    public uint IsVisible { get; set; }
+    private uint isVisible;
+    public bool IsVisible
+    {
+        get => isVisible != 0;
+        set => isVisible = value ? 1u : 0u;
+    }
 
     public override byte[] DataBytes
     {
@@ -22,7 +27,7 @@ public class OldScenegraphVisibilityChunk : NamedChunk
 
             data.AddRange(BinaryExtensions.GetP3DStringBytes(Name));
             data.AddRange(BitConverter.GetBytes(NumChildren));
-            data.AddRange(BitConverter.GetBytes(IsVisible));
+            data.AddRange(BitConverter.GetBytes(isVisible));
 
             return [.. data];
         }
@@ -34,10 +39,10 @@ public class OldScenegraphVisibilityChunk : NamedChunk
     {
         Name = br.ReadP3DString();
         var numChildren = br.ReadUInt32();
-        IsVisible = br.ReadUInt32();
+        isVisible = br.ReadUInt32();
     }
 
-    public OldScenegraphVisibilityChunk(string name, uint isVisible) : base(ChunkID)
+    public OldScenegraphVisibilityChunk(string name, bool isVisible) : base(ChunkID)
     {
         Name = name;
         IsVisible = isVisible;
@@ -47,7 +52,7 @@ public class OldScenegraphVisibilityChunk : NamedChunk
     {
         bw.WriteP3DString(Name);
         bw.Write(NumChildren);
-        bw.Write(IsVisible);
+        bw.Write(isVisible);
     }
 
     internal override Chunk CloneSelf() => new OldScenegraphVisibilityChunk(Name, IsVisible);

@@ -11,8 +11,13 @@ namespace NetP3DLib.P3D.Chunks;
 public class StatePropStateDataV1Chunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.State_Prop_State_Data_V1;
-    
-    public uint AutoTransition { get; set; }
+
+    private uint autoTransition;
+    public bool AutoTransition
+    {
+        get => autoTransition != 0;
+        set => autoTransition = value ? 1u : 0u;
+    }
     public uint OutState { get; set; }
     public uint NumDrawables => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.State_Prop_Visibilities_Data).Count();
     public uint NumFrameControllers => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.State_Prop_Frame_Controller_Data).Count();
@@ -27,7 +32,7 @@ public class StatePropStateDataV1Chunk : NamedChunk
             List<byte> data = [];
 
             data.AddRange(BinaryExtensions.GetP3DStringBytes(Name));
-            data.AddRange(BitConverter.GetBytes(AutoTransition));
+            data.AddRange(BitConverter.GetBytes(autoTransition));
             data.AddRange(BitConverter.GetBytes(OutState));
             data.AddRange(BitConverter.GetBytes(NumDrawables));
             data.AddRange(BitConverter.GetBytes(NumFrameControllers));
@@ -44,7 +49,7 @@ public class StatePropStateDataV1Chunk : NamedChunk
     public StatePropStateDataV1Chunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
-        AutoTransition = br.ReadUInt32();
+        autoTransition = br.ReadUInt32();
         OutState = br.ReadUInt32();
         var numDrawables = br.ReadUInt32();
         var numFrameControllers = br.ReadUInt32();
@@ -53,7 +58,7 @@ public class StatePropStateDataV1Chunk : NamedChunk
         OutFrame = br.ReadSingle();
     }
 
-    public StatePropStateDataV1Chunk(string name, uint autoTransition, uint outState, float outFrame) : base(ChunkID)
+    public StatePropStateDataV1Chunk(string name, bool autoTransition, uint outState, float outFrame) : base(ChunkID)
     {
         Name = name;
         AutoTransition = autoTransition;
@@ -86,7 +91,7 @@ public class StatePropStateDataV1Chunk : NamedChunk
     internal override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
-        bw.Write(AutoTransition);
+        bw.Write(autoTransition);
         bw.Write(OutState);
         bw.Write(NumDrawables);
         bw.Write(NumFrameControllers);

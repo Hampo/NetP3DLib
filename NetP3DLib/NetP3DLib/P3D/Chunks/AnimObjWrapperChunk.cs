@@ -11,7 +11,12 @@ public class AnimObjWrapperChunk : NamedChunk
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Anim_Obj_Wrapper;
     
     public byte Version { get; set; }
-    public byte HasAlpha { get; set; }
+    private byte hasAlpha;
+    public bool HasAlpha
+    {
+        get => hasAlpha != 0;
+        set => hasAlpha = (byte)(value ? 1 : 0);
+    }
 
     public override byte[] DataBytes
     {
@@ -21,7 +26,7 @@ public class AnimObjWrapperChunk : NamedChunk
 
             data.AddRange(BinaryExtensions.GetP3DStringBytes(Name));
             data.Add(Version);
-            data.Add(HasAlpha);
+            data.Add(hasAlpha);
 
             return [.. data];
         }
@@ -32,10 +37,10 @@ public class AnimObjWrapperChunk : NamedChunk
     {
         Name = br.ReadP3DString();
         Version = br.ReadByte();
-        HasAlpha = br.ReadByte();
+        hasAlpha = br.ReadByte();
     }
 
-    public AnimObjWrapperChunk(string name, byte version, byte hasAlpha) : base(ChunkID)
+    public AnimObjWrapperChunk(string name, byte version, bool hasAlpha) : base(ChunkID)
     {
         Name = name;
         Version = version;
@@ -46,7 +51,7 @@ public class AnimObjWrapperChunk : NamedChunk
     {
         bw.WriteP3DString(Name);
         bw.Write(Version);
-        bw.Write(HasAlpha);
+        bw.Write(hasAlpha);
     }
 
     internal override Chunk CloneSelf() => new AnimObjWrapperChunk(Name, Version, HasAlpha);

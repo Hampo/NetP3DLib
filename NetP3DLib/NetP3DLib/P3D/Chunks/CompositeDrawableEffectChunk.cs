@@ -10,8 +10,13 @@ namespace NetP3DLib.P3D.Chunks;
 public class CompositeDrawableEffectChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Composite_Drawable_Effect;
-    
-    public uint IsTranslucent { get; set; }
+
+    private uint isTranslucent;
+    public bool IsTranslucent
+    {
+        get => isTranslucent != 0;
+        set => isTranslucent = value ? 1u : 0u;
+    }
     public uint SkeletonJointId { get; set; }
 
     public override byte[] DataBytes
@@ -21,7 +26,7 @@ public class CompositeDrawableEffectChunk : NamedChunk
             List<byte> data = [];
 
             data.AddRange(BinaryExtensions.GetP3DStringBytes(Name));
-            data.AddRange(BitConverter.GetBytes(IsTranslucent));
+            data.AddRange(BitConverter.GetBytes(isTranslucent));
             data.AddRange(BitConverter.GetBytes(SkeletonJointId));
 
             return [.. data];
@@ -32,11 +37,11 @@ public class CompositeDrawableEffectChunk : NamedChunk
     public CompositeDrawableEffectChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
-        IsTranslucent = br.ReadUInt32();
+        isTranslucent = br.ReadUInt32();
         SkeletonJointId = br.ReadUInt32();
     }
 
-    public CompositeDrawableEffectChunk(string name, uint isTranslucent, uint skeletonJointId) : base(ChunkID)
+    public CompositeDrawableEffectChunk(string name, bool isTranslucent, uint skeletonJointId) : base(ChunkID)
     {
         Name = name;
         IsTranslucent = isTranslucent;
@@ -46,7 +51,7 @@ public class CompositeDrawableEffectChunk : NamedChunk
     internal override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
-        bw.Write(IsTranslucent);
+        bw.Write(isTranslucent);
         bw.Write(SkeletonJointId);
     }
 

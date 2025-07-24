@@ -13,7 +13,12 @@ public class OldScenegraphDrawableChunk : NamedChunk
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Scenegraph_Drawable;
     
     public string DrawableName { get; set; }
-    public uint IsTranslucent { get; set; }
+    private uint isTranslucent;
+    public bool IsTranslucent
+    {
+        get => isTranslucent == 1;
+        set => isTranslucent = value ? 1u : 0u;
+    }
 
     public override byte[] DataBytes
     {
@@ -23,7 +28,7 @@ public class OldScenegraphDrawableChunk : NamedChunk
 
             data.AddRange(BinaryExtensions.GetP3DStringBytes(Name));
             data.AddRange(BinaryExtensions.GetP3DStringBytes(DrawableName));
-            data.AddRange(BitConverter.GetBytes(IsTranslucent));
+            data.AddRange(BitConverter.GetBytes(isTranslucent));
 
             return [.. data];
         }
@@ -34,10 +39,10 @@ public class OldScenegraphDrawableChunk : NamedChunk
     {
         Name = br.ReadP3DString();
         DrawableName = br.ReadP3DString();
-        IsTranslucent = br.ReadUInt32();
+        isTranslucent = br.ReadUInt32();
     }
 
-    public OldScenegraphDrawableChunk(string name, string drawableName, uint isTranslucent) : base(ChunkID)
+    public OldScenegraphDrawableChunk(string name, string drawableName, bool isTranslucent) : base(ChunkID)
     {
         Name = name;
         DrawableName = drawableName;
@@ -56,7 +61,7 @@ public class OldScenegraphDrawableChunk : NamedChunk
     {
         bw.WriteP3DString(Name);
         bw.WriteP3DString(DrawableName);
-        bw.Write(IsTranslucent);
+        bw.Write(isTranslucent);
     }
 
     internal override Chunk CloneSelf() => new OldScenegraphDrawableChunk(Name, DrawableName, IsTranslucent);

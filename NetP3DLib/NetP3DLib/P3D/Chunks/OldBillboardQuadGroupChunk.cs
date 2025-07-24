@@ -15,9 +15,19 @@ public class OldBillboardQuadGroupChunk : NamedChunk
     
     public uint Version { get; set; }
     public string Shader { get; set; }
-    public uint ZTest { get; set; }
-    public uint ZWrite { get; set; }
-    public uint Fog { get; set; }
+    private uint zTest;
+    public bool ZTest
+    {
+        get => zTest != 0;
+        set => zTest = value ? 1u : 0u;
+    }
+    private uint zWrite;
+    public bool ZWrite
+    {
+        get => zWrite != 0;
+        set => zWrite = value ? 1u : 0u;
+    }
+    private uint Occlusion { get; set; }
     public uint NumQuads => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.Old_Billboard_Quad).Count();
 
     public override byte[] DataBytes
@@ -29,9 +39,9 @@ public class OldBillboardQuadGroupChunk : NamedChunk
             data.AddRange(BitConverter.GetBytes(Version));
             data.AddRange(BinaryExtensions.GetP3DStringBytes(Name));
             data.AddRange(BinaryExtensions.GetP3DStringBytes(Shader));
-            data.AddRange(BitConverter.GetBytes(ZTest));
-            data.AddRange(BitConverter.GetBytes(ZWrite));
-            data.AddRange(BitConverter.GetBytes(Fog));
+            data.AddRange(BitConverter.GetBytes(zTest));
+            data.AddRange(BitConverter.GetBytes(zWrite));
+            data.AddRange(BitConverter.GetBytes(Occlusion));
             data.AddRange(BitConverter.GetBytes(NumQuads));
 
             return [.. data];
@@ -45,20 +55,20 @@ public class OldBillboardQuadGroupChunk : NamedChunk
         Version = br.ReadUInt32();
         Name = br.ReadP3DString();
         Shader = br.ReadP3DString();
-        ZTest = br.ReadUInt32();
-        ZWrite = br.ReadUInt32();
-        Fog = br.ReadUInt32();
+        zTest = br.ReadUInt32();
+        zWrite = br.ReadUInt32();
+        Occlusion = br.ReadUInt32();
         var numQuads = br.ReadUInt32();
     }
 
-    public OldBillboardQuadGroupChunk(uint version, string name, string shader, uint zTest, uint zWrite, uint fog) : base(ChunkID)
+    public OldBillboardQuadGroupChunk(uint version, string name, string shader, bool zTest, bool zWrite, uint occlusion) : base(ChunkID)
     {
         Version = version;
         Name = name;
         Shader = shader;
         ZTest = zTest;
         ZWrite = zWrite;
-        Fog = fog;
+        Occlusion = occlusion;
     }
 
     public override void Validate()
@@ -74,11 +84,11 @@ public class OldBillboardQuadGroupChunk : NamedChunk
         bw.Write(Version);
         bw.WriteP3DString(Name);
         bw.WriteP3DString(Shader);
-        bw.Write(ZTest);
-        bw.Write(ZWrite);
-        bw.Write(Fog);
+        bw.Write(zTest);
+        bw.Write(zWrite);
+        bw.Write(Occlusion);
         bw.Write(NumQuads);
     }
 
-    internal override Chunk CloneSelf() => new OldBillboardQuadGroupChunk(Version, Name, Shader, ZTest, ZWrite, Fog);
+    internal override Chunk CloneSelf() => new OldBillboardQuadGroupChunk(Version, Name, Shader, ZTest, ZWrite, Occlusion);
 }

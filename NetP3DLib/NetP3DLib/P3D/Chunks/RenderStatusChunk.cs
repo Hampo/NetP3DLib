@@ -9,8 +9,13 @@ namespace NetP3DLib.P3D.Chunks;
 public class RenderStatusChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Render_Status;
-    
-    public uint CastShadow { get; set; }
+
+    private uint castShadow;
+    public bool CastShadow
+    {
+        get => castShadow == 0;
+        set => castShadow = value ? 0u : 1u;
+    }
 
     public override byte[] DataBytes
     {
@@ -27,17 +32,17 @@ public class RenderStatusChunk : Chunk
 
     public RenderStatusChunk(BinaryReader br) : base(ChunkID)
     {
-        CastShadow = br.ReadUInt32();
+        castShadow = br.ReadUInt32();
     }
 
-    public RenderStatusChunk(uint castShadow) : base(ChunkID)
+    public RenderStatusChunk(bool castShadow) : base(ChunkID)
     {
         CastShadow = castShadow;
     }
 
     internal override void WriteData(BinaryWriter bw)
     {
-        bw.Write(CastShadow);
+        bw.Write(castShadow);
     }
 
     internal override Chunk CloneSelf() => new RenderStatusChunk(CastShadow);

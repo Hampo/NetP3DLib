@@ -12,7 +12,7 @@ public class FrontendGroupChunk : NamedChunk
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Frontend_Group;
     
     public uint Version { get; set; }
-    public uint HasAlpha { get; set; }
+    public uint Alpha { get; set; }
 
     public override byte[] DataBytes
     {
@@ -22,7 +22,7 @@ public class FrontendGroupChunk : NamedChunk
 
             data.AddRange(BinaryExtensions.GetP3DStringBytes(Name));
             data.AddRange(BitConverter.GetBytes(Version));
-            data.AddRange(BitConverter.GetBytes(HasAlpha));
+            data.AddRange(BitConverter.GetBytes(Alpha));
 
             return [.. data];
         }
@@ -33,22 +33,30 @@ public class FrontendGroupChunk : NamedChunk
     {
         Name = br.ReadP3DString();
         Version = br.ReadUInt32();
-        HasAlpha = br.ReadUInt32();
+        Alpha = br.ReadUInt32();
     }
 
-    public FrontendGroupChunk(string name, uint version, uint hasAlpha) : base(ChunkID)
+    public FrontendGroupChunk(string name, uint version, uint alpha) : base(ChunkID)
     {
         Name = name;
         Version = version;
-        HasAlpha = hasAlpha;
+        Alpha = alpha;
+    }
+
+    public override void Validate()
+    {
+        if (Alpha > 256)
+            throw new InvalidDataException($"{nameof(Alpha)} must be between 0 and 256.");
+
+        base.Validate();
     }
 
     internal override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(Version);
-        bw.Write(HasAlpha);
+        bw.Write(Alpha);
     }
 
-    internal override Chunk CloneSelf() => new FrontendGroupChunk(Name, Version, HasAlpha);
+    internal override Chunk CloneSelf() => new FrontendGroupChunk(Name, Version, Alpha);
 }

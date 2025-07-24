@@ -21,9 +21,19 @@ public class RailCamChunk : NamedChunk
     public Behaviours Behaviour { get; set; }
     public float MinRadius { get; set; }
     public float MaxRadius { get; set; }
-    public uint TrackRail { get; set; }
+    private uint trackRail;
+    public bool TrackRail
+    {
+        get => trackRail == 1;
+        set => trackRail = value ? 1u : 0u;
+    }
     public float TrackDist { get; set; }
-    public uint ReverseSense { get; set; }
+    private uint reverseSense;
+    public bool ReverseSense
+    {
+        get => reverseSense == 1;
+        set => reverseSense = value ? 1u : 0u;
+    }
     public float FOV { get; set; }
     public Vector3 TargetOffset { get; set; }
     public Vector3 AxisPlay { get; set; }
@@ -40,9 +50,9 @@ public class RailCamChunk : NamedChunk
             data.AddRange(BitConverter.GetBytes((uint)Behaviour));
             data.AddRange(BitConverter.GetBytes(MinRadius));
             data.AddRange(BitConverter.GetBytes(MaxRadius));
-            data.AddRange(BitConverter.GetBytes(TrackRail));
+            data.AddRange(BitConverter.GetBytes(trackRail));
             data.AddRange(BitConverter.GetBytes(TrackDist));
-            data.AddRange(BitConverter.GetBytes(ReverseSense));
+            data.AddRange(BitConverter.GetBytes(reverseSense));
             data.AddRange(BitConverter.GetBytes(FOV));
             data.AddRange(BinaryExtensions.GetBytes(TargetOffset));
             data.AddRange(BinaryExtensions.GetBytes(AxisPlay));
@@ -60,9 +70,9 @@ public class RailCamChunk : NamedChunk
         Behaviour = (Behaviours)br.ReadUInt32();
         MinRadius = br.ReadSingle();
         MaxRadius = br.ReadSingle();
-        TrackRail = br.ReadUInt32();
+        trackRail = br.ReadUInt32();
         TrackDist = br.ReadSingle();
-        ReverseSense = br.ReadUInt32();
+        reverseSense = br.ReadUInt32();
         FOV = br.ReadSingle();
         TargetOffset = br.ReadVector3();
         AxisPlay = br.ReadVector3();
@@ -70,7 +80,7 @@ public class RailCamChunk : NamedChunk
         TargetLag = br.ReadSingle();
     }
 
-    public RailCamChunk(string name, Behaviours behaviour, float minRadius, float maxRadius, uint trackRail, float trackDist, uint reverseSense, float fov, Vector3 targetOffset, Vector3 axisPlay, float positionLag, float targetLag) : base(ChunkID)
+    public RailCamChunk(string name, Behaviours behaviour, float minRadius, float maxRadius, bool trackRail, float trackDist, bool reverseSense, float fov, Vector3 targetOffset, Vector3 axisPlay, float positionLag, float targetLag) : base(ChunkID)
     {
         Name = name;
         Behaviour = behaviour;
@@ -92,9 +102,9 @@ public class RailCamChunk : NamedChunk
         bw.Write((uint)Behaviour);
         bw.Write(MinRadius);
         bw.Write(MaxRadius);
-        bw.Write(TrackRail);
+        bw.Write(trackRail);
         bw.Write(TrackDist);
-        bw.Write(ReverseSense);
+        bw.Write(reverseSense);
         bw.Write(FOV);
         bw.Write(TargetOffset);
         bw.Write(AxisPlay);

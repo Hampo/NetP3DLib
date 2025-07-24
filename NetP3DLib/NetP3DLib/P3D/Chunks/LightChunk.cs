@@ -24,7 +24,12 @@ public class LightChunk : NamedChunk
     public float Constant { get; set; }
     public float Linear { get; set; }
     public float Squared { get; set; }
-    public uint Enabled { get; set; }
+    private uint enabled;
+    public bool Enabled
+    {
+        get => enabled != 0;
+        set => enabled = value ? 1u : 0u;
+    }
 
     public override byte[] DataBytes
     {
@@ -39,7 +44,7 @@ public class LightChunk : NamedChunk
             data.AddRange(BitConverter.GetBytes(Constant));
             data.AddRange(BitConverter.GetBytes(Linear));
             data.AddRange(BitConverter.GetBytes(Squared));
-            data.AddRange(BitConverter.GetBytes(Enabled));
+            data.AddRange(BitConverter.GetBytes(enabled));
 
             return [.. data];
         }
@@ -55,10 +60,10 @@ public class LightChunk : NamedChunk
         Constant = br.ReadSingle();
         Linear = br.ReadSingle();
         Squared = br.ReadSingle();
-        Enabled = br.ReadUInt32();
+        enabled = br.ReadUInt32();
     }
 
-    public LightChunk(string name, uint version, Types type, Color colour, float constant, float linear, float squared, uint enabled) : base(ChunkID)
+    public LightChunk(string name, uint version, Types type, Color colour, float constant, float linear, float squared, bool enabled) : base(ChunkID)
     {
         Name = name;
         Version = version;
@@ -79,7 +84,7 @@ public class LightChunk : NamedChunk
         bw.Write(Constant);
         bw.Write(Linear);
         bw.Write(Squared);
-        bw.Write(Enabled);
+        bw.Write(enabled);
     }
 
     internal override Chunk CloneSelf() => new LightChunk(Name, Version, Type, Colour, Constant, Linear, Squared, Enabled);

@@ -9,13 +9,38 @@ namespace NetP3DLib.P3D.Chunks;
 public class CollisionObjectAttributeChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Collision_Object_Attribute;
-    
-    public ushort StaticAttribute { get; set; }
+
+    private ushort isStatic;
+    public bool IsStatic
+    {
+        get => isStatic != 0;
+        set => isStatic = (ushort)(value ? 1 : 0);
+    }
     public uint DefaultArea { get; set; }
-    public ushort CanRoll { get; set; }
-    public ushort CanSlide { get; set; }
-    public ushort CanSpin { get; set; }
-    public ushort CanBounce { get; set; }
+    private ushort canRoll;
+    public bool CanRoll
+    {
+        get => canRoll != 0;
+        set => canRoll = (ushort)(value ? 1 : 0);
+    }
+    private ushort canSlide;
+    public bool CanSlide
+    {
+        get => canSlide != 0;
+        set => canSlide = (ushort)(value ? 1 : 0);
+    }
+    private ushort canSpin;
+    public bool CanSpin
+    {
+        get => canSpin != 0;
+        set => canSpin = (ushort)(value ? 1 : 0);
+    }
+    private ushort canBounce;
+    public bool CanBounce
+    {
+        get => canBounce != 0;
+        set => canBounce = (ushort)(value ? 1 : 0);
+    }
     public uint ExtraAttribute1 { get; set; }
     public uint ExtraAttribute2 { get; set; }
     public uint ExtraAttribute3 { get; set; }
@@ -26,12 +51,12 @@ public class CollisionObjectAttributeChunk : Chunk
         {
             List<byte> data = [];
 
-            data.AddRange(BitConverter.GetBytes(StaticAttribute));
+            data.AddRange(BitConverter.GetBytes(IsStatic));
             data.AddRange(BitConverter.GetBytes(DefaultArea));
-            data.AddRange(BitConverter.GetBytes(CanRoll));
-            data.AddRange(BitConverter.GetBytes(CanSlide));
-            data.AddRange(BitConverter.GetBytes(CanSpin));
-            data.AddRange(BitConverter.GetBytes(CanBounce));
+            data.AddRange(BitConverter.GetBytes(canRoll));
+            data.AddRange(BitConverter.GetBytes(canSlide));
+            data.AddRange(BitConverter.GetBytes(canSpin));
+            data.AddRange(BitConverter.GetBytes(canBounce));
             data.AddRange(BitConverter.GetBytes(ExtraAttribute1));
             data.AddRange(BitConverter.GetBytes(ExtraAttribute2));
             data.AddRange(BitConverter.GetBytes(ExtraAttribute3));
@@ -43,20 +68,20 @@ public class CollisionObjectAttributeChunk : Chunk
 
     public CollisionObjectAttributeChunk(BinaryReader br) : base(ChunkID)
     {
-        StaticAttribute = br.ReadUInt16();
+        isStatic = br.ReadUInt16();
         DefaultArea = br.ReadUInt32();
-        CanRoll = br.ReadUInt16();
-        CanSlide = br.ReadUInt16();
-        CanSpin = br.ReadUInt16();
-        CanBounce = br.ReadUInt16();
+        canRoll = br.ReadUInt16();
+        canSlide = br.ReadUInt16();
+        canSpin = br.ReadUInt16();
+        canBounce = br.ReadUInt16();
         ExtraAttribute1 = br.ReadUInt32();
         ExtraAttribute2 = br.ReadUInt32();
         ExtraAttribute3 = br.ReadUInt32();
     }
 
-    public CollisionObjectAttributeChunk(ushort staticAttribute, uint defaultArea, ushort canRoll, ushort canSlide, ushort canSpin, ushort canBounce, uint extraAttribute1, uint extraAttribute2, uint extraAttribute3) : base(ChunkID)
+    public CollisionObjectAttributeChunk(bool isStatic, uint defaultArea, bool canRoll, bool canSlide, bool canSpin, bool canBounce, uint extraAttribute1, uint extraAttribute2, uint extraAttribute3) : base(ChunkID)
     {
-        StaticAttribute = staticAttribute;
+        IsStatic = isStatic;
         DefaultArea = defaultArea;
         CanRoll = canRoll;
         CanSlide = canSlide;
@@ -69,16 +94,16 @@ public class CollisionObjectAttributeChunk : Chunk
 
     internal override void WriteData(BinaryWriter bw)
     {
-        bw.Write(StaticAttribute);
+        bw.Write(isStatic);
         bw.Write(DefaultArea);
-        bw.Write(CanRoll);
-        bw.Write(CanSlide);
-        bw.Write(CanSpin);
-        bw.Write(CanBounce);
+        bw.Write(canRoll);
+        bw.Write(canSlide);
+        bw.Write(canSpin);
+        bw.Write(canBounce);
         bw.Write(ExtraAttribute1);
         bw.Write(ExtraAttribute2);
         bw.Write(ExtraAttribute3);
     }
 
-    internal override Chunk CloneSelf() => new CollisionObjectAttributeChunk(StaticAttribute, DefaultArea, CanRoll, CanSlide, CanSpin, CanBounce, ExtraAttribute1, ExtraAttribute2, ExtraAttribute3);
+    internal override Chunk CloneSelf() => new CollisionObjectAttributeChunk(IsStatic, DefaultArea, CanRoll, CanSlide, CanSpin, CanBounce, ExtraAttribute1, ExtraAttribute2, ExtraAttribute3);
 }

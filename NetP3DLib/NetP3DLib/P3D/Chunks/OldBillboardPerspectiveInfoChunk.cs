@@ -11,7 +11,12 @@ public class OldBillboardPerspectiveInfoChunk : Chunk
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Billboard_Perspective_Info;
     
     public uint Version { get; set; }
-    public uint Perspective { get; set; }
+    private uint perspectiveScale;
+    public bool PerspectiveScale
+    {
+        get => perspectiveScale != 0;
+        set => perspectiveScale = value ? 1u : 0u;
+    }
 
     public override byte[] DataBytes
     {
@@ -20,7 +25,7 @@ public class OldBillboardPerspectiveInfoChunk : Chunk
             List<byte> data = [];
 
             data.AddRange(BitConverter.GetBytes(Version));
-            data.AddRange(BitConverter.GetBytes(Perspective));
+            data.AddRange(BitConverter.GetBytes(perspectiveScale));
 
             return [.. data];
         }
@@ -30,20 +35,20 @@ public class OldBillboardPerspectiveInfoChunk : Chunk
     public OldBillboardPerspectiveInfoChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
-        Perspective = br.ReadUInt32();
+        perspectiveScale = br.ReadUInt32();
     }
 
-    public OldBillboardPerspectiveInfoChunk(uint version, uint perspective) : base(ChunkID)
+    public OldBillboardPerspectiveInfoChunk(uint version, bool perspectiveScale) : base(ChunkID)
     {
         Version = version;
-        Perspective = perspective;
+        PerspectiveScale = perspectiveScale;
     }
 
     internal override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
-        bw.Write(Perspective);
+        bw.Write(perspectiveScale);
     }
 
-    internal override Chunk CloneSelf() => new OldBillboardPerspectiveInfoChunk(Version, Perspective);
+    internal override Chunk CloneSelf() => new OldBillboardPerspectiveInfoChunk(Version, PerspectiveScale);
 }

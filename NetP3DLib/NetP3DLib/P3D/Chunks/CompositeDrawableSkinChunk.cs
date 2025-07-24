@@ -10,8 +10,13 @@ namespace NetP3DLib.P3D.Chunks;
 public class CompositeDrawableSkinChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Composite_Drawable_Skin;
-    
-    public uint IsTranslucent { get; set; }
+
+    private uint isTranslucent;
+    public bool IsTranslucent
+    {
+        get => isTranslucent != 0;
+        set => isTranslucent = value ? 1u : 0u;
+    }
 
     public override byte[] DataBytes
     {
@@ -20,7 +25,7 @@ public class CompositeDrawableSkinChunk : NamedChunk
             List<byte> data = [];
 
             data.AddRange(BinaryExtensions.GetP3DStringBytes(Name));
-            data.AddRange(BitConverter.GetBytes(IsTranslucent));
+            data.AddRange(BitConverter.GetBytes(isTranslucent));
 
             return [.. data];
         }
@@ -30,10 +35,10 @@ public class CompositeDrawableSkinChunk : NamedChunk
     public CompositeDrawableSkinChunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
-        IsTranslucent = br.ReadUInt32();
+        isTranslucent = br.ReadUInt32();
     }
 
-    public CompositeDrawableSkinChunk(string name, uint isTranslucent) : base(ChunkID)
+    public CompositeDrawableSkinChunk(string name, bool isTranslucent) : base(ChunkID)
     {
         Name = name;
         IsTranslucent = isTranslucent;
@@ -42,7 +47,7 @@ public class CompositeDrawableSkinChunk : NamedChunk
     internal override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
-        bw.Write(IsTranslucent);
+        bw.Write(isTranslucent);
     }
 
     internal override Chunk CloneSelf() => new CompositeDrawableSkinChunk(Name, IsTranslucent);

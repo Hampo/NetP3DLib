@@ -11,7 +11,12 @@ public class ChannelInterpolationModeChunk : Chunk
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Channel_Interpolation_Mode;
     
     public uint Version { get; set; }
-    public int Interpolate { get; set; }
+    private uint interpolate;
+    public bool Interpolate
+    {
+        get => interpolate != 0;
+        set => interpolate = value ? 1u : 0u;
+    }
 
     public override byte[] DataBytes
     {
@@ -20,7 +25,7 @@ public class ChannelInterpolationModeChunk : Chunk
             List<byte> data = [];
 
             data.AddRange(BitConverter.GetBytes(Version));
-            data.AddRange(BitConverter.GetBytes(Interpolate));
+            data.AddRange(BitConverter.GetBytes(interpolate));
 
             return [.. data];
         }
@@ -30,10 +35,10 @@ public class ChannelInterpolationModeChunk : Chunk
     public ChannelInterpolationModeChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
-        Interpolate = br.ReadInt32();
+        interpolate = br.ReadUInt32();
     }
 
-    public ChannelInterpolationModeChunk(uint version, int interpolate) : base(ChunkID)
+    public ChannelInterpolationModeChunk(uint version, bool interpolate) : base(ChunkID)
     {
         Version = version;
         Interpolate = interpolate;
@@ -42,7 +47,7 @@ public class ChannelInterpolationModeChunk : Chunk
     internal override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
-        bw.Write(Interpolate);
+        bw.Write(interpolate);
     }
 
     internal override Chunk CloneSelf() => new ChannelInterpolationModeChunk(Version, Interpolate);

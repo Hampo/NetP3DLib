@@ -16,7 +16,12 @@ public class TextureAnimationChunk : NamedChunk
     public string MaterialName { get; set; }
     public uint NumFrames { get; set; }
     public float FrameRate { get; set; }
-    public uint Cyclic { get; set; }
+    private uint cyclic;
+    public bool Cyclic
+    {
+        get => cyclic == 1;
+        set => cyclic = value ? 1u : 0u;
+    }
 
     public override byte[] DataBytes
     {
@@ -29,7 +34,7 @@ public class TextureAnimationChunk : NamedChunk
             data.AddRange(BinaryExtensions.GetP3DStringBytes(MaterialName));
             data.AddRange(BitConverter.GetBytes(NumFrames));
             data.AddRange(BitConverter.GetBytes(FrameRate));
-            data.AddRange(BitConverter.GetBytes(Cyclic));
+            data.AddRange(BitConverter.GetBytes(cyclic));
 
             return [.. data];
         }
@@ -43,10 +48,10 @@ public class TextureAnimationChunk : NamedChunk
         MaterialName = br.ReadP3DString();
         NumFrames = br.ReadUInt32();
         FrameRate = br.ReadSingle();
-        Cyclic = br.ReadUInt32();
+        cyclic = br.ReadUInt32();
     }
 
-    public TextureAnimationChunk(string name, uint version, string materialName, uint numFrames, float frameRate, uint cyclic) : base(ChunkID)
+    public TextureAnimationChunk(string name, uint version, string materialName, uint numFrames, float frameRate, bool cyclic) : base(ChunkID)
     {
         Name = name;
         Version = version;
@@ -71,7 +76,7 @@ public class TextureAnimationChunk : NamedChunk
         bw.WriteP3DString(MaterialName);
         bw.Write(NumFrames);
         bw.Write(FrameRate);
-        bw.Write(Cyclic);
+        bw.Write(cyclic);
     }
 
     internal override Chunk CloneSelf() => new TextureAnimationChunk(Name, Version, MaterialName, NumFrames, FrameRate, Cyclic);

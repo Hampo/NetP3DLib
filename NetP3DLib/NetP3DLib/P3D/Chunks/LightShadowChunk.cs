@@ -9,8 +9,13 @@ namespace NetP3DLib.P3D.Chunks;
 public class LightShadowChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Light_Shadow;
-    
-    public uint Shadow { get; set; }
+
+    private uint shadow;
+    public bool Shadow
+    {
+        get => shadow == 1;
+        set => shadow = value ? 1u : 0u;
+    }
 
     public override byte[] DataBytes
     {
@@ -18,7 +23,7 @@ public class LightShadowChunk : Chunk
         {
             List<byte> data = [];
 
-            data.AddRange(BitConverter.GetBytes(Shadow));
+            data.AddRange(BitConverter.GetBytes(shadow));
 
             return [.. data];
         }
@@ -27,17 +32,17 @@ public class LightShadowChunk : Chunk
 
     public LightShadowChunk(BinaryReader br) : base(ChunkID)
     {
-        Shadow = br.ReadUInt32();
+        shadow = br.ReadUInt32();
     }
 
-    public LightShadowChunk(uint shadow) : base(ChunkID)
+    public LightShadowChunk(bool shadow) : base(ChunkID)
     {
         Shadow = shadow;
     }
 
     internal override void WriteData(BinaryWriter bw)
     {
-        bw.Write(Shadow);
+        bw.Write(shadow);
     }
 
     internal override Chunk CloneSelf() => new LightShadowChunk(Shadow);

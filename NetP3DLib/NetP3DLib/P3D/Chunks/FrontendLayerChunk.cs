@@ -12,8 +12,18 @@ public class FrontendLayerChunk : NamedChunk
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Frontend_Layer;
     
     public uint Version { get; set; }
-    public uint Visible { get; set; }
-    public uint Editable { get; set; }
+    private uint visible;
+    public bool Visible
+    {
+        get => visible != 0;
+        set => visible = value ? 1u : 0u;
+    }
+    private uint editable;
+    public bool Editable
+    {
+        get => editable != 0;
+        set => editable = value ? 1u : 0u;
+    }
     public uint Alpha { get; set; }
 
     public override byte[] DataBytes
@@ -24,8 +34,8 @@ public class FrontendLayerChunk : NamedChunk
 
             data.AddRange(BinaryExtensions.GetP3DStringBytes(Name));
             data.AddRange(BitConverter.GetBytes(Version));
-            data.AddRange(BitConverter.GetBytes(Visible));
-            data.AddRange(BitConverter.GetBytes(Editable));
+            data.AddRange(BitConverter.GetBytes(visible));
+            data.AddRange(BitConverter.GetBytes(editable));
             data.AddRange(BitConverter.GetBytes(Alpha));
 
             return [.. data];
@@ -37,12 +47,12 @@ public class FrontendLayerChunk : NamedChunk
     {
         Name = br.ReadP3DString();
         Version = br.ReadUInt32();
-        Visible = br.ReadUInt32();
-        Editable = br.ReadUInt32();
+        visible = br.ReadUInt32();
+        editable = br.ReadUInt32();
         Alpha = br.ReadUInt32();
     }
 
-    public FrontendLayerChunk(string name, uint version, uint visible, uint editable, uint alpha) : base(ChunkID)
+    public FrontendLayerChunk(string name, uint version, bool visible, bool editable, uint alpha) : base(ChunkID)
     {
         Name = name;
         Version = version;
@@ -51,12 +61,20 @@ public class FrontendLayerChunk : NamedChunk
         Alpha = alpha;
     }
 
+    public override void Validate()
+    {
+        if (Alpha > 256)
+            throw new InvalidDataException($"{nameof(Alpha)} must be between 0 and 256.");
+
+        base.Validate();
+    }
+
     internal override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(Version);
-        bw.Write(Visible);
-        bw.Write(Editable);
+        bw.Write(visible);
+        bw.Write(editable);
         bw.Write(Alpha);
     }
 

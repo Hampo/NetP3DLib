@@ -14,7 +14,12 @@ public class RoadDataSegmentChunk : NamedChunk
     
     public uint Type { get; set; }
     public uint Lanes { get; set; }
-    public uint HasShoulder { get; set; }
+    private uint hasShoulder;
+    public bool HasShoulder
+    {
+        get => hasShoulder != 0;
+        set => hasShoulder = value ? 1u : 0u;
+    }
     public Vector3 Direction { get; set; }
     public Vector3 Top { get; set; }
     public Vector3 Bottom { get; set; }
@@ -28,7 +33,7 @@ public class RoadDataSegmentChunk : NamedChunk
             data.AddRange(BinaryExtensions.GetP3DStringBytes(Name));
             data.AddRange(BitConverter.GetBytes(Type));
             data.AddRange(BitConverter.GetBytes(Lanes));
-            data.AddRange(BitConverter.GetBytes(HasShoulder));
+            data.AddRange(BitConverter.GetBytes(hasShoulder));
             data.AddRange(BinaryExtensions.GetBytes(Direction));
             data.AddRange(BinaryExtensions.GetBytes(Top));
             data.AddRange(BinaryExtensions.GetBytes(Bottom));
@@ -43,13 +48,13 @@ public class RoadDataSegmentChunk : NamedChunk
         Name = br.ReadP3DString();
         Type = br.ReadUInt32();
         Lanes = br.ReadUInt32();
-        HasShoulder = br.ReadUInt32();
+        hasShoulder = br.ReadUInt32();
         Direction = br.ReadVector3();
         Top = br.ReadVector3();
         Bottom = br.ReadVector3();
     }
 
-    public RoadDataSegmentChunk(string name, uint type, uint lanes, uint hasShoulder, Vector3 direction, Vector3 top, Vector3 bottom) : base(ChunkID)
+    public RoadDataSegmentChunk(string name, uint type, uint lanes, bool hasShoulder, Vector3 direction, Vector3 top, Vector3 bottom) : base(ChunkID)
     {
         Name = name;
         Type = type;
@@ -65,7 +70,7 @@ public class RoadDataSegmentChunk : NamedChunk
         bw.WriteP3DString(Name);
         bw.Write(Type);
         bw.Write(Lanes);
-        bw.Write(HasShoulder);
+        bw.Write(hasShoulder);
         bw.Write(Direction);
         bw.Write(Top);
         bw.Write(Bottom);

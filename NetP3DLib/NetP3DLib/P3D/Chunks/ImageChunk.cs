@@ -42,8 +42,18 @@ public class ImageChunk : NamedChunk
     public uint Width { get; set; }
     public uint Height { get; set; }
     public uint Bpp { get; set; }
-    public uint Palettized { get; set; }
-    public uint HasAlpha { get; set; }
+    private uint palettized;
+    public bool Palettized
+    {
+        get => palettized == 1;
+        set => palettized = value ? 1u : 0u;
+    }
+    private uint hasAlpha;
+    public bool HasAlpha
+    {
+        get => hasAlpha == 1;
+        set => hasAlpha = value ? 1u : 0u;
+    }
     public Formats Format { get; set; }
 
     public override byte[] DataBytes
@@ -57,8 +67,8 @@ public class ImageChunk : NamedChunk
             data.AddRange(BitConverter.GetBytes(Width));
             data.AddRange(BitConverter.GetBytes(Height));
             data.AddRange(BitConverter.GetBytes(Bpp));
-            data.AddRange(BitConverter.GetBytes(Palettized));
-            data.AddRange(BitConverter.GetBytes(HasAlpha));
+            data.AddRange(BitConverter.GetBytes(palettized));
+            data.AddRange(BitConverter.GetBytes(hasAlpha));
             data.AddRange(BitConverter.GetBytes((uint)Format));
 
             return [.. data];
@@ -73,12 +83,12 @@ public class ImageChunk : NamedChunk
         Width = br.ReadUInt32();
         Height = br.ReadUInt32();
         Bpp = br.ReadUInt32();
-        Palettized = br.ReadUInt32();
-        HasAlpha = br.ReadUInt32();
+        palettized = br.ReadUInt32();
+        hasAlpha = br.ReadUInt32();
         Format = (Formats)br.ReadUInt32();
     }
 
-    public ImageChunk(string name, uint version, uint width, uint height, uint bpp, uint palettized, uint hasAlpha, Formats format) : base(ChunkID)
+    public ImageChunk(string name, uint version, uint width, uint height, uint bpp, bool palettized, bool hasAlpha, Formats format) : base(ChunkID)
     {
         Name = name;
         Version = version;
@@ -97,8 +107,8 @@ public class ImageChunk : NamedChunk
         bw.Write(Width);
         bw.Write(Height);
         bw.Write(Bpp);
-        bw.Write(Palettized);
-        bw.Write(HasAlpha);
+        bw.Write(palettized);
+        bw.Write(hasAlpha);
         bw.Write((uint)Format);
     }
 
