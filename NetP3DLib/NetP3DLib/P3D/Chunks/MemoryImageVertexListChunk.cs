@@ -55,7 +55,7 @@ public class MemoryImageVertexListChunk : Chunk
         Version = br.ReadUInt32();
         Param = br.ReadUInt32();
         int numVertices = br.ReadInt32();
-        Vertex.Capacity = numVertices;
+        Vertex = new(numVertices);
         for (int i = 0; i < numVertices; i++)
             Vertex.Add(br.ReadByte());
     }

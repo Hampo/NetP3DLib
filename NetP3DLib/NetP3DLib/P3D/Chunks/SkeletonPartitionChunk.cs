@@ -53,7 +53,7 @@ public class SkeletonPartitionChunk : NamedChunk
     {
         Name = br.ReadP3DString();
         var numJointValues = br.ReadInt32();
-        JointBits.Capacity = numJointValues;
+        JointBits = new(numJointValues);
         for (var i = 0; i < numJointValues; i++)
             JointBits.Add(br.ReadUInt32());
     }

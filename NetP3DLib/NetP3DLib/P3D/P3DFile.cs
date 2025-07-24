@@ -179,11 +179,15 @@ public class P3DFile
                 throw new InvalidDataException($"P3D File full size incorrect. Expected {br.BaseStream.Length}, read {fileSize}.");
 
             uint bytesRead = headerSize;
-            while (bytesRead < fileSize)
+            if (bytesRead < fileSize)
             {
-                Chunk c = ChunkLoader.LoadChunk(br);
-                Chunks.Add(c);
-                bytesRead += c.Size;
+                Chunks = new((int)(fileSize - bytesRead) / 12);
+                while (bytesRead < fileSize)
+                {
+                    Chunk c = ChunkLoader.LoadChunk(br);
+                    Chunks.Add(c);
+                    bytesRead += c.Size;
+                }
             }
         }
         finally

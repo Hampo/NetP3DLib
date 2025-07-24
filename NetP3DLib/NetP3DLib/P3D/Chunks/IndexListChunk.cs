@@ -50,7 +50,7 @@ public class IndexListChunk : Chunk
     public IndexListChunk(BinaryReader br) : base(ChunkID)
     {
         var num = br.ReadInt32();
-        Indices.Capacity = num;
+        Indices = new(num);
         for (int i = 0; i < num; i++)
             Indices.Add(br.ReadUInt32());
     }

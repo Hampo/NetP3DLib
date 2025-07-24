@@ -59,7 +59,7 @@ public class OldOffsetListChunk : Chunk
     {
         var numOffsets = br.ReadInt32();
         KeyIndex = br.ReadUInt32();
-        Offsets.Capacity = numOffsets;
+        Offsets = new(numOffsets);
         for (int i = 0; i < numOffsets; i++)
             Offsets.Add(new(br));
         if (br.BaseStream.Position == br.BaseStream.Length)

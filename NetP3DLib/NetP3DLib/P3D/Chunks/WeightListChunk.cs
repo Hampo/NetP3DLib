@@ -52,7 +52,7 @@ public class WeightListChunk : Chunk
     public WeightListChunk(BinaryReader br) : base(ChunkID)
     {
         var numWeights = br.ReadInt32();
-        Weights.Capacity = numWeights;
+        Weights = new(numWeights);
         for (var i = 0; i < numWeights; i++)
             Weights.Add(br.ReadVector3());
     }

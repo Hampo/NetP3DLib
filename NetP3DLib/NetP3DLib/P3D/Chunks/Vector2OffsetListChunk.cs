@@ -57,7 +57,7 @@ public class Vector2OffsetListChunk : ParamChunk
         Version = br.ReadUInt32();
         Param = br.ReadFourCC();
         var numOffsets = br.ReadInt32();
-        Offsets.Capacity = numOffsets;
+        Offsets = new(numOffsets);
         for (int i = 0; i < numOffsets; i++)
             Offsets.Add(new(br));
     }

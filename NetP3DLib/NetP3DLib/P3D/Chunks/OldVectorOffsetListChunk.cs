@@ -57,7 +57,7 @@ public class OldVectorOffsetListChunk : ParamChunk
         Version = br.ReadUInt32();
         var numOffsets = br.ReadInt32();
         Param = br.ReadFourCC();
-        Offsets.Capacity = numOffsets;
+        Offsets = new(numOffsets);
         for (int i = 0; i < numOffsets; i++)
             Offsets.Add(br.ReadVector3());
     }

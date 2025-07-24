@@ -59,7 +59,7 @@ public class BooleanChannelChunk : ParamChunk
         Param = br.ReadFourCC();
         StartState = br.ReadUInt16();
         var numValues = br.ReadInt32();
-        Values.Capacity = numValues;
+        Values = new(numValues);
         for (int i = 0; i < numValues; i++)
             Values.Add(br.ReadUInt16());
     }

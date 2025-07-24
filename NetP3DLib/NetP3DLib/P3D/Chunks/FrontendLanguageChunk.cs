@@ -78,7 +78,7 @@ public class FrontendLanguageChunk : NamedChunk
             offsets.Add(br.ReadUInt32());
         byte[] bufferBytes = br.ReadBytes(bufferSize);
         string buffer = Encoding.Unicode.GetString(bufferBytes);
-        Entries.Capacity = numEntries;
+        Entries = new(numEntries);
         for (int i = 0; i < numEntries; i++)
         {
             uint hash = hashes[i];
@@ -101,7 +101,7 @@ public class FrontendLanguageChunk : NamedChunk
         Name = name;
         Language = language;
         Modulo = modulo;
-        Entries.Capacity = entries.Count;
+        Entries = new(entries.Count);
         foreach (var entry in entries)
             Entries.Add(new(GetNameHash(entry.Key), entry.Value));
     }

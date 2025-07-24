@@ -81,8 +81,8 @@ public class CollisionMetaDataShortChannelChunk : NamedChunk
         Version = br.ReadUInt32();
         Name = br.ReadP3DString();
         var numFrames = br.ReadInt32();
-        Indices.Capacity = numFrames;
-        Values.Capacity = numFrames;
+        Indices = new(numFrames);
+        Values = new(numFrames);
         for (var i = 0; i < numFrames; i++)
             Indices.Add(br.ReadUInt16());
         for (var i = 0; i < numFrames; i++)

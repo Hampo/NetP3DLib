@@ -61,7 +61,7 @@ public class ATCChunk : Chunk
     public ATCChunk(BinaryReader br) : base(ChunkID)
     {
         var numEntries = br.ReadInt32();
-        Entries.Capacity = numEntries;
+        Entries = new(numEntries);
         for (int i = 0; i < numEntries; i++)
             Entries.Add(new(br));
     }

@@ -52,7 +52,7 @@ public class TextureGlyphListChunk : Chunk
     public TextureGlyphListChunk(BinaryReader br) : base(ChunkID)
     {
         var numGlyphs = br.ReadInt32();
-        Glyphs.Capacity = numGlyphs;
+        Glyphs = new(numGlyphs);
         for (int i = 0; i < numGlyphs; i++)
             Glyphs.Add(new(br));
     }

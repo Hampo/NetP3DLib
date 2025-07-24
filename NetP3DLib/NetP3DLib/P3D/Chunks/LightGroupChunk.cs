@@ -63,7 +63,7 @@ public class LightGroupChunk : NamedChunk
     {
         Name = br.ReadP3DString();
         var numLights = br.ReadInt32();
-        Lights.Capacity = numLights;
+        Lights = new(numLights);
         for (int i = 0; i < numLights; i++)
             Lights.Add(br.ReadP3DString());
     }

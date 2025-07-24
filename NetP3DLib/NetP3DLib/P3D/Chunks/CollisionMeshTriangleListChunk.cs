@@ -50,7 +50,7 @@ public class CollisionMeshTriangleListChunk : Chunk
     public CollisionMeshTriangleListChunk(BinaryReader br) : base(ChunkID)
     {
         var numEntries = br.ReadInt32();
-        Triangles.Capacity = numEntries;
+        Triangles = new(numEntries);
         for (int i = 0; i < numEntries; i++)
             Triangles.Add(new(br));
     }

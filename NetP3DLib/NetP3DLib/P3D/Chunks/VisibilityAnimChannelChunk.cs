@@ -56,7 +56,7 @@ public class VisibilityAnimChannelChunk : NamedChunk
         Name = br.ReadP3DString();
         StartState = br.ReadUInt16();
         var numValues = br.ReadInt32();
-        Frames.Capacity = numValues;
+        Frames = new(numValues);
         for (int i = 0; i < numValues; i++)
             Frames.Add(br.ReadUInt32());
     }

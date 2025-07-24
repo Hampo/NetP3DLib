@@ -78,8 +78,8 @@ public class VertexAnimKeyFrameListChunk : Chunk
     {
         Version = br.ReadUInt32();
         var numKeyFrameIds = br.ReadInt32();
-        KeyFrameIds.Capacity = numKeyFrameIds;
-        KeyFrameCounts.Capacity = numKeyFrameIds;
+        KeyFrameIds = new(numKeyFrameIds);
+        KeyFrameCounts = new(numKeyFrameIds);
         for (int i = 0; i < numKeyFrameIds; i++)
             KeyFrameIds.Add(br.ReadUInt32());
         for (int i = 0; i < numKeyFrameIds; i++)

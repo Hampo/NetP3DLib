@@ -61,7 +61,7 @@ public class MultiControllerTracksChunk : Chunk
     public MultiControllerTracksChunk(BinaryReader br) : base(ChunkID)
     {
         var numTracks = br.ReadInt32();
-        Tracks.Capacity = numTracks;
+        Tracks = new(numTracks);
         for (int i = 0; i < numTracks; i++)
             Tracks.Add(new(br));
     }

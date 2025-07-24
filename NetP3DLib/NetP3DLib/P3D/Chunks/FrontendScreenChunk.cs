@@ -67,7 +67,7 @@ public class FrontendScreenChunk : NamedChunk
         Name = br.ReadP3DString();
         Version = br.ReadUInt32();
         var numPageNames = br.ReadInt32();
-        PageNames.Capacity = numPageNames;
+        PageNames = new(numPageNames);
         for (int i = 0; i < numPageNames; i++)
             PageNames.Add(br.ReadP3DString());
     }

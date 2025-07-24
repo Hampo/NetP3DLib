@@ -54,7 +54,7 @@ public class SplineChunk : NamedChunk
     {
         Name = br.ReadP3DString();
         var numPositions = br.ReadInt32();
-        Positions.Capacity = numPositions;
+        Positions = new(numPositions);
         for (var i = 0; i < numPositions; i++)
             Positions.Add(br.ReadVector3());
     }

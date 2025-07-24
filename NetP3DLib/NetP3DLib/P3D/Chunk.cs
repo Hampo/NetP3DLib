@@ -19,7 +19,7 @@ public abstract class Chunk
     /// <summary>
     /// Property <c>Children</c> is a list of a chunk's children.
     /// </summary>
-    public List<Chunk> Children { get; } = [];
+    public List<Chunk> Children { get; internal set; } = [];
 
     /// <summary>
     /// Property <c>DataBytes</c> is the chunk's header data, built from the chunk's properties.

@@ -81,8 +81,8 @@ public class Float1ChannelChunk : ParamChunk
         Version = br.ReadUInt32();
         Param = br.ReadFourCC();
         var numFrames = br.ReadInt32();
-        Frames.Capacity = numFrames;
-        Values.Capacity = numFrames;
+        Frames = new(numFrames);
+        Values = new(numFrames);
         for (var i = 0; i < numFrames; i++)
             Frames.Add(br.ReadUInt16());
         for (var i = 0; i < numFrames; i++)

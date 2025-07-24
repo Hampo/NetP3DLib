@@ -52,7 +52,7 @@ public class NormalListChunk : Chunk
     public NormalListChunk(BinaryReader br) : base(ChunkID)
     {
         var numNormals = br.ReadInt32();
-        Normals.Capacity = numNormals;
+        Normals = new(numNormals);
         for (var i = 0; i < numNormals; i++)
             Normals.Add(br.ReadVector3());
     }

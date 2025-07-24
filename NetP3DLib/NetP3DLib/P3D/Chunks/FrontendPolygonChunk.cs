@@ -86,10 +86,10 @@ public class FrontendPolygonChunk : NamedChunk
         Version = br.ReadUInt32();
         Translucency = br.ReadUInt32();
         var num = br.ReadInt32();
-        Points.Capacity = num;
+        Points = new(num);
         for (int i = 0; i < num; i++)
             Points.Add(br.ReadVector3());
-        Colours.Capacity = num;
+        Colours = new(num);
         for (int i = 0; i < num; i++)
             Colours.Add(br.ReadColor());
     }

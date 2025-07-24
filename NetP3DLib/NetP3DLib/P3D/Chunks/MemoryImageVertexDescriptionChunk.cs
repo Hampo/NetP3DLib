@@ -55,7 +55,7 @@ public class MemoryImageVertexDescriptionChunk : Chunk
         Version = br.ReadUInt32();
         Param = br.ReadUInt32();
         int numVertices = br.ReadInt32();
-        Description.Capacity = numVertices;
+        Description = new(numVertices);
         for (int i = 0; i < numVertices; i++)
             Description.Add(br.ReadByte());
     }

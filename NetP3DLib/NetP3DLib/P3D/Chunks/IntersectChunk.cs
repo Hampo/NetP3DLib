@@ -100,15 +100,15 @@ public class IntersectChunk : Chunk
     public IntersectChunk(BinaryReader br) : base(ChunkID)
     {
         var numIndices = br.ReadInt32();
-        Indices.Capacity = numIndices;
+        Indices = new(numIndices);
         for (var i = 0; i < numIndices; i++)
             Indices.Add(br.ReadUInt32());
         var numPositions = br.ReadInt32();
-        Positions.Capacity = numPositions;
+        Positions = new(numPositions);
         for (var i = 0; i < numPositions; i++)
             Positions.Add(br.ReadVector3());
         var numNormals = br.ReadInt32();
-        Normals.Capacity = numNormals;
+        Normals = new(numNormals);
         for (var i = 0; i < numNormals; i++)
             Normals.Add(br.ReadVector3());
     }

@@ -63,7 +63,7 @@ public class HistoryChunk : Chunk
     public HistoryChunk(BinaryReader br) : base(ChunkID)
     {
         ushort lineCount = br.ReadUInt16();
-        History.Capacity = lineCount;
+        History = new(lineCount);
         for (int i = 0; i < lineCount; i++)
             History.Add(br.ReadP3DString());
     }

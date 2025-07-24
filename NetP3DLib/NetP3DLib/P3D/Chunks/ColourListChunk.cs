@@ -52,7 +52,7 @@ public class ColourListChunk : Chunk
     public ColourListChunk(BinaryReader br) : base(ChunkID)
     {
         var num = br.ReadInt32();
-        Colours.Capacity = num;
+        Colours = new(num);
         for (int i = 0; i < num; i++)
             Colours.Add(br.ReadColor());
     }

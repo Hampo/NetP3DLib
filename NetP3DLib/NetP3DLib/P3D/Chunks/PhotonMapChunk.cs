@@ -115,14 +115,14 @@ public class PhotonMapChunk : NamedChunk
         Name = br.ReadP3DString();
         Version = br.ReadUInt32();
         var numLights = br.ReadInt32();
-        Lights.Capacity = numLights;
-        LightScales.Capacity = numLights;
+        Lights = new(numLights);
+        LightScales = new(numLights);
         for (var i = 0; i < numLights; i++)
             Lights.Add(br.ReadP3DString());
         for (var i = 0; i < numLights; i++)
             LightScales.Add(br.ReadSingle());
         var numPhotons = br.ReadInt32();
-        Photons.Capacity = numPhotons;
+        Photons = new(numPhotons);
         for (var i = 0; i < numPhotons; i++)
             Photons.Add(new(br));
     }

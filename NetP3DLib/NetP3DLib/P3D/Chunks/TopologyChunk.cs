@@ -50,7 +50,7 @@ public class TopologyChunk : Chunk
     public TopologyChunk(BinaryReader br) : base(ChunkID)
     {
         var numEntries = br.ReadInt32();
-        Topologies.Capacity = numEntries;
+        Topologies = new(numEntries);
         for (int i = 0; i < numEntries; i++)
             Topologies.Add(new(br));
     }

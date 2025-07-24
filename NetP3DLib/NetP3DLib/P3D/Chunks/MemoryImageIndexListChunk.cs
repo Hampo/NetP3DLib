@@ -56,7 +56,7 @@ public class MemoryImageIndexListChunk : Chunk
         Version = br.ReadUInt32();
         Param = br.ReadUInt32();
         int numIndices = br.ReadInt32() / sizeof(ushort);
-        Indices.Capacity = numIndices;
+        Indices = new(numIndices);
         for (int i = 0; i < numIndices; i++)
             Indices.Add(br.ReadUInt16());
     }

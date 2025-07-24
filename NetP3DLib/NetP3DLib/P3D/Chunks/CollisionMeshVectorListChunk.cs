@@ -52,7 +52,7 @@ public class CollisionMeshVectorListChunk : Chunk
     public CollisionMeshVectorListChunk(BinaryReader br) : base(ChunkID)
     {
         var numVectors = br.ReadInt32();
-        Vectors.Capacity = numVectors;
+        Vectors = new(numVectors);
         for (int i = 0; i < numVectors; i++)
             Vectors.Add(br.ReadVector3());
     }

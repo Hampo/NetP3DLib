@@ -55,7 +55,7 @@ public class OldColourOffsetListChunk : Chunk
     {
         Version = br.ReadUInt32();
         var numOffsets = br.ReadInt32();
-        Offsets.Capacity = numOffsets;
+        Offsets = new(numOffsets);
         for (int i = 0; i < numOffsets; i++)
             Offsets.Add(br.ReadColor());
     }

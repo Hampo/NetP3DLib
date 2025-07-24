@@ -91,8 +91,8 @@ public class CompressedQuaternionChannelChunk : ParamChunk
         Version = br.ReadUInt32();
         Param = br.ReadFourCC();
         int numFrames = br.ReadInt32();
-        Frames.Capacity = numFrames;
-        Values.Capacity = numFrames;
+        Frames = new(numFrames);
+        Values = new(numFrames);
         for (uint i = 0; i < numFrames; i++)
             Frames.Add(br.ReadUInt16());
         for (uint i = 0; i < numFrames; i++)

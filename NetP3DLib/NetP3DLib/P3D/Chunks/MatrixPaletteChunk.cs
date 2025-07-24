@@ -50,7 +50,7 @@ public class MatrixPaletteChunk : Chunk
     public MatrixPaletteChunk(BinaryReader br) : base(ChunkID)
     {
         var numMatrices = br.ReadInt32();
-        Matrices.Capacity = numMatrices;
+        Matrices = new(numMatrices);
         for (int i = 0; i < numMatrices; i++)
             Matrices.Add(br.ReadUInt32());
     }

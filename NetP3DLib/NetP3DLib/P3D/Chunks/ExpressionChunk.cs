@@ -81,8 +81,8 @@ public class ExpressionChunk : NamedChunk
         Version = br.ReadUInt32();
         Name = br.ReadP3DString();
         var numKeys = br.ReadInt32();
-        Keys.Capacity = numKeys;
-        Indices.Capacity = numKeys;
+        Keys = new(numKeys);
+        Indices = new(numKeys);
         for (int i = 0; i < numKeys; i++)
             Keys.Add(br.ReadSingle());
         for (int i = 0; i < numKeys; i++)

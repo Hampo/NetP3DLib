@@ -88,8 +88,8 @@ public class Vector2DOFChannelChunk : ParamChunk
         StaticIndex = (Coordinate)br.ReadUInt16();
         Constants = br.ReadVector3();
         var numFrames = br.ReadInt32();
-        Frames.Capacity = numFrames;
-        Values.Capacity = numFrames;
+        Frames = new(numFrames);
+        Values = new(numFrames);
         for (var i = 0; i < numFrames; i++)
             Frames.Add(br.ReadUInt16());
         for (var i = 0; i < numFrames; i++)

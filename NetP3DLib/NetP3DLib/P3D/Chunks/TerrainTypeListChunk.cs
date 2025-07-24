@@ -89,7 +89,7 @@ public class TerrainTypeListChunk : Chunk
     {
         Version = br.ReadUInt32();
         var numTypes = br.ReadInt32();
-        Types.Capacity = numTypes;
+        Types = new(numTypes);
         Types.AddRange(br.ReadBytes(numTypes).Cast<TerrainType>());
     }
 

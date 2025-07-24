@@ -60,7 +60,7 @@ public class ExpressionGroupChunk : NamedChunk
         Name = br.ReadP3DString();
         TargetName = br.ReadP3DString();
         var numStages = br.ReadInt32();
-        Stages.Capacity = numStages;
+        Stages = new(numStages);
         for (int i = 0; i < numStages; i++)
             Stages.Add(br.ReadUInt32());
     }
