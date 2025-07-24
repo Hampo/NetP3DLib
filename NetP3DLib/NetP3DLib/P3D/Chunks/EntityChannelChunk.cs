@@ -4,7 +4,6 @@ using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -76,7 +75,16 @@ public class EntityChannelChunk : ParamChunk
             return [.. data];
         }
     }
-    public override uint DataLength => sizeof(uint) + 4 + sizeof(uint) + sizeof(short) * NumValues + (uint)Values.Sum(x => BinaryExtensions.GetP3DStringBytes(x).Length);
+    public override uint DataLength
+    {
+        get
+        {
+            uint size = sizeof(uint) + 4 + sizeof(uint) + sizeof(short) * NumValues;
+            foreach (var value in Values)
+                size += BinaryExtensions.GetP3DStringLength(value);
+            return size;
+        }
+    }
 
     public EntityChannelChunk(BinaryReader br) : base(ChunkID)
     {

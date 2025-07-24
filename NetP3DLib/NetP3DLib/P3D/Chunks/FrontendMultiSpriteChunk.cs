@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -79,7 +78,16 @@ public class FrontendMultiSpriteChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(int) + sizeof(int) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(float) + sizeof(uint) + (uint)ImageNames.Sum(x => BinaryExtensions.GetP3DStringBytes(x).Length);
+    public override uint DataLength
+    {
+        get
+        {
+            uint size = BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(int) + sizeof(int) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(float) + sizeof(uint);
+            foreach (var imageName in ImageNames)
+                size += BinaryExtensions.GetP3DStringLength(imageName);
+            return size;
+        }
+    }
 
     public FrontendMultiSpriteChunk(BinaryReader br) : base(ChunkID)
     {

@@ -49,7 +49,16 @@ public class HistoryChunk : Chunk
             return [.. data];
         }
     }
-    public override uint DataLength => sizeof(ushort) + (uint)History.Sum(x => BinaryExtensions.GetP3DStringBytes(x).Length);
+    public override uint DataLength
+    {
+        get
+        {
+            uint size = sizeof(ushort);
+            foreach (var item in History)
+                size += BinaryExtensions.GetP3DStringLength(item);
+            return size;
+        }
+    }
 
     public HistoryChunk(BinaryReader br) : base(ChunkID)
     {

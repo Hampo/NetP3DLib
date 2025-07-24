@@ -38,7 +38,16 @@ public class P3DFile
         }
     }
 
-    public uint Size => HEADER_SIZE + (uint)Chunks.Sum(x => x.Size);
+    public uint Size
+    {
+        get
+        {
+            uint size = HEADER_SIZE;
+            foreach (var chunk in Chunks)
+                size += chunk.Size;
+            return size;
+        }
+    }
     public byte[] Bytes
     {
         get

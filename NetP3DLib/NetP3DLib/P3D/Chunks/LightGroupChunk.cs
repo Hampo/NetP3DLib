@@ -4,7 +4,6 @@ using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -49,7 +48,16 @@ public class LightGroupChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + (uint)Lights.Sum(x => BinaryExtensions.GetP3DStringBytes(x).Length);
+    public override uint DataLength
+    {
+        get
+        {
+            uint size = BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint);
+            foreach (var light in Lights)
+                size += BinaryExtensions.GetP3DStringLength(light);
+            return size;
+        }
+    }
 
     public LightGroupChunk(BinaryReader br) : base(ChunkID)
     {

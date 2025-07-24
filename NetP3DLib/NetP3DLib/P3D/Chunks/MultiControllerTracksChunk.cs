@@ -4,7 +4,6 @@ using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -48,7 +47,16 @@ public class MultiControllerTracksChunk : Chunk
             return [.. data];
         }
     }
-    public override uint DataLength => sizeof(uint) + (uint)Tracks.Sum(x => x.DataBytes.Length);
+    public override uint DataLength
+    {
+        get
+        {
+            uint size = sizeof(uint);
+            foreach (var track in Tracks)
+                size += track.DataLength;
+            return size;
+        }
+    }
 
     public MultiControllerTracksChunk(BinaryReader br) : base(ChunkID)
     {
@@ -107,6 +115,8 @@ public class MultiControllerTracksChunk : Chunk
                 return [.. data];
             }
         }
+
+        public uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(float) + sizeof(float) + sizeof(float);
 
         public Track(BinaryReader br)
         {

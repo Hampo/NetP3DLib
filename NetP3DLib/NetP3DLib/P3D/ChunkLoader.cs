@@ -1,5 +1,7 @@
 ﻿using NetP3DLib.IO;
+#if DEBUG
 using NetP3DLib.P3D.Enums;
+#endif
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
@@ -8,6 +10,7 @@ using System.Diagnostics;
 #endif
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace NetP3DLib.P3D;
@@ -15,6 +18,8 @@ namespace NetP3DLib.P3D;
 public static class ChunkLoader
 {
     public static readonly Dictionary<uint, Type> ChunkTypes;
+
+    private static readonly Dictionary<Type, Func<BinaryReader, Chunk>> ConstructorCache = [];
 #if DEBUG
     public static HashSet<uint> UnknownChunks = [];
 #endif
@@ -51,6 +56,7 @@ public static class ChunkLoader
 
         Type[] chunkTypeList = GetTypesInNamespace(Assembly.GetExecutingAssembly(), nameSpace);
         Type baseType = typeof(Chunk);
+
         foreach (Type chunkType in chunkTypeList)
         {
             if (chunkType.IsNested)
@@ -82,6 +88,24 @@ public static class ChunkLoader
             if (throwOnDuplicate && ChunkTypes.ContainsKey(chunkAttriutes.Identifier))
                 throw new InvalidOperationException($"Chunk type with identifier 0x{chunkAttriutes.Identifier:X} already exists.");
 
+
+            var ctor = chunkType.GetConstructor([typeof(BinaryReader)]);
+            if (ctor == null)
+            {
+                if (throwOnInvalid)
+                    throw new InvalidOperationException(
+                        $"Type {chunkType.FullName} must have a constructor with a BinaryReader parameter.");
+
+#if DEBUG
+                Console.WriteLine($"[ChunkLoader] Skipped: {chunkType.FullName} lacks expected constructor.");
+#endif
+                continue;
+            }
+
+            var param = Expression.Parameter(typeof(BinaryReader), "br");
+            var newExpr = Expression.New(ctor, param);
+            var lambda = Expression.Lambda<Func<BinaryReader, Chunk>>(newExpr, param);
+            ConstructorCache[chunkType] = lambda.Compile();
             ChunkTypes[chunkAttriutes.Identifier] = chunkType;
         }
     }
@@ -112,7 +136,7 @@ public static class ChunkLoader
 
             using MemoryStream ms = new(headerData);
             using EndianAwareBinaryReader br2 = new(ms, endianness);
-            c = (Chunk)Activator.CreateInstance(chunkType, br2);
+            c = ConstructorCache[chunkType](br2);
             actualHeaderSize = (uint)ms.Position;
         }
         else
@@ -148,9 +172,7 @@ public static class ChunkLoader
     {
         try
         {
-            return assembly.GetTypes()
-                .Where(t => string.Equals(t.Namespace, nameSpace, StringComparison.Ordinal))
-                .ToArray();
+            return [.. assembly.GetTypes().Where(t => t?.Namespace == nameSpace)];
         }
         catch (ReflectionTypeLoadException ex)
         {

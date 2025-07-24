@@ -3,7 +3,6 @@ using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -15,7 +14,17 @@ public class MultiControllerChunk : NamedChunk
     public uint Version { get; set; }
     public float Length { get; set; }
     public float Framerate { get; set; }
-    public uint NumTracks => (uint)GetChunksOfType<MultiControllerTracksChunk>().Sum(x => x.NumTracks);
+    public uint NumTracks
+    {
+        get
+        {
+            uint numTracks = 0;
+            foreach (var child in Children)
+                if (child is MultiControllerTracksChunk multiControllerTracksChunk)
+                    numTracks += multiControllerTracksChunk.NumTracks;
+            return numTracks;
+        }
+    }
 
     public override byte[] DataBytes
     {

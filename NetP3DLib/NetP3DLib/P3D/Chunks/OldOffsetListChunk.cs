@@ -3,7 +3,6 @@ using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
@@ -53,7 +52,7 @@ public class OldOffsetListChunk : Chunk
             return [.. data];
         }
     }
-    public override uint DataLength => sizeof(uint) + sizeof(uint) + (uint)Offsets.Sum(x => x.DataBytes.Length) + (HasPrimGroupIndex ? sizeof(uint) : 0u);
+    public override uint DataLength => sizeof(uint) + sizeof(uint) + OffsetEntry.Size * NumOffsets + (HasPrimGroupIndex ? sizeof(uint) : 0u);
 
     public OldOffsetListChunk(BinaryReader br) : base(ChunkID)
     {
@@ -106,6 +105,8 @@ public class OldOffsetListChunk : Chunk
 
     public class OffsetEntry
     {
+        public const uint Size = sizeof(uint) + sizeof(float) * 3;
+
         public uint Index { get; set; }
         public Vector3 Offset { get; set; }
 

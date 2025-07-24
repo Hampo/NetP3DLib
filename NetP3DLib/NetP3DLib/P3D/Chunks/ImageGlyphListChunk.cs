@@ -2,7 +2,6 @@ using NetP3DLib.P3D.Enums;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -46,7 +45,7 @@ public class ImageGlyphListChunk : Chunk
             return [.. data];
         }
     }
-    public override uint DataLength => sizeof(uint) + (uint)Glyphs.Sum(x => x.DataBytes.Length);
+    public override uint DataLength => sizeof(uint) + Glyph.Size * NumGlyphs;
 
     public ImageGlyphListChunk(BinaryReader br) : base(ChunkID)
     {
@@ -78,6 +77,8 @@ public class ImageGlyphListChunk : Chunk
 
     public class Glyph
     {
+        public const uint Size = sizeof(ushort) + sizeof(ushort) + sizeof(ushort) + sizeof(ushort) + sizeof(ushort) + sizeof(uint);
+
         public ushort XOrigin { get; set; }
         public ushort LeftBearing { get; set; }
         public ushort RightBearing { get; set; }

@@ -40,7 +40,16 @@ public abstract class Chunk
     /// Property <c>Size</c> is the chunk's size.
     /// <para>This is usually <see cref="HeaderSize"/> + SUM(<see cref="Children"/>.<see cref="Size"/>).</para>
     /// </summary>
-    public uint Size => HeaderSize + (uint)Children.Sum(x => x.Size);
+    public uint Size
+    {
+        get
+        {
+            var size = HeaderSize;
+            foreach (var child in Children)
+                size += child.Size;
+            return size;
+        }
+    }
     /// <summary>
     /// Property <c>DataBytes</c> is the chunk's data, built from the chunk's properties.
     /// <para>NOTE: This will use the system's default <see cref="Endianness"/>.</para>

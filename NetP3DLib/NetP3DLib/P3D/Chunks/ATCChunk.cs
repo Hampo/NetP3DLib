@@ -4,7 +4,6 @@ using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -48,7 +47,16 @@ public class ATCChunk : Chunk
             return [.. data];
         }
     }
-    public override uint DataLength => sizeof(uint) + (uint)Entries.Sum(x => x.DataBytes.Length);
+    public override uint DataLength
+    {
+        get
+        {
+            uint size = sizeof(uint);
+            foreach (var entry in Entries)
+                size += (uint)entry.DataBytes.Length;
+            return size;
+        }
+    }
 
     public ATCChunk(BinaryReader br) : base(ChunkID)
     {

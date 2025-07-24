@@ -3,7 +3,6 @@ using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
@@ -48,7 +47,7 @@ public class TextureGlyphListChunk : Chunk
             return [.. data];
         }
     }
-    public override uint DataLength => sizeof(uint) + (uint)Glyphs.Sum(x => x.DataBytes.Length);
+    public override uint DataLength => sizeof(uint) + Glyph.Size * NumGlyphs;
 
     public TextureGlyphListChunk(BinaryReader br) : base(ChunkID)
     {
@@ -80,6 +79,8 @@ public class TextureGlyphListChunk : Chunk
 
     public class Glyph
     {
+        public const uint Size = sizeof(uint) + sizeof(float) * 2 + sizeof(float) * 2 + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(uint);
+
         public uint TextureNum { get; set; }
         public Vector2 BottomLeft { get; set; }
         public Vector2 TopRight { get; set; }

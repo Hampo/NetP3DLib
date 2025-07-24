@@ -51,7 +51,16 @@ public class FrontendScreenChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint) + (uint)PageNames.Sum(x => BinaryExtensions.GetP3DStringBytes(x).Length);
+    public override uint DataLength
+    {
+        get
+        {
+            uint size = BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint);
+            foreach (var pageName in PageNames)
+                size += BinaryExtensions.GetP3DStringLength(pageName);
+            return size;
+        }
+    }
 
     public FrontendScreenChunk(BinaryReader br) : base(ChunkID)
     {
