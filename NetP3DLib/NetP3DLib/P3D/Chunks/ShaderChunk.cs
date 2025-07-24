@@ -24,7 +24,6 @@ public class ShaderChunk : NamedChunk
         UVs6 = 6,
         UVs7 = 7,
         UVs8 = 8,
-        UVMask = 15,
         Normals = 1 << 4,
         Colours = 1 << 5,
         Specular = 1 << 6,
@@ -43,8 +42,6 @@ public class ShaderChunk : NamedChunk
         ColourCount5 = 5 << 15,
         ColourCount6 = 6 << 15,
         ColourCount7 = 7 << 15,
-        ColourMask = 7 << 15,
-        ColourMaskOffset = 15,
     }
 
     public uint Version { get; set; }
