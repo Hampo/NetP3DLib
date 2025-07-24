@@ -181,12 +181,10 @@ public static class ChunkLoader
         {
             var loaderExceptions = ex.LoaderExceptions;
             foreach (var loaderException in loaderExceptions)
-            {
                 Console.WriteLine(loaderException);
-            }
 
             // Return the types that were successfully loaded
-            return ex.Types.Where(t => t != null && string.Equals(t.Namespace, nameSpace, StringComparison.Ordinal)).ToArray();
+            return [.. ex.Types.Where(t => t?.Namespace == nameSpace)];
         }
     }
 }
