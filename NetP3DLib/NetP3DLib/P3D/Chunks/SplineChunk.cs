@@ -65,6 +65,14 @@ public class SplineChunk : NamedChunk
         Positions.AddRange(positions);
     }
 
+    public override void Validate()
+    {
+        if (Children.Count != 1 || Children[0].ID != (uint)ChunkIdentifier.Rail_Cam)
+            throw new InvalidDataException($"There must be at one Rail Cam child chunk.");
+
+        base.Validate();
+    }
+
     internal override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
