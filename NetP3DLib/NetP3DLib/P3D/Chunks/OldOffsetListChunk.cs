@@ -47,7 +47,8 @@ public class OldOffsetListChunk : Chunk
             data.AddRange(BitConverter.GetBytes(KeyIndex));
             foreach (var offset in Offsets)
                 data.AddRange(offset.DataBytes);
-            data.AddRange(BitConverter.GetBytes(PrimGroupIndex));
+            if (HasPrimGroupIndex)
+                data.AddRange(BitConverter.GetBytes(PrimGroupIndex));
 
             return [.. data];
         }
