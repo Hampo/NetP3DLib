@@ -219,7 +219,7 @@ public enum ChunkIdentifier : uint
     State_Prop_Visibilities_Data = 0x8020002,
     Static_Entity = 0x3F00000,
     Static_Phys = 0x3F00001,
-    Surface_Type_List = 0x300000E,
+    Terrain_Type_List = 0x300000E,
     Texture = 0x19000,
     Texture_Animation = 0x3520,
     Texture_Font = 0x22000,
