@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System;
 using System.Diagnostics;
 using NetP3DLib.P3D.Enums;
@@ -131,23 +130,99 @@ public abstract class Chunk
         return chunk;
     }
 
-    public T GetFirstChunkOfType<T>() where T : Chunk => Children.OfType<T>()?.FirstOrDefault();
+    public T GetFirstChunkOfType<T>() where T : Chunk
+    {
+        foreach (var child in Children)
+            if (child is T chunk)
+                return chunk;
+        return null;
+    }
 
-    public T GetFirstChunkOfType<T>(string name) where T : NamedChunk => Children.OfType<T>()?.FirstOrDefault(x => x.Name.Equals(name));
+    public T GetFirstChunkOfType<T>(string name) where T : NamedChunk
+    {
+        foreach (var child in Children)
+            if (child is T chunk && chunk.Name == name)
+                return chunk;
+        return null;
+    }
 
-    public T GetFirstParamOfType<T>(string param) where T : ParamChunk => Children.OfType<T>()?.FirstOrDefault(x => x.Param.Equals(param));
+    public T GetFirstParamOfType<T>(string param) where T : ParamChunk
+    {
+        foreach (var child in Children)
+            if (child is T chunk && chunk.Param == param)
+                return chunk;
+        return null;
+    }
 
-    public T GetLastChunkOfType<T>() where T : Chunk => Children.OfType<T>()?.LastOrDefault();
+    public T GetLastChunkOfType<T>() where T : Chunk
+    {
+        for (int i = Children.Count - 1; i >= 0; i--)
+            if (Children[i] is T chunk)
+                return chunk;
+        return null;
+    }
 
-    public T GetLastChunkOfType<T>(string name) where T : NamedChunk => Children.OfType<T>()?.LastOrDefault(x => x.Name.Equals(name));
+    public T GetLastChunkOfType<T>(string name) where T : NamedChunk
+    {
+        for (int i = Children.Count - 1; i >= 0; i--)
+            if (Children[i] is T chunk && chunk.Name == name)
+                return chunk;
+        return null;
+    }
 
-    public T GetLastParamOfType<T>(string param) where T : ParamChunk => Children.OfType<T>()?.LastOrDefault(x => x.Param.Equals(param));
+    public T GetLastParamOfType<T>(string param) where T : ParamChunk
+    {
+        for (int i = Children.Count - 1; i >= 0; i--)
+            if (Children[i] is T chunk && chunk.Param == param)
+                return chunk;
+        return null;
+    }
 
-    public T[] GetChunksOfType<T>() where T : Chunk => Children.OfType<T>().ToArray();
+    public IReadOnlyList<T> GetChunksOfType<T>() where T : Chunk
+    {
+        var result = new List<T>();
+        foreach (var child in Children)
+        {
+            if (child is T chunk)
+                result.Add(chunk);
+        }
+        return result;
+    }
 
-    public T[] GetChunksOfType<T>(string name) where T : NamedChunk => Children.OfType<T>().Where(x => x.Name.Equals(name)).ToArray();
+    public IReadOnlyList<T> GetChunksOfType<T>(string name) where T : NamedChunk
+    {
+        var result = new List<T>();
+        foreach (var child in Children)
+        {
+            if (child is T chunk && chunk.Name == name)
+                result.Add(chunk);
+        }
+        return result;
+    }
 
-    public T[] GetParamsOfType<T>(string param) where T : ParamChunk => Children.OfType<T>().Where(x => x.Param.Equals(param)).ToArray();
+    public IReadOnlyList<T> GetParamsOfType<T>(string param) where T : ParamChunk
+    {
+        var result = new List<T>();
+        foreach (var child in Children)
+        {
+            if (child is T chunk && chunk.Param == param)
+                result.Add(chunk);
+        }
+        return result;
+    }
+
+    public uint GetChildCount() => (uint)Children.Count;
+
+    public uint GetChildCount(ChunkIdentifier chunkIdentifier) => GetChildCount((uint)chunkIdentifier);
+
+    public uint GetChildCount(uint chunkID)
+    {
+        uint count = 0;
+        foreach (var child in Children)
+            if (child.ID == chunkID)
+                count++;
+        return count;
+    }
 
     /// <summary>
     /// Writes the chunk's properties to <paramref name="bw"/>.
@@ -177,14 +252,18 @@ public abstract class Chunk
         if (ID != chunk2.ID)
             return false;
 
-        if (DataLength != chunk2.DataLength)
+        var dataLength = DataLength;
+        if (dataLength != chunk2.DataLength)
             return false;
 
         if (Children.Count != chunk2.Children.Count)
             return false;
 
-        if (!DataBytes.SequenceEqual(chunk2.DataBytes))
-            return false;
+        var dataBytes = DataBytes;
+        var dataBytes2 = chunk2.DataBytes;
+        for (int i = 0; i < dataLength; i++)
+            if (dataBytes[i] != dataBytes2[i])
+                return false;
 
         for (int i = 0; i < Children.Count; i++)
         {

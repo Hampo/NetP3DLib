@@ -2,7 +2,6 @@ using NetP3DLib.P3D.Enums;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -12,7 +11,7 @@ public class AnimationGroupListChunk : Chunk
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Animation_Group_List;
     
     public uint Version { get; set; }
-    public uint NumGroups => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.Animation_Group).Count();
+    public uint NumGroups => GetChildCount(ChunkIdentifier.Animation_Group);
 
     public override byte[] DataBytes
     {

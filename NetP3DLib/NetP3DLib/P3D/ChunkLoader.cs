@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 #endif
 using System.IO;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -52,7 +51,7 @@ public static class ChunkLoader
         if (string.IsNullOrWhiteSpace(nameSpace))
             throw new ArgumentException($"{nameof(nameSpace)} cannot be null.", nameof(nameSpace));
 
-        Type[] chunkTypeList = GetTypesInNamespace(Assembly.GetExecutingAssembly(), nameSpace);
+        var chunkTypeList = GetTypesInNamespace(Assembly.GetExecutingAssembly(), nameSpace);
         Type baseType = typeof(Chunk);
 
         foreach (Type chunkType in chunkTypeList)
@@ -171,11 +170,14 @@ public static class ChunkLoader
         return c;
     }
 
-    private static Type[] GetTypesInNamespace(Assembly assembly, string nameSpace)
+    private static IReadOnlyList<Type> GetTypesInNamespace(Assembly assembly, string nameSpace)
     {
+        var types = new List<Type>();
         try
         {
-            return [.. assembly.GetTypes().Where(t => t?.Namespace == nameSpace)];
+            foreach (var type in assembly.GetTypes())
+                if (type?.Namespace == nameSpace)
+                    types.Add(type);
         }
         catch (ReflectionTypeLoadException ex)
         {
@@ -183,8 +185,10 @@ public static class ChunkLoader
             foreach (var loaderException in loaderExceptions)
                 Console.WriteLine(loaderException);
 
-            // Return the types that were successfully loaded
-            return [.. ex.Types.Where(t => t?.Namespace == nameSpace)];
+            foreach (var type in ex.Types)
+                if (type?.Namespace == nameSpace)
+                    types.Add(type);
         }
+        return types;
     }
 }

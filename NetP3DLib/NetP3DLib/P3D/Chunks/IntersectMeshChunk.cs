@@ -3,7 +3,6 @@ using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -12,7 +11,7 @@ public class IntersectMeshChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Intersect_Mesh;
     
-    public uint NumMeshes => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.Intersect_Mesh_2).Count();
+    public uint NumMeshes => GetChildCount(ChunkIdentifier.Intersect_Mesh_2);
 
     public override byte[] DataBytes
     {

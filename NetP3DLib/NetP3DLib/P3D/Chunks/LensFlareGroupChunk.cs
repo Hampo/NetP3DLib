@@ -4,7 +4,6 @@ using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -35,7 +34,7 @@ public class LensFlareGroupChunk : NamedChunk
     }
     public float SourceRadius { get; set; }
     public float EdgeRadius { get; set; }
-    public uint NumLensFlares => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.Lens_Flare).Count();
+    public uint NumLensFlares => GetChildCount(ChunkIdentifier.Lens_Flare);
 
     public override byte[] DataBytes
     {

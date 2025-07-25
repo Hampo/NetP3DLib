@@ -4,7 +4,6 @@ using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -16,7 +15,7 @@ public class CollisionObjectChunk : NamedChunk
     public uint Version { get; set; }
     public string MaterialName { get; set; }
     public uint NumSubObjects { get; set; }
-    public uint NumOwners => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.Collision_Volume_Owner).Count();
+    public uint NumOwners => GetChildCount(ChunkIdentifier.Collision_Volume_Owner);
 
     public override byte[] DataBytes
     {

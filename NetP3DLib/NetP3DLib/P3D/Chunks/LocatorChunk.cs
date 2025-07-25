@@ -3,7 +3,6 @@ using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Numerics;
 using System.Text;
 
@@ -18,7 +17,7 @@ public class LocatorChunk : NamedChunk
     public uint DataLen => TypeData.DataLen;
     public LocatorData TypeData { get; set; }
     public Vector3 Position { get; set; }
-    public uint TriggerCount => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.Trigger_Volume).Count();
+    public uint TriggerCount => GetChildCount(ChunkIdentifier.Trigger_Volume);
 
     public override byte[] DataBytes
     {

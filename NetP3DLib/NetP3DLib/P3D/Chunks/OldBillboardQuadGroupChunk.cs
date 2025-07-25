@@ -4,7 +4,6 @@ using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -28,7 +27,7 @@ public class OldBillboardQuadGroupChunk : NamedChunk
         set => zWrite = value ? 1u : 0u;
     }
     private uint Occlusion { get; set; }
-    public uint NumQuads => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.Old_Billboard_Quad).Count();
+    public uint NumQuads => GetChildCount(ChunkIdentifier.Old_Billboard_Quad);
 
     public override byte[] DataBytes
     {

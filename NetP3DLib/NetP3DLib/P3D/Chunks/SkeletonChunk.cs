@@ -3,7 +3,6 @@ using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -13,7 +12,7 @@ public class SkeletonChunk : NamedChunk
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Skeleton;
     
     public uint Version { get; set; }
-    public uint NumJoints => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.Skeleton_Joint).Count();
+    public uint NumJoints => GetChildCount(ChunkIdentifier.Skeleton_Joint);
 
     public override byte[] DataBytes
     {

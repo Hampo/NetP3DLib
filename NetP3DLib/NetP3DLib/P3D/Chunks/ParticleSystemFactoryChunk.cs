@@ -3,7 +3,6 @@ using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -18,7 +17,7 @@ public class ParticleSystemFactoryChunk : NamedChunk
     public uint NumOLFrames { get; set; }
     public ushort CycleAnim { get; set; }
     public ushort EnableSorting { get; set; }
-    public uint NumEmitters => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.Old_Sprite_Emitter).Count();
+    public uint NumEmitters => GetChildCount(ChunkIdentifier.Old_Sprite_Emitter);
 
     public override byte[] DataBytes
     {

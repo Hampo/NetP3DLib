@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 
 namespace NetP3DLib.P3D;
 
@@ -210,6 +209,7 @@ public class P3DFile
     /// <param name="includeSectionHeaders">If <c>true</c>, will add a History chunk before each chunk ID.</param>
     /// <param name="alphabetical">If <c>true</c>, named chunks will be further sorted into alphabetical order.</param>
     /// <param name="includeHistory">If <c>true</c>, a history chunk will be added to the start to indicate how and when it was sorted.<para>Defaults to <c>true</c>.</para></param>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0220:Add explicit cast", Justification = "As the list is all chunks of the same type, if the first is a LocatorChunk, the rest will be.")]
     public void SortChunks(bool includeSectionHeaders = false, bool alphabetical = false, bool includeHistory = true)
     {
         List<Chunk> newChunks = new(Chunks.Count);
@@ -217,26 +217,69 @@ public class P3DFile
         if (includeHistory)
             newChunks.Add(new HistoryChunk(["Sorted with NetP3DLib", $"Run at {DateTime.Now:R}"]));
 
-        HashSet<uint> chunkIDs = new(Chunks.Select(x => x.ID));
-        foreach (uint id in chunkIDs.OrderBy(x => (uint)ChunkSortPriority.IndexOf(x)))
+        Dictionary<uint, List<Chunk>> chunksById = [];
+        foreach (var chunk in Chunks)
         {
-            var chunks = Chunks.Where(x => x.ID == id);
-            if (!chunks.Any())
+            if (!chunksById.TryGetValue(chunk.ID, out var list))
+            {
+                list = [];
+                chunksById[chunk.ID] = list;
+            }
+            list.Add(chunk);
+        }
+
+        List<uint> chunkIDs = [.. chunksById.Keys];
+        chunkIDs.Sort((a, b) =>
+        {
+            int indexA = ChunkSortPriority.IndexOf(a);
+            int indexB = ChunkSortPriority.IndexOf(b);
+
+            bool aInList = indexA >= 0;
+            bool bInList = indexB >= 0;
+
+            if (aInList && bInList)
+                return indexA.CompareTo(indexB);
+
+            if (aInList)
+                return -1;
+
+            if (bInList)
+                return 1;
+
+            return a.CompareTo(b);
+        });
+
+        foreach (var id in chunkIDs)
+        {
+            var chunks = chunksById[id];
+            if (chunks.Count == 0)
                 continue;
 
-            if (chunks.First() is LocatorChunk)
+            if (chunks[0] is LocatorChunk)
             {
-                var locatorChunks = chunks.Cast<LocatorChunk>();
-                HashSet<uint> types = new(locatorChunks.Select(x => x.LocatorType));
-                foreach (uint type in types.OrderBy(x => x))
+                Dictionary<uint, List<LocatorChunk>> locatorChunksByType = [];
+                foreach (LocatorChunk locatorChunk in chunks)
                 {
-                    var typeChunks = locatorChunks.Where(x => x.LocatorType == type);
+                    if (!locatorChunksByType.TryGetValue(locatorChunk.LocatorType, out var locatorList))
+                    {
+                        locatorList = [];
+                        locatorChunksByType[locatorChunk.LocatorType] = locatorList;
+                    }
+                    locatorList.Add(locatorChunk);
+                }
+
+                List<uint> locatorTypes = [.. locatorChunksByType.Keys];
+                locatorTypes.Sort();
+
+                foreach (uint type in locatorTypes)
+                {
+                    var typeChunks = locatorChunksByType[type];
 
                     if (includeSectionHeaders)
                         newChunks.Add(new HistoryChunk([$"Locator Type {type} (0x{id:X})"]));
 
                     if (alphabetical)
-                        typeChunks = typeChunks.OrderBy(x => x.Name);
+                        typeChunks.Sort((x, y) => string.CompareOrdinal(x.Name, y.Name));
 
                     newChunks.AddRange(typeChunks);
                 }
@@ -247,26 +290,104 @@ public class P3DFile
             if (includeSectionHeaders)
                 newChunks.Add(new HistoryChunk([$"{((ChunkIdentifier)id).ToString().Replace("_", " ")} (0x{id:X})"]));
 
-            if (alphabetical && chunks.First() is NamedChunk)
-                chunks = chunks.Cast<NamedChunk>().OrderBy(x => x.Name);
+            if (alphabetical && chunks[0] is NamedChunk)
+            {
+                List<NamedChunk> namedChunks = new(chunks.Count);
+                foreach (var chunk in chunks)
+                    namedChunks.Add((NamedChunk)chunk);
 
-            newChunks.AddRange(chunks);
+                namedChunks.Sort((x, y) => string.CompareOrdinal(x.Name, y.Name));
+                newChunks.AddRange(namedChunks);
+            }
+            else
+            {
+                newChunks.AddRange(chunks);
+            }
         }
 
         Chunks = newChunks;
     }
 
-    public T GetFirstChunkOfType<T>() where T : Chunk => Chunks.OfType<T>()?.FirstOrDefault();
+    public T GetFirstChunkOfType<T>() where T : Chunk
+    {
+        foreach (var child in Chunks)
+            if (child is T chunk)
+                return chunk;
+        return null;
+    }
 
-    public T GetFirstChunkOfType<T>(string name) where T : NamedChunk => Chunks.OfType<T>()?.FirstOrDefault(x => x.Name.Equals(name));
+    public T GetFirstChunkOfType<T>(string name) where T : NamedChunk
+    {
+        foreach (var child in Chunks)
+            if (child is T chunk && chunk.Name == name)
+                return chunk;
+        return null;
+    }
 
-    public T GetLastChunkOfType<T>() where T : Chunk => Chunks.OfType<T>()?.LastOrDefault();
+    public T GetFirstParamOfType<T>(string param) where T : ParamChunk
+    {
+        foreach (var child in Chunks)
+            if (child is T chunk && chunk.Param == param)
+                return chunk;
+        return null;
+    }
 
-    public T GetLastChunkOfType<T>(string name) where T : NamedChunk => Chunks.OfType<T>()?.LastOrDefault(x => x.Name.Equals(name));
+    public T GetLastChunkOfType<T>() where T : Chunk
+    {
+        for (int i = Chunks.Count - 1; i >= 0; i--)
+            if (Chunks[i] is T chunk)
+                return chunk;
+        return null;
+    }
 
-    public T[] GetChunksOfType<T>() where T : Chunk => Chunks.OfType<T>().ToArray();
+    public T GetLastChunkOfType<T>(string name) where T : NamedChunk
+    {
+        for (int i = Chunks.Count - 1; i >= 0; i--)
+            if (Chunks[i] is T chunk && chunk.Name == name)
+                return chunk;
+        return null;
+    }
 
-    public T[] GetChunksOfType<T>(string name) where T : NamedChunk => Chunks.OfType<T>().Where(x => x.Name.Equals(name)).ToArray();
+    public T GetLastParamOfType<T>(string param) where T : ParamChunk
+    {
+        for (int i = Chunks.Count - 1; i >= 0; i--)
+            if (Chunks[i] is T chunk && chunk.Param == param)
+                return chunk;
+        return null;
+    }
+
+    public IReadOnlyList<T> GetChunksOfType<T>() where T : Chunk
+    {
+        var result = new List<T>();
+        foreach (var child in Chunks)
+        {
+            if (child is T chunk)
+                result.Add(chunk);
+        }
+        return result;
+    }
+
+    public IReadOnlyList<T> GetChunksOfType<T>(string name) where T : NamedChunk
+    {
+        var result = new List<T>();
+        foreach (var child in Chunks)
+        {
+            if (child is T chunk && chunk.Name == name)
+                result.Add(chunk);
+        }
+        return result;
+    }
+
+    public IReadOnlyList<T> GetParamsOfType<T>(string param) where T : ParamChunk
+    {
+        var result = new List<T>();
+        foreach (var child in Chunks)
+        {
+            if (child is T chunk && chunk.Param == param)
+                result.Add(chunk);
+        }
+        return result;
+    }
 
     public void Write(string filePath) => Write(filePath, BinaryExtensions.DefaultEndian);
 

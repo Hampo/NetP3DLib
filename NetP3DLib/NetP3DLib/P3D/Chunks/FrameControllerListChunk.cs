@@ -2,7 +2,6 @@ using NetP3DLib.P3D.Enums;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -12,7 +11,7 @@ public class FrameControllerListChunk : Chunk
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Frame_Controller_List;
     
     public uint Version { get; set; }
-    public uint NumControllers => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.Frame_Controller).Count();
+    public uint NumControllers => GetChildCount(ChunkIdentifier.Frame_Controller);
 
     public override byte[] DataBytes
     {

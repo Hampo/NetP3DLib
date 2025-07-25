@@ -3,7 +3,7 @@ using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -13,7 +13,16 @@ public class FrontendTextBibleChunk : NamedChunk
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Frontend_Text_Bible;
     
     public uint NumLanguages => (uint)Languages.Length;
-    public string Languages => string.Concat(GetChunksOfType<FrontendLanguageChunk>().Select(x => x.Language));
+    public string Languages
+    {
+        get
+        {
+            var sb = new StringBuilder();
+            foreach (var frontendLanguageChunk in GetChunksOfType<FrontendLanguageChunk>())
+                sb.Append(frontendLanguageChunk.Language);
+            return sb.ToString();
+        }
+    }
 
     public override byte[] DataBytes
     {

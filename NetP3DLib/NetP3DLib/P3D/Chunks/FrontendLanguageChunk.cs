@@ -3,7 +3,6 @@ using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
@@ -48,20 +47,20 @@ public class FrontendLanguageChunk : NamedChunk
             data.AddRange(BitConverter.GetBytes(NumEntries));
             data.AddRange(BitConverter.GetBytes(Modulo));
 
-            (List<uint> Hashes, List<uint> Offsets, string Buffer) = BuildData();
-            byte[] bufferBytes = Encoding.Unicode.GetBytes(Buffer);
+            (List<uint> Hashes, List<uint> Offsets, List<ushort> Buffer) = BuildData();
 
-            data.AddRange(BitConverter.GetBytes(bufferBytes.Length));
+            data.AddRange(BitConverter.GetBytes(Buffer.Count * 2));
             foreach (var hash in Hashes)
                 data.AddRange(BitConverter.GetBytes(hash));
             foreach (var offset in Offsets)
                 data.AddRange(BitConverter.GetBytes(offset));
-            data.AddRange(bufferBytes);
+            foreach (var code in Buffer)
+                data.AddRange(BitConverter.GetBytes(code));
 
             return [.. data];
         }
     }
-    public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + 1 + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) * (uint)Entries.Count + sizeof(uint) * (uint)Entries.Count + (uint)Encoding.Unicode.GetBytes(BuildData().Buffer).Length;//(uint)DataBytes.Length;
+    public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + 1 + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) * (uint)Entries.Count + sizeof(uint) * (uint)Entries.Count + (uint)(BuildData().Buffer.Count * 2);//(uint)DataBytes.Length;
 
     public FrontendLanguageChunk(BinaryReader br) : base(ChunkID)
     {
@@ -113,15 +112,15 @@ public class FrontendLanguageChunk : NamedChunk
         bw.Write(NumEntries);
         bw.Write(Modulo);
 
-        (List<uint> Hashes, List<uint> Offsets, string Buffer) = BuildData();
-        byte[] bufferBytes = Encoding.Unicode.GetBytes(Buffer);
+        (List<uint> Hashes, List<uint> Offsets, List<ushort> Buffer) = BuildData();
 
-        bw.Write(bufferBytes.Length);
+        bw.Write(Buffer.Count * 2);
         foreach (var hash in Hashes)
             bw.Write(hash);
         foreach (var offset in Offsets)
             bw.Write(offset);
-        bw.Write(bufferBytes);
+        foreach (var code in Buffer)
+            bw.Write(code);
     }
 
     internal override Chunk CloneSelf()
@@ -132,21 +131,26 @@ public class FrontendLanguageChunk : NamedChunk
         return new FrontendLanguageChunk(Name, Language, Modulo, entries);
     }
 
-    private (List<uint> Hashes, List<uint> Offsets, string Buffer) BuildData()
+    private (List<uint> Hashes, List<uint> Offsets, List<ushort> Buffer) BuildData()
     {
         List<uint> hashes = new(Entries.Count);
         List<uint> offsets = new(Entries.Count);
-        StringBuilder buffer = new();
+        StringBuilder sb = new();
 
         foreach (var entry in Entries)
         {
             hashes.Add(entry.Hash);
-            offsets.Add((uint)buffer.Length * 2);
-            buffer.Append(entry.Value);
-            buffer.Append('\0');
+            offsets.Add((uint)sb.Length * 2);
+            sb.Append(entry.Value);
+            sb.Append('\0');
         }
 
-        return (hashes, offsets, buffer.ToString());
+        var bufferBytes = Encoding.Unicode.GetBytes(sb.ToString());
+        List<ushort> buffer = new(bufferBytes.Length / 2);
+        for (int i = 0; i < bufferBytes.Length; i += 2)
+            buffer.Add(BitConverter.ToUInt16(bufferBytes, i));
+
+        return (hashes, offsets, buffer);
     }
 
     public uint GetNameHash(string name)
@@ -163,7 +167,13 @@ public class FrontendLanguageChunk : NamedChunk
         return Hash;
     }
 
-    public string GetValue(uint hash) => Entries.FirstOrDefault(x => x.Hash == hash)?.Value;
+    public string GetValue(uint hash)
+    {
+        foreach (var entry in Entries)
+            if (entry.Hash == hash)
+                return entry.Value;
+        return null;
+    }
 
     public string GetValue(string name) => GetValue(GetNameHash(name));
 
@@ -177,7 +187,7 @@ public class FrontendLanguageChunk : NamedChunk
         if (index == -1)
             AddValue(hash, value);
         else
-            Entries.ElementAt(index).Value = value;
+            Entries[index].Value = value;
     }
 
     public void SetValue(string name, string value) => SetValue(GetNameHash(name), value);

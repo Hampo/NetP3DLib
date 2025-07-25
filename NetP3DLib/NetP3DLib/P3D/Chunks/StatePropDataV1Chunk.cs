@@ -4,7 +4,6 @@ using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -15,7 +14,7 @@ public class StatePropDataV1Chunk : NamedChunk
     
     public uint Version { get; set; }
     public string ObjectFactoryName { get; set; }
-    public uint NumStates => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.State_Prop_State_Data_V1).Count();
+    public uint NumStates => GetChildCount(ChunkIdentifier.State_Prop_State_Data_V1);
 
     public override byte[] DataBytes
     {
@@ -56,8 +55,9 @@ public class StatePropDataV1Chunk : NamedChunk
 
         if (Children.Count == 0)
             throw new InvalidDataException($"There must be at least one State Prop State Data V1 child chunk.");
-        if (Children.Any(x => x.ID != (uint)ChunkIdentifier.State_Prop_State_Data_V1))
-            throw new InvalidDataException($"Child chunks must be an instance of State Prop State Data V1.");
+        foreach (var child in Children)
+            if (child.ID != (uint)ChunkIdentifier.State_Prop_State_Data_V1)
+                throw new InvalidDataException($"Child chunk {child} is invalid. Child chunks must be an instance of State Prop State Data V1.");
 
         base.Validate();
     }

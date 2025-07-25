@@ -2,7 +2,6 @@ using NetP3DLib.P3D.Enums;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -11,7 +10,7 @@ public class CollisionVolumeOwnerChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Collision_Volume_Owner;
     
-    public uint NumNames => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.Collision_Volume_Owner_Name).Count();
+    public uint NumNames => GetChildCount(ChunkIdentifier.Collision_Volume_Owner_Name);
 
     public override byte[] DataBytes
     {

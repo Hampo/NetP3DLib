@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace NetP3DLib.P3D;
 
@@ -230,7 +229,15 @@ public static class LZR_Compression
     /// <exception cref="InvalidDataException">Thrown if <paramref name="input"/> is not a Little Endian Pure3D file.</exception>
     public static byte[] CompressFile(List<byte> input, bool fast = false)
     {
-        uint identifier = BitConverter.ToUInt32(input.Take(4).ToArray(), 0);
+        var inputArray = input.ToArray();
+        var identifierBytes = new byte[4]
+        {
+            input[0],
+            input[1],
+            input[2],
+            input[3],
+        };
+        uint identifier = BitConverter.ToUInt32(identifierBytes, 0);
         if (identifier != P3DFile.SIGNATURE)
             throw new InvalidDataException("The specified file is not a Little Endian P3D file.");
 
@@ -249,7 +256,7 @@ public static class LZR_Compression
             List<byte> comp = new((int)size);
             uint compSize = 0;
 
-            CompressBlock(input.Skip((int)start).ToList(), size, comp, ref compSize, fast);
+            CompressBlock(input.GetRange((int)start, (int)remaining), size, comp, ref compSize, fast);
 
             output.AddRange(BitConverter.GetBytes(compSize));
             output.AddRange(BitConverter.GetBytes(size));
@@ -277,7 +284,7 @@ public static class LZR_Compression
 
         using var stream = new MemoryStream();
         file.Write(stream);
-        List<byte> input = stream.ToArray().ToList();
+        List<byte> input = [.. stream.ToArray()];
 
         return CompressFile(input, fast);
     }

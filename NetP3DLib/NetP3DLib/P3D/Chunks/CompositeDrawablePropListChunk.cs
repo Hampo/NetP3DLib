@@ -2,7 +2,6 @@ using NetP3DLib.P3D.Enums;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -11,7 +10,7 @@ public class CompositeDrawablePropListChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Composite_Drawable_Prop_List;
     
-    public uint NumElements => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.Composite_Drawable_Prop).Count();
+    public uint NumElements => GetChildCount(ChunkIdentifier.Composite_Drawable_Prop);
 
     public override byte[] DataBytes
     {

@@ -2,7 +2,6 @@ using NetP3DLib.P3D.Enums;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -31,7 +30,7 @@ public class OldExpressionOffsetsChunk : Chunk
             }
         }
     }
-    public uint NumOffsetLists => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.Old_Offset_List).Count();
+    public uint NumOffsetLists => GetChildCount(ChunkIdentifier.Old_Offset_List);
     public List<uint> PrimitiveGroupIndices { get; } = [];
 
     public override byte[] DataBytes

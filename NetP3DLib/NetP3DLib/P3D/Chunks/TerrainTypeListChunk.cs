@@ -2,7 +2,6 @@ using NetP3DLib.P3D.Enums;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -78,7 +77,8 @@ public class TerrainTypeListChunk : Chunk
 
             data.AddRange(BitConverter.GetBytes(Version));
             data.AddRange(BitConverter.GetBytes(NumTypes));
-            data.AddRange(Types.Cast<byte>());
+            foreach (var type in Types)
+                data.Add((byte)type);
 
             return [.. data];
         }
@@ -90,7 +90,8 @@ public class TerrainTypeListChunk : Chunk
         Version = br.ReadUInt32();
         var numTypes = br.ReadInt32();
         Types = new(numTypes);
-        Types.AddRange(br.ReadBytes(numTypes).Cast<TerrainType>());
+        for (int i = 0; i < numTypes; i++)
+            Types.Add((TerrainType)br.ReadByte());
     }
 
     public TerrainTypeListChunk(uint version, IList<TerrainType> types) : base(ChunkID)
@@ -103,7 +104,8 @@ public class TerrainTypeListChunk : Chunk
     {
         bw.Write(Version);
         bw.Write(NumTypes);
-        bw.Write(Types.Cast<byte>().ToArray());
+        foreach (var type in Types)
+            bw.Write((byte)type);
     }
 
     internal override Chunk CloneSelf() => new TerrainTypeListChunk(Version, Types);

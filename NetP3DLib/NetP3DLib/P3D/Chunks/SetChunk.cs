@@ -3,7 +3,6 @@ using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -13,7 +12,7 @@ public class SetChunk : NamedChunk
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Set;
     
     public uint Version { get; set; }
-    public byte NumTextures => (byte)Children.Where(x => x.ID == (uint)ChunkIdentifier.Texture).Count();
+    public byte NumTextures => (byte)GetChildCount(ChunkIdentifier.Texture);
 
     public override byte[] DataBytes
     {
@@ -46,7 +45,7 @@ public class SetChunk : NamedChunk
 
     public override void Validate()
     {
-        if (Children.Where(x => x.ID == (uint)ChunkIdentifier.Texture).Count() > byte.MaxValue)
+        if (GetChildCount(ChunkIdentifier.Texture) > byte.MaxValue)
             throw new InvalidDataException($"The max number of child textures is {byte.MinValue}.");
 
         base.Validate();

@@ -3,7 +3,6 @@ using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -19,10 +18,10 @@ public class StatePropStateDataV1Chunk : NamedChunk
         set => autoTransition = value ? 1u : 0u;
     }
     public uint OutState { get; set; }
-    public uint NumDrawables => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.State_Prop_Visibilities_Data).Count();
-    public uint NumFrameControllers => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.State_Prop_Frame_Controller_Data).Count();
-    public uint NumEvents => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.State_Prop_Event_Data).Count();
-    public uint NumCallbacks => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.State_Prop_Callback_Data).Count();
+    public uint NumDrawables => GetChildCount(ChunkIdentifier.State_Prop_Visibilities_Data);
+    public uint NumFrameControllers => GetChildCount(ChunkIdentifier.State_Prop_Frame_Controller_Data);
+    public uint NumEvents => GetChildCount(ChunkIdentifier.State_Prop_Event_Data);
+    public uint NumCallbacks => GetChildCount(ChunkIdentifier.State_Prop_Callback_Data);
     public float OutFrame { get; set; }
 
     public override byte[] DataBytes
@@ -117,9 +116,13 @@ public class StatePropStateDataV1Chunk : NamedChunk
         List<Chunk> newChildren = new(Children.Count);
 
         foreach (uint id in ChunkSortPriority)
-            newChildren.AddRange(Children.Where(x => x.ID == id));
+            foreach (var child in Children)
+                if (child.ID == id)
+                    newChildren.Add(child);
 
-        newChildren.AddRange(Children.Where(x => !ChunkSortPriority.Contains(x.ID)));
+        foreach (var child in Children)
+            if (!ChunkSortPriority.Contains(child.ID))
+                Children.Add(child);
 
         Children.Clear();
         Children.AddRange(newChildren);

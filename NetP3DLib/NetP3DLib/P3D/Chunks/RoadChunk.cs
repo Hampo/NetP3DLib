@@ -4,7 +4,6 @@ using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -103,8 +102,9 @@ public class RoadChunk : NamedChunk
 
         if (Children.Count == 0)
             throw new InvalidDataException($"There must be at least one Road Segment child chunk.");
-        if (Children.Any(x => x.ID != (uint)ChunkIdentifier.Road_Segment))
-            throw new InvalidDataException($"Child chunks must be an instance of Road Segment.");
+        foreach (var child in Children)
+            if (child.ID != (uint)ChunkIdentifier.Road_Segment)
+                throw new InvalidDataException($"Child chunk {child} is invalid. Child chunks must be an instance of Road Segment.");
 
         base.Validate();
     }

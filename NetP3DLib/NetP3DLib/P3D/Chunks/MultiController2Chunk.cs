@@ -4,7 +4,6 @@ using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -19,7 +18,7 @@ public class MultiController2Chunk : NamedChunk
     public uint InfiniteCycle { get; set; }
     public float NumFrames { get; set; }
     public float FrameRate { get; set; }
-    public uint NumTracks => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.Multi_Controller_Track).Count();
+    public uint NumTracks => GetChildCount(ChunkIdentifier.Multi_Controller_Track);
 
     public override byte[] DataBytes
     {

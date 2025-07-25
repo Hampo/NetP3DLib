@@ -3,7 +3,6 @@ using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
@@ -19,7 +18,7 @@ public class ParticleSystemChunk : NamedChunk
     public uint IsCyclic { get; set; }
     public Quaternion Rotation { get; set; }
     public Vector3 Translation { get; set; }
-    public uint NumEmitters => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.Sprite_Particle_Emitter).Count();
+    public uint NumEmitters => GetChildCount(ChunkIdentifier.Sprite_Particle_Emitter);
 
     public override byte[] DataBytes
     {

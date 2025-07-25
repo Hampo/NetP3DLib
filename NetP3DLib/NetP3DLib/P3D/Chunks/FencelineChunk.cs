@@ -2,7 +2,6 @@ using NetP3DLib.P3D.Enums;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -11,7 +10,7 @@ public class FencelineChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Fenceline;
     
-    public uint NumWalls => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.Wall).Count();
+    public uint NumWalls => GetChildCount(ChunkIdentifier.Wall);
 
     public override byte[] DataBytes
     {

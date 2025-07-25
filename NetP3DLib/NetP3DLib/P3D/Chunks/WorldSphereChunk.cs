@@ -3,7 +3,6 @@ using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -13,8 +12,8 @@ public class WorldSphereChunk : NamedChunk
     public const ChunkIdentifier ChunkID = ChunkIdentifier.World_Sphere;
     
     public uint Version { get; set; }
-    public uint NumMeshes => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.Mesh).Count();
-    public uint NumOldBillboardQuadGroups => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.Old_Billboard_Quad_Group).Count();
+    public uint NumMeshes => GetChildCount(ChunkIdentifier.Mesh);
+    public uint NumOldBillboardQuadGroups => GetChildCount(ChunkIdentifier.Old_Billboard_Quad_Group);
 
     public override byte[] DataBytes
     {

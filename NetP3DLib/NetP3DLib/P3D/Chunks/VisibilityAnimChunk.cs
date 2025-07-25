@@ -4,7 +4,6 @@ using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -17,7 +16,7 @@ public class VisibilityAnimChunk : NamedChunk
     public uint Version { get; set; }
     public uint NumFrames { get; set; }
     public float FrameRate { get; set; }
-    public uint NumChannels => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.Visibility_Anim_Channel).Count();
+    public uint NumChannels => GetChildCount(ChunkIdentifier.Visibility_Anim_Channel);
 
     public override byte[] DataBytes
     {

@@ -4,7 +4,6 @@ using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -19,7 +18,7 @@ public class TextureFontChunk : NamedChunk
     public float FontWidth { get; set; }
     public float FontHeight { get; set; }
     public float FontBaseLine { get; set; }
-    public uint NumTextures => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.Texture).Count();
+    public uint NumTextures => GetChildCount(ChunkIdentifier.Texture);
 
     public override byte[] DataBytes
     {

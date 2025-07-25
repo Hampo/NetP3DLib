@@ -4,7 +4,6 @@ using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -94,5 +93,5 @@ public class HistoryChunk : Chunk
 
     internal override Chunk CloneSelf() => new HistoryChunk(History);
 
-    public override string ToString() => $"\"{History.FirstOrDefault() ?? ""}\" ({GetChunkType(this)} (0x{ID:X}))";
+    public override string ToString() => $"\"{(History.Count == 0 ? "" : History[0])}\" ({GetChunkType(this)} (0x{ID:X}))";
 }

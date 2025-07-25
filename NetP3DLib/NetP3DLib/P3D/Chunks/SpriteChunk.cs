@@ -4,7 +4,6 @@ using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -18,7 +17,7 @@ public class SpriteChunk : NamedChunk
     public string Shader { get; set; }
     public uint ImageWidth { get; set; }
     public uint ImageHeight { get; set; }
-    public uint ImageCount => (uint)Children.Where(x => x.ID == (uint)ChunkIdentifier.Image).Count();
+    public uint ImageCount => GetChildCount(ChunkIdentifier.Image);
     public uint BlitBorder { get; set; }
 
     public override byte[] DataBytes
