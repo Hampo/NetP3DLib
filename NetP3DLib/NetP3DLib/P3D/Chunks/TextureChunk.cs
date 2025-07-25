@@ -103,6 +103,17 @@ public class TextureChunk : NamedChunk
         Priority = priority;
     }
 
+    public override void Validate()
+    {
+        if (!Width.IsPowerOfTwo())
+            throw new InvalidDataException($"{nameof(Width)} must be a power of 2.");
+
+        if (!Height.IsPowerOfTwo())
+            throw new InvalidDataException($"{nameof(Height)} must be a power of 2.");
+
+        base.Validate();
+    }
+
     internal override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
