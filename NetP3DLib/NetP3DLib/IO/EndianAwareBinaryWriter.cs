@@ -6,7 +6,7 @@ namespace NetP3DLib.IO;
 
 public class EndianAwareBinaryWriter : BinaryWriter
 {
-    private readonly Endianness _endianness = BitConverter.IsLittleEndian ? Endianness.Little : Endianness.Big;
+    public Endianness Endianness { get; } = BitConverter.IsLittleEndian ? Endianness.Little : Endianness.Big;
 
     public EndianAwareBinaryWriter(Stream output) : base(output)
     {
@@ -22,39 +22,39 @@ public class EndianAwareBinaryWriter : BinaryWriter
 
     public EndianAwareBinaryWriter(Stream output, Endianness endianness) : base(output)
     {
-        _endianness = endianness;
+        Endianness = endianness;
     }
 
     public EndianAwareBinaryWriter(Stream output, Encoding encoding, Endianness endianness) : base(output, encoding)
     {
-        _endianness = endianness;
+        Endianness = endianness;
     }
 
     public EndianAwareBinaryWriter(Stream output, Encoding encoding, bool leaveOpen, Endianness endianness) : base(output, encoding, leaveOpen)
     {
-        _endianness = endianness;
+        Endianness = endianness;
     }
 
     public EndianAwareBinaryWriter(Endianness endianness)
     {
-        _endianness = endianness;
+        Endianness = endianness;
     }
 
-    public override void Write(short value) => Write(value, _endianness);
+    public override void Write(short value) => Write(value, Endianness);
 
-    public override void Write(int value) => Write(value, _endianness);
+    public override void Write(int value) => Write(value, Endianness);
 
-    public override void Write(long value) => Write(value, _endianness);
+    public override void Write(long value) => Write(value, Endianness);
 
-    public override void Write(ushort value) => Write(value, _endianness);
+    public override void Write(ushort value) => Write(value, Endianness);
 
-    public override void Write(uint value) => Write(value, _endianness);
+    public override void Write(uint value) => Write(value, Endianness);
 
-    public override void Write(ulong value) => Write(value, _endianness);
+    public override void Write(ulong value) => Write(value, Endianness);
 
-    public override void Write(float value) => Write(value, _endianness);
+    public override void Write(float value) => Write(value, Endianness);
 
-    public override void Write(double value) => Write(value, _endianness);
+    public override void Write(double value) => Write(value, Endianness);
 
     public void Write(short value, Endianness endianness) => WriteForEndianness(BitConverter.GetBytes(value), endianness);
 
