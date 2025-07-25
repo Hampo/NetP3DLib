@@ -52,6 +52,10 @@ public class EndianAwareBinaryWriter : BinaryWriter
 
     public override void Write(ulong value) => Write(value, _endianness);
 
+    public override void Write(float value) => Write(value, _endianness);
+
+    public override void Write(double value) => Write(value, _endianness);
+
     public void Write(short value, Endianness endianness) => WriteForEndianness(BitConverter.GetBytes(value), endianness);
 
     public void Write(int value, Endianness endianness) => WriteForEndianness(BitConverter.GetBytes(value), endianness);
@@ -63,6 +67,10 @@ public class EndianAwareBinaryWriter : BinaryWriter
     public void Write(uint value, Endianness endianness) => WriteForEndianness(BitConverter.GetBytes(value), endianness);
 
     public void Write(ulong value, Endianness endianness) => WriteForEndianness(BitConverter.GetBytes(value), endianness);
+
+    public void Write(float value, Endianness endianness) => WriteForEndianness(BitConverter.GetBytes(value), endianness);
+
+    public void Write(double value, Endianness endianness) => WriteForEndianness(BitConverter.GetBytes(value), endianness);
 
     private void WriteForEndianness(byte[] bytesToWrite, Endianness endianness)
     {

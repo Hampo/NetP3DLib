@@ -47,6 +47,10 @@ public class EndianAwareBinaryReader : BinaryReader
 
     public override ulong ReadUInt64() => ReadUInt64(Endianness);
 
+    public override float ReadSingle() => ReadSingle(Endianness);
+
+    public override double ReadDouble() => ReadDouble(Endianness);
+
     public short ReadInt16(Endianness endianness) => BitConverter.ToInt16(ReadForEndianness(sizeof(short), endianness), 0);
 
     public int ReadInt32(Endianness endianness) => BitConverter.ToInt32(ReadForEndianness(sizeof(int), endianness), 0);
@@ -58,6 +62,10 @@ public class EndianAwareBinaryReader : BinaryReader
     public uint ReadUInt32(Endianness endianness) => BitConverter.ToUInt32(ReadForEndianness(sizeof(uint), endianness), 0);
 
     public ulong ReadUInt64(Endianness endianness) => BitConverter.ToUInt64(ReadForEndianness(sizeof(ulong), endianness), 0);
+
+    public float ReadSingle(Endianness endianness) => BitConverter.ToSingle(ReadForEndianness(sizeof(float), endianness), 0);
+
+    public double ReadDouble(Endianness endianness) => BitConverter.ToDouble(ReadForEndianness(sizeof(double), endianness), 0);
 
     private byte[] ReadForEndianness(int bytesToRead, Endianness endianness)
     {
