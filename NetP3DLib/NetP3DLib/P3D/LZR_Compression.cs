@@ -229,7 +229,6 @@ public static class LZR_Compression
     /// <exception cref="InvalidDataException">Thrown if <paramref name="input"/> is not a Little Endian Pure3D file.</exception>
     public static byte[] CompressFile(List<byte> input, bool fast = false)
     {
-        var inputArray = input.ToArray();
         var identifierBytes = new byte[4]
         {
             input[0],
