@@ -10,7 +10,7 @@ public class TerrainTypeListChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Terrain_Type_List;
     
-    public enum TerrainType : byte
+    public enum TerrainTypes : byte
     {
         /// <summary>
         /// Default road terrain. Also used for sidewalk. This is default. If not set, it's this.
@@ -78,7 +78,7 @@ public class TerrainTypeListChunk : Chunk
             data.AddRange(BitConverter.GetBytes(Version));
             data.AddRange(BitConverter.GetBytes(NumTypes));
             foreach (var type in Types)
-                data.Add((byte)type);
+                data.Add(type.Value);
 
             return [.. data];
         }
@@ -91,7 +91,7 @@ public class TerrainTypeListChunk : Chunk
         var numTypes = br.ReadInt32();
         Types = new(numTypes);
         for (int i = 0; i < numTypes; i++)
-            Types.Add((TerrainType)br.ReadByte());
+            Types.Add(new(br));
     }
 
     public TerrainTypeListChunk(uint version, IList<TerrainType> types) : base(ChunkID)
@@ -105,8 +105,55 @@ public class TerrainTypeListChunk : Chunk
         bw.Write(Version);
         bw.Write(NumTypes);
         foreach (var type in Types)
-            bw.Write((byte)type);
+            type.Write(bw);
     }
 
     internal override Chunk CloneSelf() => new TerrainTypeListChunk(Version, Types);
+
+    public class TerrainType
+    {
+        public TerrainTypes Type { get; set; }
+        public bool Interior { get; set; }
+        internal byte Value
+        {
+            get
+            {
+                var value = (byte)Type;
+                if (Interior)
+                    value |= 0x80;
+                return value;
+            }
+            set
+            {
+                Type = (TerrainTypes)(value & ~0x80);
+                Interior = (value & 0x80) == 0x80;
+            }
+        }
+
+        public TerrainType(BinaryReader br)
+        {
+            Value = br.ReadByte();
+        }
+
+        public TerrainType(TerrainTypes type, bool interior)
+        {
+            Type = type;
+            Interior = interior;
+        }
+
+        public TerrainType()
+        {
+            Type = TerrainTypes.Road;
+            Interior = false;
+        }
+
+        internal void Write(BinaryWriter bw)
+        {
+            bw.Write(Value);
+        }
+
+        internal TerrainType Clone() => new(Type, Interior);
+
+        public override string ToString() => $"{Type} | {Interior}";
+    }
 }
