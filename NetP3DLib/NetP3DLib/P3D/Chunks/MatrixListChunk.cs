@@ -26,7 +26,7 @@ public class MatrixListChunk : Chunk
             else
             {
                 while (NumMatrices < value)
-                    Matrices.Add(default);
+                    Matrices.Add(new());
             }
         }
     }

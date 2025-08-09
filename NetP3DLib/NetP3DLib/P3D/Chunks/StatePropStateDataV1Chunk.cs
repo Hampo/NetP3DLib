@@ -122,7 +122,7 @@ public class StatePropStateDataV1Chunk : NamedChunk
 
         foreach (var child in Children)
             if (!ChunkSortPriority.Contains(child.ID))
-                Children.Add(child);
+                newChildren.Add(child);
 
         Children.Clear();
         Children.AddRange(newChildren);

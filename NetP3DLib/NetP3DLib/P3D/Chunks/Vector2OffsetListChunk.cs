@@ -29,7 +29,7 @@ public class Vector2OffsetListChunk : ParamChunk
             else
             {
                 while (NumOffsets < value)
-                    Offsets.Add(default);
+                    Offsets.Add(new());
             }
         }
     }

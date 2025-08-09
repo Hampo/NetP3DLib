@@ -28,7 +28,7 @@ public class OldOffsetListChunk : Chunk
             else
             {
                 while (NumOffsets < value)
-                    Offsets.Add(default);
+                    Offsets.Add(new());
             }
         }
     }

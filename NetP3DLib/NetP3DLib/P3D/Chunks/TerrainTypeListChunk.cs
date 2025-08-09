@@ -9,42 +9,6 @@ namespace NetP3DLib.P3D.Chunks;
 public class TerrainTypeListChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Terrain_Type_List;
-    
-    public enum TerrainTypes : byte
-    {
-        /// <summary>
-        /// Default road terrain. Also used for sidewalk. This is default. If not set, it's this.
-        /// </summary>
-        Road,
-        /// <summary>
-        /// Grass type terrain most everything else which isn't road or sidewalk.
-        /// </summary>
-        Grass,
-        /// <summary>
-        /// Sand type terrain.
-        /// </summary>
-        Sand,
-        /// <summary>
-        /// Loose gravel type terrain.
-        /// </summary>
-        Gravel,
-        /// <summary>
-        /// Water on surface type terrain.
-        /// </summary>
-        Water,
-        /// <summary>
-        /// Boardwalks, docks type terrain.
-        /// </summary>
-        Wood,
-        /// <summary>
-        /// Powerplant and other structures.
-        /// </summary>
-        Metal,
-        /// <summary>
-        /// Dirt type terrain.
-        /// </summary>
-        Dirt
-    }
 
     public uint Version { get; set; }
     public uint NumTypes
@@ -63,7 +27,7 @@ public class TerrainTypeListChunk : Chunk
             else
             {
                 while (NumTypes < value)
-                    Types.Add(default);
+                    Types.Add(new());
             }
         }
     }
@@ -112,7 +76,43 @@ public class TerrainTypeListChunk : Chunk
 
     public class TerrainType
     {
-        public TerrainTypes Type { get; set; }
+        public enum Types : byte
+        {
+            /// <summary>
+            /// Default road terrain. Also used for sidewalk. This is default. If not set, it's this.
+            /// </summary>
+            Road,
+            /// <summary>
+            /// Grass type terrain most everything else which isn't road or sidewalk.
+            /// </summary>
+            Grass,
+            /// <summary>
+            /// Sand type terrain.
+            /// </summary>
+            Sand,
+            /// <summary>
+            /// Loose gravel type terrain.
+            /// </summary>
+            Gravel,
+            /// <summary>
+            /// Water on surface type terrain.
+            /// </summary>
+            Water,
+            /// <summary>
+            /// Boardwalks, docks type terrain.
+            /// </summary>
+            Wood,
+            /// <summary>
+            /// Powerplant and other structures.
+            /// </summary>
+            Metal,
+            /// <summary>
+            /// Dirt type terrain.
+            /// </summary>
+            Dirt
+        }
+
+        public Types Type { get; set; }
         public bool Interior { get; set; }
         internal byte Value
         {
@@ -125,7 +125,7 @@ public class TerrainTypeListChunk : Chunk
             }
             set
             {
-                Type = (TerrainTypes)(value & ~0x80);
+                Type = (Types)(value & ~0x80);
                 Interior = (value & 0x80) == 0x80;
             }
         }
@@ -135,7 +135,7 @@ public class TerrainTypeListChunk : Chunk
             Value = br.ReadByte();
         }
 
-        public TerrainType(TerrainTypes type, bool interior)
+        public TerrainType(Types type, bool interior)
         {
             Type = type;
             Interior = interior;
@@ -143,7 +143,7 @@ public class TerrainTypeListChunk : Chunk
 
         public TerrainType()
         {
-            Type = TerrainTypes.Road;
+            Type = Types.Road;
             Interior = false;
         }
 
