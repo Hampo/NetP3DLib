@@ -133,6 +133,10 @@ public class IntersectChunk : Chunk
         if (Normals.Count != numTriangles)
             throw new InvalidDataException($"The number of {nameof(Normals)} does not match the number of triangles ({numTriangles}).");
 
+        var terrainTypeListChunk = GetFirstChunkOfType<TerrainTypeListChunk>();
+        if (terrainTypeListChunk != null && terrainTypeListChunk.NumTypes != NumNormals)
+            throw new InvalidDataException($"The number of {nameof(Normals)} does not match the number of terrain types ({terrainTypeListChunk.NumTypes}).");
+
         base.Validate();
     }
 
