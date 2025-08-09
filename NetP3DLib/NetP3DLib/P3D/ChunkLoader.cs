@@ -27,8 +27,10 @@ public static class ChunkLoader
 
 #if !DEBUG
         LoadChunkTypes("NetP3DLib.P3D.Chunks", false, false);
+        LoadChunkTypes("NetP3DLib.P3D.UnknownChunks", false, false);
 #else
         LoadChunkTypes("NetP3DLib.P3D.Chunks", true, true);
+        LoadChunkTypes("NetP3DLib.P3D.UnknownChunks", true, true);
         Console.WriteLine($"Known chunk identifiers: {Enum.GetValues(typeof(ChunkIdentifier)).Length}. Loaded chunk classes: {ChunkTypes.Count}.");
         foreach (var chunkIdentifier in Enum.GetValues(typeof(ChunkIdentifier)))
             if (!ChunkTypes.ContainsKey((uint)chunkIdentifier))
