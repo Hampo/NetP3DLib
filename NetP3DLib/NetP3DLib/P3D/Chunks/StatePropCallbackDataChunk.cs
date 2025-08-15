@@ -11,20 +11,27 @@ public class StatePropCallbackDataChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.State_Prop_Callback_Data;
     
-    public enum Events : uint
+    public enum Events : int
     {
-        Idle,
-        FadeIn,
-        FadeOut,
-        Moving,
-        AttackCharging,
-        AttackCharged,
-        Attacking,
-        Destroyed,
-        Hit,
-        FeatherTouch,
-        Stomp,
-        VehicleHit,
+        StateChange = -1,
+        RemoveFromWorld,
+        Spawn5Coins,
+        RemoveCollisionVolume,
+        FireEnergyBolt,
+        KillSpeed,
+        Spawn10Coins,
+        Spawn15Coins,
+        Spawn20Coins,
+        RadiateForce,
+        EmitLeaves,
+        ObjectDestroyed,
+        Spawn5CoinsZ,
+        Spawn1Coin,
+        ColaDestroyed,
+        CamShake,
+        RemoveFirstCollisionVolume,
+        RemoveSecondCollisionVolume,
+        RemoveThirdCollisionVolume,
     }
 
     public Events Event { get; set; }
@@ -37,13 +44,13 @@ public class StatePropCallbackDataChunk : NamedChunk
             List<byte> data = [];
 
             data.AddRange(BinaryExtensions.GetP3DStringBytes(Name));
-            data.AddRange(BitConverter.GetBytes((uint)Event));
+            data.AddRange(BitConverter.GetBytes((int)Event));
             data.AddRange(BitConverter.GetBytes(OnFrame));
 
             return [.. data];
         }
     }
-    public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(float);
+    public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(int) + sizeof(float);
 
     public StatePropCallbackDataChunk(BinaryReader br) : base(ChunkID)
     {
@@ -62,7 +69,7 @@ public class StatePropCallbackDataChunk : NamedChunk
     internal override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
-        bw.Write((uint)Event);
+        bw.Write((int)Event);
         bw.Write(OnFrame);
     }
 
