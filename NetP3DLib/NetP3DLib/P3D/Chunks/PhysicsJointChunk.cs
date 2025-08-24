@@ -15,7 +15,7 @@ public class PhysicsJointChunk : Chunk
     public float Stiffness { get; set; }
     public float MaxAngle { get; set; }
     public float MinAngle { get; set; }
-    public float DOF { get; set; }
+    public int DOF { get; set; }
 
     public override byte[] DataBytes
     {
@@ -33,7 +33,7 @@ public class PhysicsJointChunk : Chunk
             return [.. data];
         }
     }
-    public override uint DataLength => sizeof(uint) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(float);
+    public override uint DataLength => sizeof(uint) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(int);
 
     public PhysicsJointChunk(BinaryReader br) : base(ChunkID)
     {
@@ -42,10 +42,10 @@ public class PhysicsJointChunk : Chunk
         Stiffness = br.ReadSingle();
         MaxAngle = br.ReadSingle();
         MinAngle = br.ReadSingle();
-        DOF = br.ReadSingle();
+        DOF = br.ReadInt32();
     }
 
-    public PhysicsJointChunk(uint index, float volume, float stiffness, float maxAngle, float minAngle, float dof) : base(ChunkID)
+    public PhysicsJointChunk(uint index, float volume, float stiffness, float maxAngle, float minAngle, int dof) : base(ChunkID)
     {
         Index = index;
         Volume = volume;
@@ -53,6 +53,15 @@ public class PhysicsJointChunk : Chunk
         MaxAngle = maxAngle;
         MinAngle = minAngle;
         DOF = dof;
+    }
+
+    private static readonly HashSet<int> ValidDOF = [0, 1, 3];
+    public override void Validate()
+    {
+        if (!ValidDOF.Contains(DOF))
+            throw new InvalidDataException($"{nameof(DOF)} must be one of: {string.Join(", ", ValidDOF)}");
+
+        base.Validate();
     }
 
     internal override void WriteData(BinaryWriter bw)
