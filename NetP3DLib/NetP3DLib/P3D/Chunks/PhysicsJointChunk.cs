@@ -9,13 +9,20 @@ namespace NetP3DLib.P3D.Chunks;
 public class PhysicsJointChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Physics_Joint;
-    
-    public uint Index { get; set; }
+
+    public enum DegreesOfFreedom
+    {
+        Fixed0D = 0,
+        Hinge1D = 1,
+        BallAndSocket3D = 3
+    }
+
+    public int Index { get; set; }
     public float Volume { get; set; }
     public float Stiffness { get; set; }
     public float MaxAngle { get; set; }
     public float MinAngle { get; set; }
-    public int DOF { get; set; }
+    public DegreesOfFreedom DOF { get; set; }
 
     public override byte[] DataBytes
     {
@@ -28,24 +35,24 @@ public class PhysicsJointChunk : Chunk
             data.AddRange(BitConverter.GetBytes(Stiffness));
             data.AddRange(BitConverter.GetBytes(MaxAngle));
             data.AddRange(BitConverter.GetBytes(MinAngle));
-            data.AddRange(BitConverter.GetBytes(DOF));
+            data.AddRange(BitConverter.GetBytes((int)DOF));
 
             return [.. data];
         }
     }
-    public override uint DataLength => sizeof(uint) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(int);
+    public override uint DataLength => sizeof(int) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(int);
 
     public PhysicsJointChunk(BinaryReader br) : base(ChunkID)
     {
-        Index = br.ReadUInt32();
+        Index = br.ReadInt32();
         Volume = br.ReadSingle();
         Stiffness = br.ReadSingle();
         MaxAngle = br.ReadSingle();
         MinAngle = br.ReadSingle();
-        DOF = br.ReadInt32();
+        DOF = (DegreesOfFreedom)br.ReadInt32();
     }
 
-    public PhysicsJointChunk(uint index, float volume, float stiffness, float maxAngle, float minAngle, int dof) : base(ChunkID)
+    public PhysicsJointChunk(int index, float volume, float stiffness, float maxAngle, float minAngle, DegreesOfFreedom dof) : base(ChunkID)
     {
         Index = index;
         Volume = volume;
@@ -55,15 +62,6 @@ public class PhysicsJointChunk : Chunk
         DOF = dof;
     }
 
-    private static readonly HashSet<int> ValidDOF = [0, 1, 3];
-    public override void Validate()
-    {
-        if (!ValidDOF.Contains(DOF))
-            throw new InvalidDataException($"{nameof(DOF)} must be one of: {string.Join(", ", ValidDOF)}");
-
-        base.Validate();
-    }
-
     internal override void WriteData(BinaryWriter bw)
     {
         bw.Write(Index);
@@ -71,7 +69,7 @@ public class PhysicsJointChunk : Chunk
         bw.Write(Stiffness);
         bw.Write(MaxAngle);
         bw.Write(MinAngle);
-        bw.Write(DOF);
+        bw.Write((int)DOF);
     }
 
     internal override Chunk CloneSelf() => new PhysicsJointChunk(Index, Volume, Stiffness, MaxAngle, MinAngle, DOF);
