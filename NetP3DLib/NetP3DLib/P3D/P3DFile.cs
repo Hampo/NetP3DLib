@@ -260,10 +260,10 @@ public class P3DFile
                 Dictionary<uint, List<LocatorChunk>> locatorChunksByType = [];
                 foreach (LocatorChunk locatorChunk in chunks)
                 {
-                    if (!locatorChunksByType.TryGetValue(locatorChunk.LocatorType, out var locatorList))
+                    if (!locatorChunksByType.TryGetValue((uint)locatorChunk.LocatorType, out var locatorList))
                     {
                         locatorList = [];
-                        locatorChunksByType[locatorChunk.LocatorType] = locatorList;
+                        locatorChunksByType[(uint)locatorChunk.LocatorType] = locatorList;
                     }
                     locatorList.Add(locatorChunk);
                 }
