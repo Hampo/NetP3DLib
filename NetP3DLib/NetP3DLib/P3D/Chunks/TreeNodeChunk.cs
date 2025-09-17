@@ -39,6 +39,17 @@ public class TreeNodeChunk : Chunk
         ParentOffset = parentOffset;
     }
 
+    public override void Validate()
+    {
+        if (Children.Count == 0)
+            throw new InvalidDataException($"There must be at least one Tree Node 2 child chunk.");
+        foreach (var child in Children)
+            if (child.ID != (uint)ChunkIdentifier.Tree_Node_2)
+                throw new InvalidDataException($"Child chunk {child} is invalid. Child chunks must be an instance of Tree Node 2.");
+
+        base.Validate();
+    }
+
     internal override void WriteData(BinaryWriter bw)
     {
         bw.Write(NumChildren);
