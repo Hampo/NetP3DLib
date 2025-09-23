@@ -28,7 +28,7 @@ public class CollisionEffectChunk : Chunk
     }
 
     public ClassTypes ClassType { get; set; }
-    public uint PhyPropID { get; set; }
+    public uint PhysPropID { get; set; }
     public string SoundResourceDataName { get; set; }
 
     public override byte[] DataBytes
@@ -38,7 +38,7 @@ public class CollisionEffectChunk : Chunk
             List<byte> data = [];
 
             data.AddRange(BitConverter.GetBytes((uint)ClassType));
-            data.AddRange(BitConverter.GetBytes(PhyPropID));
+            data.AddRange(BitConverter.GetBytes(PhysPropID));
             data.AddRange(BinaryExtensions.GetP3DStringBytes(SoundResourceDataName));
 
             return [.. data];
@@ -49,14 +49,14 @@ public class CollisionEffectChunk : Chunk
     public CollisionEffectChunk(BinaryReader br) : base(ChunkID)
     {
         ClassType = (ClassTypes)br.ReadUInt32();
-        PhyPropID = br.ReadUInt32();
+        PhysPropID = br.ReadUInt32();
         SoundResourceDataName = br.ReadP3DString();
     }
 
     public CollisionEffectChunk(ClassTypes classType, uint phyPropID, string soundResourceDataName) : base(ChunkID)
     {
         ClassType = classType;
-        PhyPropID = phyPropID;
+        PhysPropID = phyPropID;
         SoundResourceDataName = soundResourceDataName;
     }
 
@@ -71,9 +71,9 @@ public class CollisionEffectChunk : Chunk
     internal override void WriteData(BinaryWriter bw)
     {
         bw.Write((uint)ClassType);
-        bw.Write(PhyPropID);
+        bw.Write(PhysPropID);
         bw.WriteP3DString(SoundResourceDataName);
     }
 
-    internal override Chunk CloneSelf() => new CollisionEffectChunk(ClassType, PhyPropID, SoundResourceDataName);
+    internal override Chunk CloneSelf() => new CollisionEffectChunk(ClassType, PhysPropID, SoundResourceDataName);
 }
