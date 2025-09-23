@@ -51,7 +51,7 @@ public class CollisionObjectAttributeChunk : Chunk
         {
             List<byte> data = [];
 
-            data.AddRange(BitConverter.GetBytes(IsStatic));
+            data.AddRange(BitConverter.GetBytes(isStatic));
             data.AddRange(BitConverter.GetBytes(DefaultArea));
             data.AddRange(BitConverter.GetBytes(canRoll));
             data.AddRange(BitConverter.GetBytes(canSlide));

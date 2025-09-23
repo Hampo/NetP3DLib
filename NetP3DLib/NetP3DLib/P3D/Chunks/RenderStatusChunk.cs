@@ -23,7 +23,7 @@ public class RenderStatusChunk : Chunk
         {
             List<byte> data = [];
 
-            data.AddRange(BitConverter.GetBytes(CastShadow));
+            data.AddRange(BitConverter.GetBytes(castShadow));
 
             return [.. data];
         }
