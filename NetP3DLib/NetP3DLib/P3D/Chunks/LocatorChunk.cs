@@ -609,11 +609,29 @@ public class LocatorChunk : NamedChunk
     /// </summary>
     public class ActionLocatorData : LocatorData
     {
+        public enum Intention : uint
+        {
+            NONE,
+            LeftStickX,
+            LeftStickY,
+            DoAction,
+            Jump,
+            Dash,
+            Attack,
+            DPadUp,
+            DPadDown,
+            DPadLeft,
+            DPadRight,
+            GetOutCar,
+            MouseLookLeft,
+            MouseLookRight,
+        }
+
         public string ObjectName { get; set; }
         public string JointName { get; set; }
         public string ActionName { get; set; }
-        public uint ButtonInput { get; set; }
-        public uint ShouldTransform { get; set; }
+        public Intention ButtonInput { get; set; }
+        public bool ShouldTransform { get; set; }
 
         public override List<uint> DataArray
         {
@@ -624,8 +642,8 @@ public class LocatorChunk : NamedChunk
                 data.AddRange(CreateStringData(ObjectName));
                 data.AddRange(CreateStringData(JointName));
                 data.AddRange(CreateStringData(ActionName));
-                data.Add(ButtonInput);
-                data.Add(ShouldTransform);
+                data.Add((uint)ButtonInput);
+                data.Add(ShouldTransform ? 1u : 0u);
 
                 return [.. data];
             }
@@ -640,11 +658,11 @@ public class LocatorChunk : NamedChunk
             var actionName = ParseDataString(data, jointName.Index);
             ActionName = actionName.String;
             var index = actionName.Index;
-            ButtonInput = data[index++];
-            ShouldTransform = data[index++];
+            ButtonInput = (Intention)data[index++];
+            ShouldTransform = data[index++] == 1;
         }
 
-        public ActionLocatorData(string objectName, string jointName, string actionName, uint buttonInput, uint shouldTransform) : base(LocatorTypes.Action)
+        public ActionLocatorData(string objectName, string jointName, string actionName, Intention buttonInput, bool shouldTransform) : base(LocatorTypes.Action)
         {
             ObjectName = objectName;
             JointName = jointName;
