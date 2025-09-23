@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace NetP3DLib.P3D;
 
@@ -202,6 +203,7 @@ public class P3DFile
         }
     }
 
+    private static readonly Regex SectionRegex = new(@"^(.*?) \(0x([A-F0-9]+)\)$");
     /// <summary>
     /// Sort <see cref="Chunks"/> in the order specified in <see cref="ChunkSortPriority"/>.
     /// <para>Chunk IDs without a sort priority will remain in their original order at the end of the file.</para>
@@ -215,7 +217,7 @@ public class P3DFile
         List<Chunk> newChunks = new(Chunks.Count);
 
         if (includeHistory)
-            newChunks.Add(new HistoryChunk(["Sorted with NetP3DLib", $"Run at {DateTime.Now:R}"]));
+            Chunks.Add(new HistoryChunk(["Sorted with NetP3DLib", $"Run at {DateTime.Now:R}"]));
 
         Dictionary<uint, List<Chunk>> chunksById = [];
         foreach (var chunk in Chunks)
@@ -252,6 +254,29 @@ public class P3DFile
         foreach (var id in chunkIDs)
         {
             var chunks = chunksById[id];
+
+            if (chunks[0] is HistoryChunk)
+            {
+                for (int i = chunks.Count - 1; i >= 0; i--)
+                {
+                    var historyChunk = (HistoryChunk)chunks[i];
+
+                    if (historyChunk.NumHistory != 1)
+                        continue;
+
+                    var sectionMatch = SectionRegex.Match(historyChunk.History[0]);
+                    if (!sectionMatch.Success)
+                        continue;
+
+                    var typeName = sectionMatch.Groups[1].Value;
+                    var typeID = int.Parse(sectionMatch.Groups[2].Value, System.Globalization.NumberStyles.HexNumber);
+                    var typeIdentifier = (ChunkIdentifier)typeID;
+
+                    if ((typeIdentifier == ChunkIdentifier.Locator && typeName.Contains("Locator")) || typeIdentifier.ToString().Replace("_", " ") == typeName)
+                        chunks.RemoveAt(i);
+                }
+            }
+
             if (chunks.Count == 0)
                 continue;
 
@@ -276,7 +301,7 @@ public class P3DFile
                     var typeChunks = locatorChunksByType[type];
 
                     if (includeSectionHeaders)
-                        newChunks.Add(new HistoryChunk([$"Locator Type {type} (0x{id:X})"]));
+                        newChunks.Add(new HistoryChunk([$"{typeChunks[0].LocatorType} Locator (Type {type}) (0x{id:X})"]));
 
                     if (alphabetical)
                         typeChunks.Sort((x, y) => string.CompareOrdinal(x.Name, y.Name));
