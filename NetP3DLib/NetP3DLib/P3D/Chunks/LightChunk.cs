@@ -4,6 +4,7 @@ using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.ComponentModel;
 using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
@@ -19,6 +20,7 @@ public class LightChunk : NamedChunk
         Directional = 2,
     }
 
+    [DefaultValue(257)]
     public uint Version { get; set; }
     public Types Type { get; set; }
     public Color Colour { get; set; }

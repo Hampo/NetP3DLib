@@ -5,6 +5,7 @@ using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.ComponentModel;
 using System.IO;
 using System.Numerics;
 
@@ -15,6 +16,7 @@ public class OldBillboardQuadChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Billboard_Quad;
     
+    [DefaultValue(2)]
     public uint Version { get; set; }
     public string BillboardMode { get; set; }
     public Vector3 Translation { get; set; }

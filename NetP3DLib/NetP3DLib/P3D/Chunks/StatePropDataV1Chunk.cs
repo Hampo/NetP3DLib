@@ -4,6 +4,7 @@ using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
@@ -13,6 +14,7 @@ public class StatePropDataV1Chunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.State_Prop_Data_V1;
     
+    [DefaultValue(1)]
     public uint Version { get; set; }
     public string ObjectFactoryName { get; set; }
     public uint NumStates => GetChildCount(ChunkIdentifier.State_Prop_State_Data_V1);

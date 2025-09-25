@@ -2,6 +2,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
@@ -11,6 +12,7 @@ public class AnimationChannelCountChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Animation_Channel_Count;
     
+    [DefaultValue(0)]
     public uint Version { get; set; }
     public uint ChannelChunkID { get; set; }
     public uint NumNumKeys

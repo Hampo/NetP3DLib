@@ -3,6 +3,7 @@ using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
@@ -12,6 +13,7 @@ public class AnimatedObjectAnimationChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Animated_Object_Animation;
     
+    [DefaultValue(0)]
     public uint Version { get; set; }
     public float FrameRate { get; set; }
     public uint NumOldFrameControllers { get; set; }

@@ -3,6 +3,7 @@ using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Numerics;
 
@@ -13,6 +14,7 @@ public class CameraChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Camera;
     
+    [DefaultValue(2)]
     public uint Version { get; set; }
     public float FOV { get; set; }
     public float AspectRatio { get; set; }

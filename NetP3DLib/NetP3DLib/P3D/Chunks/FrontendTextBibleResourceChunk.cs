@@ -4,6 +4,7 @@ using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
@@ -13,6 +14,7 @@ public class FrontendTextBibleResourceChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Frontend_Text_Bible_Resource;
     
+    [DefaultValue(1)]
     public uint Version { get; set; }
     public string Filename { get; set; }
     public string InventoryName { get; set; }

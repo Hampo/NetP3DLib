@@ -2,6 +2,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
@@ -11,6 +12,7 @@ public class AnimationSizeChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Animation_Size;
     
+    [DefaultValue(1)]
     public uint Version { get; set; }
     public uint PC { get; set; }
     public uint PS2 { get; set; }

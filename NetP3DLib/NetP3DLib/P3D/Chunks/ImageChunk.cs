@@ -4,6 +4,7 @@ using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
@@ -40,6 +41,7 @@ public class ImageChunk : NamedChunk
         PSP4Bit = 25,
     }
 
+    [DefaultValue(14000)]
     public uint Version { get; set; }
     public uint Width { get; set; }
     public uint Height { get; set; }

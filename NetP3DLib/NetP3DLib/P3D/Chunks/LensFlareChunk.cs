@@ -3,6 +3,7 @@ using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
@@ -12,6 +13,7 @@ public class LensFlareChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Lens_Flare;
     
+    [DefaultValue(0)]
     public uint Version { get; set; }
     public uint NumOldBillboardQuadGroups => GetChildCount(ChunkIdentifier.Old_Billboard_Quad_Group);
 

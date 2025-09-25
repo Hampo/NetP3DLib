@@ -4,6 +4,7 @@ using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.ComponentModel;
 using System.IO;
 using System.Numerics;
 
@@ -14,6 +15,7 @@ public class FrontendPolygonChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Frontend_Polygon;
     
+    [DefaultValue(1)]
     public uint Version { get; set; }
     public uint Translucency { get; set; }
     public uint NumPoints

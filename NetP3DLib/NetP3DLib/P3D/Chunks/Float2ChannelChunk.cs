@@ -3,6 +3,7 @@ using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Numerics;
 
@@ -13,6 +14,7 @@ public class Float2ChannelChunk : ParamChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Float_2_Channel;
     
+    [DefaultValue(0)]
     public uint Version { get; set; }
     public uint NumFrames
     {

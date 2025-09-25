@@ -4,6 +4,7 @@ using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Numerics;
 
@@ -14,6 +15,7 @@ public class OldBillboardDisplayInfoChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Billboard_Display_Info;
     
+    [DefaultValue(1)]
     public uint Version { get; set; }
     public Quaternion Rotation { get; set; }
     public string CutOffMode { get; set; }

@@ -2,6 +2,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
@@ -11,6 +12,7 @@ public class AnimObjWrapperChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Anim_Obj_Wrapper;
     
+    [DefaultValue(1)]
     public byte Version { get; set; }
     private byte hasAlpha;
     public bool HasAlpha

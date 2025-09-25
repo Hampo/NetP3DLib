@@ -4,6 +4,7 @@ using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
@@ -55,6 +56,7 @@ public class OldPrimitiveGroupChunk : Chunk
         ColourMaskOffset = 15,
     }
 
+    [DefaultValue(0)]
     public uint Version { get; set; }
     public string ShaderName { get; set; }
     public PrimitiveTypes PrimitiveType { get; set; }

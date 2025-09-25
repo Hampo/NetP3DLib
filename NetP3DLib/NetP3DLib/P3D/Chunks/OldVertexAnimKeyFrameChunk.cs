@@ -3,6 +3,7 @@ using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
@@ -12,6 +13,7 @@ public class OldVertexAnimKeyFrameChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Vertex_Anim_Key_Frame;
     
+    [DefaultValue(0)]
     public uint Version { get; set; }
 
     public override byte[] DataBytes

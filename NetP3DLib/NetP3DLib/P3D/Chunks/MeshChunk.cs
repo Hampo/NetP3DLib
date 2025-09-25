@@ -3,6 +3,7 @@ using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
@@ -12,6 +13,7 @@ public class MeshChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Mesh;
     
+    [DefaultValue(1)]
     public uint Version { get; set; }
     public uint NumOldPrimitiveGroups => GetChildCount(ChunkIdentifier.Old_Primitive_Group);
 

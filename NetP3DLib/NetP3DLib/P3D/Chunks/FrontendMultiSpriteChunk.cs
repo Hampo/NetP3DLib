@@ -5,6 +5,7 @@ using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.ComponentModel;
 using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
@@ -23,6 +24,7 @@ public class FrontendMultiSpriteChunk : NamedChunk
         Centre
     }
 
+    [DefaultValue(1)]
     public uint Version { get; set; }
     public int PositionX { get; set; }
     public int PositionY { get; set; }
