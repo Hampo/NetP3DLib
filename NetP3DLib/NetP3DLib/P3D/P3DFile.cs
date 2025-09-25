@@ -1,4 +1,5 @@
-﻿using NetP3DLib.IO;
+﻿using NetP3DLib.Comparer;
+using NetP3DLib.IO;
 using NetP3DLib.P3D.Chunks;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
@@ -220,7 +221,7 @@ public class P3DFile
         if (includeHistory)
             Chunks.Add(new HistoryChunk(["Sorted with NetP3DLib", $"Run at {DateTime.Now:R}"]));
 
-        var comparer = caseInsensitive ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal;
+        var comparer = new NaturalComparer(caseInsensitive);//caseInsensitive ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal;
 
         Dictionary<uint, List<Chunk>> chunksById = [];
         foreach (var chunk in Chunks)
