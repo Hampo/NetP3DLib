@@ -211,13 +211,16 @@ public class P3DFile
     /// <param name="includeSectionHeaders">If <c>true</c>, will add a History chunk before each chunk ID.</param>
     /// <param name="alphabetical">If <c>true</c>, named chunks will be further sorted into alphabetical order.</param>
     /// <param name="includeHistory">If <c>true</c>, a history chunk will be added to the start to indicate how and when it was sorted.<para>Defaults to <c>true</c>.</para></param>
+    /// <param name="caseInsensitive">If <c>true</c>, and <paramref name="alphabetical"/> is <c>true</c>, named chunk sorting will be case insensitive</param>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0220:Add explicit cast", Justification = "As the list is all chunks of the same type, if the first is a LocatorChunk, the rest will be.")]
-    public void SortChunks(bool includeSectionHeaders = false, bool alphabetical = false, bool includeHistory = true)
+    public void SortChunks(bool includeSectionHeaders = false, bool alphabetical = false, bool includeHistory = true, bool caseInsensitive = false)
     {
         List<Chunk> newChunks = new(Chunks.Count);
 
         if (includeHistory)
             Chunks.Add(new HistoryChunk(["Sorted with NetP3DLib", $"Run at {DateTime.Now:R}"]));
+
+        var comparer = caseInsensitive ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal;
 
         Dictionary<uint, List<Chunk>> chunksById = [];
         foreach (var chunk in Chunks)
@@ -304,7 +307,7 @@ public class P3DFile
                         newChunks.Add(new HistoryChunk([$"{typeChunks[0].LocatorType} Locator (Type {type}) (0x{id:X})"]));
 
                     if (alphabetical)
-                        typeChunks.Sort((x, y) => string.CompareOrdinal(x.Name, y.Name));
+                        typeChunks.Sort((x, y) => comparer.Compare(x.Name, y.Name));
 
                     newChunks.AddRange(typeChunks);
                 }
@@ -321,7 +324,7 @@ public class P3DFile
                 foreach (var chunk in chunks)
                     namedChunks.Add((NamedChunk)chunk);
 
-                namedChunks.Sort((x, y) => string.CompareOrdinal(x.Name, y.Name));
+                namedChunks.Sort((x, y) => comparer.Compare(x.Name, y.Name));
                 newChunks.AddRange(namedChunks);
             }
             else
