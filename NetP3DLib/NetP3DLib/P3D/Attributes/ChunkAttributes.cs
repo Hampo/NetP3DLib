@@ -1,7 +1,7 @@
 ﻿using NetP3DLib.P3D.Enums;
 using System;
 
-namespace NetP3DLib.P3D;
+namespace NetP3DLib.P3D.Attributes;
 
 [AttributeUsage(AttributeTargets.Class)]
 public class ChunkAttributes : Attribute
