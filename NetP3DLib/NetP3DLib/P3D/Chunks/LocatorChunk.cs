@@ -632,7 +632,12 @@ public class LocatorChunk : NamedChunk
         [KnownValues(true, "ToggleOnOff", "ToggleReverse", "PlayAnim", "PlayAnimLoop", "AutoPlayAnim", "AutoPlayAnimLoop", "AutoPlayAnimInOut", "DestroyObject", "PowerCoupling", "UseVendingMachine", "PrankPhone", "SummonVehiclePhone", "Doorbell", "OpenDoor", "TalkFood", "TalkCollectible", "TalkDialog", "TalkMission", "FoodSmall", "FoodLarge", "CollectorCard", "AlienCamera", "PlayOnce", "AutomaticDoor", "Wrench", "Teleport", "PurchaseCar", "PurchaseSkin", "Nitro")]
         public string ActionName { get; set; }
         public Intention ButtonInput { get; set; }
-        public bool ShouldTransform { get; set; }
+        private uint shouldTransform;
+        public bool ShouldTransform
+        {
+            get => shouldTransform == 1;
+            set => shouldTransform = value ? 1u : 0u;
+        }
 
         public override List<uint> DataArray
         {
@@ -660,7 +665,7 @@ public class LocatorChunk : NamedChunk
             ActionName = actionName.String;
             var index = actionName.Index;
             ButtonInput = (Intention)data[index++];
-            ShouldTransform = data[index++] == 1;
+            shouldTransform = data[index++];
         }
 
         public ActionLocatorData(string objectName, string jointName, string actionName, Intention buttonInput, bool shouldTransform) : base(LocatorTypes.Action)
