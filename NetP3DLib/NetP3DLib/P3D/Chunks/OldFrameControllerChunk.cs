@@ -13,10 +13,72 @@ namespace NetP3DLib.P3D.Chunks;
 public class OldFrameControllerChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Frame_Controller;
-    
+
+    public enum AnimationType : uint
+    {
+        Undefined = 0,
+        /// <summary>
+        /// AOBJ
+        /// </summary>
+        ANIMATED_OBJECT = 0x4A424F41,
+        /// <summary>
+        /// TEX
+        /// </summary>
+        TEXTURE = 0x584554,
+        /// <summary>
+        /// CAM
+        /// </summary>
+        CAMERA = 0x4D4143,
+        /// <summary>
+        /// LITE
+        /// </summary>
+        LIGHT = 0x4554494C,
+        /// <summary>
+        /// EXP
+        /// </summary>
+        EXPRESSION = 0x505845,
+        /// <summary>
+        /// PTRN
+        /// </summary>
+        POSE_TRANSFORM = 0x4E525450,
+        /// <summary>
+        /// PVIS
+        /// </summary>
+        POSE_VISIBILITY = 0x53495650,
+        /// <summary>
+        /// STRN
+        /// </summary>
+        SCENEGRAPH_TRANSFORM = 0x4E525453,
+        /// <summary>
+        /// SVIS
+        /// </summary>
+        SCENEGRAPH_VISIBILITY = 0x53495653,
+        /// <summary>
+        /// EVT
+        /// </summary>
+        EVENT = 0x545645,
+        /// <summary>
+        /// BQG
+        /// </summary>
+        BILLBOARD_QUAD_GROUP = 0x475142,
+        /// <summary>
+        /// EFX
+        /// </summary>
+        EFFECT = 0x584645,
+        /// <summary>
+        /// VRTX
+        /// </summary>
+        VERTEX = 0x58545256,
+        /// <summary>
+        /// SHAD
+        /// </summary>
+        SHADER = 0x44414853,
+
+    }
+
     [DefaultValue(0)]
     public uint Version { get; set; }
-    public string Type { get; set; }
+    public AnimationType Type { get; set; }
     public float FrameOffset { get; set; }
     public string HierarchyName { get; set; }
     public string AnimationName { get; set; }
@@ -26,10 +88,9 @@ public class OldFrameControllerChunk : NamedChunk
         get
         {
             List<byte> data = [];
-
             data.AddRange(BitConverter.GetBytes(Version));
             data.AddRange(BinaryExtensions.GetP3DStringBytes(Name));
-            data.AddRange(BinaryExtensions.GetFourCCBytes(Type));
+            data.AddRange(BitConverter.GetBytes((uint)Type));
             data.AddRange(BitConverter.GetBytes(FrameOffset));
             data.AddRange(BinaryExtensions.GetP3DStringBytes(HierarchyName));
             data.AddRange(BinaryExtensions.GetP3DStringBytes(AnimationName));
@@ -37,19 +98,19 @@ public class OldFrameControllerChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + 4 + sizeof(float) + BinaryExtensions.GetP3DStringLength(HierarchyName) + BinaryExtensions.GetP3DStringLength(AnimationName);
+    public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(float) + BinaryExtensions.GetP3DStringLength(HierarchyName) + BinaryExtensions.GetP3DStringLength(AnimationName);
 
     public OldFrameControllerChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         Name = br.ReadP3DString();
-        Type = br.ReadFourCC();
+        Type = (AnimationType)br.ReadUInt32();
         FrameOffset = br.ReadSingle();
         HierarchyName = br.ReadP3DString();
         AnimationName = br.ReadP3DString();
     }
 
-    public OldFrameControllerChunk(uint version, string name, string type, float frameOffset, string hierarchyName, string animationName) : base(ChunkID)
+    public OldFrameControllerChunk(uint version, string name, AnimationType type, float frameOffset, string hierarchyName, string animationName) : base(ChunkID)
     {
         Version = version;
         Name = name;
@@ -61,9 +122,6 @@ public class OldFrameControllerChunk : NamedChunk
 
     public override void Validate()
     {
-        if (!Type.IsValidFourCC())
-            throw new InvalidFourCCException(nameof(Type), Type);
-
         if (!HierarchyName.IsValidP3DString())
             throw new InvalidP3DStringException(nameof(HierarchyName), HierarchyName);
 
@@ -77,7 +135,7 @@ public class OldFrameControllerChunk : NamedChunk
     {
         bw.Write(Version);
         bw.WriteP3DString(Name);
-        bw.WriteFourCC(Type);
+        bw.Write((uint)Type);
         bw.Write(FrameOffset);
         bw.WriteP3DString(HierarchyName);
         bw.WriteP3DString(AnimationName);
