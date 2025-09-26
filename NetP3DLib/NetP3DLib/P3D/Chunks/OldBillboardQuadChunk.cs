@@ -18,6 +18,7 @@ public class OldBillboardQuadChunk : NamedChunk
     
     [DefaultValue(2)]
     public uint Version { get; set; }
+    [MaxLength(4)]
     public string BillboardMode { get; set; }
     public Vector3 Translation { get; set; }
     public Color Colour { get; set; }

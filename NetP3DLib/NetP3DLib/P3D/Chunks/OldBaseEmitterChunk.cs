@@ -16,7 +16,9 @@ public class OldBaseEmitterChunk : NamedChunk
     
     [DefaultValue(0)]
     public uint Version { get; set; }
+    [MaxLength(4)]
     public string ParticleType { get; set; }
+    [MaxLength(4)]
     public string GeneratorType { get; set; }
     private uint zTest;
     public bool ZTest

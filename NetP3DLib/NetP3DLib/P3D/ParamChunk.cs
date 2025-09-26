@@ -1,4 +1,5 @@
-﻿using NetP3DLib.P3D.Enums;
+﻿using NetP3DLib.P3D.Attributes;
+using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
 
@@ -6,6 +7,7 @@ namespace NetP3DLib.P3D;
 
 public abstract class ParamChunk : Chunk
 {
+    [MaxLength(4)]
     public string Param { get; set; }
 
     public ParamChunk(uint ID) : base(ID) { }

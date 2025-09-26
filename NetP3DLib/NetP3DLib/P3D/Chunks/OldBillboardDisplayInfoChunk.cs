@@ -18,6 +18,7 @@ public class OldBillboardDisplayInfoChunk : Chunk
     [DefaultValue(1)]
     public uint Version { get; set; }
     public Quaternion Rotation { get; set; }
+    [MaxLength(4)]
     public string CutOffMode { get; set; }
     public Vector2 UVOffsetRange { get; set; }
     public float SourceRange { get; set; }

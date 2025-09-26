@@ -16,7 +16,9 @@ public class FrameControllerChunk : NamedChunk
     
     [DefaultValue(1)]
     public uint Version { get; set; }
+    [MaxLength(4)]
     public string Type { get; set; }
+    [MaxLength(4)]
     public string CycleMode { get; set; }
     public uint NumCycles { get; set; }
     public uint InfiniteCycle { get; set; }

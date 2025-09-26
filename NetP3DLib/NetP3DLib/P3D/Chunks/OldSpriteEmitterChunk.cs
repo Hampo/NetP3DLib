@@ -17,8 +17,10 @@ public class OldSpriteEmitterChunk : NamedChunk
     [DefaultValue(0)]
     public uint Version { get; set; }
     public string ShaderName { get; set; }
+    [MaxLength(4)]
     public string AngleMode { get; set; }
     public float Angle { get; set; }
+    [MaxLength(4)]
     public string TextureAnimMode { get; set; }
     public uint NumTextureFrames { get; set; }
     public uint TextureFrameRate { get; set; }

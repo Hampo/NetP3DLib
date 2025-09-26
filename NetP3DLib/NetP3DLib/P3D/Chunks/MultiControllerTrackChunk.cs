@@ -16,6 +16,7 @@ public class MultiControllerTrackChunk : NamedChunk
     
     [DefaultValue(0)]
     public uint Version { get; set; }
+    [MaxLength(4)]
     public string Type { get; set; }
 
     public override byte[] DataBytes

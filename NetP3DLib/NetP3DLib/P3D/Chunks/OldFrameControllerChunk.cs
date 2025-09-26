@@ -14,68 +14,6 @@ public class OldFrameControllerChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Frame_Controller;
 
-    public enum AnimationType : uint
-    {
-        Undefined = 0,
-        /// <summary>
-        /// AOBJ
-        /// </summary>
-        ANIMATED_OBJECT = 0x4A424F41,
-        /// <summary>
-        /// TEX
-        /// </summary>
-        TEXTURE = 0x584554,
-        /// <summary>
-        /// CAM
-        /// </summary>
-        CAMERA = 0x4D4143,
-        /// <summary>
-        /// LITE
-        /// </summary>
-        LIGHT = 0x4554494C,
-        /// <summary>
-        /// EXP
-        /// </summary>
-        EXPRESSION = 0x505845,
-        /// <summary>
-        /// PTRN
-        /// </summary>
-        POSE_TRANSFORM = 0x4E525450,
-        /// <summary>
-        /// PVIS
-        /// </summary>
-        POSE_VISIBILITY = 0x53495650,
-        /// <summary>
-        /// STRN
-        /// </summary>
-        SCENEGRAPH_TRANSFORM = 0x4E525453,
-        /// <summary>
-        /// SVIS
-        /// </summary>
-        SCENEGRAPH_VISIBILITY = 0x53495653,
-        /// <summary>
-        /// EVT
-        /// </summary>
-        EVENT = 0x545645,
-        /// <summary>
-        /// BQG
-        /// </summary>
-        BILLBOARD_QUAD_GROUP = 0x475142,
-        /// <summary>
-        /// EFX
-        /// </summary>
-        EFFECT = 0x584645,
-        /// <summary>
-        /// VRTX
-        /// </summary>
-        VERTEX = 0x58545256,
-        /// <summary>
-        /// SHAD
-        /// </summary>
-        SHADER = 0x44414853,
-
-    }
-
     [DefaultValue(0)]
     public uint Version { get; set; }
     public AnimationType Type { get; set; }

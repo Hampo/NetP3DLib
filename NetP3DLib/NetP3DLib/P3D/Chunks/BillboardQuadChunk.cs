@@ -17,6 +17,7 @@ public class BillboardQuadChunk : NamedChunk
     public uint Version { get; set; }
     public uint CutOffEnabled { get; set; }
     public uint Perspective { get; set; }
+    [MaxLength(4)]
     public string AxisMode { get; set; }
     public Color Colour { get; set; }
     public float Width { get; set; }

@@ -16,7 +16,7 @@ public class AnimationChunk : NamedChunk
     
     [DefaultValue(0)]
     public uint Version { get; set; }
-    public string AnimationType { get; set; }
+    public AnimationType AnimationType { get; set; }
     public float NumFrames { get; set; }
     public float FrameRate { get; set; }
     private uint cyclic;
@@ -34,7 +34,7 @@ public class AnimationChunk : NamedChunk
 
             data.AddRange(BitConverter.GetBytes(Version));
             data.AddRange(BinaryExtensions.GetP3DStringBytes(Name));
-            data.AddRange(BinaryExtensions.GetFourCCBytes(AnimationType));
+            data.AddRange(BitConverter.GetBytes((uint)AnimationType));
             data.AddRange(BitConverter.GetBytes(NumFrames));
             data.AddRange(BitConverter.GetBytes(FrameRate));
             data.AddRange(BitConverter.GetBytes(cyclic));
@@ -48,13 +48,13 @@ public class AnimationChunk : NamedChunk
     {
         Version = br.ReadUInt32();
         Name = br.ReadP3DString();
-        AnimationType = br.ReadFourCC();
+        AnimationType = (AnimationType)br.ReadUInt32();
         NumFrames = br.ReadSingle();
         FrameRate = br.ReadSingle();
         cyclic = br.ReadUInt32();
     }
 
-    public AnimationChunk(uint version, string name, string animationType, float numFrames, float frameRate, bool cyclic) : base(ChunkID)
+    public AnimationChunk(uint version, string name, AnimationType animationType, float numFrames, float frameRate, bool cyclic) : base(ChunkID)
     {
         Version = version;
         Name = name;
@@ -64,19 +64,11 @@ public class AnimationChunk : NamedChunk
         Cyclic = cyclic;
     }
 
-    public override void Validate()
-    {
-        if (!AnimationType.IsValidFourCC())
-            throw new InvalidFourCCException(nameof(AnimationType), AnimationType);
-
-        base.Validate();
-    }
-
     internal override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.WriteP3DString(Name);
-        bw.WriteFourCC(AnimationType);
+        bw.Write((uint)AnimationType);
         bw.Write(NumFrames);
         bw.Write(FrameRate);
         bw.Write(cyclic);
