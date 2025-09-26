@@ -119,6 +119,7 @@ public class P3DFile
         (uint)ChunkIdentifier.Animated_Object_Factory,
         (uint)ChunkIdentifier.Animated_Object,
         (uint)ChunkIdentifier.Scenegraph,
+        (uint)ChunkIdentifier.Frame_Controller,
         (uint)ChunkIdentifier.Old_Frame_Controller,
         (uint)ChunkIdentifier.Multi_Controller,
         (uint)ChunkIdentifier.Old_Locator,
