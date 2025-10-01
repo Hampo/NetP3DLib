@@ -64,7 +64,7 @@ public class MultiControllerChunk : NamedChunk
         Framerate = framerate;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(Version);
@@ -73,5 +73,5 @@ public class MultiControllerChunk : NamedChunk
         bw.Write(NumTracks);
     }
 
-    internal override Chunk CloneSelf() => new MultiControllerChunk(Name, Version, Length, Framerate);
+    protected override Chunk CloneSelf() => new MultiControllerChunk(Name, Version, Length, Framerate);
 }

@@ -115,7 +115,7 @@ public class ImageChunk : NamedChunk
         Formats.DXT3,
         Formats.DXT5,
     ];
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         if (bw is EndianAwareBinaryWriter endianAwareBinaryWriter && endianAwareBinaryWriter.Endianness != BinaryExtensions.DefaultEndian && FlippedFormats.Contains(Format))
             throw new NotImplementedException($"Writing {Format} images with swapped endian is not supported at this time.");
@@ -130,5 +130,5 @@ public class ImageChunk : NamedChunk
         bw.Write((uint)Format);
     }
 
-    internal override Chunk CloneSelf() => new ImageChunk(Name, Version, Width, Height, Bpp, Palettized, HasAlpha, Format);
+    protected override Chunk CloneSelf() => new ImageChunk(Name, Version, Width, Height, Bpp, Palettized, HasAlpha, Format);
 }

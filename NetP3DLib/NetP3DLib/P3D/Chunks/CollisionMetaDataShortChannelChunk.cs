@@ -106,7 +106,7 @@ public class CollisionMetaDataShortChannelChunk : NamedChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.WriteP3DString(Name);
@@ -117,5 +117,5 @@ public class CollisionMetaDataShortChannelChunk : NamedChunk
             bw.Write(value);
     }
 
-    internal override Chunk CloneSelf() => new CollisionMetaDataShortChannelChunk(Version, Name, Indices, Values);
+    protected override Chunk CloneSelf() => new CollisionMetaDataShortChannelChunk(Version, Name, Indices, Values);
 }

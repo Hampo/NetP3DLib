@@ -55,12 +55,12 @@ public class FrontendImageResourceChunk : NamedChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(Version);
         bw.WriteP3DString(Filename);
     }
 
-    internal override Chunk CloneSelf() => new FrontendImageResourceChunk(Name, Version, Filename);
+    protected override Chunk CloneSelf() => new FrontendImageResourceChunk(Name, Version, Filename);
 }

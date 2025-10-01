@@ -61,12 +61,12 @@ public class IndexListChunk : Chunk
         Indices.AddRange(indices);
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(NumIndices);
         foreach (var index in Indices)
             bw.Write(index);
     }
 
-    internal override Chunk CloneSelf() => new IndexListChunk(Indices);
+    protected override Chunk CloneSelf() => new IndexListChunk(Indices);
 }

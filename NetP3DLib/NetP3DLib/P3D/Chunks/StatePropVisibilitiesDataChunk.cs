@@ -45,11 +45,11 @@ public class StatePropVisibilitiesDataChunk : NamedChunk
         IsVisible = isVisible;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(isVisible);
     }
 
-    internal override Chunk CloneSelf() => new StatePropVisibilitiesDataChunk(Name, IsVisible);
+    protected override Chunk CloneSelf() => new StatePropVisibilitiesDataChunk(Name, IsVisible);
 }

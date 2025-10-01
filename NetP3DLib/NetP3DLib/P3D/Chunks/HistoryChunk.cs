@@ -85,14 +85,14 @@ public class HistoryChunk : Chunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(NumHistory);
         foreach (string item in History)
             bw.WriteP3DString(item);
     }
 
-    internal override Chunk CloneSelf() => new HistoryChunk(History);
+    protected override Chunk CloneSelf() => new HistoryChunk(History);
 
     public override string ToString() => $"\"{(History.Count == 0 ? "" : History[0])}\" ({GetChunkType(this)} (0x{ID:X}))";
 }

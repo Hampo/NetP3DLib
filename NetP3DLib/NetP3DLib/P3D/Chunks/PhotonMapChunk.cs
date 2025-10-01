@@ -145,7 +145,7 @@ public class PhotonMapChunk : NamedChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(Version);
@@ -159,7 +159,7 @@ public class PhotonMapChunk : NamedChunk
             photon.Write(bw);
     }
 
-    internal override Chunk CloneSelf()
+    protected override Chunk CloneSelf()
     {
         var photons = new List<Photon>(Photons.Count);
         foreach (var photon in Photons)

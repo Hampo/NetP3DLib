@@ -65,7 +65,7 @@ public class OldExpressionOffsetsChunk : Chunk
         PrimitiveGroupIndices.AddRange(primitiveGroupIndices);
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(NumPrimitiveGroups);
         bw.Write(NumOffsetLists);
@@ -73,5 +73,5 @@ public class OldExpressionOffsetsChunk : Chunk
             bw.Write(index);
     }
 
-    internal override Chunk CloneSelf() => new OldExpressionOffsetsChunk(PrimitiveGroupIndices);
+    protected override Chunk CloneSelf() => new OldExpressionOffsetsChunk(PrimitiveGroupIndices);
 }

@@ -74,7 +74,7 @@ public class SplineChunk : NamedChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(NumPositions);
@@ -82,5 +82,5 @@ public class SplineChunk : NamedChunk
             bw.Write(pos);
     }
 
-    internal override Chunk CloneSelf() => new SplineChunk(Name, Positions);
+    protected override Chunk CloneSelf() => new SplineChunk(Name, Positions);
 }

@@ -111,7 +111,7 @@ public class OldBaseEmitterChunk : NamedChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.WriteP3DString(Name);
@@ -126,5 +126,5 @@ public class OldBaseEmitterChunk : NamedChunk
         bw.Write(TranslationCohesion);
     }
 
-    internal override Chunk CloneSelf() => new OldBaseEmitterChunk(Version, Name, ParticleType, GeneratorType, ZTest, ZWrite, Fog, MaxParticles, InfiniteLife, RotationalCohesion, TranslationCohesion);
+    protected override Chunk CloneSelf() => new OldBaseEmitterChunk(Version, Name, ParticleType, GeneratorType, ZTest, ZWrite, Fog, MaxParticles, InfiniteLife, RotationalCohesion, TranslationCohesion);
 }

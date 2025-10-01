@@ -81,7 +81,7 @@ public class OldBillboardQuadGroupChunk : NamedChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.WriteP3DString(Name);
@@ -92,5 +92,5 @@ public class OldBillboardQuadGroupChunk : NamedChunk
         bw.Write(NumQuads);
     }
 
-    internal override Chunk CloneSelf() => new OldBillboardQuadGroupChunk(Version, Name, Shader, ZTest, ZWrite, Occlusion);
+    protected override Chunk CloneSelf() => new OldBillboardQuadGroupChunk(Version, Name, Shader, ZTest, ZWrite, Occlusion);
 }

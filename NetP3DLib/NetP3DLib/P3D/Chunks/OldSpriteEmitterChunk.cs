@@ -83,7 +83,7 @@ public class OldSpriteEmitterChunk : NamedChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.WriteP3DString(Name);
@@ -95,5 +95,5 @@ public class OldSpriteEmitterChunk : NamedChunk
         bw.Write(TextureFrameRate);
     }
 
-    internal override Chunk CloneSelf() => new OldSpriteEmitterChunk(Version, Name, ShaderName, AngleMode, Angle, TextureAnimMode, NumTextureFrames, TextureFrameRate);
+    protected override Chunk CloneSelf() => new OldSpriteEmitterChunk(Version, Name, ShaderName, AngleMode, Angle, TextureAnimMode, NumTextureFrames, TextureFrameRate);
 }

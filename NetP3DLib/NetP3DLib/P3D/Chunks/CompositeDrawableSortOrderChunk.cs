@@ -36,10 +36,10 @@ public class CompositeDrawableSortOrderChunk : Chunk
         SortOrder = sortOrder;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(SortOrder);
     }
 
-    internal override Chunk CloneSelf() => new CompositeDrawableSortOrderChunk(SortOrder);
+    protected override Chunk CloneSelf() => new CompositeDrawableSortOrderChunk(SortOrder);
 }

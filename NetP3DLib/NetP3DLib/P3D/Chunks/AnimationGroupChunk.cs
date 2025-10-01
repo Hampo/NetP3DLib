@@ -50,7 +50,7 @@ public class AnimationGroupChunk : NamedChunk
         GroupID = groupID;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.WriteP3DString(Name);
@@ -58,5 +58,5 @@ public class AnimationGroupChunk : NamedChunk
         bw.Write(NumChannels);
     }
 
-    internal override Chunk CloneSelf() => new AnimationGroupChunk(Version, Name, GroupID);
+    protected override Chunk CloneSelf() => new AnimationGroupChunk(Version, Name, GroupID);
 }

@@ -40,11 +40,11 @@ public class ShaderIntegerParameterChunk : ParamChunk
         Value = value;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteFourCC(Param);
         bw.Write(Value);
     }
 
-    internal override Chunk CloneSelf() => new ShaderIntegerParameterChunk(Param, Value);
+    protected override Chunk CloneSelf() => new ShaderIntegerParameterChunk(Param, Value);
 }

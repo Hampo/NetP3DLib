@@ -71,7 +71,7 @@ public class AnimationChannelCountChunk : Chunk
         NumKeys.AddRange(numKeys);
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.Write(ChannelChunkID);
@@ -80,5 +80,5 @@ public class AnimationChannelCountChunk : Chunk
             bw.Write(key);
     }
 
-    internal override Chunk CloneSelf() => new AnimationChannelCountChunk(Version, ChannelChunkID, NumKeys);
+    protected override Chunk CloneSelf() => new AnimationChannelCountChunk(Version, ChannelChunkID, NumKeys);
 }

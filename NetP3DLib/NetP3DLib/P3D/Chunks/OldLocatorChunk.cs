@@ -47,12 +47,12 @@ public class OldLocatorChunk : NamedChunk
         Position = position;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(Version);
         bw.Write(Position);
     }
 
-    internal override Chunk CloneSelf() => new OldLocatorChunk(Name, Version, Position);
+    protected override Chunk CloneSelf() => new OldLocatorChunk(Name, Version, Position);
 }

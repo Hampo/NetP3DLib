@@ -93,7 +93,7 @@ public class CollisionObjectAttributeChunk : Chunk
         ExtraAttribute3 = extraAttribute3;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(isStatic);
         bw.Write(DefaultArea);
@@ -106,5 +106,5 @@ public class CollisionObjectAttributeChunk : Chunk
         bw.Write(ExtraAttribute3);
     }
 
-    internal override Chunk CloneSelf() => new CollisionObjectAttributeChunk(IsStatic, DefaultArea, CanRoll, CanSlide, CanSpin, CanBounce, ExtraAttribute1, ExtraAttribute2, ExtraAttribute3);
+    protected override Chunk CloneSelf() => new CollisionObjectAttributeChunk(IsStatic, DefaultArea, CanRoll, CanSlide, CanSpin, CanBounce, ExtraAttribute1, ExtraAttribute2, ExtraAttribute3);
 }

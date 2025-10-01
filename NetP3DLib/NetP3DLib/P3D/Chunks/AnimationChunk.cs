@@ -64,7 +64,7 @@ public class AnimationChunk : NamedChunk
         Cyclic = cyclic;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.WriteP3DString(Name);
@@ -74,5 +74,5 @@ public class AnimationChunk : NamedChunk
         bw.Write(cyclic);
     }
 
-    internal override Chunk CloneSelf() => new AnimationChunk(Version, Name, AnimationType, NumFrames, FrameRate, Cyclic);
+    protected override Chunk CloneSelf() => new AnimationChunk(Version, Name, AnimationType, NumFrames, FrameRate, Cyclic);
 }

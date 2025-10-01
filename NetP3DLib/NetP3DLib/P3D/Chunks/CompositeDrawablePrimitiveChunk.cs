@@ -53,7 +53,7 @@ public class CompositeDrawablePrimitiveChunk : NamedChunk
         SkeletonJointID = skeletonJointId;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.Write(CreateInstance);
@@ -62,5 +62,5 @@ public class CompositeDrawablePrimitiveChunk : NamedChunk
         bw.Write(SkeletonJointID);
     }
 
-    internal override Chunk CloneSelf() => new CompositeDrawablePrimitiveChunk(Version, CreateInstance, Name, Type, SkeletonJointID);
+    protected override Chunk CloneSelf() => new CompositeDrawablePrimitiveChunk(Version, CreateInstance, Name, Type, SkeletonJointID);
 }

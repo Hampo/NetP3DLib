@@ -49,12 +49,12 @@ public class OldScenegraphVisibilityChunk : NamedChunk
         IsVisible = isVisible;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(NumChildren);
         bw.Write(isVisible);
     }
 
-    internal override Chunk CloneSelf() => new OldScenegraphVisibilityChunk(Name, IsVisible);
+    protected override Chunk CloneSelf() => new OldScenegraphVisibilityChunk(Name, IsVisible);
 }

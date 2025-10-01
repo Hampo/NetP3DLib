@@ -80,14 +80,14 @@ public class MultiControllerTracksChunk : Chunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(NumTracks);
         foreach (var track in Tracks)
             track.Write(bw);
     }
 
-    internal override Chunk CloneSelf()
+    protected override Chunk CloneSelf()
     {
         var tracks = new List<Track>(Tracks.Count);
         foreach (var track in Tracks)

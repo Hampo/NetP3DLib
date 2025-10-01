@@ -56,12 +56,12 @@ public class MultiControllerTrackChunk : NamedChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.WriteP3DString(Name);
         bw.WriteFourCC(Type);
     }
 
-    internal override Chunk CloneSelf() => new MultiControllerTrackChunk(Version, Name, Type);
+    protected override Chunk CloneSelf() => new MultiControllerTrackChunk(Version, Name, Type);
 }

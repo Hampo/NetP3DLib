@@ -40,11 +40,11 @@ public class SortOrderChunk : Chunk
         SortOrder = sortOrder;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.Write(SortOrder);
     }
 
-    internal override Chunk CloneSelf() => new SortOrderChunk(Version, SortOrder);
+    protected override Chunk CloneSelf() => new SortOrderChunk(Version, SortOrder);
 }

@@ -41,11 +41,11 @@ public class BoundingBoxChunk : Chunk
         High = high;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Low);
         bw.Write(High);
     }
 
-    internal override Chunk CloneSelf() => new BoundingBoxChunk(Low, High);
+    protected override Chunk CloneSelf() => new BoundingBoxChunk(Low, High);
 }

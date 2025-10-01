@@ -46,12 +46,12 @@ public class LensFlareChunk : NamedChunk
         Version = version;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(Version);
         bw.Write(NumOldBillboardQuadGroups);
     }
 
-    internal override Chunk CloneSelf() => new LensFlareChunk(Name, Version);
+    protected override Chunk CloneSelf() => new LensFlareChunk(Name, Version);
 }

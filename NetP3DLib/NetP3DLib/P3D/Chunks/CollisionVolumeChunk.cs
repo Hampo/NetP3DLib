@@ -44,12 +44,12 @@ public class CollisionVolumeChunk : Chunk
         OwnerIndex = ownerIndex;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(ObjectReferenceIndex);
         bw.Write(OwnerIndex);
         bw.Write(NumSubVolumes);
     }
 
-    internal override Chunk CloneSelf() => new CollisionVolumeChunk(ObjectReferenceIndex, OwnerIndex);
+    protected override Chunk CloneSelf() => new CollisionVolumeChunk(ObjectReferenceIndex, OwnerIndex);
 }

@@ -97,7 +97,7 @@ public class LocatorChunk : NamedChunk
         Position = position;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write((uint)LocatorType);
@@ -109,7 +109,7 @@ public class LocatorChunk : NamedChunk
 
     public override string ToString() => $"\"{Name}\" ({LocatorType} {GetChunkType(this)} (Type {(int)LocatorType}) (0x{ID:X}))";
 
-    internal override Chunk CloneSelf() => new LocatorChunk(Name, TypeData.Clone(), Position);
+    protected override Chunk CloneSelf() => new LocatorChunk(Name, TypeData.Clone(), Position);
 
     public abstract class LocatorData
     {

@@ -47,11 +47,11 @@ public class OldBillboardPerspectiveInfoChunk : Chunk
         PerspectiveScale = perspectiveScale;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.Write(perspectiveScale);
     }
 
-    internal override Chunk CloneSelf() => new OldBillboardPerspectiveInfoChunk(Version, PerspectiveScale);
+    protected override Chunk CloneSelf() => new OldBillboardPerspectiveInfoChunk(Version, PerspectiveScale);
 }

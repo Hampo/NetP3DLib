@@ -61,14 +61,14 @@ public class ImageGlyphListChunk : Chunk
         Glyphs.AddRange(glyphs);
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(NumGlyphs);
         foreach (var glyph in Glyphs)
             glyph.Write(bw);
     }
 
-    internal override Chunk CloneSelf()
+    protected override Chunk CloneSelf()
     {
         var glyphs = new List<Glyph>(Glyphs.Count);
         foreach (var glyph in Glyphs)

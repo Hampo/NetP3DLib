@@ -42,11 +42,11 @@ public class AnimationHeaderChunk : Chunk
         NumGroups = numGroups;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.Write(NumGroups);
     }
 
-    internal override Chunk CloneSelf() => new AnimationHeaderChunk(Version, NumGroups);
+    protected override Chunk CloneSelf() => new AnimationHeaderChunk(Version, NumGroups);
 }

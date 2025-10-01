@@ -48,11 +48,11 @@ public class OldScenegraphLightGroupChunk : NamedChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.WriteP3DString(LightGroupName);
     }
 
-    internal override Chunk CloneSelf() => new OldScenegraphLightGroupChunk(Name, LightGroupName);
+    protected override Chunk CloneSelf() => new OldScenegraphLightGroupChunk(Name, LightGroupName);
 }

@@ -61,14 +61,14 @@ public class CollisionMeshTriangleListChunk : Chunk
         Triangles.AddRange(entries);
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(NumTriangles);
         foreach (var entry in Triangles)
             entry.Write(bw);
     }
 
-    internal override Chunk CloneSelf()
+    protected override Chunk CloneSelf()
     {
         var triangles = new List<Triangle>(Triangles.Count);
         foreach (var triangle in Triangles)

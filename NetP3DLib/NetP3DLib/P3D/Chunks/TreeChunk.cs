@@ -46,12 +46,12 @@ public class TreeChunk : Chunk
         Maximum = maximum;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(NumChildren);
         bw.Write(Minimum);
         bw.Write(Maximum);
     }
 
-    internal override Chunk CloneSelf() => new TreeChunk(Minimum, Maximum);
+    protected override Chunk CloneSelf() => new TreeChunk(Minimum, Maximum);
 }

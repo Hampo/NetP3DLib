@@ -67,7 +67,7 @@ public class MultiColourListChunk : Chunk
         Colours.AddRange(colours);
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(NumColours);
         bw.Write(Channel);
@@ -75,5 +75,5 @@ public class MultiColourListChunk : Chunk
             bw.Write(colour);
     }
 
-    internal override Chunk CloneSelf() => new MultiColourListChunk(Channel, Colours);
+    protected override Chunk CloneSelf() => new MultiColourListChunk(Channel, Colours);
 }

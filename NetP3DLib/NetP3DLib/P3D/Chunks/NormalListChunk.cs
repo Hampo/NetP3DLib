@@ -63,12 +63,12 @@ public class NormalListChunk : Chunk
         Normals.AddRange(normals);
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(NumNormals);
         foreach (var pos in Normals)
             bw.Write(pos);
     }
 
-    internal override Chunk CloneSelf() => new NormalListChunk(Normals);
+    protected override Chunk CloneSelf() => new NormalListChunk(Normals);
 }

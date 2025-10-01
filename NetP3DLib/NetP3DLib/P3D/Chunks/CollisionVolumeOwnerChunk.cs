@@ -35,10 +35,10 @@ public class CollisionVolumeOwnerChunk : Chunk
     public CollisionVolumeOwnerChunk() : base(ChunkID)
     { }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(NumNames);
     }
 
-    internal override Chunk CloneSelf() => new CollisionVolumeOwnerChunk();
+    protected override Chunk CloneSelf() => new CollisionVolumeOwnerChunk();
 }

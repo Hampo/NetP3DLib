@@ -25,8 +25,8 @@ public class OldScenegraphRootChunk : Chunk
     public OldScenegraphRootChunk() : base(ChunkID)
     { }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     { }
 
-    internal override Chunk CloneSelf() => new OldScenegraphRootChunk();
+    protected override Chunk CloneSelf() => new OldScenegraphRootChunk();
 }

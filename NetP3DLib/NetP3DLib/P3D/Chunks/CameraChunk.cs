@@ -71,7 +71,7 @@ public class CameraChunk : NamedChunk
         Up = up;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(Version);
@@ -84,5 +84,5 @@ public class CameraChunk : NamedChunk
         bw.Write(Up);
     }
 
-    internal override Chunk CloneSelf() => new CameraChunk(Name, Version, FOV, AspectRatio, NearClip, FarClip, Position, Look, Up);
+    protected override Chunk CloneSelf() => new CameraChunk(Name, Version, FOV, AspectRatio, NearClip, FarClip, Position, Look, Up);
 }

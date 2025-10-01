@@ -45,11 +45,11 @@ public class CompositeDrawableSkinChunk : NamedChunk
         IsTranslucent = isTranslucent;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(isTranslucent);
     }
 
-    internal override Chunk CloneSelf() => new CompositeDrawableSkinChunk(Name, IsTranslucent);
+    protected override Chunk CloneSelf() => new CompositeDrawableSkinChunk(Name, IsTranslucent);
 }

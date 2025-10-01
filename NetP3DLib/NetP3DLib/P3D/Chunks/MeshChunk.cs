@@ -46,12 +46,12 @@ public class MeshChunk : NamedChunk
         Version = version;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(Version);
         bw.Write(NumOldPrimitiveGroups);
     }
 
-    internal override Chunk CloneSelf() => new MeshChunk(Name, Version);
+    protected override Chunk CloneSelf() => new MeshChunk(Name, Version);
 }

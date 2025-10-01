@@ -37,10 +37,10 @@ public class CollisionOrientedBoundingBoxChunk : Chunk
         HalfExtents = halfExtents;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(HalfExtents);
     }
 
-    internal override Chunk CloneSelf() => new CollisionOrientedBoundingBoxChunk(HalfExtents);
+    protected override Chunk CloneSelf() => new CollisionOrientedBoundingBoxChunk(HalfExtents);
 }

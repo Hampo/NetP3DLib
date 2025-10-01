@@ -54,7 +54,7 @@ public class CollisionMeshTreeChunk : Chunk
         High = high;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.Write(FirstNode);
@@ -63,5 +63,5 @@ public class CollisionMeshTreeChunk : Chunk
         bw.Write(High);
     }
 
-    internal override Chunk CloneSelf() => new CollisionMeshTreeChunk(Version, FirstNode, HierarchyIndex, Low, High);
+    protected override Chunk CloneSelf() => new CollisionMeshTreeChunk(Version, FirstNode, HierarchyIndex, Low, High);
 }

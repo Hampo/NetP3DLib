@@ -65,7 +65,7 @@ public class StatePropDataV1Chunk : NamedChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.WriteP3DString(Name);
@@ -73,5 +73,5 @@ public class StatePropDataV1Chunk : NamedChunk
         bw.Write(NumStates);
     }
 
-    internal override Chunk CloneSelf() => new StatePropDataV1Chunk(Version, Name, ObjectFactoryName);
+    protected override Chunk CloneSelf() => new StatePropDataV1Chunk(Version, Name, ObjectFactoryName);
 }

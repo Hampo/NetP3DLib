@@ -48,7 +48,7 @@ public class LightConeParamChunk : Chunk
         Range = range;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Phi);
         bw.Write(Theta);
@@ -56,5 +56,5 @@ public class LightConeParamChunk : Chunk
         bw.Write(Range);
     }
 
-    internal override Chunk CloneSelf() => new LightConeParamChunk(Phi, Theta, Falloff, Range);
+    protected override Chunk CloneSelf() => new LightConeParamChunk(Phi, Theta, Falloff, Range);
 }

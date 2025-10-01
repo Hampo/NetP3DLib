@@ -56,7 +56,7 @@ public class ImageFontChunk : NamedChunk
         FontBaseLine = fontBaseLine;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.WriteP3DString(Name);
@@ -66,5 +66,5 @@ public class ImageFontChunk : NamedChunk
         bw.Write(FontBaseLine);
     }
 
-    internal override Chunk CloneSelf() => new ImageFontChunk(Version, Name, FontSize, FontWidth, FontHeight, FontBaseLine);
+    protected override Chunk CloneSelf() => new ImageFontChunk(Version, Name, FontSize, FontWidth, FontHeight, FontBaseLine);
 }

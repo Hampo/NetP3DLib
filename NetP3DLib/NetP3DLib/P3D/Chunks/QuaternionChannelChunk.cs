@@ -109,7 +109,7 @@ public class QuaternionChannelChunk : ParamChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.WriteFourCC(Param);
@@ -120,5 +120,5 @@ public class QuaternionChannelChunk : ParamChunk
             bw.Write(value);
     }
 
-    internal override Chunk CloneSelf() => new QuaternionChannelChunk(Version, Param, Frames, Values);
+    protected override Chunk CloneSelf() => new QuaternionChannelChunk(Version, Param, Frames, Values);
 }

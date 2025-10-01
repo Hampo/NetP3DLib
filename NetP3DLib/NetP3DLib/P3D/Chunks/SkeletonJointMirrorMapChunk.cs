@@ -48,7 +48,7 @@ public class SkeletonJointMirrorMapChunk : Chunk
         ZAxisMap = zAxisMap;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(MappedJointIndex);
         bw.Write(XAxisMap);
@@ -56,5 +56,5 @@ public class SkeletonJointMirrorMapChunk : Chunk
         bw.Write(ZAxisMap);
     }
 
-    internal override Chunk CloneSelf() => new SkeletonJointMirrorMapChunk(MappedJointIndex, XAxisMap, YAxisMap, ZAxisMap);
+    protected override Chunk CloneSelf() => new SkeletonJointMirrorMapChunk(MappedJointIndex, XAxisMap, YAxisMap, ZAxisMap);
 }

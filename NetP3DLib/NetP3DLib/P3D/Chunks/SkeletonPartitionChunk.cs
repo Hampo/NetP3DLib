@@ -65,7 +65,7 @@ public class SkeletonPartitionChunk : NamedChunk
         JointBits.AddRange(jointBits);
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(NumJointValues);
@@ -73,5 +73,5 @@ public class SkeletonPartitionChunk : NamedChunk
             bw.Write(jointBit);
     }
 
-    internal override Chunk CloneSelf() => new SkeletonPartitionChunk(Name, JointBits);
+    protected override Chunk CloneSelf() => new SkeletonPartitionChunk(Name, JointBits);
 }

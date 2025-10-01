@@ -73,7 +73,7 @@ public class SpriteChunk : NamedChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(NativeX);
@@ -85,5 +85,5 @@ public class SpriteChunk : NamedChunk
         bw.Write(BlitBorder);
     }
 
-    internal override Chunk CloneSelf() => new SpriteChunk(Name, NativeX, NativeY, Shader, ImageWidth, ImageHeight, BlitBorder);
+    protected override Chunk CloneSelf() => new SpriteChunk(Name, NativeX, NativeY, Shader, ImageWidth, ImageHeight, BlitBorder);
 }

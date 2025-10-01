@@ -41,10 +41,10 @@ public class SkeletonJointBonePreserveChunk : Chunk
         PreserveBoneLengths = preserveBoneLengths;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(preserveBoneLengths);
     }
 
-    internal override Chunk CloneSelf() => new SkeletonJointBonePreserveChunk(PreserveBoneLengths);
+    protected override Chunk CloneSelf() => new SkeletonJointBonePreserveChunk(PreserveBoneLengths);
 }

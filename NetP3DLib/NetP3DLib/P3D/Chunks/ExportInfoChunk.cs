@@ -34,10 +34,10 @@ public class ExportInfoChunk : NamedChunk
         Name = name;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
     }
 
-    internal override Chunk CloneSelf() => new ExportInfoChunk(Name);
+    protected override Chunk CloneSelf() => new ExportInfoChunk(Name);
 }

@@ -90,7 +90,7 @@ public class FrontendScreenChunk : NamedChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(Version);
@@ -99,5 +99,5 @@ public class FrontendScreenChunk : NamedChunk
             bw.WriteP3DString(pageName);
     }
 
-    internal override Chunk CloneSelf() => new FrontendScreenChunk(Name, Version, PageNames);
+    protected override Chunk CloneSelf() => new FrontendScreenChunk(Name, Version, PageNames);
 }

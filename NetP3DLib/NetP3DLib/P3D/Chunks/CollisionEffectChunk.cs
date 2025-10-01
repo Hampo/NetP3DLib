@@ -69,12 +69,12 @@ public class CollisionEffectChunk : Chunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write((uint)ClassType);
         bw.Write(PhysPropID);
         bw.WriteP3DString(SoundResourceDataName);
     }
 
-    internal override Chunk CloneSelf() => new CollisionEffectChunk(ClassType, PhysPropID, SoundResourceDataName);
+    protected override Chunk CloneSelf() => new CollisionEffectChunk(ClassType, PhysPropID, SoundResourceDataName);
 }

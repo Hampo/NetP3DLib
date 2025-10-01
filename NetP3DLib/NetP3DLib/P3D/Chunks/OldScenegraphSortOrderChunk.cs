@@ -36,10 +36,10 @@ public class OldScenegraphSortOrderChunk : Chunk
         SortOrder = sortOrder;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(SortOrder);
     }
 
-    internal override Chunk CloneSelf() => new OldScenegraphSortOrderChunk(SortOrder);
+    protected override Chunk CloneSelf() => new OldScenegraphSortOrderChunk(SortOrder);
 }

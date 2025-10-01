@@ -37,10 +37,10 @@ public class LightDirectionChunk : Chunk
         Direction = direction;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Direction);
     }
 
-    internal override Chunk CloneSelf() => new LightDirectionChunk(Direction);
+    protected override Chunk CloneSelf() => new LightDirectionChunk(Direction);
 }

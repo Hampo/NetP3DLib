@@ -108,7 +108,7 @@ public class IntegerChannelChunk : ParamChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.WriteFourCC(Param);
@@ -119,5 +119,5 @@ public class IntegerChannelChunk : ParamChunk
             bw.Write(value);
     }
 
-    internal override Chunk CloneSelf() => new IntegerChannelChunk(Version, Param, Frames, Values);
+    protected override Chunk CloneSelf() => new IntegerChannelChunk(Version, Param, Frames, Values);
 }

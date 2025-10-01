@@ -52,7 +52,7 @@ public class Skeleton2Chunk : NamedChunk
         NumLimbs = numLimbs;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(Version);
@@ -61,5 +61,5 @@ public class Skeleton2Chunk : NamedChunk
         bw.Write(NumLimbs);
     }
 
-    internal override Chunk CloneSelf() => new Skeleton2Chunk(Name, Version, NumLimbs);
+    protected override Chunk CloneSelf() => new Skeleton2Chunk(Name, Version, NumLimbs);
 }

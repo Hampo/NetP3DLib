@@ -69,7 +69,7 @@ public class VisibilityAnimChannelChunk : NamedChunk
         Frames.AddRange(frames);
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(StartState);
@@ -78,5 +78,5 @@ public class VisibilityAnimChannelChunk : NamedChunk
             bw.Write(value);
     }
 
-    internal override Chunk CloneSelf() => new VisibilityAnimChannelChunk(Name, StartState, Frames);
+    protected override Chunk CloneSelf() => new VisibilityAnimChannelChunk(Name, StartState, Frames);
 }

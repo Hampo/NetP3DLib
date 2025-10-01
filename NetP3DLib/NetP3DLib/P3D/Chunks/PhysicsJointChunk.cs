@@ -63,7 +63,7 @@ public class PhysicsJointChunk : Chunk
         DOF = dof;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Index);
         bw.Write(Volume);
@@ -73,5 +73,5 @@ public class PhysicsJointChunk : Chunk
         bw.Write((int)DOF);
     }
 
-    internal override Chunk CloneSelf() => new PhysicsJointChunk(Index, Volume, Stiffness, MaxAngle, MinAngle, DOF);
+    protected override Chunk CloneSelf() => new PhysicsJointChunk(Index, Volume, Stiffness, MaxAngle, MinAngle, DOF);
 }

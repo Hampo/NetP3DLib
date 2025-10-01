@@ -70,7 +70,7 @@ public class Vector2OffsetListChunk : ParamChunk
         Offsets.AddRange(offsets);
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.WriteFourCC(Param);
@@ -79,7 +79,7 @@ public class Vector2OffsetListChunk : ParamChunk
             offset.Write(bw);
     }
 
-    internal override Chunk CloneSelf()
+    protected override Chunk CloneSelf()
     {
         var offsets = new List<Vector2Offset>(Offsets.Count);
         foreach (var offset in Offsets)

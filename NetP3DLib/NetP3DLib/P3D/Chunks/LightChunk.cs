@@ -78,7 +78,7 @@ public class LightChunk : NamedChunk
         Enabled = enabled;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(Version);
@@ -90,5 +90,5 @@ public class LightChunk : NamedChunk
         bw.Write(enabled);
     }
 
-    internal override Chunk CloneSelf() => new LightChunk(Name, Version, Type, Colour, Constant, Linear, Squared, Enabled);
+    protected override Chunk CloneSelf() => new LightChunk(Name, Version, Type, Colour, Constant, Linear, Squared, Enabled);
 }

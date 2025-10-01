@@ -50,12 +50,12 @@ public class AnimObjWrapperChunk : NamedChunk
         HasAlpha = hasAlpha;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(Version);
         bw.Write(hasAlpha);
     }
 
-    internal override Chunk CloneSelf() => new AnimObjWrapperChunk(Name, Version, HasAlpha);
+    protected override Chunk CloneSelf() => new AnimObjWrapperChunk(Name, Version, HasAlpha);
 }

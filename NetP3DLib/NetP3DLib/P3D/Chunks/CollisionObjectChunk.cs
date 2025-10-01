@@ -63,7 +63,7 @@ public class CollisionObjectChunk : NamedChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(Version);
@@ -72,5 +72,5 @@ public class CollisionObjectChunk : NamedChunk
         bw.Write(NumOwners);
     }
 
-    internal override Chunk CloneSelf() => new CollisionObjectChunk(Name, Version, MaterialName, NumSubObjects);
+    protected override Chunk CloneSelf() => new CollisionObjectChunk(Name, Version, MaterialName, NumSubObjects);
 }

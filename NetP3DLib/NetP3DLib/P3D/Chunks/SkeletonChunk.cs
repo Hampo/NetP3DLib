@@ -46,12 +46,12 @@ public class SkeletonChunk : NamedChunk
         Version = version;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(Version);
         bw.Write(NumJoints);
     }
 
-    internal override Chunk CloneSelf() => new SkeletonChunk(Name, Version);
+    protected override Chunk CloneSelf() => new SkeletonChunk(Name, Version);
 }

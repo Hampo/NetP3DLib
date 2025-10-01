@@ -40,11 +40,11 @@ public class GameAttributeVectorParameterChunk : NamedChunk
         Value = value;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(Value);
     }
 
-    internal override Chunk CloneSelf() => new GameAttributeVectorParameterChunk(Name, Value);
+    protected override Chunk CloneSelf() => new GameAttributeVectorParameterChunk(Name, Value);
 }

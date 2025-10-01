@@ -105,7 +105,7 @@ public class VolumeImageChunk : NamedChunk
         Format = format;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(Version);
@@ -118,5 +118,5 @@ public class VolumeImageChunk : NamedChunk
         bw.Write((uint)Format);
     }
 
-    internal override Chunk CloneSelf() => new VolumeImageChunk(Name, Version, Width, Height, Depth, Bpp, Palettized, HasAlpha, Format);
+    protected override Chunk CloneSelf() => new VolumeImageChunk(Name, Version, Width, Height, Depth, Bpp, Palettized, HasAlpha, Format);
 }

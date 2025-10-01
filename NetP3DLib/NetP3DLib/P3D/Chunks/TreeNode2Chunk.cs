@@ -80,7 +80,7 @@ public class TreeNode2Chunk : Chunk
         AnimEntityLimit = animEntityLimit;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write((sbyte)SplitAxis);
         bw.Write(SplitPosition);
@@ -94,5 +94,5 @@ public class TreeNode2Chunk : Chunk
         bw.Write(AnimEntityLimit);
     }
 
-    internal override Chunk CloneSelf() => new TreeNode2Chunk(SplitAxis, SplitPosition, StaticEntityLimit, StaticPhysEntityLimit, IntersectEntityLimit, DynaPhysEntityLimit, FenceEntityLimit, RoadSegmentEntityLimit, PathSegmentEntityLimit, AnimEntityLimit);
+    protected override Chunk CloneSelf() => new TreeNode2Chunk(SplitAxis, SplitPosition, StaticEntityLimit, StaticPhysEntityLimit, IntersectEntityLimit, DynaPhysEntityLimit, FenceEntityLimit, RoadSegmentEntityLimit, PathSegmentEntityLimit, AnimEntityLimit);
 }

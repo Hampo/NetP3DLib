@@ -72,12 +72,12 @@ public class PathChunk : Chunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(NumPositions);
         foreach (var pos in Positions)
             bw.Write(pos);
     }
 
-    internal override Chunk CloneSelf() => new PathChunk(Positions);
+    protected override Chunk CloneSelf() => new PathChunk(Positions);
 }

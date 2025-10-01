@@ -86,7 +86,7 @@ public class FrameControllerChunk : NamedChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.WriteP3DString(Name);
@@ -98,5 +98,5 @@ public class FrameControllerChunk : NamedChunk
         bw.WriteP3DString(AnimationName);
     }
 
-    internal override Chunk CloneSelf() => new FrameControllerChunk(Version, Name, Type, CycleMode, NumCycles, InfiniteCycle, HierarchyName, AnimationName);
+    protected override Chunk CloneSelf() => new FrameControllerChunk(Version, Name, Type, CycleMode, NumCycles, InfiniteCycle, HierarchyName, AnimationName);
 }

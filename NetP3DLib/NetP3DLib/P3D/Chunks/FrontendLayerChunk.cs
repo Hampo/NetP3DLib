@@ -72,7 +72,7 @@ public class FrontendLayerChunk : NamedChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(Version);
@@ -81,5 +81,5 @@ public class FrontendLayerChunk : NamedChunk
         bw.Write(Alpha);
     }
 
-    internal override Chunk CloneSelf() => new FrontendLayerChunk(Name, Version, Visible, Editable, Alpha);
+    protected override Chunk CloneSelf() => new FrontendLayerChunk(Name, Version, Visible, Editable, Alpha);
 }

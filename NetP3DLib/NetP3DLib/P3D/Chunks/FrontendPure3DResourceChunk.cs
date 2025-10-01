@@ -76,7 +76,7 @@ public class FrontendPure3DResourceChunk : NamedChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(Version);
@@ -86,5 +86,5 @@ public class FrontendPure3DResourceChunk : NamedChunk
         bw.WriteP3DString(AnimationName);
     }
 
-    internal override Chunk CloneSelf() => new FrontendPure3DResourceChunk(Name, Version, Filename, InventoryName, CameraName, AnimationName);
+    protected override Chunk CloneSelf() => new FrontendPure3DResourceChunk(Name, Version, Filename, InventoryName, CameraName, AnimationName);
 }

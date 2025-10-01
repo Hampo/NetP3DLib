@@ -50,7 +50,7 @@ public class AnimatedObjectAnimationChunk : NamedChunk
         NumOldFrameControllers = numOldFrameControllers;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.WriteP3DString(Name);
@@ -58,5 +58,5 @@ public class AnimatedObjectAnimationChunk : NamedChunk
         bw.Write(NumOldFrameControllers);
     }
 
-    internal override Chunk CloneSelf() => new AnimatedObjectAnimationChunk(Version, Name, FrameRate, NumOldFrameControllers);
+    protected override Chunk CloneSelf() => new AnimatedObjectAnimationChunk(Version, Name, FrameRate, NumOldFrameControllers);
 }

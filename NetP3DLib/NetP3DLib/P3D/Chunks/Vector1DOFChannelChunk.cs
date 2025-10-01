@@ -135,7 +135,7 @@ public class Vector1DOFChannelChunk : ParamChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.WriteFourCC(Param);
@@ -148,5 +148,5 @@ public class Vector1DOFChannelChunk : ParamChunk
             bw.Write(value);
     }
 
-    internal override Chunk CloneSelf() => new Vector1DOFChannelChunk(Version, Param, DynamicIndex, Constants, Frames, Values);
+    protected override Chunk CloneSelf() => new Vector1DOFChannelChunk(Version, Param, DynamicIndex, Constants, Frames, Values);
 }

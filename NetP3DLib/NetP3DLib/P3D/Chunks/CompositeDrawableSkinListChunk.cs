@@ -35,10 +35,10 @@ public class CompositeDrawableSkinListChunk : Chunk
     public CompositeDrawableSkinListChunk() : base(ChunkID)
     { }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(NumElements);
     }
 
-    internal override Chunk CloneSelf() => new CompositeDrawableSkinListChunk();
+    protected override Chunk CloneSelf() => new CompositeDrawableSkinListChunk();
 }

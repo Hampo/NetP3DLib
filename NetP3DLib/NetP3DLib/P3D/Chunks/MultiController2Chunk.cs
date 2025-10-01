@@ -76,7 +76,7 @@ public class MultiController2Chunk : NamedChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.WriteP3DString(Name);
@@ -88,5 +88,5 @@ public class MultiController2Chunk : NamedChunk
         bw.Write(NumTracks);
     }
 
-    internal override Chunk CloneSelf() => new MultiController2Chunk(Version, Name, CycleMode, NumCycles, InfiniteCycle, NumFrames, FrameRate);
+    protected override Chunk CloneSelf() => new MultiController2Chunk(Version, Name, CycleMode, NumCycles, InfiniteCycle, NumFrames, FrameRate);
 }

@@ -65,7 +65,7 @@ public class ParticleSystemChunk : NamedChunk
         Translation = translation;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.WriteP3DString(Name);
@@ -77,5 +77,5 @@ public class ParticleSystemChunk : NamedChunk
         bw.Write(NumEmitters);
     }
 
-    internal override Chunk CloneSelf() => new ParticleSystemChunk(Version, Name, FrameRate, NumFrames, IsCyclic, Rotation, Translation);
+    protected override Chunk CloneSelf() => new ParticleSystemChunk(Version, Name, FrameRate, NumFrames, IsCyclic, Rotation, Translation);
 }

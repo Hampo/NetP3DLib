@@ -37,10 +37,10 @@ public class PhysicsVectorChunk : Chunk
         Vector = vector;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Vector);
     }
 
-    internal override Chunk CloneSelf() => new PhysicsVectorChunk(Vector);
+    protected override Chunk CloneSelf() => new PhysicsVectorChunk(Vector);
 }

@@ -49,12 +49,12 @@ public class CollisionCylinderChunk : Chunk
         FlatEnd = flatEnd;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Radius);
         bw.Write(HalfLength);
         bw.Write(flatEnd);
     }
 
-    internal override Chunk CloneSelf() => new CollisionCylinderChunk(Radius, HalfLength, FlatEnd);
+    protected override Chunk CloneSelf() => new CollisionCylinderChunk(Radius, HalfLength, FlatEnd);
 }

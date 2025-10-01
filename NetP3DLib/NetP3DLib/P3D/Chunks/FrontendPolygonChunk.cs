@@ -114,7 +114,7 @@ public class FrontendPolygonChunk : NamedChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(Version);
@@ -126,5 +126,5 @@ public class FrontendPolygonChunk : NamedChunk
             bw.Write(colour);
     }
 
-    internal override Chunk CloneSelf() => new FrontendPolygonChunk(Name, Version, Translucency, Points, Colours);
+    protected override Chunk CloneSelf() => new FrontendPolygonChunk(Name, Version, Translucency, Points, Colours);
 }

@@ -101,7 +101,7 @@ public class FrontendPure3DObjectChunk : NamedChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(Version);
@@ -117,5 +117,5 @@ public class FrontendPure3DObjectChunk : NamedChunk
         bw.WriteP3DString(Pure3DFilename);
     }
 
-    internal override Chunk CloneSelf() => new FrontendPure3DObjectChunk(Name, Version, PositionX, PositionY, DimensionX, DimensionY, JustificationX, JustificationY, Colour, Translucency, RotationValue, Pure3DFilename);
+    protected override Chunk CloneSelf() => new FrontendPure3DObjectChunk(Name, Version, PositionX, PositionY, DimensionX, DimensionY, JustificationX, JustificationY, Colour, Translucency, RotationValue, Pure3DFilename);
 }

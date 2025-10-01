@@ -69,7 +69,7 @@ public class MemoryImageIndexListChunk : Chunk
         Indices.AddRange(indices);
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.Write(Param);
@@ -78,5 +78,5 @@ public class MemoryImageIndexListChunk : Chunk
             bw.Write(index);
     }
 
-    internal override Chunk CloneSelf() => new MemoryImageIndexListChunk(Version, Param, Indices);
+    protected override Chunk CloneSelf() => new MemoryImageIndexListChunk(Version, Param, Indices);
 }

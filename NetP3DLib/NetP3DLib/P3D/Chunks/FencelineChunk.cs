@@ -35,10 +35,10 @@ public class FencelineChunk : Chunk
     public FencelineChunk() : base(ChunkID)
     { }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(NumWalls);
     }
 
-    internal override Chunk CloneSelf() => new FencelineChunk();
+    protected override Chunk CloneSelf() => new FencelineChunk();
 }

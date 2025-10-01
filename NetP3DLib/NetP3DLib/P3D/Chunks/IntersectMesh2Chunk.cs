@@ -36,10 +36,10 @@ public class IntersectMesh2Chunk : Chunk
         SurfaceType = surfaceType;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(SurfaceType);
     }
 
-    internal override Chunk CloneSelf() => new IntersectMesh2Chunk(SurfaceType);
+    protected override Chunk CloneSelf() => new IntersectMesh2Chunk(SurfaceType);
 }

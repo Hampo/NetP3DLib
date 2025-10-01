@@ -58,12 +58,12 @@ public class Unknown7000008Chunk : Chunk
         Unknown.AddRange(unknown);
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(NumUnknown);
         foreach (var unknown in Unknown)
             bw.Write(unknown);
     }
 
-    internal override Chunk CloneSelf() => new Unknown7000008Chunk(Unknown);
+    protected override Chunk CloneSelf() => new Unknown7000008Chunk(Unknown);
 }

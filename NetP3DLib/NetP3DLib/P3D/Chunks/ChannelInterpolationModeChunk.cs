@@ -47,11 +47,11 @@ public class ChannelInterpolationModeChunk : Chunk
         Interpolate = interpolate;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.Write(interpolate);
     }
 
-    internal override Chunk CloneSelf() => new ChannelInterpolationModeChunk(Version, Interpolate);
+    protected override Chunk CloneSelf() => new ChannelInterpolationModeChunk(Version, Interpolate);
 }

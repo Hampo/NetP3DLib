@@ -141,7 +141,7 @@ public class IntersectChunk : Chunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(NumIndices);
         foreach (var i in Indices)
@@ -154,5 +154,5 @@ public class IntersectChunk : Chunk
             bw.Write(normal);
     }
 
-    internal override Chunk CloneSelf() => new IntersectChunk(Indices, Positions, Normals);
+    protected override Chunk CloneSelf() => new IntersectChunk(Indices, Positions, Normals);
 }

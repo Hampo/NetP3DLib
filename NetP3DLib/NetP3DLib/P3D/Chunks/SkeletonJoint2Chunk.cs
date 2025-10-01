@@ -45,12 +45,12 @@ public class SkeletonJoint2Chunk : NamedChunk
         RestPose = restPose;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(Parent);
         bw.Write(RestPose);
     }
 
-    internal override Chunk CloneSelf() => new SkeletonJoint2Chunk(Name, Parent, RestPose);
+    protected override Chunk CloneSelf() => new SkeletonJoint2Chunk(Name, Parent, RestPose);
 }

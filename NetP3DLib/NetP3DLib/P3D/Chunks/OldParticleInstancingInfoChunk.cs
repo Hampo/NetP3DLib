@@ -42,11 +42,11 @@ public class OldParticleInstancingInfoChunk : Chunk
         MaxInstances = maxInstances;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.Write(MaxInstances);
     }
 
-    internal override Chunk CloneSelf() => new OldParticleInstancingInfoChunk(Version, MaxInstances);
+    protected override Chunk CloneSelf() => new OldParticleInstancingInfoChunk(Version, MaxInstances);
 }

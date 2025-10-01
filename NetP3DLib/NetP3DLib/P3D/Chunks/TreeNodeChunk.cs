@@ -51,11 +51,11 @@ public class TreeNodeChunk : Chunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(NumChildren);
         bw.Write(ParentOffset);
     }
 
-    internal override Chunk CloneSelf() => new TreeNodeChunk(NumChildren, ParentOffset);
+    protected override Chunk CloneSelf() => new TreeNodeChunk(NumChildren, ParentOffset);
 }

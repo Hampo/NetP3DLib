@@ -39,11 +39,11 @@ public class ShaderDefinitionChunk : NamedChunk
         Definition = definition;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.WriteP3DLongString(Definition);
     }
 
-    internal override Chunk CloneSelf() => new ShaderDefinitionChunk(Name, Definition);
+    protected override Chunk CloneSelf() => new ShaderDefinitionChunk(Name, Definition);
 }

@@ -63,12 +63,12 @@ public class ColourListChunk : Chunk
         Colours.AddRange(colours);
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(NumColours);
         foreach (var colour in Colours)
             bw.Write(colour);
     }
 
-    internal override Chunk CloneSelf() => new ColourListChunk(Colours);
+    protected override Chunk CloneSelf() => new ColourListChunk(Colours);
 }

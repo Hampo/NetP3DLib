@@ -60,7 +60,7 @@ public class SkinChunk : NamedChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(Version);
@@ -68,5 +68,5 @@ public class SkinChunk : NamedChunk
         bw.Write(NumOldPrimitiveGroups + NumPrimitiveGroups);
     }
 
-    internal override Chunk CloneSelf() => new SkinChunk(Name, Version, SkeletonName);
+    protected override Chunk CloneSelf() => new SkinChunk(Name, Version, SkeletonName);
 }

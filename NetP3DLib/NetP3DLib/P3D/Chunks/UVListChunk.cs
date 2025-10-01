@@ -67,7 +67,7 @@ public class UVListChunk : Chunk
         UVs.AddRange(uvs);
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(NumUVs);
         bw.Write(Channel);
@@ -75,5 +75,5 @@ public class UVListChunk : Chunk
             bw.Write(pos);
     }
 
-    internal override Chunk CloneSelf() => new UVListChunk(Channel, UVs);
+    protected override Chunk CloneSelf() => new UVListChunk(Channel, UVs);
 }

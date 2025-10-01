@@ -48,11 +48,11 @@ public class ExportInfoNamedStringChunk : NamedChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.WriteP3DString(Value);
     }
 
-    internal override Chunk CloneSelf() => new ExportInfoNamedStringChunk(Name, Value);
+    protected override Chunk CloneSelf() => new ExportInfoNamedStringChunk(Name, Value);
 }

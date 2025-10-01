@@ -124,7 +124,7 @@ public class CompressedQuaternionChannelChunk : ParamChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.WriteFourCC(Param);
@@ -144,5 +144,5 @@ public class CompressedQuaternionChannelChunk : ParamChunk
         }
     }
 
-    internal override Chunk CloneSelf() => new CompressedQuaternionChannelChunk(Version, Param, Frames, Values);
+    protected override Chunk CloneSelf() => new CompressedQuaternionChannelChunk(Version, Param, Frames, Values);
 }

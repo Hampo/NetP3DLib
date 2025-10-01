@@ -80,14 +80,14 @@ public class ATCChunk : Chunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(NumEntries);
         foreach (var entry in Entries)
             entry.Write(bw);
     }
 
-    internal override Chunk CloneSelf()
+    protected override Chunk CloneSelf()
     {
         var entries = new List<Entry>(Entries.Count);
         foreach (var entry in Entries)

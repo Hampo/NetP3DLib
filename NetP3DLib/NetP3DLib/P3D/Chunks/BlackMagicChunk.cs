@@ -25,8 +25,8 @@ public class BlackMagicChunk : Chunk
     public BlackMagicChunk() : base(ChunkID)
     { }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     { }
 
-    internal override Chunk CloneSelf() => new BlackMagicChunk();
+    protected override Chunk CloneSelf() => new BlackMagicChunk();
 }

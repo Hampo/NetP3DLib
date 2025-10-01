@@ -63,12 +63,12 @@ public class WeightListChunk : Chunk
         Weights.AddRange(weights);
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(NumWeights);
         foreach (var weight in Weights)
             bw.Write(weight);
     }
 
-    internal override Chunk CloneSelf() => new WeightListChunk(Weights);
+    protected override Chunk CloneSelf() => new WeightListChunk(Weights);
 }

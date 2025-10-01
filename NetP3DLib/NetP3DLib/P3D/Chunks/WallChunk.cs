@@ -45,12 +45,12 @@ public class WallChunk : Chunk
         Normal = normal;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Start);
         bw.Write(End);
         bw.Write(Normal);
     }
 
-    internal override Chunk CloneSelf() => new WallChunk(Start, End, Normal);
+    protected override Chunk CloneSelf() => new WallChunk(Start, End, Normal);
 }

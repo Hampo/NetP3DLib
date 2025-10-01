@@ -49,7 +49,7 @@ public class ShadowMeshChunk : NamedChunk
         NumTriangles = numTriangles;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(Version);
@@ -57,5 +57,5 @@ public class ShadowMeshChunk : NamedChunk
         bw.Write(NumTriangles);
     }
 
-    internal override Chunk CloneSelf() => new ShadowMeshChunk(Name, Version, NumVertices, NumTriangles);
+    protected override Chunk CloneSelf() => new ShadowMeshChunk(Name, Version, NumVertices, NumTriangles);
 }

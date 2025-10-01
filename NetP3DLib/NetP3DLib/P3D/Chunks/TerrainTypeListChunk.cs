@@ -67,7 +67,7 @@ public class TerrainTypeListChunk : Chunk
         Types.AddRange(types);
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.Write(NumTypes);
@@ -75,7 +75,7 @@ public class TerrainTypeListChunk : Chunk
             type.Write(bw);
     }
 
-    internal override Chunk CloneSelf() => new TerrainTypeListChunk(Version, Types);
+    protected override Chunk CloneSelf() => new TerrainTypeListChunk(Version, Types);
 
     public class TerrainType
     {

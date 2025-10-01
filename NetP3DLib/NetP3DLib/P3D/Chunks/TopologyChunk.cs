@@ -61,14 +61,14 @@ public class TopologyChunk : Chunk
         Topologies.AddRange(topologies);
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(NumTopology);
         foreach (var entry in Topologies)
             entry.Write(bw);
     }
 
-    internal override Chunk CloneSelf()
+    protected override Chunk CloneSelf()
     {
         var topologies = new List<Topology>(Topologies.Count);
         foreach (var topology in Topologies)

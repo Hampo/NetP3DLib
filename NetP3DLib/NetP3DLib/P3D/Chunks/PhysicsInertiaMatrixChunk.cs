@@ -37,10 +37,10 @@ public class PhysicsInertiaMatrixChunk : Chunk
         Matrix = matrix;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Matrix);
     }
 
-    internal override Chunk CloneSelf() => new PhysicsInertiaMatrixChunk(Matrix);
+    protected override Chunk CloneSelf() => new PhysicsInertiaMatrixChunk(Matrix);
 }

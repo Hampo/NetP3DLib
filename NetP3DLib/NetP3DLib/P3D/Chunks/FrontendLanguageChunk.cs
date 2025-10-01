@@ -106,7 +106,7 @@ public class FrontendLanguageChunk : NamedChunk
             Entries.Add(new(GetNameHash(entry.Key), entry.Value));
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(Language);
@@ -124,7 +124,7 @@ public class FrontendLanguageChunk : NamedChunk
             bw.Write(code);
     }
 
-    internal override Chunk CloneSelf()
+    protected override Chunk CloneSelf()
     {
         var entries = new List<Entry>(Entries.Count);
         foreach (var entry in Entries)

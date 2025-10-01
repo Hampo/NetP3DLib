@@ -109,7 +109,7 @@ public class ColourChannelChunk : ParamChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.WriteFourCC(Param);
@@ -120,5 +120,5 @@ public class ColourChannelChunk : ParamChunk
             bw.Write(value);
     }
 
-    internal override Chunk CloneSelf() => new ColourChannelChunk(Version, Param, Frames, Values);
+    protected override Chunk CloneSelf() => new ColourChannelChunk(Version, Param, Frames, Values);
 }

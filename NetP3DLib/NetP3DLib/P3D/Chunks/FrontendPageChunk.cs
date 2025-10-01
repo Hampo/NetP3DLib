@@ -50,7 +50,7 @@ public class FrontendPageChunk : NamedChunk
         ResolutionY = resolutionY;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(Version);
@@ -58,5 +58,5 @@ public class FrontendPageChunk : NamedChunk
         bw.Write(ResolutionY);
     }
 
-    internal override Chunk CloneSelf() => new FrontendPageChunk(Name, Version, ResolutionX, ResolutionY);
+    protected override Chunk CloneSelf() => new FrontendPageChunk(Name, Version, ResolutionX, ResolutionY);
 }

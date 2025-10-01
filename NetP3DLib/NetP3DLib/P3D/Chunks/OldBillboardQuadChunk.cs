@@ -98,7 +98,7 @@ public class OldBillboardQuadChunk : NamedChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.WriteP3DString(Name);
@@ -115,5 +115,5 @@ public class OldBillboardQuadChunk : NamedChunk
         bw.Write(UVOffset);
     }
 
-    internal override Chunk CloneSelf() => new OldBillboardQuadChunk(Version, Name, BillboardMode, Translation, Colour, UV0, UV1, UV2, UV3, Width, Height, Distance, UVOffset);
+    protected override Chunk CloneSelf() => new OldBillboardQuadChunk(Version, Name, BillboardMode, Translation, Colour, UV0, UV1, UV2, UV3, Width, Height, Distance, UVOffset);
 }

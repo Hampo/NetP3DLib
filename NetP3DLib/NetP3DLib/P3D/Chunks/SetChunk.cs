@@ -54,12 +54,12 @@ public class SetChunk : NamedChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(Version);
         bw.Write(NumTextures);
     }
 
-    internal override Chunk CloneSelf() => new SetChunk(Name, Version);
+    protected override Chunk CloneSelf() => new SetChunk(Name, Version);
 }

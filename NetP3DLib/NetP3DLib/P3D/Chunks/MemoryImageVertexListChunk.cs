@@ -68,7 +68,7 @@ public class MemoryImageVertexListChunk : Chunk
         Vertex.AddRange(vertex);
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.Write(Param);
@@ -76,5 +76,5 @@ public class MemoryImageVertexListChunk : Chunk
         bw.Write(Vertex.ToArray());
     }
 
-    internal override Chunk CloneSelf() => new MemoryImageVertexListChunk(Version, Param, Vertex);
+    protected override Chunk CloneSelf() => new MemoryImageVertexListChunk(Version, Param, Vertex);
 }

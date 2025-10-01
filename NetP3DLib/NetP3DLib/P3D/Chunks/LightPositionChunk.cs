@@ -37,10 +37,10 @@ public class LightPositionChunk : Chunk
         Position = position;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Position);
     }
 
-    internal override Chunk CloneSelf() => new LightPositionChunk(Position);
+    protected override Chunk CloneSelf() => new LightPositionChunk(Position);
 }

@@ -136,7 +136,7 @@ public class FrontendMultiSpriteChunk : NamedChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(Version);
@@ -154,5 +154,5 @@ public class FrontendMultiSpriteChunk : NamedChunk
             bw.WriteP3DString(imageName);
     }
 
-    internal override Chunk CloneSelf() => new FrontendMultiSpriteChunk(Name, Version, PositionX, PositionY, DimensionX, DimensionY, JustificationX, JustificationY, Colour, Translucency, RotationValue, ImageNames);
+    protected override Chunk CloneSelf() => new FrontendMultiSpriteChunk(Name, Version, PositionX, PositionY, DimensionX, DimensionY, JustificationX, JustificationY, Colour, Translucency, RotationValue, ImageNames);
 }

@@ -61,12 +61,12 @@ public class MatrixPaletteChunk : Chunk
         Matrices.AddRange(matrices);
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(NumMatrices);
         foreach (var mat in Matrices)
             bw.Write(mat);
     }
 
-    internal override Chunk CloneSelf() => new MatrixPaletteChunk(Matrices);
+    protected override Chunk CloneSelf() => new MatrixPaletteChunk(Matrices);
 }

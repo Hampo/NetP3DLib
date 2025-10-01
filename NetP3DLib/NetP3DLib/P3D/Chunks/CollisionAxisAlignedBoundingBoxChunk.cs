@@ -36,10 +36,10 @@ public class CollisionAxisAlignedBoundingBoxChunk : Chunk
         Nothing = 0;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Nothing);
     }
 
-    internal override Chunk CloneSelf() => new CollisionAxisAlignedBoundingBoxChunk();
+    protected override Chunk CloneSelf() => new CollisionAxisAlignedBoundingBoxChunk();
 }

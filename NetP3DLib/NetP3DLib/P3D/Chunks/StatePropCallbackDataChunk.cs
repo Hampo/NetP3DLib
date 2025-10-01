@@ -67,12 +67,12 @@ public class StatePropCallbackDataChunk : NamedChunk
         OnFrame = onFrame;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write((int)Event);
         bw.Write(OnFrame);
     }
 
-    internal override Chunk CloneSelf() => new StatePropCallbackDataChunk(Name, Event, OnFrame);
+    protected override Chunk CloneSelf() => new StatePropCallbackDataChunk(Name, Event, OnFrame);
 }

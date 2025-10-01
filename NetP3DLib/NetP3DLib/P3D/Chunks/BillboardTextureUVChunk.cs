@@ -60,7 +60,7 @@ public class BillboardTextureUVChunk : Chunk
         UVOffset = uvOffset;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.Write(RandomU);
@@ -72,5 +72,5 @@ public class BillboardTextureUVChunk : Chunk
         bw.Write(UVOffset);
     }
 
-    internal override Chunk CloneSelf() => new BillboardTextureUVChunk(Version, RandomU, RandomV, UV0, UV1, UV2, UV3, UVOffset);
+    protected override Chunk CloneSelf() => new BillboardTextureUVChunk(Version, RandomU, RandomV, UV0, UV1, UV2, UV3, UVOffset);
 }

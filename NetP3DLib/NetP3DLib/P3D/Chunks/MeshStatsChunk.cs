@@ -47,7 +47,7 @@ public class MeshStatsChunk : NamedChunk
         IsCollision = isCollision;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.WriteP3DString(Name);
@@ -55,5 +55,5 @@ public class MeshStatsChunk : NamedChunk
         bw.Write(IsCollision);
     }
 
-    internal override Chunk CloneSelf() => new MeshStatsChunk(Version, Name, IsRendered, IsCollision);
+    protected override Chunk CloneSelf() => new MeshStatsChunk(Version, Name, IsRendered, IsCollision);
 }

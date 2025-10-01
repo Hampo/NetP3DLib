@@ -55,7 +55,7 @@ public class TriggerVolumeChunk : NamedChunk
         Matrix = matrix;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write((uint)Type);
@@ -63,5 +63,5 @@ public class TriggerVolumeChunk : NamedChunk
         bw.Write(Matrix);
     }
 
-    internal override Chunk CloneSelf() => new TriggerVolumeChunk(Name, Type, HalfExtents, Matrix);
+    protected override Chunk CloneSelf() => new TriggerVolumeChunk(Name, Type, HalfExtents, Matrix);
 }

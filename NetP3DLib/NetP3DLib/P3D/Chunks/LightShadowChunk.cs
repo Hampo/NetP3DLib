@@ -41,10 +41,10 @@ public class LightShadowChunk : Chunk
         Shadow = shadow;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(shadow);
     }
 
-    internal override Chunk CloneSelf() => new LightShadowChunk(Shadow);
+    protected override Chunk CloneSelf() => new LightShadowChunk(Shadow);
 }

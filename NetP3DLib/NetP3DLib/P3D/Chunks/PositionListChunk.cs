@@ -63,12 +63,12 @@ public class PositionListChunk : Chunk
         Positions.AddRange(positions);
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(NumPositions);
         foreach (var pos in Positions)
             bw.Write(pos);
     }
 
-    internal override Chunk CloneSelf() => new PositionListChunk(Positions);
+    protected override Chunk CloneSelf() => new PositionListChunk(Positions);
 }

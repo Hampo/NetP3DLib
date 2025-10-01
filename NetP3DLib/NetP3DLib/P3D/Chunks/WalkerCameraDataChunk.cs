@@ -54,7 +54,7 @@ public class WalkerCameraDataChunk : Chunk
         TargetOffset = targetOffset;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Index);
         bw.Write(MinMagnitude);
@@ -63,5 +63,5 @@ public class WalkerCameraDataChunk : Chunk
         bw.Write(TargetOffset);
     }
 
-    internal override Chunk CloneSelf() => new WalkerCameraDataChunk(Index, MinMagnitude, MaxMagnitude, Elevation, TargetOffset);
+    protected override Chunk CloneSelf() => new WalkerCameraDataChunk(Index, MinMagnitude, MaxMagnitude, Elevation, TargetOffset);
 }

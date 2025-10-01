@@ -67,7 +67,7 @@ public class OldColourOffsetListChunk : Chunk
         Offsets.AddRange(offsets);
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.Write(NumOffsets);
@@ -75,5 +75,5 @@ public class OldColourOffsetListChunk : Chunk
             bw.Write(offset);
     }
 
-    internal override Chunk CloneSelf() => new OldColourOffsetListChunk(Version, Offsets);
+    protected override Chunk CloneSelf() => new OldColourOffsetListChunk(Version, Offsets);
 }

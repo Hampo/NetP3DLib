@@ -88,7 +88,7 @@ public class StatePropStateDataV1Chunk : NamedChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(autoTransition);
@@ -100,7 +100,7 @@ public class StatePropStateDataV1Chunk : NamedChunk
         bw.Write(OutFrame);
     }
 
-    internal override Chunk CloneSelf() => new StatePropStateDataV1Chunk(Name, AutoTransition, OutState, OutFrame);
+    protected override Chunk CloneSelf() => new StatePropStateDataV1Chunk(Name, AutoTransition, OutState, OutFrame);
 
     private static readonly List<uint> ChunkSortPriority = [
         (uint)ChunkIdentifier.State_Prop_Visibilities_Data,

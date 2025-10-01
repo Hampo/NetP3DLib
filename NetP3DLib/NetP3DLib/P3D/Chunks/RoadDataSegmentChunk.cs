@@ -66,7 +66,7 @@ public class RoadDataSegmentChunk : NamedChunk
         Bottom = bottom;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(Type);
@@ -77,5 +77,5 @@ public class RoadDataSegmentChunk : NamedChunk
         bw.Write(Bottom);
     }
 
-    internal override Chunk CloneSelf() => new RoadDataSegmentChunk(Name, Type, Lanes, HasShoulder, Direction, Top, Bottom);
+    protected override Chunk CloneSelf() => new RoadDataSegmentChunk(Name, Type, Lanes, HasShoulder, Direction, Top, Bottom);
 }

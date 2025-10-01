@@ -62,7 +62,7 @@ public class ShadowSkinChunk : NamedChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(Version);
@@ -71,5 +71,5 @@ public class ShadowSkinChunk : NamedChunk
         bw.Write(NumTriangles);
     }
 
-    internal override Chunk CloneSelf() => new ShadowSkinChunk(Name, Version, SkeletonName, NumVertices, NumTriangles);
+    protected override Chunk CloneSelf() => new ShadowSkinChunk(Name, Version, SkeletonName, NumVertices, NumTriangles);
 }

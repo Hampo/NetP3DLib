@@ -25,8 +25,8 @@ public class FenceChunk : Chunk
     public FenceChunk() : base(ChunkID)
     { }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     { }
 
-    internal override Chunk CloneSelf() => new FenceChunk();
+    protected override Chunk CloneSelf() => new FenceChunk();
 }

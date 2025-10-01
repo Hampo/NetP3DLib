@@ -40,11 +40,11 @@ public class CollisionMetaDataChunk : Chunk
         Version = version;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.Write(NumChannels);
     }
 
-    internal override Chunk CloneSelf() => new CollisionMetaDataChunk(Version);
+    protected override Chunk CloneSelf() => new CollisionMetaDataChunk(Version);
 }

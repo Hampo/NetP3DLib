@@ -60,12 +60,12 @@ public class StatePropEventDataChunk : NamedChunk
         Event = @event;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(ToState);
         bw.Write((uint)Event);
     }
 
-    internal override Chunk CloneSelf() => new StatePropEventDataChunk(Name, ToState, Event);
+    protected override Chunk CloneSelf() => new StatePropEventDataChunk(Name, ToState, Event);
 }

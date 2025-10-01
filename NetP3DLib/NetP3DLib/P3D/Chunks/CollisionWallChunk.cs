@@ -25,8 +25,8 @@ public class CollisionWallChunk : Chunk
     public CollisionWallChunk() : base(ChunkID)
     { }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     { }
 
-    internal override Chunk CloneSelf() => new CollisionWallChunk();
+    protected override Chunk CloneSelf() => new CollisionWallChunk();
 }

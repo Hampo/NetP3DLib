@@ -84,7 +84,7 @@ public class LightGroupChunk : NamedChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(NumLights);
@@ -92,5 +92,5 @@ public class LightGroupChunk : NamedChunk
             bw.WriteP3DString(light);
     }
 
-    internal override Chunk CloneSelf() => new LightGroupChunk(Name, Lights);
+    protected override Chunk CloneSelf() => new LightGroupChunk(Name, Lights);
 }

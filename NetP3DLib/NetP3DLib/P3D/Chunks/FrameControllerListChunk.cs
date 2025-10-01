@@ -40,11 +40,11 @@ public class FrameControllerListChunk : Chunk
         Version = version;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.Write(NumControllers);
     }
 
-    internal override Chunk CloneSelf() => new FrameControllerListChunk(Version);
+    protected override Chunk CloneSelf() => new FrameControllerListChunk(Version);
 }

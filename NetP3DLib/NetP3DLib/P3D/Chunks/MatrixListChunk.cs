@@ -61,14 +61,14 @@ public class MatrixListChunk : Chunk
         Matrices.AddRange(matrices);
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(NumMatrices);
         foreach (var mat in Matrices)
             mat.Write(bw);
     }
 
-    internal override Chunk CloneSelf()
+    protected override Chunk CloneSelf()
     {
         var matrices = new List<Matrix>(Matrices.Count);
         foreach (var matrix in Matrices)

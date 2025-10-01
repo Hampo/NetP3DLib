@@ -70,7 +70,7 @@ public class StatePropFrameControllerDataChunk : NamedChunk
         RelativeSpeed = relativeSpeed;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(cyclic);
@@ -81,5 +81,5 @@ public class StatePropFrameControllerDataChunk : NamedChunk
         bw.Write(RelativeSpeed);
     }
 
-    internal override Chunk CloneSelf() => new StatePropFrameControllerDataChunk(Name, Cyclic, NumCycles, HoldFrame, MinFrame, MaxFrame, RelativeSpeed);
+    protected override Chunk CloneSelf() => new StatePropFrameControllerDataChunk(Name, Cyclic, NumCycles, HoldFrame, MinFrame, MaxFrame, RelativeSpeed);
 }

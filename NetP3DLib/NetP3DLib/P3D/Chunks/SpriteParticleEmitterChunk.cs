@@ -97,7 +97,7 @@ public class SpriteParticleEmitterChunk : NamedChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.WriteP3DString(Name);
@@ -115,5 +115,5 @@ public class SpriteParticleEmitterChunk : NamedChunk
         bw.Write(RotationalCohesion);
     }
 
-    internal override Chunk CloneSelf() => new SpriteParticleEmitterChunk(Version, Name, ShaderName, UpdateMode, ZTest, ZWrite, MaxParticles, InfiniteLife, NumTextureFrames, TextureFrameRate, InitialAngle, InitialAngleVariance, TranslationalCohesion, RotationalCohesion);
+    protected override Chunk CloneSelf() => new SpriteParticleEmitterChunk(Version, Name, ShaderName, UpdateMode, ZTest, ZWrite, MaxParticles, InfiniteLife, NumTextureFrames, TextureFrameRate, InitialAngle, InitialAngleVariance, TranslationalCohesion, RotationalCohesion);
 }

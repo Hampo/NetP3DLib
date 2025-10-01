@@ -41,10 +41,10 @@ public class RenderStatusChunk : Chunk
         CastShadow = castShadow;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(castShadow);
     }
 
-    internal override Chunk CloneSelf() => new RenderStatusChunk(CastShadow);
+    protected override Chunk CloneSelf() => new RenderStatusChunk(CastShadow);
 }

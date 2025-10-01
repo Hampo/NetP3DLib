@@ -43,10 +43,10 @@ public class LightIlluminationTypeChunk : Chunk
         IlluminationType = illuminationType;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write((uint)IlluminationType);
     }
 
-    internal override Chunk CloneSelf() => new LightIlluminationTypeChunk(IlluminationType);
+    protected override Chunk CloneSelf() => new LightIlluminationTypeChunk(IlluminationType);
 }

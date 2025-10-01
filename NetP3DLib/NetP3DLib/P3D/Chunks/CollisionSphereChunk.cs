@@ -36,10 +36,10 @@ public class CollisionSphereChunk : Chunk
         Radius = radius;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Radius);
     }
 
-    internal override Chunk CloneSelf() => new CollisionSphereChunk(Radius);
+    protected override Chunk CloneSelf() => new CollisionSphereChunk(Radius);
 }

@@ -58,11 +58,11 @@ public class PackedNormalListChunk : Chunk
         Normals.AddRange(normals);
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(NumNormals);
         bw.Write(Normals.ToArray());
     }
 
-    internal override Chunk CloneSelf() => new PackedNormalListChunk(Normals);
+    protected override Chunk CloneSelf() => new PackedNormalListChunk(Normals);
 }

@@ -49,12 +49,12 @@ public class CompositeDrawablePropChunk : NamedChunk
         SkeletonJointId = skeletonJointId;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(isTranslucent);
         bw.Write(SkeletonJointId);
     }
 
-    internal override Chunk CloneSelf() => new CompositeDrawablePropChunk(Name, IsTranslucent, SkeletonJointId);
+    protected override Chunk CloneSelf() => new CompositeDrawablePropChunk(Name, IsTranslucent, SkeletonJointId);
 }

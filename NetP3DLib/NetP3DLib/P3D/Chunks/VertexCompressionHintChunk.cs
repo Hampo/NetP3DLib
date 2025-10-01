@@ -64,7 +64,7 @@ public class VertexCompressionHintChunk : Chunk
         PositionSize = positionSize;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.Write(UV0Size);
@@ -76,5 +76,5 @@ public class VertexCompressionHintChunk : Chunk
         bw.Write(PositionSize);
     }
 
-    internal override Chunk CloneSelf() => new VertexCompressionHintChunk(Version, UV0Size, UV1Size, UV2Size, UV3Size, NormalSize, ColourSize, PositionSize);
+    protected override Chunk CloneSelf() => new VertexCompressionHintChunk(Version, UV0Size, UV1Size, UV2Size, UV3Size, NormalSize, ColourSize, PositionSize);
 }

@@ -66,7 +66,7 @@ public class ParticleSystemFactoryChunk : NamedChunk
         EnableSorting = enableSorting;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.WriteP3DString(Name);
@@ -78,5 +78,5 @@ public class ParticleSystemFactoryChunk : NamedChunk
         bw.Write(NumEmitters);
     }
 
-    internal override Chunk CloneSelf() => new ParticleSystemFactoryChunk(Version, Name, FrameRate, NumAnimFrames, NumOLFrames, CycleAnim, EnableSorting);
+    protected override Chunk CloneSelf() => new ParticleSystemFactoryChunk(Version, Name, FrameRate, NumAnimFrames, NumOLFrames, CycleAnim, EnableSorting);
 }

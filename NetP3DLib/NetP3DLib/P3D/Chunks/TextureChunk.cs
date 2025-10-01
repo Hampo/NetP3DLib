@@ -117,7 +117,7 @@ public class TextureChunk : NamedChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(Version);
@@ -131,5 +131,5 @@ public class TextureChunk : NamedChunk
         bw.Write(Priority);
     }
 
-    internal override Chunk CloneSelf() => new TextureChunk(Name, Version, Width, Height, Bpp, AlphaDepth, NumMipMaps, TextureType, UsageHint, Priority);
+    protected override Chunk CloneSelf() => new TextureChunk(Name, Version, Width, Height, Bpp, AlphaDepth, NumMipMaps, TextureType, UsageHint, Priority);
 }

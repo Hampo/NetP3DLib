@@ -102,7 +102,7 @@ public class VertexAnimKeyFrameListChunk : Chunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.Write(NumKeyFrameIds);
@@ -112,5 +112,5 @@ public class VertexAnimKeyFrameListChunk : Chunk
             bw.Write(keyFrameCount);
     }
 
-    internal override Chunk CloneSelf() => new VertexAnimKeyFrameListChunk(Version, KeyFrameIds, KeyFrameCounts);
+    protected override Chunk CloneSelf() => new VertexAnimKeyFrameListChunk(Version, KeyFrameIds, KeyFrameCounts);
 }

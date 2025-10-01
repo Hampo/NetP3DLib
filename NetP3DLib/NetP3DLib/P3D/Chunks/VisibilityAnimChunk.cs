@@ -65,7 +65,7 @@ public class VisibilityAnimChunk : NamedChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.WriteP3DString(SceneName);
@@ -75,5 +75,5 @@ public class VisibilityAnimChunk : NamedChunk
         bw.Write(NumChannels);
     }
 
-    internal override Chunk CloneSelf() => new VisibilityAnimChunk(Name, SceneName, Version, NumFrames, FrameRate);
+    protected override Chunk CloneSelf() => new VisibilityAnimChunk(Name, SceneName, Version, NumFrames, FrameRate);
 }

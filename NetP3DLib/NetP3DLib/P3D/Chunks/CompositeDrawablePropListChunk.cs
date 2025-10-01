@@ -35,10 +35,10 @@ public class CompositeDrawablePropListChunk : Chunk
     public CompositeDrawablePropListChunk() : base(ChunkID)
     { }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(NumElements);
     }
 
-    internal override Chunk CloneSelf() => new CompositeDrawablePropListChunk();
+    protected override Chunk CloneSelf() => new CompositeDrawablePropListChunk();
 }

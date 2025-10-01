@@ -173,7 +173,7 @@ public class PrimitiveGroupChunk : Chunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.WriteP3DString(ShaderName);
@@ -188,7 +188,7 @@ public class PrimitiveGroupChunk : Chunk
         bw.Write(VertexAnimationMask);
     }
 
-    internal override Chunk CloneSelf() => new PrimitiveGroupChunk(Version, ShaderName, PrimitiveType, NumVertices, NumIndices, NumMatrices, MemoryImaged, Optimized, VertexAnimated, VertexAnimationMask);
+    protected override Chunk CloneSelf() => new PrimitiveGroupChunk(Version, ShaderName, PrimitiveType, NumVertices, NumIndices, NumMatrices, MemoryImaged, Optimized, VertexAnimated, VertexAnimationMask);
 
     public override string ToString() => $"\"{ShaderName}\" ({GetChunkType(this)} (0x{ID:X}))";
 }

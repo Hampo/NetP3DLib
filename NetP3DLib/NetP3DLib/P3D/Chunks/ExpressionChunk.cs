@@ -108,7 +108,7 @@ public class ExpressionChunk : NamedChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.WriteP3DString(Name);
@@ -119,5 +119,5 @@ public class ExpressionChunk : NamedChunk
             bw.Write(index);
     }
 
-    internal override Chunk CloneSelf() => new ExpressionChunk(Version, Name, Keys, Indices);
+    protected override Chunk CloneSelf() => new ExpressionChunk(Version, Name, Keys, Indices);
 }

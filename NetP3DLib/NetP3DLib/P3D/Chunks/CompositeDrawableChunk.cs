@@ -48,11 +48,11 @@ public class CompositeDrawableChunk : NamedChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.WriteP3DString(SkeletonName);
     }
 
-    internal override Chunk CloneSelf() => new CompositeDrawableChunk(Name, SkeletonName);
+    protected override Chunk CloneSelf() => new CompositeDrawableChunk(Name, SkeletonName);
 }

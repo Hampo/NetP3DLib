@@ -71,11 +71,11 @@ public class BreakableObjectChunk : Chunk
         MaxInstances = maxInstances;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write((int)Index);
         bw.Write(MaxInstances);
     }
 
-    internal override Chunk CloneSelf() => new BreakableObjectChunk(Index, MaxInstances);
+    protected override Chunk CloneSelf() => new BreakableObjectChunk(Index, MaxInstances);
 }

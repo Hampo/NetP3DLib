@@ -49,7 +49,7 @@ public class ScenegraphTransformChunk : NamedChunk
         Transform = transform;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.WriteP3DString(Name);
@@ -57,5 +57,5 @@ public class ScenegraphTransformChunk : NamedChunk
         bw.Write(Transform);
     }
 
-    internal override Chunk CloneSelf() => new ScenegraphTransformChunk(Version, Name, Transform);
+    protected override Chunk CloneSelf() => new ScenegraphTransformChunk(Version, Name, Transform);
 }

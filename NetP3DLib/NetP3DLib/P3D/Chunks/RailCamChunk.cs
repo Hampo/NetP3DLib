@@ -97,7 +97,7 @@ public class RailCamChunk : NamedChunk
         TargetLag = targetLag;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write((uint)Behaviour);
@@ -113,5 +113,5 @@ public class RailCamChunk : NamedChunk
         bw.Write(TargetLag);
     }
 
-    internal override Chunk CloneSelf() => new RailCamChunk(Name, Behaviour, MinRadius, MaxRadius, TrackRail, TrackDist, ReverseSense, FOV, TargetOffset, AxisPlay, PositionLag, TargetLag);
+    protected override Chunk CloneSelf() => new RailCamChunk(Name, Behaviour, MinRadius, MaxRadius, TrackRail, TrackDist, ReverseSense, FOV, TargetOffset, AxisPlay, PositionLag, TargetLag);
 }

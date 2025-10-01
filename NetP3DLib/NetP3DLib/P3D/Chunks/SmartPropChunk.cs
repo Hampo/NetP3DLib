@@ -80,7 +80,7 @@ public class SmartPropChunk : NamedChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.WriteP3DString(Name);
@@ -93,5 +93,5 @@ public class SmartPropChunk : NamedChunk
         bw.Write(NumStates);
     }
 
-    internal override Chunk CloneSelf() => new SmartPropChunk(Version, Name, ObjectFactoryName, Material, MaterialEnum, NumBreakables, RenderingCost, SimulationCost, NumStates);
+    protected override Chunk CloneSelf() => new SmartPropChunk(Version, Name, ObjectFactoryName, Material, MaterialEnum, NumBreakables, RenderingCost, SimulationCost, NumStates);
 }

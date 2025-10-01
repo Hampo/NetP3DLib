@@ -54,7 +54,7 @@ public class AnimationSizeChunk : Chunk
         GC = gc;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.Write(PC);
@@ -63,5 +63,5 @@ public class AnimationSizeChunk : Chunk
         bw.Write(GC);
     }
 
-    internal override Chunk CloneSelf() => new AnimationSizeChunk(Version, PC, PS2, XBOX, GC);
+    protected override Chunk CloneSelf() => new AnimationSizeChunk(Version, PC, PS2, XBOX, GC);
 }

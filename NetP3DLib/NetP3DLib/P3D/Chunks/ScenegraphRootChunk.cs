@@ -31,10 +31,10 @@ public class ScenegraphRootChunk : Chunk
         Version = version;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
     }
 
-    internal override Chunk CloneSelf() => new OldScenegraphRootChunk();
+    protected override Chunk CloneSelf() => new OldScenegraphRootChunk();
 }

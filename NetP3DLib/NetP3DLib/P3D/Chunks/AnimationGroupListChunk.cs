@@ -42,11 +42,11 @@ public class AnimationGroupListChunk : Chunk
         Version = version;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.Write(NumGroups);
     }
 
-    internal override Chunk CloneSelf() => new AnimationGroupListChunk(Version);
+    protected override Chunk CloneSelf() => new AnimationGroupListChunk(Version);
 }

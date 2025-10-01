@@ -56,7 +56,7 @@ public class ParticlePlaneGeneratorChunk : Chunk
         RadialVar = radialVar;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.Write(Width);
@@ -66,5 +66,5 @@ public class ParticlePlaneGeneratorChunk : Chunk
         bw.Write(RadialVar);
     }
 
-    internal override Chunk CloneSelf() => new ParticlePlaneGeneratorChunk(Version, Width, Height, HorizontalSpread, VerticalSpread, RadialVar);
+    protected override Chunk CloneSelf() => new ParticlePlaneGeneratorChunk(Version, Width, Height, HorizontalSpread, VerticalSpread, RadialVar);
 }

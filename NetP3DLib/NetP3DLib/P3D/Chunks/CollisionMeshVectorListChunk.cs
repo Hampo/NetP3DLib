@@ -63,12 +63,12 @@ public class CollisionMeshVectorListChunk : Chunk
         Vectors.AddRange(vectors);
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(NumVectors);
         foreach (var pos in Vectors)
             bw.Write(pos);
     }
 
-    internal override Chunk CloneSelf() => new CollisionMeshVectorListChunk(Vectors);
+    protected override Chunk CloneSelf() => new CollisionMeshVectorListChunk(Vectors);
 }

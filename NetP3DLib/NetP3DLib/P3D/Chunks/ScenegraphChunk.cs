@@ -42,11 +42,11 @@ public class ScenegraphChunk : NamedChunk
         Version = version;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(Version);
     }
 
-    internal override Chunk CloneSelf() => new ScenegraphChunk(Name, Version);
+    protected override Chunk CloneSelf() => new ScenegraphChunk(Name, Version);
 }

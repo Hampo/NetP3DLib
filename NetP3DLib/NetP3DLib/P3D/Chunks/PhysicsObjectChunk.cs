@@ -67,7 +67,7 @@ public class PhysicsObjectChunk : NamedChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(Version);
@@ -77,5 +77,5 @@ public class PhysicsObjectChunk : NamedChunk
         bw.Write(RestingSensitivity);
     }
 
-    internal override Chunk CloneSelf() => new PhysicsObjectChunk(Name, Version, MaterialName, NumJoints, Volume, RestingSensitivity);
+    protected override Chunk CloneSelf() => new PhysicsObjectChunk(Name, Version, MaterialName, NumJoints, Volume, RestingSensitivity);
 }

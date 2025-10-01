@@ -74,7 +74,7 @@ public class ExpressionMixerChunk : NamedChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.WriteP3DString(Name);
@@ -83,5 +83,5 @@ public class ExpressionMixerChunk : NamedChunk
         bw.WriteP3DString(ExpressionGroupName);
     }
 
-    internal override Chunk CloneSelf() => new ExpressionMixerChunk(Version, Name, Type, TargetName, ExpressionGroupName);
+    protected override Chunk CloneSelf() => new ExpressionMixerChunk(Version, Name, Type, TargetName, ExpressionGroupName);
 }

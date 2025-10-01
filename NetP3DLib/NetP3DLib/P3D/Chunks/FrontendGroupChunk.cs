@@ -54,12 +54,12 @@ public class FrontendGroupChunk : NamedChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(Version);
         bw.Write(Alpha);
     }
 
-    internal override Chunk CloneSelf() => new FrontendGroupChunk(Name, Version, Alpha);
+    protected override Chunk CloneSelf() => new FrontendGroupChunk(Name, Version, Alpha);
 }

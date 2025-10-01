@@ -75,7 +75,7 @@ public class BooleanChannelChunk : ParamChunk
         Values.AddRange(values);
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.WriteFourCC(Param);
@@ -85,5 +85,5 @@ public class BooleanChannelChunk : ParamChunk
             bw.Write(value);
     }
 
-    internal override Chunk CloneSelf() => new BooleanChannelChunk(Version, Param, StartState, Values);
+    protected override Chunk CloneSelf() => new BooleanChannelChunk(Version, Param, StartState, Values);
 }

@@ -53,12 +53,12 @@ public class FrontendTextBibleChunk : NamedChunk
         Name = name;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(NumLanguages);
         bw.WriteP3DString(Languages);
     }
 
-    internal override Chunk CloneSelf() => new FrontendTextBibleChunk(Name);
+    protected override Chunk CloneSelf() => new FrontendTextBibleChunk(Name);
 }

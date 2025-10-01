@@ -52,13 +52,13 @@ public class FrontendStringTextBibleChunk : Chunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(BibleName);
         bw.WriteP3DString(StringID);
     }
 
-    internal override Chunk CloneSelf() => new FrontendStringTextBibleChunk(BibleName, StringID);
+    protected override Chunk CloneSelf() => new FrontendStringTextBibleChunk(BibleName, StringID);
 
     public override string ToString() => $"\"{StringID}\" ({GetChunkType(this)} (0x{ID:X}))";
 }

@@ -42,11 +42,11 @@ public class BoundingSphereChunk : Chunk
         Radius = radius;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Centre);
         bw.Write(Radius);
     }
 
-    internal override Chunk CloneSelf() => new BoundingSphereChunk(Centre, Radius);
+    protected override Chunk CloneSelf() => new BoundingSphereChunk(Centre, Radius);
 }

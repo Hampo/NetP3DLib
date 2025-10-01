@@ -59,7 +59,7 @@ public class AnimatedObjectFactoryChunk : NamedChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.WriteP3DString(Name);
@@ -67,5 +67,5 @@ public class AnimatedObjectFactoryChunk : NamedChunk
         bw.Write(NumAnimations);
     }
 
-    internal override Chunk CloneSelf() => new AnimatedObjectFactoryChunk(Version, Name, BaseAnimation, NumAnimations);
+    protected override Chunk CloneSelf() => new AnimatedObjectFactoryChunk(Version, Name, BaseAnimation, NumAnimations);
 }

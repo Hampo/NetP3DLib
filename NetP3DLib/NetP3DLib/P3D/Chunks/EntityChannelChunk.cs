@@ -124,7 +124,7 @@ public class EntityChannelChunk : ParamChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.WriteFourCC(Param);
@@ -135,5 +135,5 @@ public class EntityChannelChunk : ParamChunk
             bw.WriteP3DString(value);
     }
 
-    internal override Chunk CloneSelf() => new EntityChannelChunk(Version, Param, Frames, Values);
+    protected override Chunk CloneSelf() => new EntityChannelChunk(Version, Param, Frames, Values);
 }

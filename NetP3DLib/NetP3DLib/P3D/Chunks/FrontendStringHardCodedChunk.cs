@@ -45,10 +45,10 @@ public class FrontendStringHardCodedChunk : Chunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(String);
     }
 
-    internal override Chunk CloneSelf() => new FrontendStringHardCodedChunk(String);
+    protected override Chunk CloneSelf() => new FrontendStringHardCodedChunk(String);
 }

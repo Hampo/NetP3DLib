@@ -70,7 +70,7 @@ public class OldBillboardDisplayInfoChunk : Chunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.Write(Rotation);
@@ -80,5 +80,5 @@ public class OldBillboardDisplayInfoChunk : Chunk
         bw.Write(EdgeRange);
     }
 
-    internal override Chunk CloneSelf() => new OldBillboardDisplayInfoChunk(Version, Rotation, CutOffMode, UVOffsetRange, SourceRange, EdgeRange);
+    protected override Chunk CloneSelf() => new OldBillboardDisplayInfoChunk(Version, Rotation, CutOffMode, UVOffsetRange, SourceRange, EdgeRange);
 }

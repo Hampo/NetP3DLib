@@ -121,7 +121,7 @@ public class FrontendMultiTextChunk : NamedChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(Version);
@@ -142,5 +142,5 @@ public class FrontendMultiTextChunk : NamedChunk
         bw.Write(CurrentText);
     }
 
-    internal override Chunk CloneSelf() => new FrontendMultiTextChunk(Name, Version, PositionX, PositionY, DimensionX, DimensionY, JustificationX, JustificationY, Colour, Translucency, RotationValue, TextStyleName, ShadowEnabled, ShadowColour, ShadowOffsetX, ShadowOffsetY, CurrentText);
+    protected override Chunk CloneSelf() => new FrontendMultiTextChunk(Name, Version, PositionX, PositionY, DimensionX, DimensionY, JustificationX, JustificationY, Colour, Translucency, RotationValue, TextStyleName, ShadowEnabled, ShadowColour, ShadowOffsetX, ShadowOffsetY, CurrentText);
 }

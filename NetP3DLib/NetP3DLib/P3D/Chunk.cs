@@ -72,7 +72,7 @@ public abstract class Chunk
     /// This constructor initialises an unknown chunk with the given <paramref name="chunkId"/>.
     /// </summary>
     /// <param name="chunkId">The chunk's identifier. See <seealso cref="ChunkIdentifier"/> for known identifiers.</param>
-    internal Chunk(uint chunkId)
+    protected Chunk(uint chunkId)
     {
         ID = chunkId;
     }
@@ -81,7 +81,7 @@ public abstract class Chunk
     /// This constructor initialises an unknown chunk with the given <paramref name="chunkId"/>.
     /// </summary>
     /// <param name="chunkId">The chunk's identifier. See <seealso cref="ChunkIdentifier"/> for known identifiers.</param>
-    internal Chunk(ChunkIdentifier chunkId) : this((uint)chunkId) { }
+    protected Chunk(ChunkIdentifier chunkId) : this((uint)chunkId) { }
 
     /// <summary>
     /// Runs validation on this chunk and all <see cref="Children"/>. Throws an exception if any invalid data is found.
@@ -229,13 +229,13 @@ public abstract class Chunk
     /// <para>This should be overwritten for known chunks.</para>
     /// </summary>
     /// <param name="bw">The <c>BinaryWriter</c> to write to.</param>
-    internal abstract void WriteData(System.IO.BinaryWriter bw);
+    protected abstract void WriteData(System.IO.BinaryWriter bw);
 
     /// <summary>
     /// Creates a clone of the current chunk.
     /// </summary>
     /// <returns>A duplicate of the current chunk.</returns>
-    internal abstract Chunk CloneSelf();
+    protected abstract Chunk CloneSelf();
 
     public override string ToString() => $"{GetChunkType(this)} (0x{ID:X})";
 
@@ -306,7 +306,7 @@ public abstract class Chunk
     /// <returns>Returns <c>true</c> if <paramref name="left"/> is not equal to <paramref name="right"/>.</returns>
     public static bool operator !=(Chunk left, Chunk right) => !(left == right);
 
-    internal static string GetChunkType(Chunk chunk)
+    protected static string GetChunkType(Chunk chunk)
     {
         if (Enum.IsDefined(typeof(ChunkIdentifier), (ChunkIdentifier)chunk.ID))
             return ((ChunkIdentifier)chunk.ID).ToString().Replace("_", " ");
@@ -341,7 +341,7 @@ public class UnknownChunk : Chunk
         Data = (byte[])data.Clone();
     }
 
-    internal override void WriteData(System.IO.BinaryWriter bw) => bw.Write(Data);
+    protected override void WriteData(System.IO.BinaryWriter bw) => bw.Write(Data);
 
-    internal override Chunk CloneSelf() => new UnknownChunk(ID, Data);
+    protected override Chunk CloneSelf() => new UnknownChunk(ID, Data);
 }

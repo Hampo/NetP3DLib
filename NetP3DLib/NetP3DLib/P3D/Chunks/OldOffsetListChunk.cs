@@ -87,7 +87,7 @@ public class OldOffsetListChunk : Chunk
         HasPrimGroupIndex = false;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(NumOffsets);
         bw.Write(KeyIndex);
@@ -97,7 +97,7 @@ public class OldOffsetListChunk : Chunk
             bw.Write(PrimGroupIndex);
     }
 
-    internal override Chunk CloneSelf()
+    protected override Chunk CloneSelf()
     {
         var offsets = new List<OffsetEntry>(Offsets.Count);
         foreach (var offset in Offsets)

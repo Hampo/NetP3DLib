@@ -34,10 +34,10 @@ public class InstanceListChunk : NamedChunk
         Name = name;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
     }
 
-    internal override Chunk CloneSelf() => new InstanceListChunk(Name);
+    protected override Chunk CloneSelf() => new InstanceListChunk(Name);
 }

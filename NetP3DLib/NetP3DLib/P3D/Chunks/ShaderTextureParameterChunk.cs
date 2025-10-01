@@ -48,11 +48,11 @@ public class ShaderTextureParameterChunk : ParamChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteFourCC(Param);
         bw.WriteP3DString(Value);
     }
 
-    internal override Chunk CloneSelf() => new ShaderTextureParameterChunk(Param, Value);
+    protected override Chunk CloneSelf() => new ShaderTextureParameterChunk(Param, Value);
 }

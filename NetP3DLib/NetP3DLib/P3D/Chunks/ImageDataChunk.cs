@@ -46,11 +46,11 @@ public class ImageDataChunk : Chunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(ImageData.Length);
         bw.Write(ImageData);
     }
 
-    internal override Chunk CloneSelf() => new ImageDataChunk(ImageData);
+    protected override Chunk CloneSelf() => new ImageDataChunk(ImageData);
 }

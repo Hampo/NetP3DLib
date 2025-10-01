@@ -40,11 +40,11 @@ public class AnimationSyncFrameChunk : Chunk
         SyncFrame = syncFrame;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.Write(SyncFrame);
     }
 
-    internal override Chunk CloneSelf() => new AnimationSyncFrameChunk(Version, SyncFrame);
+    protected override Chunk CloneSelf() => new AnimationSyncFrameChunk(Version, SyncFrame);
 }

@@ -55,12 +55,12 @@ public class ParticleSystem2Chunk : NamedChunk
         base.Validate();
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.WriteP3DString(Name);
         bw.WriteP3DString(FactoryName);
     }
 
-    internal override Chunk CloneSelf() => new ParticleSystem2Chunk(Version, Name, FactoryName);
+    protected override Chunk CloneSelf() => new ParticleSystem2Chunk(Version, Name, FactoryName);
 }

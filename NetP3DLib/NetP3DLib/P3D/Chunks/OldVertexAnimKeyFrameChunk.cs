@@ -42,11 +42,11 @@ public class OldVertexAnimKeyFrameChunk : NamedChunk
         Name = name;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.WriteP3DString(Name);
     }
 
-    internal override Chunk CloneSelf() => new OldVertexAnimKeyFrameChunk(Version, Name);
+    protected override Chunk CloneSelf() => new OldVertexAnimKeyFrameChunk(Version, Name);
 }

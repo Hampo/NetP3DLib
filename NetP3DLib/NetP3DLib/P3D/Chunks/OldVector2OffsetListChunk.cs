@@ -70,7 +70,7 @@ public class OldVector2OffsetListChunk : ParamChunk
         Offsets.AddRange(offsets);
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(Version);
         bw.Write(NumOffsets);
@@ -79,5 +79,5 @@ public class OldVector2OffsetListChunk : ParamChunk
             bw.Write(offset);
     }
 
-    internal override Chunk CloneSelf() => new OldVector2OffsetListChunk(Version, Param, Offsets);
+    protected override Chunk CloneSelf() => new OldVector2OffsetListChunk(Version, Param, Offsets);
 }

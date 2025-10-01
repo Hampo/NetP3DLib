@@ -49,7 +49,7 @@ public class WorldSphereChunk : NamedChunk
         Version = version;
     }
 
-    internal override void WriteData(BinaryWriter bw)
+    protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(Version);
@@ -57,5 +57,5 @@ public class WorldSphereChunk : NamedChunk
         bw.Write(NumOldBillboardQuadGroups);
     }
 
-    internal override Chunk CloneSelf() => new WorldSphereChunk(Name, Version);
+    protected override Chunk CloneSelf() => new WorldSphereChunk(Name, Version);
 }
