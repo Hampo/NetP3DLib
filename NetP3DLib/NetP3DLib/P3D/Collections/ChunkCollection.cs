@@ -12,6 +12,11 @@ public class ChunkCollection : Collection<Chunk>
         _owner = owner;
     }
 
+    public ChunkCollection(Chunk owner, int capacity) : base(new List<Chunk>(capacity))
+    {
+        _owner = owner;
+    }
+
     protected override void InsertItem(int index, Chunk item)
     {
         if (item.ParentChunk != null)

@@ -163,7 +163,7 @@ public static class ChunkLoader
         uint bytesRead = actualHeaderSize + P3DFile.HEADER_SIZE;
         if (bytesRead < chunkSize)
         {
-            //c.Children = new((int)(chunkSize - bytesRead) / 12);
+            c.Children = new(c, (int)(chunkSize - bytesRead) / 12);
             while (bytesRead < chunkSize)
             {
                 Chunk subChunk = LoadChunk(br);
