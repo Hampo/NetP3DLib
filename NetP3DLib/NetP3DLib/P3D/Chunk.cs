@@ -55,7 +55,7 @@ public abstract class Chunk
         }
     }
     /// <summary>
-    /// Property <c>DataBytes</c> is the chunk's data, built from the chunk's properties.
+    /// Property <c>Bytes</c> is the chunk's data, built from the chunk's properties.
     /// <para>NOTE: This will use the system's default <see cref="Endianness"/>.</para>
     /// </summary>
     public byte[] Bytes
