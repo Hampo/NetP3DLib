@@ -289,11 +289,12 @@ public abstract class Chunk
     /// <returns>An <c>int</c> with the hash code.</returns>
     public override int GetHashCode()
     {
-        int hashCode = 1251651808;
-        hashCode = hashCode * -1521134295 + ID.GetHashCode();
-        hashCode = hashCode * -1521134295 + EqualityComparer<byte[]>.Default.GetHashCode(DataBytes);
-        hashCode = hashCode * -1521134295 + EqualityComparer<ChunkCollection>.Default.GetHashCode(Children);
-        return hashCode;
+        int hash = ID.GetHashCode();
+        foreach (var b in DataBytes)
+            hash = (hash * 31) + b;
+        foreach (var child in Children)
+            hash = (hash * 31) + child.GetHashCode();
+        return hash;
     }
 
     /// <summary>
