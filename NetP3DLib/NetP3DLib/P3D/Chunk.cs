@@ -3,6 +3,7 @@ using System;
 using System.Diagnostics;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.IO;
+using NetP3DLib.P3D.Collections;
 
 namespace NetP3DLib.P3D;
 
@@ -16,9 +17,13 @@ public abstract class Chunk
     /// </summary>
     public uint ID { get; set; }
     /// <summary>
-    /// Property <c>Children</c> is a list of a chunk's children.
+    /// The parent of this chunk. If <c>null</c>, either not in a hierarchy or not in root of file.
     /// </summary>
-    public List<Chunk> Children { get; internal set; } = [];
+    public Chunk ParentChunk { get; internal set; } = null;
+    /// <summary>
+    /// Property <c>Children</c> is a collection of a chunk's children.
+    /// </summary>
+    public ChunkCollection Children { get; internal set; }
 
     /// <summary>
     /// Property <c>DataBytes</c> is the chunk's header data, built from the chunk's properties.
@@ -75,6 +80,7 @@ public abstract class Chunk
     protected Chunk(uint chunkId)
     {
         ID = chunkId;
+        Children = new(this);
     }
 
     /// <summary>
@@ -286,7 +292,7 @@ public abstract class Chunk
         int hashCode = 1251651808;
         hashCode = hashCode * -1521134295 + ID.GetHashCode();
         hashCode = hashCode * -1521134295 + EqualityComparer<byte[]>.Default.GetHashCode(DataBytes);
-        hashCode = hashCode * -1521134295 + EqualityComparer<List<Chunk>>.Default.GetHashCode(Children);
+        hashCode = hashCode * -1521134295 + EqualityComparer<ChunkCollection>.Default.GetHashCode(Children);
         return hashCode;
     }
 
