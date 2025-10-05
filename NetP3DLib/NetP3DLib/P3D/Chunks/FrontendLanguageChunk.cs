@@ -168,7 +168,7 @@ public class FrontendLanguageChunk : NamedChunk
         return Hash;
     }
 
-    public string GetValue(uint hash)
+    public string? GetValue(uint hash)
     {
         foreach (var entry in Entries)
             if (entry.Hash == hash)
@@ -176,7 +176,7 @@ public class FrontendLanguageChunk : NamedChunk
         return null;
     }
 
-    public string GetValue(string name) => GetValue(GetNameHash(name));
+    public string? GetValue(string name) => GetValue(GetNameHash(name));
 
     public void AddValue(uint hash, string value) => Entries.Add(new(hash, value));
 

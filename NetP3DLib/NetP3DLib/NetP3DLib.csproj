@@ -9,6 +9,7 @@
     <Description>A .NET library for working with Pure3D files. Contains all known Simpsons: Hit &amp; Run chunk types.</Description>
     <PackageIcon>128x128.png</PackageIcon>
     <ApplicationIcon>256x256.ico</ApplicationIcon>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>

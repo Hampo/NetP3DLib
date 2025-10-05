@@ -50,7 +50,7 @@ public static class ChunkLoader
     /// <param name="throwOnInvalid">If <c>true</c> invalid chunks will error. If <c>false</c> invalid chunks will be ignored.</param>
     /// <exception cref="ArgumentException">Thrown if the <paramref name="nameSpace"/> is null or whitespace.</exception>
     /// <exception cref="InvalidOperationException">Thrown is <paramref name="throwOnDuplicate"/> or <paramref name="throwOnInvalid"/> are <c>true</c> and an invalid chunk is encountered.</exception>
-    public static void LoadChunkTypes(string nameSpace, bool throwOnDuplicate = true, bool throwOnInvalid = true, Assembly assembly = null)
+    public static void LoadChunkTypes(string nameSpace, bool throwOnDuplicate = true, bool throwOnInvalid = true, Assembly? assembly = null)
     {
         if (string.IsNullOrWhiteSpace(nameSpace))
             throw new ArgumentException($"{nameof(nameSpace)} cannot be null.", nameof(nameSpace));

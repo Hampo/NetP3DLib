@@ -6,7 +6,7 @@ namespace NetP3DLib.P3D;
 
 public abstract class NamedChunk : Chunk
 {
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     public NamedChunk(uint ID) : base(ID) { }
 

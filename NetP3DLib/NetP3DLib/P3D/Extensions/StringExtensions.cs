@@ -3,7 +3,7 @@
 namespace NetP3DLib.P3D.Extensions;
 public static class StringExtensions
 {
-    public static bool IsValidP3DString(this string str)
+    public static bool IsValidP3DString(this string? str)
     {
         if (str == null)
             return false;
@@ -13,7 +13,7 @@ public static class StringExtensions
         return true;
     }
 
-    public static bool IsValidP3DLongString(this string str)
+    public static bool IsValidP3DLongString(this string? str)
     {
         if (str == null)
             return false;
@@ -23,7 +23,7 @@ public static class StringExtensions
         return true;
     }
 
-    public static bool IsValidFourCC(this string str)
+    public static bool IsValidFourCC(this string? str)
     {
         if (str == null)
             return false;

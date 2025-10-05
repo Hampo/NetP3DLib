@@ -385,7 +385,7 @@ public class LocatorChunk : NamedChunk
     {
         public float Rotation { get; set; }
         public uint? ParkedCar { get; set; }
-        public string FreeCar { get; set; }
+        public string? FreeCar { get; set; }
 
         public override List<uint> DataArray
         {
@@ -427,7 +427,7 @@ public class LocatorChunk : NamedChunk
             FreeCar = null;
         }
 
-        public CarStartLocatorData(float rotation, uint parkedCar, string freeCar) : base(LocatorTypes.CarStart)
+        public CarStartLocatorData(float rotation, uint parkedCar, string? freeCar) : base(LocatorTypes.CarStart)
         {
             Rotation = rotation;
             ParkedCar = parkedCar;
@@ -801,7 +801,7 @@ public class LocatorChunk : NamedChunk
             Data = null;
         }
 
-        public StaticCameraLocatorData(Vector3 targetPosition, float fov, float targetLag, uint followPlayer, float transitionTargetRate) : base(LocatorTypes.StaticCamera)
+        public StaticCameraLocatorData(Vector3 targetPosition, float fov, float targetLag, uint followPlayer, float? transitionTargetRate) : base(LocatorTypes.StaticCamera)
         {
             TargetPosition = targetPosition;
             FOV = fov;
@@ -813,7 +813,7 @@ public class LocatorChunk : NamedChunk
             Data = null;
         }
 
-        public StaticCameraLocatorData(Vector3 targetPosition, float fov, float targetLag, uint followPlayer, float transitionTargetRate, uint flags) : base(LocatorTypes.StaticCamera)
+        public StaticCameraLocatorData(Vector3 targetPosition, float fov, float targetLag, uint followPlayer, float? transitionTargetRate, uint? flags) : base(LocatorTypes.StaticCamera)
         {
             TargetPosition = targetPosition;
             FOV = fov;
@@ -825,7 +825,7 @@ public class LocatorChunk : NamedChunk
             Data = null;
         }
 
-        public StaticCameraLocatorData(Vector3 targetPosition, float fov, float targetLag, uint followPlayer, float transitionTargetRate, uint flags, uint cutInOut, uint data) : base(LocatorTypes.StaticCamera)
+        public StaticCameraLocatorData(Vector3 targetPosition, float fov, float targetLag, uint followPlayer, float? transitionTargetRate, uint? flags, uint? cutInOut, uint? data) : base(LocatorTypes.StaticCamera)
         {
             TargetPosition = targetPosition;
             FOV = fov;
@@ -841,13 +841,13 @@ public class LocatorChunk : NamedChunk
         {
             (true, true, true, true) =>
                 new StaticCameraLocatorData(TargetPosition, FOV, TargetLag, FollowPlayer,
-                                        TransitionTargetRate.Value, Flags.Value, CutInOut.Value, Data.Value),
+                                        TransitionTargetRate!.Value!, Flags!.Value, CutInOut!.Value, Data!.Value),
             (true, true, _, _) =>
                 new StaticCameraLocatorData(TargetPosition, FOV, TargetLag, FollowPlayer,
-                                        TransitionTargetRate.Value, Flags.Value),
+                                        TransitionTargetRate!.Value, Flags!.Value),
             (true, _, _, _) =>
                 new StaticCameraLocatorData(TargetPosition, FOV, TargetLag, FollowPlayer,
-                                        TransitionTargetRate.Value),
+                                        TransitionTargetRate!.Value),
             _ =>
                 new StaticCameraLocatorData(TargetPosition, FOV, TargetLag, FollowPlayer)
         };

@@ -19,7 +19,7 @@ public abstract class Chunk
     /// <summary>
     /// The parent of this chunk. If <c>null</c>, either not in a hierarchy or not in root of file.
     /// </summary>
-    public Chunk ParentChunk { get; internal set; } = null;
+    public Chunk? ParentChunk { get; internal set; } = null;
     /// <summary>
     /// Property <c>Children</c> is a collection of a chunk's children.
     /// </summary>
@@ -136,7 +136,7 @@ public abstract class Chunk
         return chunk;
     }
 
-    public T GetFirstChunkOfType<T>() where T : Chunk
+    public T? GetFirstChunkOfType<T>() where T : Chunk
     {
         foreach (var child in Children)
             if (child is T chunk)
@@ -144,7 +144,7 @@ public abstract class Chunk
         return null;
     }
 
-    public T GetFirstChunkOfType<T>(string name) where T : NamedChunk
+    public T? GetFirstChunkOfType<T>(string name) where T : NamedChunk
     {
         foreach (var child in Children)
             if (child is T chunk && chunk.Name == name)
@@ -152,7 +152,7 @@ public abstract class Chunk
         return null;
     }
 
-    public T GetFirstParamOfType<T>(string param) where T : ParamChunk
+    public T? GetFirstParamOfType<T>(string param) where T : ParamChunk
     {
         foreach (var child in Children)
             if (child is T chunk && chunk.Param == param)
@@ -160,7 +160,7 @@ public abstract class Chunk
         return null;
     }
 
-    public T GetLastChunkOfType<T>() where T : Chunk
+    public T? GetLastChunkOfType<T>() where T : Chunk
     {
         for (int i = Children.Count - 1; i >= 0; i--)
             if (Children[i] is T chunk)
@@ -168,7 +168,7 @@ public abstract class Chunk
         return null;
     }
 
-    public T GetLastChunkOfType<T>(string name) where T : NamedChunk
+    public T? GetLastChunkOfType<T>(string name) where T : NamedChunk
     {
         for (int i = Children.Count - 1; i >= 0; i--)
             if (Children[i] is T chunk && chunk.Name == name)
@@ -176,7 +176,7 @@ public abstract class Chunk
         return null;
     }
 
-    public T GetLastParamOfType<T>(string param) where T : ParamChunk
+    public T? GetLastParamOfType<T>(string param) where T : ParamChunk
     {
         for (int i = Children.Count - 1; i >= 0; i--)
             if (Children[i] is T chunk && chunk.Param == param)
@@ -303,7 +303,16 @@ public abstract class Chunk
     /// <param name="left">The <see cref="Chunk"/> to compare against.</param>
     /// <param name="right">The <see cref="Chunk"/> to compare to.</param>
     /// <returns>Returns <c>true</c> if <paramref name="left"/> is equal to <paramref name="right"/>.</returns>
-    public static bool operator ==(Chunk left, Chunk right) => EqualityComparer<Chunk>.Default.Equals(left, right);
+    public static bool operator ==(Chunk? left, Chunk? right)
+    {
+        if (left is null && right is null)
+            return true;
+
+        if (left is null || right is null)
+            return false;
+
+        return EqualityComparer<Chunk>.Default.Equals(left, right);
+    }
 
     /// <summary>
     /// Checks if <paramref name="left"/> is not equal to <paramref name="right"/> using <see cref="Equals(object)"/>.
@@ -311,7 +320,7 @@ public abstract class Chunk
     /// <param name="left">The <see cref="Chunk"/> to compare against.</param>
     /// <param name="right">The <see cref="Chunk"/> to compare to.</param>
     /// <returns>Returns <c>true</c> if <paramref name="left"/> is not equal to <paramref name="right"/>.</returns>
-    public static bool operator !=(Chunk left, Chunk right) => !(left == right);
+    public static bool operator !=(Chunk? left, Chunk? right) => !(left == right);
 
     protected static string GetChunkType(Chunk chunk)
     {

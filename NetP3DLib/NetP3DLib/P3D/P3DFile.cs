@@ -135,9 +135,9 @@ public class P3DFile
         if (!File.Exists(filePath))
             throw new FileNotFoundException($"Could not find the specified file.", filePath);
 
-        FileStream fs = null;
-        MemoryStream ms = null;
-        EndianAwareBinaryReader br = null;
+        FileStream? fs = null;
+        MemoryStream? ms = null;
+        EndianAwareBinaryReader? br = null;
         try
         {
             fs = new(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
@@ -338,7 +338,7 @@ public class P3DFile
         Chunks = newChunks;
     }
 
-    public T GetFirstChunkOfType<T>() where T : Chunk
+    public T? GetFirstChunkOfType<T>() where T : Chunk
     {
         foreach (var child in Chunks)
             if (child is T chunk)
@@ -346,7 +346,7 @@ public class P3DFile
         return null;
     }
 
-    public T GetFirstChunkOfType<T>(string name) where T : NamedChunk
+    public T? GetFirstChunkOfType<T>(string name) where T : NamedChunk
     {
         foreach (var child in Chunks)
             if (child is T chunk && chunk.Name == name)
@@ -354,7 +354,7 @@ public class P3DFile
         return null;
     }
 
-    public T GetFirstParamOfType<T>(string param) where T : ParamChunk
+    public T? GetFirstParamOfType<T>(string param) where T : ParamChunk
     {
         foreach (var child in Chunks)
             if (child is T chunk && chunk.Param == param)
@@ -362,7 +362,7 @@ public class P3DFile
         return null;
     }
 
-    public T GetLastChunkOfType<T>() where T : Chunk
+    public T? GetLastChunkOfType<T>() where T : Chunk
     {
         for (int i = Chunks.Count - 1; i >= 0; i--)
             if (Chunks[i] is T chunk)
@@ -370,7 +370,7 @@ public class P3DFile
         return null;
     }
 
-    public T GetLastChunkOfType<T>(string name) where T : NamedChunk
+    public T? GetLastChunkOfType<T>(string name) where T : NamedChunk
     {
         for (int i = Chunks.Count - 1; i >= 0; i--)
             if (Chunks[i] is T chunk && chunk.Name == name)
@@ -378,7 +378,7 @@ public class P3DFile
         return null;
     }
 
-    public T GetLastParamOfType<T>(string param) where T : ParamChunk
+    public T? GetLastParamOfType<T>(string param) where T : ParamChunk
     {
         for (int i = Chunks.Count - 1; i >= 0; i--)
             if (Chunks[i] is T chunk && chunk.Param == param)
