@@ -16,7 +16,7 @@ public class ChunkCollection : Collection<Chunk>
     protected override void InsertItem(int index, Chunk item)
     {
         if (item.ParentChunk != null)
-            throw new InvalidOperationException($"Chunk \"{item}\" already has parent chunk. You must first remove it from \"{item.ParentChunk}\".");
+            throw new InvalidOperationException($"Cannot insert chunk \"{item}\" into \"{_owner}\" at index {index}. It already belongs to \"{item.ParentChunk}\".");
 
         base.InsertItem(index, item);
         item.ParentChunk = _owner;
@@ -38,7 +38,7 @@ public class ChunkCollection : Collection<Chunk>
     protected override void SetItem(int index, Chunk item)
     {
         if (item.ParentChunk != null)
-            throw new InvalidOperationException($"Chunk \"{item}\" already has parent chunk. You must first remove it from \"{item.ParentChunk}\".");
+            throw new InvalidOperationException($"Cannot set chunk \"{item}\" in \"{_owner}\" at index {index}. It already belongs to \"{item.ParentChunk}\".");
 
         Chunk old = this[index];
 
@@ -64,6 +64,8 @@ public class ChunkCollection : Collection<Chunk>
         base.ClearItems();
     }
 
+    public IReadOnlyList<Chunk> GetRange(int index, int count) => ((List<Chunk>)Items).GetRange(index, count);
+
     public void AddRange(IEnumerable<Chunk> items)
     {
         if (items == null)
@@ -77,7 +79,7 @@ public class ChunkCollection : Collection<Chunk>
                 throw new ArgumentNullException(nameof(items), $"{nameof(items)} cannot contain any null entries.");
 
             if (item.ParentChunk != null)
-                throw new InvalidOperationException($"Chunk \"{item}\" already has parent chunk. You must first remove it from \"{item.ParentChunk}\".");
+                throw new InvalidOperationException($"Cannot add chunk \"{item}\" into \"{_owner}\". It already belongs to \"{item.ParentChunk}\".");
         }
 
         int startIndex = Count;
@@ -105,7 +107,7 @@ public class ChunkCollection : Collection<Chunk>
                 throw new ArgumentNullException(nameof(items), $"{nameof(items)} cannot contain any null entries.");
 
             if (item.ParentChunk != null)
-                throw new InvalidOperationException($"Chunk \"{item}\" already has parent chunk. You must first remove it from \"{item.ParentChunk}\".");
+                throw new InvalidOperationException($"Cannot insert chunk \"{item}\" into \"{_owner}\" at index {index}. It already belongs to \"{item.ParentChunk}\".");
         }
 
         ((List<Chunk>)Items).InsertRange(index, chunkList);
@@ -114,6 +116,34 @@ public class ChunkCollection : Collection<Chunk>
             item.ParentChunk = _owner;
 
         UpdateChildIndices(index);
+    }
+
+    public void RemoveRange(int index, int count)
+    {
+        if (index < 0)
+            throw new ArgumentOutOfRangeException(nameof(index), $"{nameof(index)} cannot be negative.");
+
+        if (count < 0)
+            throw new ArgumentOutOfRangeException(nameof(count), $"{nameof(count)} cannot be negative.");
+
+        if (index + count > Count)
+            throw new ArgumentException("The range defined by index and count exceeds the collection bounds.");
+
+        if (count == 0)
+            return;
+
+        var list = (List<Chunk>)Items;
+
+        for (int i = index; i < index + count; i++)
+        {
+            var chunk = list[i];
+            chunk.ParentChunk = null;
+            chunk.IndexInParent = -1;
+        }
+
+        list.RemoveRange(index, count);
+        if (index < Count)
+            UpdateChildIndices(index);
     }
 
     private void UpdateChildIndices(int startIndex = 0)
