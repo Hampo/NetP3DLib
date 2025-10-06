@@ -55,35 +55,26 @@ public class TreeChunk : Chunk
 
     protected override Chunk CloneSelf() => new TreeChunk(Minimum, Maximum);
 
-    private int _childCount = -1;
-    private int[] _childOffsets = [];
+    private int _childHash = 0;
+    private int _childCount = 0;
     internal void RecalculateNumChildrenIfNeeded()
     {
         var children = GetChunksOfType<TreeNodeChunk>();
         var childCount = children.Count;
 
-        if (_childCount == Children.Count)
+        unchecked
         {
-            var offsetsMatch = true;
-
+            int hash = 17;
             for (int i = 0; i < childCount; i++)
-            {
-                if (children[i].ParentOffset != _childOffsets[i])
-                {
-                    offsetsMatch = false;
-                    break;
-                }
-            }    
+                hash = hash * 31 + children[i].ParentOffset;
 
-            if (offsetsMatch)
+            if (hash == _childHash && childCount == _childCount)
                 return;
+
+            _childHash = hash;
+            _childCount = childCount;
         }
 
-        _childCount = childCount;
-        if (_childOffsets.Length != childCount)
-            _childOffsets = new int[childCount];
-        for (int i = 0; i < childCount; i++)
-            _childOffsets[i] = children[i].ParentOffset;
         ComputeNumChildrenForAllNodes(children);
     }
 
