@@ -54,4 +54,56 @@ public class TreeChunk : Chunk
     }
 
     protected override Chunk CloneSelf() => new TreeChunk(Minimum, Maximum);
+
+    private int _childCount = -1;
+    private int[] _childOffsets = [];
+    internal void RecalculateNumChildrenIfNeeded()
+    {
+        var children = GetChunksOfType<TreeNodeChunk>();
+        var childCount = children.Count;
+
+        if (_childCount == Children.Count)
+        {
+            var offsetsMatch = true;
+
+            for (int i = 0; i < childCount; i++)
+            {
+                if (children[i].ParentOffset != _childOffsets[i])
+                {
+                    offsetsMatch = false;
+                    break;
+                }
+            }    
+
+            if (offsetsMatch)
+                return;
+        }
+
+        _childCount = childCount;
+        if (_childOffsets.Length != childCount)
+            _childOffsets = new int[childCount];
+        for (int i = 0; i < childCount; i++)
+            _childOffsets[i] = children[i].ParentOffset;
+        ComputeNumChildrenForAllNodes(children);
+    }
+
+    private void ComputeNumChildrenForAllNodes(IReadOnlyList<TreeNodeChunk> children)
+    {
+        foreach (var c in children)
+            if (c is TreeNodeChunk tn)
+                tn._cachedNumChildren = 0;
+
+        for (int i = children.Count - 1; i >= 0; i--)
+        {
+            if (children[i] is not TreeNodeChunk node)
+                continue;
+
+            if (node.ParentOffset == 0)
+                continue;
+
+            int parentIndex = i + node.ParentOffset;
+            if (parentIndex >= 0 && parentIndex < children.Count && children[parentIndex] is TreeNodeChunk parent)
+                parent._cachedNumChildren += 1 + node._cachedNumChildren;
+        }
+    }
 }

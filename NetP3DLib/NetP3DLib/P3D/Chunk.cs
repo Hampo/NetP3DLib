@@ -21,6 +21,10 @@ public abstract class Chunk
     /// </summary>
     public Chunk? ParentChunk { get; internal set; } = null;
     /// <summary>
+    /// The index in <see cref="ParentChunk"/>. <c>-1</c> if no parent.
+    /// </summary>
+    public int IndexInParent { get; internal set; } = -1;
+    /// <summary>
     /// Property <c>Children</c> is a collection of a chunk's children.
     /// </summary>
     public ChunkCollection Children { get; internal set; }
@@ -55,7 +59,7 @@ public abstract class Chunk
         }
     }
     /// <summary>
-    /// Property <c>Bytes</c> is the chunk's data, built from the chunk's properties.
+    /// Property <c>Bytes</c> is the chunk's data, built from the chunk's properties and children.
     /// <para>NOTE: This will use the system's default <see cref="Endianness"/>.</para>
     /// </summary>
     public byte[] Bytes

@@ -20,6 +20,9 @@ public class ChunkCollection : Collection<Chunk>
 
         base.InsertItem(index, item);
         item.ParentChunk = _owner;
+        item.IndexInParent = index;
+
+        UpdateChildIndices(index + 1);
     }
 
     protected override void RemoveItem(int index)
@@ -27,26 +30,36 @@ public class ChunkCollection : Collection<Chunk>
         Chunk old = this[index];
         base.RemoveItem(index);
         old.ParentChunk = null;
+        old.IndexInParent = -1;
+
+        UpdateChildIndices(index);
     }
 
     protected override void SetItem(int index, Chunk item)
     {
-        Chunk old = this[index];
-
-        if (old != null)
-            old.ParentChunk = null;
-
         if (item.ParentChunk != null)
             throw new InvalidOperationException($"Chunk \"{item}\" already has parent chunk. You must first remove it from \"{item.ParentChunk}\".");
 
+        Chunk old = this[index];
+
+        if (old != null)
+        {
+            old.ParentChunk = null;
+            old.IndexInParent = -1;
+        }
+
         base.SetItem(index, item);
         item.ParentChunk = _owner;
+        item.IndexInParent = index;
     }
 
     protected override void ClearItems()
     {
         foreach (var child in new List<Chunk>(this))
+        {
             child.ParentChunk = null;
+            child.IndexInParent = -1;
+        }
 
         base.ClearItems();
     }
@@ -67,10 +80,16 @@ public class ChunkCollection : Collection<Chunk>
                 throw new InvalidOperationException($"Chunk \"{item}\" already has parent chunk. You must first remove it from \"{item.ParentChunk}\".");
         }
 
-        foreach (var item in chunkList)
-            item.ParentChunk = _owner;
+        int startIndex = Count;
 
         ((List<Chunk>)Items).AddRange(items);
+
+        int i = startIndex;
+        foreach (var item in chunkList)
+        {
+            item.ParentChunk = _owner;
+            item.IndexInParent = i++;
+        }
     }
 
     public void InsertRange(int index, IEnumerable<Chunk> items)
@@ -89,9 +108,17 @@ public class ChunkCollection : Collection<Chunk>
                 throw new InvalidOperationException($"Chunk \"{item}\" already has parent chunk. You must first remove it from \"{item.ParentChunk}\".");
         }
 
+        ((List<Chunk>)Items).InsertRange(index, chunkList);
+
         foreach (var item in chunkList)
             item.ParentChunk = _owner;
 
-        ((List<Chunk>)Items).InsertRange(index, chunkList);
+        UpdateChildIndices(index);
+    }
+
+    private void UpdateChildIndices(int startIndex = 0)
+    {
+        for (int i = startIndex; i < Count; i++)
+            this[i].IndexInParent = i;
     }
 }

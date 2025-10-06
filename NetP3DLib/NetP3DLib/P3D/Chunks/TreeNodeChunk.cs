@@ -10,8 +10,19 @@ namespace NetP3DLib.P3D.Chunks;
 public class TreeNodeChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Tree_Node;
-    
-    public uint NumChildren { get; set; } // TODO: This is calculated from the `NumChildren` and `ParentOffset` of other `TreeNodeChunk`s in the parent `Tree`. Currently no way to access a parent from the current chunk so cannot be calculated at this time.
+
+    internal uint _cachedNumChildren;
+    public uint NumChildren
+    {
+        get
+        {
+            if (ParentChunk is not TreeChunk treeChunk)
+                return 0;
+
+            treeChunk.RecalculateNumChildrenIfNeeded();
+            return _cachedNumChildren;
+        }
+    }
     public int ParentOffset { get; set; }
 
     public override byte[] DataBytes
@@ -28,15 +39,15 @@ public class TreeNodeChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(int);
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
     public TreeNodeChunk(BinaryReader br) : base(ChunkID)
     {
-        NumChildren = br.ReadUInt32();
+        var numChildren = br.ReadUInt32();
         ParentOffset = br.ReadInt32();
     }
 
-    public TreeNodeChunk(uint numChildren, int parentOffset) : base(ChunkID)
+    public TreeNodeChunk(int parentOffset) : base(ChunkID)
     {
-        NumChildren = numChildren;
         ParentOffset = parentOffset;
     }
 
@@ -57,5 +68,5 @@ public class TreeNodeChunk : Chunk
         bw.Write(ParentOffset);
     }
 
-    protected override Chunk CloneSelf() => new TreeNodeChunk(NumChildren, ParentOffset);
+    protected override Chunk CloneSelf() => new TreeNodeChunk( ParentOffset);
 }
