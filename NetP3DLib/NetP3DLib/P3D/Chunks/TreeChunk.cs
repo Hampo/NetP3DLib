@@ -13,7 +13,7 @@ public class TreeChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Tree;
     
-    public uint NumChildren => (uint)Children.Count;
+    public uint NumChildren => GetChildCount(ChunkIdentifier.Tree_Node);
     public Vector3 Minimum { get; set; }
     public Vector3 Maximum { get; set; }
 
