@@ -1,5 +1,6 @@
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
+using NetP3DLib.P3D.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -41,7 +42,7 @@ public class ImageDataChunk : Chunk
     public override void Validate()
     {
         if (ImageData.LongLength > int.MaxValue)
-            throw new InvalidDataException($"The max length of {nameof(ImageData)} is {int.MaxValue} bytes.");
+            throw new InvalidP3DException($"The max length of {nameof(ImageData)} is {int.MaxValue} bytes.");
 
         base.Validate();
     }

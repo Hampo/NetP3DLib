@@ -2,7 +2,7 @@
 using System.Text;
 
 namespace NetP3DLib.P3D.Exceptions;
-internal class InvalidFourCCException : Exception
+internal class InvalidFourCCException : InvalidP3DException
 {
     public string Variable { get; }
     public string? Value { get; }

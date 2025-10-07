@@ -1,5 +1,6 @@
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
+using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
@@ -69,7 +70,7 @@ public class SplineChunk : NamedChunk
     public override void Validate()
     {
         if (Children.Count != 1 || Children[0].ID != (uint)ChunkIdentifier.Rail_Cam)
-            throw new InvalidDataException($"There must be at one Rail Cam child chunk.");
+            throw new InvalidP3DException($"Children must be one Rail Cam child chunk.");
 
         base.Validate();
     }

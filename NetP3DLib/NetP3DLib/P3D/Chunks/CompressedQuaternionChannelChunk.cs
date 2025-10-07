@@ -1,5 +1,6 @@
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
+using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
@@ -119,7 +120,7 @@ public class CompressedQuaternionChannelChunk : ParamChunk
     public override void Validate()
     {
         if (Frames.Count != Values.Count)
-            throw new InvalidDataException($"The number of ${nameof(Frames)} and ${nameof(Values)} much match.");
+            throw new InvalidP3DException($"The number of ${nameof(Frames)} and ${nameof(Values)} much match.");
 
         base.Validate();
     }

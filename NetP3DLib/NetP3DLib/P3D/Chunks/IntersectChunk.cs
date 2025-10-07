@@ -1,5 +1,6 @@
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
+using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
@@ -124,19 +125,19 @@ public class IntersectChunk : Chunk
     public override void Validate()
     {
         if (Indices.Count % 3 != 0)
-            throw new InvalidDataException($"The number of {nameof(Indices)} must be divisible by 3.");
+            throw new InvalidP3DException($"The number of {nameof(Indices)} must be divisible by 3.");
         
         for (var i = 0; i < Indices.Count; i++)
             if (Indices[i] >= Positions.Count)
-                throw new InvalidDataException($"The {nameof(Indices)} at index {i} is out of bound of the {nameof(Positions)} list.");
+                throw new InvalidP3DException($"The {nameof(Indices)} at index {i} is out of bound of the {nameof(Positions)} list.");
 
         var numTriangles = Indices.Count / 3;
         if (Normals.Count != numTriangles)
-            throw new InvalidDataException($"The number of {nameof(Normals)} does not match the number of triangles ({numTriangles}).");
+            throw new InvalidP3DException($"The number of {nameof(Normals)} does not match the number of triangles ({numTriangles}).");
 
         var terrainTypeListChunk = GetFirstChunkOfType<TerrainTypeListChunk>();
         if (terrainTypeListChunk != null && terrainTypeListChunk.NumTypes != NumNormals)
-            throw new InvalidDataException($"The number of {nameof(Normals)} does not match the number of terrain types ({terrainTypeListChunk.NumTypes}).");
+            throw new InvalidP3DException($"The number of {nameof(Normals)} does not match the number of terrain types ({terrainTypeListChunk.NumTypes}).");
 
         base.Validate();
     }

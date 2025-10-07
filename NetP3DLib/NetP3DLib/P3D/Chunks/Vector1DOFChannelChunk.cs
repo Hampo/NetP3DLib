@@ -1,5 +1,6 @@
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
+using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
@@ -130,7 +131,7 @@ public class Vector1DOFChannelChunk : ParamChunk
     public override void Validate()
     {
         if (Frames.Count != Values.Count)
-            throw new InvalidDataException($"{nameof(Frames)} and {nameof(Values)} must have equal counts.");
+            throw new InvalidP3DException($"{nameof(Frames)} and {nameof(Values)} must have equal counts.");
 
         base.Validate();
     }

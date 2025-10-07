@@ -1,5 +1,6 @@
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
+using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
@@ -102,7 +103,7 @@ public class CollisionMetaDataVectorChannelChunk : NamedChunk
     public override void Validate()
     {
         if (Indices.Count != Values.Count)
-            throw new InvalidDataException($"{nameof(Indices)} and {nameof(Values)} must have equal counts.");
+            throw new InvalidP3DException($"{nameof(Indices)} and {nameof(Values)} must have equal counts.");
 
         base.Validate();
     }

@@ -113,7 +113,7 @@ public class EntityChannelChunk : ParamChunk
     public override void Validate()
     {
         if (Frames.Count != Values.Count)
-            throw new InvalidDataException($"{nameof(Frames)} and {nameof(Values)} must have equal counts.");
+            throw new InvalidP3DException($"{nameof(Frames)} and {nameof(Values)} must have equal counts.");
 
         foreach (var value in Values)
         {

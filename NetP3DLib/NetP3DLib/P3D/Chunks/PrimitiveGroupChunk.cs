@@ -55,10 +55,48 @@ public class PrimitiveGroupChunk : Chunk
         ColourMaskOffset = 15,
     }
 
+    private static readonly Dictionary<uint, VertexTypes> VertexTypeMap = new() {
+        { (uint)ChunkIdentifier.Packed_Normal_List, VertexTypes.Normals },
+        { (uint)ChunkIdentifier.Normal_List, VertexTypes.Normals },
+        { (uint)ChunkIdentifier.Colour_List, VertexTypes.Colours },
+        { (uint)ChunkIdentifier.Multi_Colour_List, VertexTypes.Colours2 },
+        { (uint)ChunkIdentifier.Matrix_List, VertexTypes.Matrices },
+        { (uint)ChunkIdentifier.Matrix_Palette, VertexTypes.Matrices },
+        { (uint)ChunkIdentifier.Weight_List, VertexTypes.Weights },
+        { (uint)ChunkIdentifier.Position_List, VertexTypes.Position },
+    };
+
     public uint Version { get; set; }
     public string ShaderName { get; set; }
     public PrimitiveTypes PrimitiveType { get; set; }
-    public VertexTypes VertexType => GetVertexType();
+    public VertexTypes VertexType
+    {
+        get
+        {
+            VertexTypes vertexType = VertexTypes.None;
+
+            var uvN = 0;
+            foreach (var chunk in Children)
+            {
+                if (chunk.ID == (uint)ChunkIdentifier.UV_List)
+                {
+                    uvN++;
+                }
+                else if (VertexTypeMap.TryGetValue(chunk.ID, out var subType))
+                {
+                    vertexType |= subType;
+                }
+            }
+
+            if (uvN > 8)
+                throw new InvalidP3DException("Primitive Groups can only have a maximum of 8 UV Lists.");
+
+            if (uvN > 0)
+                vertexType |= (VertexTypes)uvN;
+
+            return vertexType;
+        }
+    }
     public uint NumVertices { get; set; }
     public uint NumIndices { get; set; }
     public uint NumMatrices { get; set; }
@@ -120,55 +158,10 @@ public class PrimitiveGroupChunk : Chunk
         VertexAnimationMask = vertexAnimationMask;
     }
 
-    private static readonly Dictionary<uint, VertexTypes> VertexTypeMap = new() {
-        { (uint)ChunkIdentifier.Packed_Normal_List, VertexTypes.Normals },
-        { (uint)ChunkIdentifier.Normal_List, VertexTypes.Normals },
-        { (uint)ChunkIdentifier.Colour_List, VertexTypes.Colours },
-        { (uint)ChunkIdentifier.Multi_Colour_List, VertexTypes.Colours2 },
-        { (uint)ChunkIdentifier.Matrix_List, VertexTypes.Matrices },
-        { (uint)ChunkIdentifier.Matrix_Palette, VertexTypes.Matrices },
-        { (uint)ChunkIdentifier.Weight_List, VertexTypes.Weights },
-        { (uint)ChunkIdentifier.Position_List, VertexTypes.Position },
-    };
-    /// <summary>
-    /// Generates a <see cref="VertexTypes"/> based on <see cref="Chunk.Children"/>.
-    /// </summary>
-    /// <returns>The correct <see cref="VertexTypes"/> for this chunk.</returns>
-    /// <exception cref="InvalidDataException">Throws if there is an invalid number of <see cref="UVListChunk"/> children.</exception>
-    public VertexTypes GetVertexType()
-    {
-        VertexTypes vertexType = VertexTypes.None;
-
-        var uvN = 0;
-        foreach (var chunk in Children)
-        {
-            if (chunk.ID == (uint)ChunkIdentifier.UV_List)
-            {
-                uvN++;
-            }
-            else if (VertexTypeMap.TryGetValue(chunk.ID, out var subType))
-            {
-                vertexType |= subType;
-            }
-        }
-
-        if (uvN > 8)
-            throw new InvalidDataException("Primitive Groups can only have a maximum of 8 UV Lists.");
-
-        if (uvN > 0)
-            vertexType |= (VertexTypes)uvN;
-
-        return vertexType;
-    }
-
     public override void Validate()
 	{
 		if (!ShaderName.IsValidP3DString())
 			throw new InvalidP3DStringException(nameof(ShaderName), ShaderName);
-
-		//var expectedVertextType = GetVertexType() & ~VertexTypes.Position; // Hacky fix for "The Simpsons: Road Rage" as the Position List didn't exist then. "The Simpsons: Hit & Run" hardcodedly adds the Position List type to all Old Primitive Groups.
-  //      if ((VertexType & expectedVertextType) != expectedVertextType)
-  //          throw new InvalidDataException($"The {nameof(VertexType)} \"{VertexType}\" does not match expected value \"{expectedVertextType}\"");
 
         base.Validate();
     }

@@ -1,10 +1,11 @@
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
+using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.ComponentModel;
+using System.Drawing;
 using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
@@ -104,7 +105,7 @@ public class ColourChannelChunk : ParamChunk
     public override void Validate()
     {
         if (Frames.Count != Values.Count)
-            throw new InvalidDataException($"{nameof(Frames)} and {nameof(Values)} must have equal counts.");
+            throw new InvalidP3DException($"{nameof(Frames)} and {nameof(Values)} must have equal counts.");
 
         base.Validate();
     }

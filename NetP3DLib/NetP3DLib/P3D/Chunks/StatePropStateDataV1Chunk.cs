@@ -1,5 +1,6 @@
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
+using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
@@ -70,7 +71,7 @@ public class StatePropStateDataV1Chunk : NamedChunk
     public override void Validate()
     {
         if (Children.Count == 0)
-            throw new InvalidDataException($"There must be at least one child chunk.");
+            throw new InvalidP3DException($"There must be at least one child chunk.");
 
         var currentIndex = 0;
         foreach (var child in Children)
@@ -78,10 +79,10 @@ public class StatePropStateDataV1Chunk : NamedChunk
             var expectedIndex = ChunkSortPriority.IndexOf(child.ID);
 
             if (expectedIndex == -1)
-                throw new InvalidDataException($"Invalid child chunk: {child}.");
+                throw new InvalidP3DException($"Invalid child chunk: {child}.");
 
             if (expectedIndex < currentIndex)
-                throw new InvalidDataException($"Child chunk {child} is out of order. Expected order: {string.Join("; ", ChunkSortPriority.Select(x => $"{(ChunkIdentifier)x} (0x{x:X})"))}.");
+                throw new InvalidP3DException($"Child chunk {child} is out of order. Expected order: {string.Join("; ", ChunkSortPriority.Select(x => $"{(ChunkIdentifier)x} (0x{x:X})"))}.");
 
             currentIndex = expectedIndex;
         }

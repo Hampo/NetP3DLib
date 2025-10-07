@@ -1,5 +1,6 @@
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
+using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
@@ -109,10 +110,10 @@ public class TextureChunk : NamedChunk
     public override void Validate()
     {
         if (!Width.IsPowerOfTwo())
-            throw new InvalidDataException($"{nameof(Width)} must be a power of 2.");
+            throw new InvalidP3DException($"{nameof(Width)} must be a power of 2.");
 
         if (!Height.IsPowerOfTwo())
-            throw new InvalidDataException($"{nameof(Height)} must be a power of 2.");
+            throw new InvalidP3DException($"{nameof(Height)} must be a power of 2.");
 
         base.Validate();
     }

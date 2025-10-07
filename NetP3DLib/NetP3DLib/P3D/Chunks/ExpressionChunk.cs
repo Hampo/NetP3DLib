@@ -1,5 +1,6 @@
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
+using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
@@ -103,7 +104,7 @@ public class ExpressionChunk : NamedChunk
     public override void Validate()
     {
         if (Keys.Count != Indices.Count)
-            throw new InvalidDataException($"{nameof(Keys)} and {nameof(Indices)} must have equal counts.");
+            throw new InvalidP3DException($"{nameof(Keys)} and {nameof(Indices)} must have equal counts.");
 
         base.Validate();
     }

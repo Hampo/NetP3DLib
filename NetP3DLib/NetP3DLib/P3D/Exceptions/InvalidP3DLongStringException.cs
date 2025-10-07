@@ -2,7 +2,7 @@
 using System.Text;
 
 namespace NetP3DLib.P3D.Exceptions;
-internal class InvalidP3DLongStringException : Exception
+internal class InvalidP3DLongStringException : InvalidP3DException
 {
     public string Variable { get; }
     public string? Value { get; }

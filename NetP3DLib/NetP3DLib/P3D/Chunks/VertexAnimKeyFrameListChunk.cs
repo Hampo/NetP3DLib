@@ -1,5 +1,6 @@
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
+using NetP3DLib.P3D.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -97,7 +98,7 @@ public class VertexAnimKeyFrameListChunk : Chunk
     public override void Validate()
     {
         if (KeyFrameIds.Count != KeyFrameCounts.Count)
-            throw new InvalidDataException($"{nameof(KeyFrameIds)} and {nameof(KeyFrameCounts)} must have equal counts.");
+            throw new InvalidP3DException($"{nameof(KeyFrameIds)} and {nameof(KeyFrameCounts)} must have equal counts.");
 
         base.Validate();
     }

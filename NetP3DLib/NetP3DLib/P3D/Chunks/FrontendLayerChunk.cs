@@ -1,5 +1,6 @@
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
+using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
@@ -67,7 +68,7 @@ public class FrontendLayerChunk : NamedChunk
     public override void Validate()
     {
         if (Alpha > 256)
-            throw new InvalidDataException($"{nameof(Alpha)} must be between 0 and 256.");
+            throw new InvalidP3DException($"{nameof(Alpha)} must be between 0 and 256.");
 
         base.Validate();
     }

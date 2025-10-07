@@ -102,10 +102,10 @@ public class RoadChunk : NamedChunk
             throw new InvalidP3DStringException(nameof(EndIntersection), EndIntersection);
 
         if (Children.Count == 0)
-            throw new InvalidDataException($"There must be at least one Road Segment child chunk.");
+            throw new InvalidP3DException($"There must be at least one Road Segment child chunk.");
         foreach (var child in Children)
             if (child.ID != (uint)ChunkIdentifier.Road_Segment)
-                throw new InvalidDataException($"Child chunk {child} is invalid. Child chunks must be an instance of Road Segment.");
+                throw new InvalidP3DException($"Child chunk {child} is invalid. Child chunks must be an instance of Road Segment.");
 
         base.Validate();
     }

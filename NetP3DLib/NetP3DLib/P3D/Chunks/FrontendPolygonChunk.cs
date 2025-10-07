@@ -1,10 +1,11 @@
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
+using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.ComponentModel;
+using System.Drawing;
 using System.IO;
 using System.Numerics;
 
@@ -109,7 +110,7 @@ public class FrontendPolygonChunk : NamedChunk
     public override void Validate()
     {
         if (Points.Count != Colours.Count)
-            throw new InvalidDataException($"{nameof(Points)} and {nameof(Colours)} must have equal counts.");
+            throw new InvalidP3DException($"{nameof(Points)} and {nameof(Colours)} must have equal counts.");
 
         base.Validate();
     }

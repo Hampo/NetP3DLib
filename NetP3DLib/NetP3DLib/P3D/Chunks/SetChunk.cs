@@ -1,5 +1,6 @@
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
+using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
@@ -49,7 +50,7 @@ public class SetChunk : NamedChunk
     public override void Validate()
     {
         if (GetChildCount(ChunkIdentifier.Texture) > byte.MaxValue)
-            throw new InvalidDataException($"The max number of child textures is {byte.MinValue}.");
+            throw new InvalidP3DException($"The max number of child textures is {byte.MinValue}.");
 
         base.Validate();
     }

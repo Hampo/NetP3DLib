@@ -1,5 +1,6 @@
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
+using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
@@ -140,7 +141,7 @@ public class PhotonMapChunk : NamedChunk
     public override void Validate()
     {
         if (Lights.Count != LightScales.Count)
-            throw new InvalidDataException($"{nameof(Lights)} and {nameof(LightScales)} must have equal counts.");
+            throw new InvalidP3DException($"{nameof(Lights)} and {nameof(LightScales)} must have equal counts.");
 
         base.Validate();
     }

@@ -57,10 +57,10 @@ public class StatePropDataV1Chunk : NamedChunk
             throw new InvalidP3DStringException(nameof(ObjectFactoryName), ObjectFactoryName);
 
         if (Children.Count == 0)
-            throw new InvalidDataException($"There must be at least one State Prop State Data V1 child chunk.");
+            throw new InvalidP3DException($"There must be at least one State Prop State Data V1 child chunk.");
         foreach (var child in Children)
             if (child.ID != (uint)ChunkIdentifier.State_Prop_State_Data_V1)
-                throw new InvalidDataException($"Child chunk {child} is invalid. Child chunks must be an instance of State Prop State Data V1.");
+                throw new InvalidP3DException($"Child chunk {child} is invalid. Child chunks must be an instance of State Prop State Data V1.");
 
         base.Validate();
     }

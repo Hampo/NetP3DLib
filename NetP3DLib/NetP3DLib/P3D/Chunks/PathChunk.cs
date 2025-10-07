@@ -1,5 +1,6 @@
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
+using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
@@ -67,7 +68,7 @@ public class PathChunk : Chunk
     public override void Validate()
     {
         if (Positions.Count < MIN_POSITIONS)
-            throw new InvalidDataException($"The min number of positions is {MIN_POSITIONS}.");
+            throw new InvalidP3DException($"The min number of positions is {MIN_POSITIONS}.");
 
         base.Validate();
     }
