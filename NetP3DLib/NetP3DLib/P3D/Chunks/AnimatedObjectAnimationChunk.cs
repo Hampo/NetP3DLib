@@ -16,7 +16,7 @@ public class AnimatedObjectAnimationChunk : NamedChunk
     [DefaultValue(0)]
     public uint Version { get; set; }
     public float FrameRate { get; set; }
-    public uint NumOldFrameControllers { get; set; }
+    public uint NumOldFrameControllers => GetChildCount(ChunkIdentifier.Old_Frame_Controller);
 
     public override byte[] DataBytes
     {
@@ -34,20 +34,20 @@ public class AnimatedObjectAnimationChunk : NamedChunk
     }
     public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + sizeof(float) + sizeof(uint);
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
     public AnimatedObjectAnimationChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         Name = br.ReadP3DString();
         FrameRate = br.ReadSingle();
-        NumOldFrameControllers = br.ReadUInt32();
+        var numOldFrameControllers = br.ReadUInt32();
     }
 
-    public AnimatedObjectAnimationChunk(uint version, string name, float frameRate, uint numOldFrameControllers) : base(ChunkID)
+    public AnimatedObjectAnimationChunk(uint version, string name, float frameRate) : base(ChunkID)
     {
         Version = version;
         Name = name;
         FrameRate = frameRate;
-        NumOldFrameControllers = numOldFrameControllers;
     }
 
     protected override void WriteData(BinaryWriter bw)
@@ -58,5 +58,5 @@ public class AnimatedObjectAnimationChunk : NamedChunk
         bw.Write(NumOldFrameControllers);
     }
 
-    protected override Chunk CloneSelf() => new AnimatedObjectAnimationChunk(Version, Name, FrameRate, NumOldFrameControllers);
+    protected override Chunk CloneSelf() => new AnimatedObjectAnimationChunk(Version, Name, FrameRate);
 }
