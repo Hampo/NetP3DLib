@@ -81,7 +81,7 @@ public class StatePropStateDataV1Chunk : NamedChunk
                 throw new InvalidDataException($"Invalid child chunk: {child}.");
 
             if (expectedIndex < currentIndex)
-                throw new InvalidDataException($"Child chunk {child} is out of order. Expected order: {string.Join(", ", ChunkSortPriority.Select(x => $"{(ChunkIdentifier)x} (0x{x:X})"))}.");
+                throw new InvalidDataException($"Child chunk {child} is out of order. Expected order: {string.Join("; ", ChunkSortPriority.Select(x => $"{(ChunkIdentifier)x} (0x{x:X})"))}.");
 
             currentIndex = expectedIndex;
         }
