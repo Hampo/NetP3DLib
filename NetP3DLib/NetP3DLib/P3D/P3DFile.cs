@@ -471,4 +471,12 @@ public class P3DFile
         stream.Write(compressedBytes, 0, compressedBytes.Length);
         stream.Flush();
     }
+
+    public override string ToString()
+    {
+        int totalChunks = Chunks.Count;
+        int totalSubChunks = AllChunks.Count - totalChunks;
+
+        return $"P3DFile: {totalChunks:N0} root chunk{(totalChunks != 1 ? "s" : "")}; {totalSubChunks:N0} subchunk{(totalSubChunks != 1 ? "s" : "")}; {Size:N0} bytes";
+    }
 }
