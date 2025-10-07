@@ -17,11 +17,15 @@ public abstract class Chunk
     /// </summary>
     public uint ID { get; set; }
     /// <summary>
-    /// The parent of this chunk. If <c>null</c>, either not in a hierarchy or not in root of file.
+    /// The parent file of this chunk. If <c>null</c>, chunk is not in a file.
+    /// </summary>
+    public P3DFile? ParentFile { get; internal set; } = null;
+    /// <summary>
+    /// The parent of this chunk. If <c>null</c>, either not in a hierarchy or in root of file (see <see cref="ParentFile"/>).
     /// </summary>
     public Chunk? ParentChunk { get; internal set; } = null;
     /// <summary>
-    /// The index in <see cref="ParentChunk"/>. <c>-1</c> if no parent.
+    /// The index in <see cref="ParentChunk"/> or <see cref="ParentFile"/>. <c>-1</c> if no parent.
     /// </summary>
     public int IndexInParent { get; internal set; } = -1;
     /// <summary>
@@ -232,6 +236,14 @@ public abstract class Chunk
             if (child.ID == chunkID)
                 count++;
         return count;
+    }
+
+    public P3DFile? GetP3DFile()
+    {
+        var chunk = this;
+        while (chunk.ParentChunk != null)
+            chunk = chunk.ParentChunk;
+        return chunk.ParentFile;
     }
 
     /// <summary>

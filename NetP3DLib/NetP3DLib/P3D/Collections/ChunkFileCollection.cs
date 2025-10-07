@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace NetP3DLib.P3D.Collections;
-public class ChunkCollection : Collection<Chunk>
+public class ChunkFileCollection : Collection<Chunk>
 {
-    private readonly Chunk _owner;
-    public Chunk Owner => _owner;
+    private readonly P3DFile _owner;
+    public P3DFile Owner => _owner;
 
-    public ChunkCollection(Chunk owner, int capacity = 0) : base(new List<Chunk>(capacity))
+    public ChunkFileCollection(P3DFile owner, int capacity = 0) : base(new List<Chunk>(capacity))
     {
         _owner = owner;
     }
@@ -22,7 +22,7 @@ public class ChunkCollection : Collection<Chunk>
             throw new InvalidOperationException($"Cannot insert chunk \"{item}\" into \"{_owner}\" at index {index}. It already belongs to \"{item.ParentChunk}\".");
 
         base.InsertItem(index, item);
-        item.ParentChunk = _owner;
+        item.ParentFile = _owner;
         item.IndexInParent = index;
 
         UpdateChildIndices(index + 1);
@@ -32,7 +32,7 @@ public class ChunkCollection : Collection<Chunk>
     {
         Chunk old = this[index];
         base.RemoveItem(index);
-        old.ParentChunk = null;
+        old.ParentFile = null;
         old.IndexInParent = -1;
 
         UpdateChildIndices(index);
@@ -50,12 +50,12 @@ public class ChunkCollection : Collection<Chunk>
 
         if (old != null)
         {
-            old.ParentChunk = null;
+            old.ParentFile = null;
             old.IndexInParent = -1;
         }
 
         base.SetItem(index, item);
-        item.ParentChunk = _owner;
+        item.ParentFile = _owner;
         item.IndexInParent = index;
     }
 
@@ -63,7 +63,7 @@ public class ChunkCollection : Collection<Chunk>
     {
         foreach (var child in new List<Chunk>(this))
         {
-            child.ParentChunk = null;
+            child.ParentFile = null;
             child.IndexInParent = -1;
         }
 
@@ -98,7 +98,7 @@ public class ChunkCollection : Collection<Chunk>
         int i = startIndex;
         foreach (var item in chunkList)
         {
-            item.ParentChunk = _owner;
+            item.ParentFile = _owner;
             item.IndexInParent = i++;
         }
     }
@@ -125,7 +125,7 @@ public class ChunkCollection : Collection<Chunk>
         ((List<Chunk>)Items).InsertRange(index, chunkList);
 
         foreach (var item in chunkList)
-            item.ParentChunk = _owner;
+            item.ParentFile = _owner;
 
         UpdateChildIndices(index);
     }
@@ -149,7 +149,7 @@ public class ChunkCollection : Collection<Chunk>
         for (int i = index; i < index + count; i++)
         {
             var chunk = list[i];
-            chunk.ParentChunk = null;
+            chunk.ParentFile = null;
             chunk.IndexInParent = -1;
         }
 

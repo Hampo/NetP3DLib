@@ -1,6 +1,7 @@
 ﻿using NetP3DLib.Comparer;
 using NetP3DLib.IO;
 using NetP3DLib.P3D.Chunks;
+using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
 using System;
@@ -19,7 +20,7 @@ public class P3DFile
     public const uint COMPRESSED_SIGNATURE_SWAP = 0x5033445A;
     public const uint HEADER_SIZE = sizeof(uint) + sizeof(uint) + sizeof(uint); // ID + HeaderLength + ChunkLength
 
-    public List<Chunk> Chunks { get; private set; } = [];
+    public ChunkFileCollection Chunks { get; private set; }
     public ReadOnlyCollection<Chunk> AllChunks
     {
         get
@@ -128,7 +129,10 @@ public class P3DFile
         (uint)ChunkIdentifier.State_Prop_Data_V1,
     ];
 
-    public P3DFile() { }
+    public P3DFile()
+    {
+        Chunks = new(this);
+    }
 
     public P3DFile (string filePath)
     {
@@ -183,13 +187,17 @@ public class P3DFile
             uint bytesRead = headerSize;
             if (bytesRead < fileSize)
             {
-                Chunks = new((int)(fileSize - bytesRead) / 12);
+                Chunks = new(this, (int)(fileSize - bytesRead) / 12);
                 while (bytesRead < fileSize)
                 {
                     Chunk c = ChunkLoader.LoadChunk(br);
                     Chunks.Add(c);
                     bytesRead += c.Size;
                 }
+            }
+            else
+            {
+                Chunks = new(this);
             }
         }
         finally
@@ -335,7 +343,8 @@ public class P3DFile
             }
         }
 
-        Chunks = newChunks;
+        Chunks.Clear();
+        Chunks.AddRange(newChunks);
     }
 
     public T? GetFirstChunkOfType<T>() where T : Chunk
