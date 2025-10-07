@@ -149,6 +149,26 @@ public class OldPrimitiveGroupChunk : Chunk
         if (!ShaderName.IsValidP3DString())
             throw new InvalidP3DStringException(nameof(ShaderName), ShaderName);
 
+        if (GetChildCount(ChunkIdentifier.Matrix_Palette) == 0)
+        {
+            base.Validate();
+            return;
+        }
+
+        switch (ParentChunk)
+        {
+            case MeshChunk:
+                throw new InvalidP3DException("Old Primitive Group chunks cannot have a Matrix Palette if the parent chunk is a Mesh.");
+            case SkinChunk skinChunk:
+                if (GetP3DFile() is not P3DFile p3dFile)
+                    break;
+
+                if (p3dFile.GetFirstChunkOfType<SkeletonChunk>(skinChunk.SkeletonName) == null)
+                    throw new InvalidP3DException($"Could not find the skeleton named \"{skinChunk.SkeletonName}\" in the P3D file. This is required when the Old Primitive Group has a Matrix Palette.");
+
+                break;
+        }
+
         base.Validate();
     }
 
