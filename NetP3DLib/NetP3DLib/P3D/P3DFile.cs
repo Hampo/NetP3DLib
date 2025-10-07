@@ -428,23 +428,32 @@ public class P3DFile
         return result;
     }
 
-    public void Write(string filePath) => Write(filePath, BinaryExtensions.DefaultEndian);
+    public void Write(string filePath) => Write(filePath, BinaryExtensions.DefaultEndian, true);
 
-    public void Write(string filePath, Endianness endianness)
+    public void Write(string filePath, bool validate) => Write(filePath, BinaryExtensions.DefaultEndian, validate);
+
+    public void Write(string filePath, Endianness endianness) => Write(filePath, endianness, true);
+
+    public void Write(string filePath, Endianness endianness, bool validate)
     {
         using FileStream fs = File.Open(filePath, FileMode.Create, FileAccess.ReadWrite, FileShare.None);
-        Write(fs, endianness);
+        Write(fs, endianness, validate);
     }
 
-    public void Write(Stream stream) => Write(stream, BinaryExtensions.DefaultEndian);
+    public void Write(Stream stream) => Write(stream, BinaryExtensions.DefaultEndian, true);
 
-    public void Write(Stream stream, Endianness endianness)
+    public void Write(Stream stream, bool validate) => Write(stream, BinaryExtensions.DefaultEndian, validate);
+
+    public void Write(Stream stream, Endianness endianness) => Write(stream, endianness, true);
+
+    public void Write(Stream stream, Endianness endianness, bool validate)
     {
         if (!stream.CanWrite)
             throw new ArgumentException("Cannot write to stream.", nameof(stream));
 
-        foreach (var c in Chunks)
-            c.Validate();
+        if (validate)
+            foreach (var c in Chunks)
+                c.Validate();
 
         EndianAwareBinaryWriter bw = new(stream, endianness);
 
