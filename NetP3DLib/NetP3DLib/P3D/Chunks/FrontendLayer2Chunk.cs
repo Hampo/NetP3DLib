@@ -66,7 +66,7 @@ public class FrontendLayer2Chunk : NamedChunk
     public override void Validate()
     {
         if (Alpha > 256)
-            throw new InvalidP3DException($"{nameof(Alpha)} must be between 0 and 256.");
+            throw new InvalidP3DException(this, $"{nameof(Alpha)} must be between 0 and 256.");
 
         base.Validate();
     }

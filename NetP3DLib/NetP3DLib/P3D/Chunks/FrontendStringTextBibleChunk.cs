@@ -44,10 +44,10 @@ public class FrontendStringTextBibleChunk : Chunk
     public override void Validate()
     {
         if (!BibleName.IsValidP3DString())
-            throw new InvalidP3DStringException(nameof(BibleName), BibleName);
+            throw new InvalidP3DStringException(this, nameof(BibleName), BibleName);
 
         if (!StringID.IsValidP3DString())
-            throw new InvalidP3DStringException(nameof(StringID), StringID);
+            throw new InvalidP3DStringException(this, nameof(StringID), StringID);
 
         base.Validate();
     }

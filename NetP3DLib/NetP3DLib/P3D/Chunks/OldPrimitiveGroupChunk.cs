@@ -93,7 +93,7 @@ public class OldPrimitiveGroupChunk : Chunk
             }
 
             if (uvN > 8)
-                throw new InvalidP3DException("Old Primitive Groups can only have a maximum of 8 UV Lists.");
+                throw new InvalidP3DException(this, "Old Primitive Groups can only have a maximum of 8 UV Lists.");
 
             if (uvN > 0)
                 vertexType |= (VertexTypes)uvN;
@@ -179,7 +179,7 @@ public class OldPrimitiveGroupChunk : Chunk
     public override void Validate()
     {
         if (!ShaderName.IsValidP3DString())
-            throw new InvalidP3DStringException(nameof(ShaderName), ShaderName);
+            throw new InvalidP3DStringException(this, nameof(ShaderName), ShaderName);
 
         if (GetChildCount(ChunkIdentifier.Matrix_Palette) == 0)
         {
@@ -190,13 +190,13 @@ public class OldPrimitiveGroupChunk : Chunk
         switch (ParentChunk)
         {
             case MeshChunk:
-                throw new InvalidP3DException("Old Primitive Group chunks cannot have a Matrix Palette if the parent chunk is a Mesh.");
+                throw new InvalidP3DException(this, "Old Primitive Group chunks cannot have a Matrix Palette if the parent chunk is a Mesh.");
             case SkinChunk skinChunk:
                 if (GetP3DFile() is not P3DFile p3dFile)
                     break;
 
                 if (p3dFile.GetFirstChunkOfType<SkeletonChunk>(skinChunk.SkeletonName) == null)
-                    throw new InvalidP3DException($"Could not find the skeleton named \"{skinChunk.SkeletonName}\" in the P3D file. This is required when the Old Primitive Group has a Matrix Palette.");
+                    throw new InvalidP3DException(this, $"Could not find the skeleton named \"{skinChunk.SkeletonName}\" in the P3D file. This is required when the Old Primitive Group has a Matrix Palette.");
 
                 break;
         }

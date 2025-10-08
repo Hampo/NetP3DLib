@@ -110,7 +110,7 @@ public class FrontendPolygonChunk : NamedChunk
     public override void Validate()
     {
         if (Points.Count != Colours.Count)
-            throw new InvalidP3DException($"{nameof(Points)} and {nameof(Colours)} must have equal counts.");
+            throw new InvalidP3DException(this, $"{nameof(Points)} and {nameof(Colours)} must have equal counts.");
 
         base.Validate();
     }

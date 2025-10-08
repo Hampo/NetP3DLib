@@ -104,7 +104,7 @@ public class OldBaseEmitterChunk : NamedChunk
     public override void Validate()
     {
         if (!ParticleType.IsValidFourCC())
-            throw new InvalidFourCCException(nameof(ParticleType), ParticleType);
+            throw new InvalidFourCCException(this,nameof(ParticleType), ParticleType);
 
         if (!GeneratorType.IsValidFourCC())
 

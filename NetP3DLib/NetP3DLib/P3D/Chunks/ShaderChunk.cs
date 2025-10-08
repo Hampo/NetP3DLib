@@ -103,7 +103,7 @@ public class ShaderChunk : NamedChunk
     public override void Validate()
     {
         if (!PddiShaderName.IsValidP3DString())
-            throw new InvalidP3DStringException(nameof(PddiShaderName), PddiShaderName);
+            throw new InvalidP3DStringException(this, nameof(PddiShaderName), PddiShaderName);
 
         base.Validate();
     }

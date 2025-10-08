@@ -93,7 +93,7 @@ public class OldBillboardQuadChunk : NamedChunk
     public override void Validate()
     {
         if (!BillboardMode.IsValidFourCC())
-            throw new InvalidFourCCException(nameof(BillboardMode), BillboardMode);
+            throw new InvalidFourCCException(this,nameof(BillboardMode), BillboardMode);
 
         base.Validate();
     }

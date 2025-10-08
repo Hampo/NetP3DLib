@@ -96,16 +96,16 @@ public class RoadChunk : NamedChunk
     public override void Validate()
     {
         if (!StartIntersection.IsValidP3DString())
-            throw new InvalidP3DStringException(nameof(StartIntersection), StartIntersection);
+            throw new InvalidP3DStringException(this, nameof(StartIntersection), StartIntersection);
 
         if (!EndIntersection.IsValidP3DString())
-            throw new InvalidP3DStringException(nameof(EndIntersection), EndIntersection);
+            throw new InvalidP3DStringException(this, nameof(EndIntersection), EndIntersection);
 
         if (Children.Count == 0)
-            throw new InvalidP3DException($"There must be at least one Road Segment child chunk.");
+            throw new InvalidP3DException(this, $"There must be at least one Road Segment child chunk.");
         foreach (var child in Children)
             if (child.ID != (uint)ChunkIdentifier.Road_Segment)
-                throw new InvalidP3DException($"Child chunk {child} is invalid. Child chunks must be an instance of Road Segment.");
+                throw new InvalidP3DException(this, $"Child chunk {child} is invalid. Child chunks must be an instance of Road Segment.");
 
         base.Validate();
     }

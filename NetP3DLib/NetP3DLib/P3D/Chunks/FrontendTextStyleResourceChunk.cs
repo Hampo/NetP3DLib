@@ -54,10 +54,10 @@ public class FrontendTextStyleResourceChunk : NamedChunk
     public override void Validate()
     {
         if (!Filename.IsValidP3DString())
-            throw new InvalidP3DStringException(nameof(Filename), Filename);
+            throw new InvalidP3DStringException(this, nameof(Filename), Filename);
 
         if (!InventoryName.IsValidP3DString())
-            throw new InvalidP3DStringException(nameof(InventoryName), InventoryName);
+            throw new InvalidP3DStringException(this, nameof(InventoryName), InventoryName);
 
         base.Validate();
     }

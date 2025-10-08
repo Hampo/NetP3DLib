@@ -116,7 +116,7 @@ public class FrontendMultiTextChunk : NamedChunk
     public override void Validate()
     {
         if (!TextStyleName.IsValidP3DString())
-            throw new InvalidP3DStringException(nameof(TextStyleName), TextStyleName);
+            throw new InvalidP3DStringException(this, nameof(TextStyleName), TextStyleName);
 
         base.Validate();
     }

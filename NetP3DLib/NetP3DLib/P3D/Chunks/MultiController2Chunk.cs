@@ -71,7 +71,7 @@ public class MultiController2Chunk : NamedChunk
     public override void Validate()
     {
         if (!CycleMode.IsValidFourCC())
-            throw new InvalidFourCCException(nameof(CycleMode), CycleMode);
+            throw new InvalidFourCCException(this,nameof(CycleMode), CycleMode);
 
         base.Validate();
     }

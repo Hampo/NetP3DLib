@@ -50,7 +50,7 @@ public class SetChunk : NamedChunk
     public override void Validate()
     {
         if (GetChildCount(ChunkIdentifier.Texture) > byte.MaxValue)
-            throw new InvalidP3DException($"The max number of child textures is {byte.MinValue}.");
+            throw new InvalidP3DException(this, $"The max number of child textures is {byte.MinValue}.");
 
         base.Validate();
     }

@@ -51,7 +51,7 @@ public class MultiControllerTrackChunk : NamedChunk
     public override void Validate()
     {
         if (!Type.IsValidFourCC())
-            throw new InvalidFourCCException(nameof(Type), Type);
+            throw new InvalidFourCCException(this,nameof(Type), Type);
 
         base.Validate();
     }

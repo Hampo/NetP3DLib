@@ -67,7 +67,7 @@ public class BinormalListChunk : Chunk
     public override void Validate()
     {
         if (ParentChunk is OldPrimitiveGroupChunk oldPrimitiveGroup && oldPrimitiveGroup.NumVertices != NumBinormals)
-            throw new InvalidP3DException($"Num Binormals value {NumBinormals} does not match parent Num Vertices value {oldPrimitiveGroup.NumVertices}.");
+            throw new InvalidP3DException(this, $"Num Binormals value {NumBinormals} does not match parent Num Vertices value {oldPrimitiveGroup.NumVertices}.");
 
         base.Validate();
     }

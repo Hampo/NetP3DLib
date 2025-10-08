@@ -70,7 +70,7 @@ public class SplineChunk : NamedChunk
     public override void Validate()
     {
         if (Children.Count != 1 || Children[0].ID != (uint)ChunkIdentifier.Rail_Cam)
-            throw new InvalidP3DException($"Children must be one Rail Cam child chunk.");
+            throw new InvalidP3DException(this, $"Children must be one Rail Cam child chunk.");
 
         base.Validate();
     }

@@ -75,7 +75,7 @@ public class MultiControllerTracksChunk : Chunk
     public override void Validate()
     {
         foreach (var track in Tracks)
-            track.Validate();
+            track.Validate(this);
 
         base.Validate();
     }
@@ -143,10 +143,10 @@ public class MultiControllerTracksChunk : Chunk
             Scale = 0;
         }
 
-        public void Validate()
+        public void Validate(MultiControllerTracksChunk chunk)
         {
             if (!Name.IsValidP3DString())
-                throw new InvalidP3DStringException(nameof(Name), Name);
+                throw new InvalidP3DStringException(chunk, nameof(Name), Name);
         }
 
         internal void Write(BinaryWriter bw)

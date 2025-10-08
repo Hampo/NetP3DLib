@@ -70,7 +70,7 @@ public class TextureFontChunk : NamedChunk
     public override void Validate()
     {
         if (!Shader.IsValidP3DString())
-            throw new InvalidP3DStringException(nameof(Shader), Shader);
+            throw new InvalidP3DStringException(this, nameof(Shader), Shader);
 
         base.Validate();
     }

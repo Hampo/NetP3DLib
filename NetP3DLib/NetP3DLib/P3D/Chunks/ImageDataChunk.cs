@@ -42,7 +42,7 @@ public class ImageDataChunk : Chunk
     public override void Validate()
     {
         if (ImageData.LongLength > int.MaxValue)
-            throw new InvalidP3DException($"The max length of {nameof(ImageData)} is {int.MaxValue} bytes.");
+            throw new InvalidP3DException(this, $"The max length of {nameof(ImageData)} is {int.MaxValue} bytes.");
 
         base.Validate();
     }

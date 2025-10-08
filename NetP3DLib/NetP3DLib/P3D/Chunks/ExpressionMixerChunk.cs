@@ -66,10 +66,10 @@ public class ExpressionMixerChunk : NamedChunk
     public override void Validate()
     {
         if (!TargetName.IsValidP3DString())
-            throw new InvalidP3DStringException(nameof(TargetName), TargetName);
+            throw new InvalidP3DStringException(this, nameof(TargetName), TargetName);
 
         if (!ExpressionGroupName.IsValidP3DString())
-            throw new InvalidP3DStringException(nameof(ExpressionGroupName), ExpressionGroupName);
+            throw new InvalidP3DStringException(this, nameof(ExpressionGroupName), ExpressionGroupName);
 
         base.Validate();
     }

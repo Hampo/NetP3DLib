@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 
 namespace NetP3DLib.P3D.Exceptions;
 internal class InvalidFourCCException : InvalidP3DException
@@ -8,7 +7,7 @@ internal class InvalidFourCCException : InvalidP3DException
     public string? Value { get; }
     public int ByteCount { get; }
 
-    public InvalidFourCCException(string variable, string? str) : base($"Invalid FourCC for \"{variable}\". FourCCs cannot be null and must not exceed 4 bytes.")
+    public InvalidFourCCException(Chunk? chunk, string variable, string? str) : base(chunk, $"Invalid FourCC for \"{variable}\". FourCCs cannot be null and must not exceed 4 bytes.")
     {
         Variable = variable;
         Value = str;

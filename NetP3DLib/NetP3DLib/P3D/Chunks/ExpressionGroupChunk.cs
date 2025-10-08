@@ -86,7 +86,7 @@ public class ExpressionGroupChunk : NamedChunk
     public override void Validate()
     {
         if (!TargetName.IsValidP3DString())
-            throw new InvalidP3DStringException(nameof(TargetName), TargetName);
+            throw new InvalidP3DStringException(this, nameof(TargetName), TargetName);
 
         base.Validate();
     }

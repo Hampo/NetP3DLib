@@ -85,7 +85,7 @@ public class FrontendScreenChunk : NamedChunk
     {
         foreach (var pageName in PageNames)
             if (!pageName.IsValidP3DString())
-                throw new InvalidP3DStringException(nameof(PageNames), pageName);
+                throw new InvalidP3DStringException(this, nameof(PageNames), pageName);
 
         base.Validate();
     }

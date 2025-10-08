@@ -68,7 +68,7 @@ public class PathChunk : Chunk
     public override void Validate()
     {
         if (Positions.Count < MIN_POSITIONS)
-            throw new InvalidP3DException($"The min number of positions is {MIN_POSITIONS}.");
+            throw new InvalidP3DException(this, $"The min number of positions is {MIN_POSITIONS}.");
 
         base.Validate();
     }

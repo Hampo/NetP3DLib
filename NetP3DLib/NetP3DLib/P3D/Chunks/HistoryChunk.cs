@@ -76,11 +76,11 @@ public class HistoryChunk : Chunk
     public override void Validate()
     {
         if (History.Count > MAX_HISTORY_LINES)
-            throw new InvalidP3DException($"The max number of history lines is {MAX_HISTORY_LINES}.");
+            throw new InvalidP3DException(this, $"The max number of history lines is {MAX_HISTORY_LINES}.");
 
         foreach (var history in History)
             if (!history.IsValidP3DString())
-                throw new InvalidP3DStringException(nameof(History), history);
+                throw new InvalidP3DStringException(this, nameof(History), history);
 
         base.Validate();
     }

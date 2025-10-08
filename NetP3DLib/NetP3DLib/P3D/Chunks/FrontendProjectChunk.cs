@@ -70,16 +70,16 @@ public class FrontendProjectChunk : NamedChunk
     public override void Validate()
     {
         if (!Platform.IsValidP3DString())
-            throw new InvalidP3DStringException(nameof(Platform), Platform);
+            throw new InvalidP3DStringException(this, nameof(Platform), Platform);
 
         if (!PagePath.IsValidP3DString())
-            throw new InvalidP3DStringException(nameof(PagePath), PagePath);
+            throw new InvalidP3DStringException(this, nameof(PagePath), PagePath);
 
         if (!ResourcePath.IsValidP3DString())
-            throw new InvalidP3DStringException(nameof(ResourcePath), ResourcePath);
+            throw new InvalidP3DStringException(this, nameof(ResourcePath), ResourcePath);
 
         if (!ScreenPath.IsValidP3DString())
-            throw new InvalidP3DStringException(nameof(ScreenPath), ScreenPath);
+            throw new InvalidP3DStringException(this, nameof(ScreenPath), ScreenPath);
 
         base.Validate();
     }

@@ -54,7 +54,7 @@ public class AnimatedObjectChunk : NamedChunk
     public override void Validate()
     {
         if (!FactoryName.IsValidP3DString())
-            throw new InvalidP3DStringException(nameof(FactoryName), FactoryName);
+            throw new InvalidP3DStringException(this, nameof(FactoryName), FactoryName);
 
         base.Validate();
     }

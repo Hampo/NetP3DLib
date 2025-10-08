@@ -53,7 +53,7 @@ public class OldScenegraphDrawableChunk : NamedChunk
     public override void Validate()
     {
         if (!DrawableName.IsValidP3DString())
-            throw new InvalidP3DStringException(nameof(DrawableName), DrawableName);
+            throw new InvalidP3DStringException(this, nameof(DrawableName), DrawableName);
 
         base.Validate();
     }

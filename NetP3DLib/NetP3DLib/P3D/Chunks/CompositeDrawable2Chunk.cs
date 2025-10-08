@@ -52,7 +52,7 @@ public class CompositeDrawable2Chunk : NamedChunk
     public override void Validate()
     {
         if (!SkeletonName.IsValidP3DString())
-            throw new InvalidP3DStringException(nameof(SkeletonName), SkeletonName);
+            throw new InvalidP3DStringException(this, nameof(SkeletonName), SkeletonName);
 
         base.Validate();
     }

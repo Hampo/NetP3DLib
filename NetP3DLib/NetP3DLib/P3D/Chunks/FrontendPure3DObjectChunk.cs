@@ -96,7 +96,7 @@ public class FrontendPure3DObjectChunk : NamedChunk
     public override void Validate()
     {
         if (!Pure3DFilename.IsValidP3DString())
-            throw new InvalidP3DStringException(nameof(Pure3DFilename), Pure3DFilename);
+            throw new InvalidP3DStringException(this, nameof(Pure3DFilename), Pure3DFilename);
 
         base.Validate();
     }

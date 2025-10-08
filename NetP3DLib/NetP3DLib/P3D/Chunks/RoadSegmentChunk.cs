@@ -52,7 +52,7 @@ public class RoadSegmentChunk : NamedChunk
     public override void Validate()
     {
         if (!RoadDataSegment.IsValidP3DString())
-            throw new InvalidP3DStringException(nameof(RoadDataSegment), RoadDataSegment);
+            throw new InvalidP3DStringException(this, nameof(RoadDataSegment), RoadDataSegment);
 
         base.Validate();
     }

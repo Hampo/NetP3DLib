@@ -65,7 +65,7 @@ public class OldBillboardDisplayInfoChunk : Chunk
     public override void Validate()
     {
         if (!CutOffMode.IsValidFourCC())
-            throw new InvalidFourCCException(nameof(CutOffMode), CutOffMode);
+            throw new InvalidFourCCException(this,nameof(CutOffMode), CutOffMode);
 
         base.Validate();
     }

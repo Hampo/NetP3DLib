@@ -61,10 +61,10 @@ public class OldFrameControllerChunk : NamedChunk
     public override void Validate()
     {
         if (!HierarchyName.IsValidP3DString())
-            throw new InvalidP3DStringException(nameof(HierarchyName), HierarchyName);
+            throw new InvalidP3DStringException(this, nameof(HierarchyName), HierarchyName);
 
         if (!AnimationName.IsValidP3DString())
-            throw new InvalidP3DStringException(nameof(AnimationName), AnimationName);
+            throw new InvalidP3DStringException(this, nameof(AnimationName), AnimationName);
 
         base.Validate();
     }

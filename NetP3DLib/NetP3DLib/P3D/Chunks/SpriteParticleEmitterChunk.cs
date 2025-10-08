@@ -92,7 +92,7 @@ public class SpriteParticleEmitterChunk : NamedChunk
     public override void Validate()
     {
         if (!ShaderName.IsValidP3DString())
-            throw new InvalidP3DStringException(nameof(ShaderName), ShaderName);
+            throw new InvalidP3DStringException(this, nameof(ShaderName), ShaderName);
 
         base.Validate();
     }

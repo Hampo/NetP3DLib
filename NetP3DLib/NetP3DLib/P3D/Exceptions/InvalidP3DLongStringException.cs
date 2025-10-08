@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 
 namespace NetP3DLib.P3D.Exceptions;
 internal class InvalidP3DLongStringException : InvalidP3DException
@@ -8,7 +7,7 @@ internal class InvalidP3DLongStringException : InvalidP3DException
     public string? Value { get; }
     public int ByteCount { get; }
 
-    public InvalidP3DLongStringException(string variable, string? str) : base($"Invalid P3D string for \"{variable}\". Strings cannot be null and must not exceed {int.MaxValue - 4} bytes.")
+    public InvalidP3DLongStringException(Chunk? chunk, string variable, string? str) : base(chunk, $"Invalid P3D string for \"{variable}\". Strings cannot be null and must not exceed {int.MaxValue - 4} bytes.")
     {
         Variable = variable;
         Value = str;

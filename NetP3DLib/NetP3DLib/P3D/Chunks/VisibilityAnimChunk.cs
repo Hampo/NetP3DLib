@@ -60,7 +60,7 @@ public class VisibilityAnimChunk : NamedChunk
     public override void Validate()
     {
         if (!SceneName.IsValidP3DString())
-            throw new InvalidP3DStringException(nameof(SceneName), SceneName);
+            throw new InvalidP3DStringException(this, nameof(SceneName), SceneName);
 
         base.Validate();
     }

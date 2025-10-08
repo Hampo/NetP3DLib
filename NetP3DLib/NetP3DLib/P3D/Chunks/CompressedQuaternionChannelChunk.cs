@@ -120,7 +120,7 @@ public class CompressedQuaternionChannelChunk : ParamChunk
     public override void Validate()
     {
         if (Frames.Count != Values.Count)
-            throw new InvalidP3DException($"The number of ${nameof(Frames)} and ${nameof(Values)} much match.");
+            throw new InvalidP3DException(this, $"The number of ${nameof(Frames)} and ${nameof(Values)} much match.");
 
         base.Validate();
     }

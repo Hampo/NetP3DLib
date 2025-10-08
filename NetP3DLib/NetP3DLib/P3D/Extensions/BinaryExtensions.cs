@@ -31,7 +31,7 @@ public static class BinaryExtensions
     public static byte[] GetP3DStringBytes(string value)
     {
         if (!value.IsValidP3DString())
-            throw new InvalidP3DStringException(nameof(value), value);
+            throw new InvalidP3DStringException(null, nameof(value), value);
 
         byte[] bytes = Encoding.UTF8.GetBytes(value);
         int length = bytes.Length;
@@ -60,7 +60,7 @@ public static class BinaryExtensions
     public static uint GetP3DStringLength(string value)
     {
         if (!value.IsValidP3DString())
-            throw new InvalidP3DStringException(nameof(value), value);
+            throw new InvalidP3DStringException(null, nameof(value), value);
 
         int length = Encoding.UTF8.GetByteCount(value);
 
@@ -98,7 +98,7 @@ public static class BinaryExtensions
     public static void WriteP3DString(this BinaryWriter bw, string value)
     {
         if (!value.IsValidP3DString())
-            throw new InvalidP3DStringException(nameof(value), value);
+            throw new InvalidP3DStringException(null, nameof(value), value);
 
         byte[] bytes = Encoding.UTF8.GetBytes(value);
         int length = bytes.Length;
@@ -128,7 +128,7 @@ public static class BinaryExtensions
     public static byte[] GetP3DLongStringBytes(string value)
     {
         if (!value.IsValidP3DLongString())
-            throw new InvalidP3DLongStringException(nameof(value), value);
+            throw new InvalidP3DLongStringException(null, nameof(value), value);
 
         byte[] bytes = Encoding.UTF8.GetBytes(value);
         int length = bytes.Length;
@@ -154,7 +154,7 @@ public static class BinaryExtensions
     public static uint GetP3DLongStringLength(string value)
     {
         if (!value.IsValidP3DLongString())
-            throw new InvalidP3DLongStringException(nameof(value), value);
+            throw new InvalidP3DLongStringException(null, nameof(value), value);
 
         int length = Encoding.UTF8.GetByteCount(value);
 
@@ -189,7 +189,7 @@ public static class BinaryExtensions
     public static void WriteP3DLongString(this BinaryWriter bw, string value)
     {
         if (!value.IsValidP3DLongString())
-            throw new InvalidP3DLongStringException(nameof(value), value);
+            throw new InvalidP3DLongStringException(null, nameof(value), value);
 
         byte[] bytes = Encoding.UTF8.GetBytes(value);
         int length = bytes.Length;
@@ -215,7 +215,7 @@ public static class BinaryExtensions
     public static byte[] GetFourCCBytes(string value)
     {
         if (!value.IsValidFourCC())
-            throw new InvalidFourCCException(nameof(value), value);
+            throw new InvalidFourCCException(null, nameof(value), value);
 
         char[] c = [(char)0, (char)0, (char)0, (char)0];
         value.ToCharArray().CopyTo(c, 0);
@@ -250,7 +250,7 @@ public static class BinaryExtensions
     public static void WriteFourCC(this BinaryWriter bw, string value)
     {
         if (!value.IsValidFourCC())
-            throw new InvalidFourCCException(nameof(value), value);
+            throw new InvalidFourCCException(null, nameof(value), value);
 
         char[] c = [(char)0, (char)0, (char)0, (char)0];
         value.ToCharArray().CopyTo(c, 0);

@@ -50,7 +50,7 @@ public class FrontendImageResourceChunk : NamedChunk
     public override void Validate()
     {
         if (!Filename.IsValidP3DString())
-            throw new InvalidP3DStringException(nameof(Filename), Filename);
+            throw new InvalidP3DStringException(this, nameof(Filename), Filename);
 
         base.Validate();
     }

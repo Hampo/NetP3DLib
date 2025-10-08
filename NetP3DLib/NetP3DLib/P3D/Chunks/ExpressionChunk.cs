@@ -104,7 +104,7 @@ public class ExpressionChunk : NamedChunk
     public override void Validate()
     {
         if (Keys.Count != Indices.Count)
-            throw new InvalidP3DException($"{nameof(Keys)} and {nameof(Indices)} must have equal counts.");
+            throw new InvalidP3DException(this, $"{nameof(Keys)} and {nameof(Indices)} must have equal counts.");
 
         base.Validate();
     }

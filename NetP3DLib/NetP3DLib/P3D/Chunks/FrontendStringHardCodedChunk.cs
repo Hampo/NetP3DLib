@@ -40,7 +40,7 @@ public class FrontendStringHardCodedChunk : Chunk
     public override void Validate()
     {
         if (!String.IsValidP3DString())
-            throw new InvalidP3DStringException(nameof(String), String);
+            throw new InvalidP3DStringException(this, nameof(String), String);
 
         base.Validate();
     }

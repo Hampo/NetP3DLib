@@ -67,7 +67,7 @@ public class PositionListChunk : Chunk
     public override void Validate()
     {
         if (ParentChunk is OldPrimitiveGroupChunk oldPrimitiveGroup && oldPrimitiveGroup.NumVertices != NumPositions)
-            throw new InvalidP3DException($"Num Positions value {NumPositions} does not match parent Num Vertices value {oldPrimitiveGroup.NumVertices}.");
+            throw new InvalidP3DException(this, $"Num Positions value {NumPositions} does not match parent Num Vertices value {oldPrimitiveGroup.NumVertices}.");
 
         base.Validate();
     }

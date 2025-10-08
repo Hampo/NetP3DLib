@@ -91,7 +91,7 @@ public class PrimitiveGroupChunk : Chunk
             }
 
             if (uvN > 8)
-                throw new InvalidP3DException("Primitive Groups can only have a maximum of 8 UV Lists.");
+                throw new InvalidP3DException(this, "Primitive Groups can only have a maximum of 8 UV Lists.");
 
             if (uvN > 0)
                 vertexType |= (VertexTypes)uvN;
@@ -163,7 +163,7 @@ public class PrimitiveGroupChunk : Chunk
     public override void Validate()
 	{
 		if (!ShaderName.IsValidP3DString())
-			throw new InvalidP3DStringException(nameof(ShaderName), ShaderName);
+			throw new InvalidP3DStringException(this, nameof(ShaderName), ShaderName);
 
         base.Validate();
     }

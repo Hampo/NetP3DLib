@@ -64,7 +64,7 @@ public class CollisionEffectChunk : Chunk
     public override void Validate()
     {
         if (!SoundResourceDataName.IsValidP3DString())
-            throw new InvalidP3DStringException(nameof(SoundResourceDataName), SoundResourceDataName);
+            throw new InvalidP3DStringException(this, nameof(SoundResourceDataName), SoundResourceDataName);
 
         base.Validate();
     }

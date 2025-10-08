@@ -103,7 +103,7 @@ public class CompressedQuaternionChannel2Chunk : ParamChunk
 
             var sumOfSquares = x * x + y * y + z * z;
             if (sumOfSquares > 1.0f)
-                throw new InvalidP3DException($"Invalid Compressed Quaternion Channel 2.");
+                throw new InvalidP3DException(this, $"Invalid Compressed Quaternion Channel 2.");
             var w = Math.Sqrt(1 - sumOfSquares);
 
             Values.Add(new((float)x, (float)y, (float)z, (float)w));
@@ -121,7 +121,7 @@ public class CompressedQuaternionChannel2Chunk : ParamChunk
     public override void Validate()
     {
         if (Frames.Count != Values.Count)
-            throw new InvalidP3DException($"The number of ${nameof(Frames)} and ${nameof(Values)} much match.");
+            throw new InvalidP3DException(this, $"The number of ${nameof(Frames)} and ${nameof(Values)} much match.");
 
         base.Validate();
     }

@@ -75,7 +75,7 @@ public class ATCChunk : Chunk
     public override void Validate()
     {
         foreach (var entry in Entries)
-            entry.Validate();
+            entry.Validate(this);
 
         base.Validate();
     }
@@ -151,16 +151,16 @@ public class ATCChunk : Chunk
             Elasticity = 0;
         }
 
-        public void Validate()
+        public void Validate(ATCChunk chunk)
         {
             if (!SoundResourceDataName.IsValidP3DString())
-                throw new InvalidP3DStringException(nameof(SoundResourceDataName), SoundResourceDataName);
+                throw new InvalidP3DStringException(chunk, nameof(SoundResourceDataName), SoundResourceDataName);
 
             if (!Particle.IsValidP3DString())
-                throw new InvalidP3DStringException(nameof(Particle), Particle);
+                throw new InvalidP3DStringException(chunk, nameof(Particle), Particle);
 
             if (!BreakableObject.IsValidP3DString())
-                throw new InvalidP3DStringException(nameof(BreakableObject), BreakableObject);
+                throw new InvalidP3DStringException(chunk, nameof(BreakableObject), BreakableObject);
         }
 
         internal void Write(BinaryWriter bw)

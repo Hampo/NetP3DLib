@@ -79,7 +79,7 @@ public class LightGroupChunk : NamedChunk
     {
         foreach (var light in Lights)
             if (!light.IsValidP3DString())
-                throw new InvalidP3DStringException(nameof(Lights), light);
+                throw new InvalidP3DStringException(this, nameof(Lights), light);
 
         base.Validate();
     }

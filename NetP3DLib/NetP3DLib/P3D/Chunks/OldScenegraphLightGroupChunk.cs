@@ -43,7 +43,7 @@ public class OldScenegraphLightGroupChunk : NamedChunk
     public override void Validate()
     {
         if (!LightGroupName.IsValidP3DString())
-            throw new InvalidP3DStringException(nameof(LightGroupName), LightGroupName);
+            throw new InvalidP3DStringException(this, nameof(LightGroupName), LightGroupName);
 
         base.Validate();
     }

@@ -17,7 +17,7 @@ public abstract class ParamChunk : Chunk
     public override void Validate()
     {
         if (!Param.IsValidFourCC())
-            throw new InvalidFourCCException(nameof(Param), Param);
+            throw new InvalidFourCCException(this,nameof(Param), Param);
 
         base.Validate();
     }

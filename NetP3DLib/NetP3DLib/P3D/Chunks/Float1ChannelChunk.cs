@@ -104,7 +104,7 @@ public class Float1ChannelChunk : ParamChunk
     public override void Validate()
     {
         if (Frames.Count != Values.Count)
-            throw new InvalidP3DException($"{nameof(Frames)} and {nameof(Values)} must have equal counts.");
+            throw new InvalidP3DException(this, $"{nameof(Frames)} and {nameof(Values)} must have equal counts.");
 
         base.Validate();
     }

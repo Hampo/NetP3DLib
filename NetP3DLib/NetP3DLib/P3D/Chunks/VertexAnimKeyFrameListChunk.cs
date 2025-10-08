@@ -98,7 +98,7 @@ public class VertexAnimKeyFrameListChunk : Chunk
     public override void Validate()
     {
         if (KeyFrameIds.Count != KeyFrameCounts.Count)
-            throw new InvalidP3DException($"{nameof(KeyFrameIds)} and {nameof(KeyFrameCounts)} must have equal counts.");
+            throw new InvalidP3DException(this, $"{nameof(KeyFrameIds)} and {nameof(KeyFrameCounts)} must have equal counts.");
 
         base.Validate();
     }

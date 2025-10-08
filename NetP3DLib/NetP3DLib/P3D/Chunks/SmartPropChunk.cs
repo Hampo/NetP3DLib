@@ -72,10 +72,10 @@ public class SmartPropChunk : NamedChunk
     public override void Validate()
     {
         if (!ObjectFactoryName.IsValidP3DString())
-            throw new InvalidP3DStringException(nameof(ObjectFactoryName), ObjectFactoryName);
+            throw new InvalidP3DStringException(this, nameof(ObjectFactoryName), ObjectFactoryName);
 
         if (!Material.IsValidP3DString())
-            throw new InvalidP3DStringException(nameof(Material), Material);
+            throw new InvalidP3DStringException(this, nameof(Material), Material);
 
         base.Validate();
     }

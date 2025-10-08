@@ -62,7 +62,7 @@ public class PhysicsObjectChunk : NamedChunk
     public override void Validate()
     {
         if (!MaterialName.IsValidP3DString())
-            throw new InvalidP3DStringException(nameof(MaterialName), MaterialName);
+            throw new InvalidP3DStringException(this, nameof(MaterialName), MaterialName);
 
         base.Validate();
     }

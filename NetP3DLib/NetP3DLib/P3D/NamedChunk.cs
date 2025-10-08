@@ -15,7 +15,7 @@ public abstract class NamedChunk : Chunk
     public override void Validate()
     {
         if (!Name.IsValidP3DString())
-            throw new InvalidP3DStringException(nameof(Name), Name);
+            throw new InvalidP3DStringException(this, nameof(Name), Name);
 
         base.Validate();
     }

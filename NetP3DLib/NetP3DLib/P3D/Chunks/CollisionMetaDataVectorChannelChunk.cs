@@ -103,7 +103,7 @@ public class CollisionMetaDataVectorChannelChunk : NamedChunk
     public override void Validate()
     {
         if (Indices.Count != Values.Count)
-            throw new InvalidP3DException($"{nameof(Indices)} and {nameof(Values)} must have equal counts.");
+            throw new InvalidP3DException(this, $"{nameof(Indices)} and {nameof(Values)} must have equal counts.");
 
         base.Validate();
     }

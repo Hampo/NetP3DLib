@@ -72,16 +72,16 @@ public class FrameControllerChunk : NamedChunk
     public override void Validate()
     {
         if (!Type.IsValidFourCC())
-            throw new InvalidFourCCException(nameof(Type), Type);
+            throw new InvalidFourCCException(this,nameof(Type), Type);
 
         if (!CycleMode.IsValidFourCC())
-            throw new InvalidFourCCException(nameof(CycleMode), CycleMode);
+            throw new InvalidFourCCException(this,nameof(CycleMode), CycleMode);
 
         if (!HierarchyName.IsValidP3DString())
-            throw new InvalidP3DStringException(nameof(HierarchyName), HierarchyName);
+            throw new InvalidP3DStringException(this, nameof(HierarchyName), HierarchyName);
 
         if (!AnimationName.IsValidP3DString())
-            throw new InvalidP3DStringException(nameof(AnimationName), AnimationName);
+            throw new InvalidP3DStringException(this, nameof(AnimationName), AnimationName);
 
         base.Validate();
     }

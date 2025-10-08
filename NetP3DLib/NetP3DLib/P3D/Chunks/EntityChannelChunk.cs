@@ -113,12 +113,12 @@ public class EntityChannelChunk : ParamChunk
     public override void Validate()
     {
         if (Frames.Count != Values.Count)
-            throw new InvalidP3DException($"{nameof(Frames)} and {nameof(Values)} must have equal counts.");
+            throw new InvalidP3DException(this, $"{nameof(Frames)} and {nameof(Values)} must have equal counts.");
 
         foreach (var value in Values)
         {
             if (!value.IsValidP3DString())
-                throw new InvalidP3DStringException(nameof(Values), value);
+                throw new InvalidP3DStringException(this, nameof(Values), value);
         }
 
         base.Validate();

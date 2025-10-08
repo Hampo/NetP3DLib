@@ -72,13 +72,13 @@ public class OldSpriteEmitterChunk : NamedChunk
     public override void Validate()
     {
         if (!ShaderName.IsValidP3DString())
-            throw new InvalidP3DStringException(nameof(ShaderName), ShaderName);
+            throw new InvalidP3DStringException(this, nameof(ShaderName), ShaderName);
 
         if (!AngleMode.IsValidFourCC())
-            throw new InvalidFourCCException(nameof(AngleMode), AngleMode);
+            throw new InvalidFourCCException(this,nameof(AngleMode), AngleMode);
 
         if (!TextureAnimMode.IsValidFourCC())
-            throw new InvalidFourCCException(nameof(TextureAnimMode), TextureAnimMode);
+            throw new InvalidFourCCException(this,nameof(TextureAnimMode), TextureAnimMode);
 
         base.Validate();
     }

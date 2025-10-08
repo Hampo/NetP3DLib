@@ -131,7 +131,7 @@ public class FrontendMultiSpriteChunk : NamedChunk
     {
         foreach (var imageName in ImageNames)
             if (!imageName.IsValidP3DString())
-                throw new InvalidP3DStringException(nameof(ImageNames), imageName);
+                throw new InvalidP3DStringException(this, nameof(ImageNames), imageName);
 
         base.Validate();
     }

@@ -74,7 +74,7 @@ public class BillboardQuadChunk : NamedChunk
     public override void Validate()
     {
         if (!AxisMode.IsValidFourCC())
-            throw new InvalidFourCCException(nameof(AxisMode), AxisMode);
+            throw new InvalidFourCCException(this,nameof(AxisMode), AxisMode);
 
         base.Validate();
     }

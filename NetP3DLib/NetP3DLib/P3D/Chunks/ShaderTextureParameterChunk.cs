@@ -43,7 +43,7 @@ public class ShaderTextureParameterChunk : ParamChunk
     public override void Validate()
     {
         if (!Value.IsValidP3DString())
-            throw new InvalidP3DStringException(nameof(Value), Value);
+            throw new InvalidP3DStringException(this, nameof(Value), Value);
 
         base.Validate();
     }

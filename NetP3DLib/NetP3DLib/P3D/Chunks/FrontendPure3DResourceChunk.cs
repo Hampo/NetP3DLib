@@ -62,16 +62,16 @@ public class FrontendPure3DResourceChunk : NamedChunk
     public override void Validate()
     {
         if (!Filename.IsValidP3DString())
-            throw new InvalidP3DStringException(nameof(Filename), Filename);
+            throw new InvalidP3DStringException(this, nameof(Filename), Filename);
 
         if (!InventoryName.IsValidP3DString())
-            throw new InvalidP3DStringException(nameof(InventoryName), InventoryName);
+            throw new InvalidP3DStringException(this, nameof(InventoryName), InventoryName);
 
         if (!CameraName.IsValidP3DString())
-            throw new InvalidP3DStringException(nameof(CameraName), CameraName);
+            throw new InvalidP3DStringException(this, nameof(CameraName), CameraName);
 
         if (!AnimationName.IsValidP3DString())
-            throw new InvalidP3DStringException(nameof(AnimationName), AnimationName);
+            throw new InvalidP3DStringException(this, nameof(AnimationName), AnimationName);
 
         base.Validate();
     }
