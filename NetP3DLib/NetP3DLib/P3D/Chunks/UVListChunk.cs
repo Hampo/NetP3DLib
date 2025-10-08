@@ -1,5 +1,6 @@
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
+using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
@@ -65,6 +66,14 @@ public class UVListChunk : Chunk
     {
         Channel = channel;
         UVs.AddRange(uvs);
+    }
+
+    public override void Validate()
+    {
+        if (ParentChunk is OldPrimitiveGroupChunk oldPrimitiveGroup && oldPrimitiveGroup.NumVertices != NumUVs)
+            throw new InvalidP3DException($"Num UVs value {NumUVs} does not match parent Num Vertices value {oldPrimitiveGroup.NumVertices}.");
+
+        base.Validate();
     }
 
     protected override void WriteData(BinaryWriter bw)

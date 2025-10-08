@@ -1,5 +1,6 @@
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
+using NetP3DLib.P3D.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -59,6 +60,14 @@ public class MatrixListChunk : Chunk
     public MatrixListChunk(IList<Matrix> matrices) : base(ChunkID)
     {
         Matrices.AddRange(matrices);
+    }
+
+    public override void Validate()
+    {
+        if (ParentChunk is OldPrimitiveGroupChunk oldPrimitiveGroup && oldPrimitiveGroup.NumVertices != NumMatrices)
+            throw new InvalidP3DException($"Num Matrices value {NumMatrices} does not match parent Num Vertices value {oldPrimitiveGroup.NumVertices}.");
+
+        base.Validate();
     }
 
     protected override void WriteData(BinaryWriter bw)

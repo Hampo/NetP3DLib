@@ -41,7 +41,7 @@ public class PrimitiveGroupChunk : Chunk
         Weights = 1 << 8,
         Size = 1 << 9,
         W = 1 << 10,
-        BiNormal = 1 << 11,
+        Binormal = 1 << 11,
         Tangent = 1 << 12,
         Position = 1 << 13,
         Colours2 = 1 << 14,
@@ -64,6 +64,8 @@ public class PrimitiveGroupChunk : Chunk
         { (uint)ChunkIdentifier.Matrix_Palette, VertexTypes.Matrices },
         { (uint)ChunkIdentifier.Weight_List, VertexTypes.Weights },
         { (uint)ChunkIdentifier.Position_List, VertexTypes.Position },
+        { (uint)ChunkIdentifier.Binormal_List, VertexTypes.Binormal },
+        { (uint)ChunkIdentifier.Tangent_List, VertexTypes.Tangent },
     };
 
     public uint Version { get; set; }

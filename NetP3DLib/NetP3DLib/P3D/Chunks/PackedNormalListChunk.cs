@@ -1,5 +1,6 @@
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
+using NetP3DLib.P3D.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -56,6 +57,14 @@ public class PackedNormalListChunk : Chunk
     public PackedNormalListChunk(IList<byte> normals) : base(ChunkID)
     {
         Normals.AddRange(normals);
+    }
+
+    public override void Validate()
+    {
+        if (ParentChunk is OldPrimitiveGroupChunk oldPrimitiveGroup && oldPrimitiveGroup.NumVertices != NumNormals)
+            throw new InvalidP3DException($"Num Normals value {NumNormals} does not match parent Num Vertices value {oldPrimitiveGroup.NumVertices}.");
+
+        base.Validate();
     }
 
     protected override void WriteData(BinaryWriter bw)

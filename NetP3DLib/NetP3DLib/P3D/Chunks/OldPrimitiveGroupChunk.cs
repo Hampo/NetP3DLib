@@ -42,7 +42,7 @@ public class OldPrimitiveGroupChunk : Chunk
         Weights = 1 << 8,
         Size = 1 << 9,
         W = 1 << 10,
-        BiNormal = 1 << 11,
+        Binormal = 1 << 11,
         Tangent = 1 << 12,
         Position = 1 << 13,
         Colours2 = 1 << 14,
@@ -65,6 +65,8 @@ public class OldPrimitiveGroupChunk : Chunk
         { (uint)ChunkIdentifier.Matrix_Palette, VertexTypes.Matrices },
         { (uint)ChunkIdentifier.Weight_List, VertexTypes.Weights },
         { (uint)ChunkIdentifier.Position_List, VertexTypes.Position },
+        { (uint)ChunkIdentifier.Binormal_List, VertexTypes.Binormal },
+        { (uint)ChunkIdentifier.Tangent_List, VertexTypes.Tangent },
     };
 
     [DefaultValue(0)]
@@ -99,9 +101,42 @@ public class OldPrimitiveGroupChunk : Chunk
             return vertexType;
         }
     }
-    public uint NumVertices { get; set; }
-    public uint NumIndices { get; set; }
-    public uint NumMatrices { get; set; }
+    public uint NumVertices
+    {
+        get
+        {
+            foreach (var child in Children)
+            {
+                switch (child)
+                {
+                    case PositionListChunk positionList:
+                        return positionList.NumPositions;
+                    case NormalListChunk normalList:
+                        return normalList.NumNormals;
+                    case BinormalListChunk binormalList:
+                        return binormalList.NumBinormals;
+                    case PackedNormalListChunk packedNormalList:
+                        return packedNormalList.NumNormals;
+                    case ColourListChunk colourList:
+                        return colourList.NumColours;
+                    case MultiColourListChunk multiColourList:
+                        return multiColourList.NumColours;
+                    case UVListChunk uvList:
+                        return uvList.NumUVs;
+                    case WeightListChunk weightList:
+                        return weightList.NumWeights;
+                    case MatrixListChunk matrixList:
+                        return matrixList.NumMatrices;
+                    case TangentListChunk tangentList:
+                        return tangentList.NumTangents;
+                }
+            }
+
+            return 0;
+        }
+    }
+    public uint NumIndices => GetFirstChunkOfType<IndexListChunk>()?.NumIndices ?? 0;
+    public uint NumMatrices => GetFirstChunkOfType<MatrixPaletteChunk>()?.NumMatrices ?? 0;
 
     public override byte[] DataBytes
     {
@@ -129,19 +164,16 @@ public class OldPrimitiveGroupChunk : Chunk
         ShaderName = br.ReadP3DString();
         PrimitiveType = (PrimitiveTypes)br.ReadUInt32();
         var vertexType = (VertexTypes)br.ReadUInt32();
-        NumVertices = br.ReadUInt32();
-        NumIndices = br.ReadUInt32();
-        NumMatrices = br.ReadUInt32();
+        var numVertices = br.ReadUInt32();
+        var numIndices = br.ReadUInt32();
+        var numMatrices = br.ReadUInt32();
     }
 
-    public OldPrimitiveGroupChunk(uint version, string shaderName, PrimitiveTypes primitiveType, uint numVertices, uint numIndices, uint numMatrices) : base(ChunkID)
+    public OldPrimitiveGroupChunk(uint version, string shaderName, PrimitiveTypes primitiveType) : base(ChunkID)
     {
         Version = version;
         ShaderName = shaderName;
         PrimitiveType = primitiveType;
-        NumVertices = numVertices;
-        NumIndices = numIndices;
-        NumMatrices = numMatrices;
     }
 
     public override void Validate()
@@ -183,7 +215,7 @@ public class OldPrimitiveGroupChunk : Chunk
         bw.Write(NumMatrices);
     }
 
-    protected override Chunk CloneSelf() => new OldPrimitiveGroupChunk(Version, ShaderName, PrimitiveType, NumVertices, NumIndices, NumMatrices);
+    protected override Chunk CloneSelf() => new OldPrimitiveGroupChunk(Version, ShaderName, PrimitiveType);
 
     public override string ToString() => $"\"{ShaderName}\" ({GetChunkType(this)} (0x{ID:X}))";
 }

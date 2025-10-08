@@ -1,5 +1,6 @@
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
+using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
@@ -61,6 +62,14 @@ public class PositionListChunk : Chunk
     public PositionListChunk(IList<Vector3> positions) : base(ChunkID)
     {
         Positions.AddRange(positions);
+    }
+
+    public override void Validate()
+    {
+        if (ParentChunk is OldPrimitiveGroupChunk oldPrimitiveGroup && oldPrimitiveGroup.NumVertices != NumPositions)
+            throw new InvalidP3DException($"Num Positions value {NumPositions} does not match parent Num Vertices value {oldPrimitiveGroup.NumVertices}.");
+
+        base.Validate();
     }
 
     protected override void WriteData(BinaryWriter bw)
