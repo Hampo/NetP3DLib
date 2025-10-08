@@ -276,13 +276,13 @@ public static class LZR_Compression
     /// <param name="includeHistory">If <c>true</c>, a history chunk will be added to the start to indicate how and when it was compressed.<para>Defaults to <c>true</c>.</para></param>
     /// <param name="fast">If <c>true</c>, a slightly faster algorithm will be used.<para>Defaults to <c>false</c>.</para></param>
     /// <returns>A <see cref="byte"/> array containing the compressed bytes of <paramref name="file"/>.</returns>
-    public static byte[] CompressFile(P3DFile file, bool includeHistory = true, bool fast = false)
+    public static byte[] CompressFile(P3DFile file, bool includeHistory = true, bool fast = false, bool validate = true)
     {
         if (includeHistory)
             file.Chunks.Insert(0, new HistoryChunk(["Compressed with NetP3DLib", $"Run at {DateTime.Now:R}"]));
 
         using var stream = new MemoryStream();
-        file.Write(stream);
+        file.Write(stream, validate);
         List<byte> input = [.. stream.ToArray()];
 
         return CompressFile(input, fast);

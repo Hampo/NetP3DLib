@@ -465,18 +465,18 @@ public class P3DFile
         bw.Flush();
     }
 
-    public void Compress(string filePath, bool includeHistory = true, bool fast = false)
+    public void Compress(string filePath, bool includeHistory = true, bool fast = false, bool validate = true)
     {
         using FileStream fs = File.Open(filePath, FileMode.Create, FileAccess.ReadWrite, FileShare.None);
-        Compress(fs, includeHistory, fast);
+        Compress(fs, includeHistory, fast, validate);
     }
 
-    public void Compress(Stream stream, bool includeHistory = true, bool fast = false)
+    public void Compress(Stream stream, bool includeHistory = true, bool fast = false, bool validate = true)
     {
         if (!stream.CanWrite)
             throw new ArgumentException("Cannot write to stream.", nameof(stream));
 
-        var compressedBytes = LZR_Compression.CompressFile(this, includeHistory, fast);
+        var compressedBytes = LZR_Compression.CompressFile(this, includeHistory, fast, validate);
         stream.Write(compressedBytes, 0, compressedBytes.Length);
         stream.Flush();
     }
