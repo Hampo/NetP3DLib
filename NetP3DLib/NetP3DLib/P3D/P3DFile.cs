@@ -428,6 +428,14 @@ public class P3DFile
         return result;
     }
 
+    public P3DFile Clone()
+    {
+        var clone = new P3DFile();
+        foreach (var child in Chunks)
+            clone.Chunks.Add(child.Clone());
+        return clone;
+    }
+
     public void Write(string filePath) => Write(filePath, BinaryExtensions.DefaultEndian, true);
 
     public void Write(string filePath, bool validate) => Write(filePath, BinaryExtensions.DefaultEndian, validate);
