@@ -436,7 +436,7 @@ public class LocatorChunk : NamedChunk
 
         internal override LocatorData Clone() => ParkedCar.HasValue ? new CarStartLocatorData(Rotation, ParkedCar.Value, FreeCar) : new CarStartLocatorData(Rotation);
 
-        public override string ToString() => $"Rotation = {Rotation}, ParkedCar = {ParkedCar?.ToString() ?? "null"}, FreeCar = {FreeCar}";
+        public override string ToString() => $"Rotation = {Rotation}, ParkedCar = {ParkedCar?.ToString() ?? "null"}, FreeCar = {FreeCar ?? "null"}";
     }
 
     /// <summary>
