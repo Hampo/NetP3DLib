@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System;
-using System.Diagnostics;
-using NetP3DLib.P3D.Enums;
-using NetP3DLib.IO;
+﻿using NetP3DLib.IO;
 using NetP3DLib.P3D.Collections;
+using NetP3DLib.P3D.Enums;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace NetP3DLib.P3D;
 
@@ -223,6 +223,20 @@ public abstract class Chunk
                 result.Add(chunk);
         }
         return result;
+    }
+
+    public T? FindNamedChunkInParentHierarchy<T>(string name) where T : NamedChunk => FindNamedChunkInParentHierarchy<T>(this, name);
+
+    private static T? FindNamedChunkInParentHierarchy<T>(Chunk chunk, string name) where T : NamedChunk
+    {
+        if (chunk.ParentFile is P3DFile p3dFile)
+            return p3dFile.GetFirstChunkOfType<T>(name);
+
+
+        if (chunk.ParentChunk is Chunk parentChunk)
+            return parentChunk.GetFirstChunkOfType<T>(name) ?? FindNamedChunkInParentHierarchy<T>(parentChunk, name);
+
+        return null;
     }
 
     public uint GetChildCount() => (uint)Children.Count;
