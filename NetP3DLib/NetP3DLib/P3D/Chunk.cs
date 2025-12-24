@@ -225,16 +225,20 @@ public abstract class Chunk
         return result;
     }
 
-    public T? FindNamedChunkInParentHierarchy<T>(string name) where T : NamedChunk => FindNamedChunkInParentHierarchy<T>(this, name);
-
-    private static T? FindNamedChunkInParentHierarchy<T>(Chunk chunk, string name) where T : NamedChunk
+    public T? FindNamedChunkInParentHierarchy<T>(string name) where T : NamedChunk
     {
-        if (chunk.ParentFile is P3DFile p3dFile)
-            return p3dFile.GetFirstChunkOfType<T>(name);
+        if (ParentFile != null)
+            return ParentFile.GetFirstChunkOfType<T>(name);
 
+        var current = ParentChunk;
+        while (current != null)
+        {
+            var found = current.GetFirstChunkOfType<T>(name) ?? current.ParentFile?.GetFirstChunkOfType<T>(name);
+            if (found != null)
+                return found;
 
-        if (chunk.ParentChunk is Chunk parentChunk)
-            return parentChunk.GetFirstChunkOfType<T>(name) ?? FindNamedChunkInParentHierarchy<T>(parentChunk, name);
+            current = current.ParentChunk;
+        }
 
         return null;
     }
