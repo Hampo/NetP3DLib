@@ -45,6 +45,9 @@ public class CompositeDrawableChunk : NamedChunk
         if (!SkeletonName.IsValidP3DString())
             throw new InvalidP3DStringException(this, nameof(SkeletonName), SkeletonName);
 
+        if ((ParentChunk != null || ParentFile != null) && FindNamedChunkInParentHierarchy<SkeletonChunk>(SkeletonName) == null && FindNamedChunkInParentHierarchy<Skeleton2Chunk>(SkeletonName) == null)
+            throw new InvalidP3DException(this, $"Could not find skeleton with name \"{SkeletonName}\" in the parent hierarchy.");
+
         base.Validate();
     }
 
