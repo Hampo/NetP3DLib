@@ -192,11 +192,8 @@ public class OldPrimitiveGroupChunk : Chunk
             case MeshChunk:
                 throw new InvalidP3DException(this, "Old Primitive Group chunks cannot have a Matrix Palette if the parent chunk is a Mesh.");
             case SkinChunk skinChunk:
-                if (GetP3DFile() is not P3DFile p3dFile)
-                    break;
-
-                if (p3dFile.GetFirstChunkOfType<SkeletonChunk>(skinChunk.SkeletonName) == null)
-                    throw new InvalidP3DException(this, $"Could not find the skeleton named \"{skinChunk.SkeletonName}\" in the P3D file. This is required when the Old Primitive Group has a Matrix Palette.");
+                if (FindNamedChunkInParentHierarchy<SkeletonChunk>(skinChunk.SkeletonName) == null)
+                    throw new InvalidP3DException(this, $"Could not find the skeleton named \"{skinChunk.SkeletonName}\" in the parent hierarchy. This is required when the Old Primitive Group has a Matrix Palette.");
 
                 break;
         }
