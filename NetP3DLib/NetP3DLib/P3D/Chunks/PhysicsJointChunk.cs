@@ -11,11 +11,11 @@ public class PhysicsJointChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Physics_Joint;
 
-    public enum DegreesOfFreedom
+    public enum DegreeOfFreedom
     {
-        Fixed0D = 0,
-        Hinge1D = 1,
-        BallAndSocket3D = 3
+        Fixed_0D = 0,
+        Hinge_1D = 1,
+        BallAndSocket_3D = 3
     }
 
     public int Index { get; set; }
@@ -23,7 +23,7 @@ public class PhysicsJointChunk : Chunk
     public float Stiffness { get; set; }
     public float MaxAngle { get; set; }
     public float MinAngle { get; set; }
-    public DegreesOfFreedom DOF { get; set; }
+    public DegreeOfFreedom DegreesOfFreedom { get; set; }
 
     public override byte[] DataBytes
     {
@@ -36,7 +36,7 @@ public class PhysicsJointChunk : Chunk
             data.AddRange(BitConverter.GetBytes(Stiffness));
             data.AddRange(BitConverter.GetBytes(MaxAngle));
             data.AddRange(BitConverter.GetBytes(MinAngle));
-            data.AddRange(BitConverter.GetBytes((int)DOF));
+            data.AddRange(BitConverter.GetBytes((int)DegreesOfFreedom));
 
             return [.. data];
         }
@@ -50,17 +50,17 @@ public class PhysicsJointChunk : Chunk
         Stiffness = br.ReadSingle();
         MaxAngle = br.ReadSingle();
         MinAngle = br.ReadSingle();
-        DOF = (DegreesOfFreedom)br.ReadInt32();
+        DegreesOfFreedom = (DegreeOfFreedom)br.ReadInt32();
     }
 
-    public PhysicsJointChunk(int index, float volume, float stiffness, float maxAngle, float minAngle, DegreesOfFreedom dof) : base(ChunkID)
+    public PhysicsJointChunk(int index, float volume, float stiffness, float maxAngle, float minAngle, DegreeOfFreedom degreesOfFreedom) : base(ChunkID)
     {
         Index = index;
         Volume = volume;
         Stiffness = stiffness;
         MaxAngle = maxAngle;
         MinAngle = minAngle;
-        DOF = dof;
+        DegreesOfFreedom = degreesOfFreedom;
     }
 
     protected override void WriteData(BinaryWriter bw)
@@ -70,8 +70,8 @@ public class PhysicsJointChunk : Chunk
         bw.Write(Stiffness);
         bw.Write(MaxAngle);
         bw.Write(MinAngle);
-        bw.Write((int)DOF);
+        bw.Write((int)DegreesOfFreedom);
     }
 
-    protected override Chunk CloneSelf() => new PhysicsJointChunk(Index, Volume, Stiffness, MaxAngle, MinAngle, DOF);
+    protected override Chunk CloneSelf() => new PhysicsJointChunk(Index, Volume, Stiffness, MaxAngle, MinAngle, DegreesOfFreedom);
 }
