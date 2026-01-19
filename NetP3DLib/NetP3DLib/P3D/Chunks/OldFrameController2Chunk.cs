@@ -9,7 +9,7 @@ using System.IO;
 namespace NetP3DLib.P3D.Chunks;
 
 [ChunkAttributes(ChunkID)]
-public class OldFrameControllerChunk2 : NamedChunk
+public class OldFrameController2Chunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Frame_Controller_2;
     
@@ -55,7 +55,7 @@ public class OldFrameControllerChunk2 : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint) + BinaryExtensions.GetP3DStringLength(HierarchyName) + BinaryExtensions.GetP3DStringLength(AnimationName);
 
-    public OldFrameControllerChunk2(BinaryReader br) : base(ChunkID)
+    public OldFrameController2Chunk(BinaryReader br) : base(ChunkID)
     {
         Name = br.ReadP3DString();
         Version = br.ReadUInt32();
@@ -64,7 +64,7 @@ public class OldFrameControllerChunk2 : NamedChunk
         AnimationName = br.ReadP3DString();
     }
 
-    public OldFrameControllerChunk2(string name, uint version, Types type, string hierarchyName, string animationName) : base(ChunkID)
+    public OldFrameController2Chunk(string name, uint version, Types type, string hierarchyName, string animationName) : base(ChunkID)
     {
         Name = name;
         Version = version;
@@ -93,5 +93,5 @@ public class OldFrameControllerChunk2 : NamedChunk
         bw.WriteP3DString(AnimationName);
     }
 
-    protected override Chunk CloneSelf() => new OldFrameControllerChunk2(Name, Version, Type, HierarchyName, AnimationName);
+    protected override Chunk CloneSelf() => new OldFrameController2Chunk(Name, Version, Type, HierarchyName, AnimationName);
 }
