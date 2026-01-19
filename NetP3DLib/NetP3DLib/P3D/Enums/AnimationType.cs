@@ -59,3 +59,17 @@ public enum AnimationType : uint
     /// </summary>
     Shader = 0x44414853,
 }
+
+public static class AnimationTypeExtensions
+{
+    public static string ToFourCC(this AnimationType animationType)
+    {
+        var value = (uint)animationType;
+        return new string([
+            (char)(value & 0xFF),
+            (char)((value >> 8) & 0xFF),
+            (char)((value >> 16) & 0xFF),
+            (char)((value >> 24) & 0xFF)
+        ]);
+    }
+}
