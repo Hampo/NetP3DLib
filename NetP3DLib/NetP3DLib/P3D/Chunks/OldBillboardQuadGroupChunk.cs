@@ -29,7 +29,7 @@ public class OldBillboardQuadGroupChunk : NamedChunk
         get => zWrite != 0;
         set => zWrite = value ? 1u : 0u;
     }
-    private uint Occlusion { get; set; }
+    public uint Occlusion { get; set; }
     public uint NumQuads => GetChildCount(ChunkIdentifier.Old_Billboard_Quad);
 
     public override byte[] DataBytes
