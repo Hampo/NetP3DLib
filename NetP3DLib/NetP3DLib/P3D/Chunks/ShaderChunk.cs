@@ -15,7 +15,7 @@ public class ShaderChunk : NamedChunk
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Shader;
 
     [Flags]
-    public enum VertexMasks : uint
+    public enum VertexMasks : int
     {
         None = 0,
         UVs = 1,
@@ -69,14 +69,14 @@ public class ShaderChunk : NamedChunk
             data.AddRange(BitConverter.GetBytes(Version));
             data.AddRange(BinaryExtensions.GetP3DStringBytes(PddiShaderName));
             data.AddRange(BitConverter.GetBytes(hasTranslucency));
-            data.AddRange(BitConverter.GetBytes((uint)VertexNeeds));
-            data.AddRange(BitConverter.GetBytes((uint)~VertexMask));
+            data.AddRange(BitConverter.GetBytes((int)VertexNeeds));
+            data.AddRange(BitConverter.GetBytes((int)~VertexMask));
             data.AddRange(BitConverter.GetBytes(NumParams));
 
             return [.. data];
         }
     }
-    public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + BinaryExtensions.GetP3DStringLength(PddiShaderName) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint);
+    public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + BinaryExtensions.GetP3DStringLength(PddiShaderName) + sizeof(uint) + sizeof(int) + sizeof(int) + sizeof(uint);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
     public ShaderChunk(BinaryReader br) : base(ChunkID)
@@ -85,8 +85,8 @@ public class ShaderChunk : NamedChunk
         Version = br.ReadUInt32();
         PddiShaderName = br.ReadP3DString();
         hasTranslucency = br.ReadUInt32();
-        VertexNeeds = (VertexMasks)br.ReadUInt32();
-        VertexMask = (VertexMasks)~br.ReadUInt32();
+        VertexNeeds = (VertexMasks)br.ReadInt32();
+        VertexMask = (VertexMasks)~br.ReadInt32();
         var numParams = br.ReadUInt32();
     }
 
@@ -114,8 +114,8 @@ public class ShaderChunk : NamedChunk
         bw.Write(Version);
         bw.WriteP3DString(PddiShaderName);
         bw.Write(hasTranslucency);
-        bw.Write((uint)VertexNeeds);
-        bw.Write((uint)~VertexMask);
+        bw.Write((int)VertexNeeds);
+        bw.Write((int)~VertexMask);
         bw.Write(NumParams);
     }
 
