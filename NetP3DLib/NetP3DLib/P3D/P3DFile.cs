@@ -25,18 +25,23 @@ public class P3DFile
     {
         get
         {
-            List<Chunk> allChunks = [];
-            void AddChunks(IList<Chunk> chunks)
+            var result = new List<Chunk>(Chunks.Count * 4);
+
+            var stack = new Stack<Chunk>(Chunks.Count);
+            for (int i = Chunks.Count - 1; i >= 0; i--)
+                stack.Push(Chunks[i]);
+
+            while (stack.Count > 0)
             {
-                allChunks.Capacity += chunks.Count;
-                foreach (var chunk in chunks)
-                {
-                    allChunks.Add(chunk);
-                    AddChunks(chunk.Children);
-                }
+                var chunk = stack.Pop();
+                result.Add(chunk);
+
+                var children = chunk.Children;
+                for (int i = children.Count - 1; i >= 0; i--)
+                    stack.Push(children[i]);
             }
-            AddChunks(Chunks);
-            return allChunks.AsReadOnly();
+
+            return result.AsReadOnly();
         }
     }
 

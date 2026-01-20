@@ -3,6 +3,7 @@ using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 
 namespace NetP3DLib.P3D;
@@ -32,6 +33,32 @@ public abstract class Chunk
     /// Property <c>Children</c> is a collection of a chunk's children.
     /// </summary>
     public ChunkCollection Children { get; internal set; }
+    /// <summary>
+    /// Property <c>AllChildren</c> is all the chunk's children flattened.
+    /// </summary>
+    public ReadOnlyCollection<Chunk> AllChildren
+    {
+        get
+        {
+            var result = new List<Chunk>(Children.Count * 4);
+
+            var stack = new Stack<Chunk>(Children.Count);
+            for (int i = Children.Count - 1; i >= 0; i--)
+                stack.Push(Children[i]);
+
+            while (stack.Count > 0)
+            {
+                var chunk = stack.Pop();
+                result.Add(chunk);
+
+                var children = chunk.Children;
+                for (int i = children.Count - 1; i >= 0; i--)
+                    stack.Push(children[i]);
+            }
+
+            return result.AsReadOnly();
+        }
+    }
 
     /// <summary>
     /// Property <c>DataBytes</c> is the chunk's header data, built from the chunk's properties.
