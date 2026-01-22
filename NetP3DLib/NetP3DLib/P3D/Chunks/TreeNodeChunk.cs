@@ -12,16 +12,16 @@ public class TreeNodeChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Tree_Node;
 
-    internal uint _cachedNumChildren;
-    public uint NumChildren
+    internal uint _cachedSubTreeSize;
+    public uint SubTreeSize
     {
         get
         {
             if (ParentChunk is not TreeChunk treeChunk)
                 return 0;
 
-            treeChunk.RecalculateNumChildrenIfNeeded();
-            return _cachedNumChildren;
+            treeChunk.RecalculateSubTreeSizeIfNeeded();
+            return _cachedSubTreeSize;
         }
     }
     public int ParentOffset { get; set; }
@@ -32,7 +32,7 @@ public class TreeNodeChunk : Chunk
         {
             List<byte> data = [];
 
-            data.AddRange(BitConverter.GetBytes(NumChildren));
+            data.AddRange(BitConverter.GetBytes(SubTreeSize));
             data.AddRange(BitConverter.GetBytes(ParentOffset));
 
             return [.. data];
@@ -57,7 +57,7 @@ public class TreeNodeChunk : Chunk
         if (Children.Count == 0)
             throw new InvalidP3DException(this, $"There must be at least one Tree Node 2 child chunk.");
         foreach (var child in Children)
-            if (child.ID != (uint)ChunkIdentifier.Tree_Node_2)
+            if (child.ID != (uint)ChunkIdentifier.Spatial_Node)
                 throw new InvalidP3DException(this, $"Child chunk {child} is invalid. Child chunks must be an instance of Tree Node 2.");
 
         base.Validate();
@@ -65,7 +65,7 @@ public class TreeNodeChunk : Chunk
 
     protected override void WriteData(BinaryWriter bw)
     {
-        bw.Write(NumChildren);
+        bw.Write(SubTreeSize);
         bw.Write(ParentOffset);
     }
 

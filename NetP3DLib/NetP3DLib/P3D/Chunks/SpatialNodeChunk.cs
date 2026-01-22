@@ -7,9 +7,9 @@ using System.IO;
 namespace NetP3DLib.P3D.Chunks;
 
 [ChunkAttributes(ChunkID)]
-public class TreeNode2Chunk : Chunk
+public class SpatialNodeChunk : Chunk
 {
-    public const ChunkIdentifier ChunkID = ChunkIdentifier.Tree_Node_2;
+    public const ChunkIdentifier ChunkID = ChunkIdentifier.Spatial_Node;
     
     public enum Axis : sbyte
     {
@@ -52,7 +52,7 @@ public class TreeNode2Chunk : Chunk
     }
     public override uint DataLength => sizeof(sbyte) + sizeof(float) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint);
 
-    public TreeNode2Chunk(BinaryReader br) : base(ChunkID)
+    public SpatialNodeChunk(BinaryReader br) : base(ChunkID)
     {
         SplitAxis = (Axis)br.ReadSByte();
         SplitPosition = br.ReadSingle();
@@ -66,7 +66,7 @@ public class TreeNode2Chunk : Chunk
         AnimEntityLimit = br.ReadUInt32();
     }
 
-    public TreeNode2Chunk(Axis splitAxis, float splitPosition, uint staticEntityLimit, uint staticPhysEntityLimit, uint intersectEntityLimit, uint dynaPhysEntityLimit, uint fencyEntityLimit, uint roadSegmentEntityLimit, uint pathSegmentEntityLimit, uint animEntityLimit) : base(ChunkID)
+    public SpatialNodeChunk(Axis splitAxis, float splitPosition, uint staticEntityLimit, uint staticPhysEntityLimit, uint intersectEntityLimit, uint dynaPhysEntityLimit, uint fencyEntityLimit, uint roadSegmentEntityLimit, uint pathSegmentEntityLimit, uint animEntityLimit) : base(ChunkID)
     {
         SplitAxis = splitAxis;
         SplitPosition = splitPosition;
@@ -94,5 +94,5 @@ public class TreeNode2Chunk : Chunk
         bw.Write(AnimEntityLimit);
     }
 
-    protected override Chunk CloneSelf() => new TreeNode2Chunk(SplitAxis, SplitPosition, StaticEntityLimit, StaticPhysEntityLimit, IntersectEntityLimit, DynaPhysEntityLimit, FenceEntityLimit, RoadSegmentEntityLimit, PathSegmentEntityLimit, AnimEntityLimit);
+    protected override Chunk CloneSelf() => new SpatialNodeChunk(SplitAxis, SplitPosition, StaticEntityLimit, StaticPhysEntityLimit, IntersectEntityLimit, DynaPhysEntityLimit, FenceEntityLimit, RoadSegmentEntityLimit, PathSegmentEntityLimit, AnimEntityLimit);
 }

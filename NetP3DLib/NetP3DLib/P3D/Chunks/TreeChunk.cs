@@ -13,9 +13,9 @@ public class TreeChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Tree;
     
-    public uint NumChildren => GetChildCount(ChunkIdentifier.Tree_Node);
-    public Vector3 Minimum { get; set; }
-    public Vector3 Maximum { get; set; }
+    public uint NumNodes => GetChildCount(ChunkIdentifier.Tree_Node);
+    public Vector3 BoundsMin { get; set; }
+    public Vector3 BoundsMax { get; set; }
 
     public override byte[] DataBytes
     {
@@ -23,9 +23,9 @@ public class TreeChunk : Chunk
         {
             List<byte> data = [];
 
-            data.AddRange(BitConverter.GetBytes(NumChildren));
-            data.AddRange(BinaryExtensions.GetBytes(Minimum));
-            data.AddRange(BinaryExtensions.GetBytes(Maximum));
+            data.AddRange(BitConverter.GetBytes(NumNodes));
+            data.AddRange(BinaryExtensions.GetBytes(BoundsMin));
+            data.AddRange(BinaryExtensions.GetBytes(BoundsMax));
 
             return [.. data];
         }
@@ -36,28 +36,28 @@ public class TreeChunk : Chunk
     public TreeChunk(BinaryReader br) : base(ChunkID)
     {
         var numChildren = br.ReadUInt32();
-        Minimum = br.ReadVector3();
-        Maximum = br.ReadVector3();
+        BoundsMin = br.ReadVector3();
+        BoundsMax = br.ReadVector3();
     }
 
     public TreeChunk(Vector3 minimum, Vector3 maximum) : base(ChunkID)
     {
-        Minimum = minimum;
-        Maximum = maximum;
+        BoundsMin = minimum;
+        BoundsMax = maximum;
     }
 
     protected override void WriteData(BinaryWriter bw)
     {
-        bw.Write(NumChildren);
-        bw.Write(Minimum);
-        bw.Write(Maximum);
+        bw.Write(NumNodes);
+        bw.Write(BoundsMin);
+        bw.Write(BoundsMax);
     }
 
-    protected override Chunk CloneSelf() => new TreeChunk(Minimum, Maximum);
+    protected override Chunk CloneSelf() => new TreeChunk(BoundsMin, BoundsMax);
 
     private int _childHash = 0;
     private int _childCount = 0;
-    internal void RecalculateNumChildrenIfNeeded()
+    internal void RecalculateSubTreeSizeIfNeeded()
     {
         var children = GetChunksOfType<TreeNodeChunk>();
         var childCount = children.Count;
@@ -75,13 +75,13 @@ public class TreeChunk : Chunk
             _childCount = childCount;
         }
 
-        ComputeNumChildrenForAllNodes(children);
+        ComputeSubTreeSizeForAllNodes(children);
     }
 
-    private void ComputeNumChildrenForAllNodes(IReadOnlyList<TreeNodeChunk> children)
+    private void ComputeSubTreeSizeForAllNodes(IReadOnlyList<TreeNodeChunk> children)
     {
         foreach (var c in children)
-            c?._cachedNumChildren = 0;
+            c?._cachedSubTreeSize = 0;
 
         for (int i = children.Count - 1; i >= 0; i--)
         {
@@ -94,7 +94,7 @@ public class TreeChunk : Chunk
 
             int parentIndex = i + node.ParentOffset;
             if (parentIndex >= 0 && parentIndex < children.Count && children[parentIndex] is TreeNodeChunk parent)
-                parent._cachedNumChildren += 1 + node._cachedNumChildren;
+                parent._cachedSubTreeSize += 1 + node._cachedSubTreeSize;
         }
     }
 }
