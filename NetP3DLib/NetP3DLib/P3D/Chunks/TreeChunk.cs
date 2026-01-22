@@ -81,12 +81,12 @@ public class TreeChunk : Chunk
     private void ComputeNumChildrenForAllNodes(IReadOnlyList<TreeNodeChunk> children)
     {
         foreach (var c in children)
-            if (c is TreeNodeChunk tn)
-                tn._cachedNumChildren = 0;
+            c?._cachedNumChildren = 0;
 
         for (int i = children.Count - 1; i >= 0; i--)
         {
-            if (children[i] is not TreeNodeChunk node)
+            var node = children[i];
+            if (node == null)
                 continue;
 
             if (node.ParentOffset == 0)
