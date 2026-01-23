@@ -55,10 +55,10 @@ public class TreeNodeChunk : Chunk
     public override void Validate()
     {
         if (Children.Count == 0)
-            throw new InvalidP3DException(this, $"There must be at least one Tree Node 2 child chunk.");
+            throw new InvalidP3DException(this, $"There must be at least one Spatial Node child chunk.");
         foreach (var child in Children)
             if (child.ID != (uint)ChunkIdentifier.Spatial_Node)
-                throw new InvalidP3DException(this, $"Child chunk {child} is invalid. Child chunks must be an instance of Tree Node 2.");
+                throw new InvalidP3DException(this, $"Child chunk {child} is invalid. Child chunks must be an instance of Spatial Node.");
 
         base.Validate();
     }
