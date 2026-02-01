@@ -78,6 +78,9 @@ public class OldBillboardQuadGroupChunk : NamedChunk
         if (!Shader.IsValidP3DString())
             throw new InvalidP3DStringException(this, nameof(Shader), Shader);
 
+        if ((ParentChunk != null || ParentFile != null) && FindNamedChunkInParentHierarchy<ShaderChunk>(Shader) == null)
+            throw new InvalidP3DException(this, $"Could not find shader with name \"{Shader}\" in the parent hierarchy.");
+
         base.Validate();
     }
 
