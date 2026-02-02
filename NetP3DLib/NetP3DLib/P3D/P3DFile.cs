@@ -142,7 +142,9 @@ public class P3DFile
         {
             fs = new(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
             if (fs.Length < HEADER_SIZE)
-                throw new InvalidDataException("Specified file too short. Must be at least 12 bytes.");
+                throw new InvalidDataException($"Specified file too short. Must be at least {HEADER_SIZE} bytes.");
+            if (fs.Length > int.MaxValue)
+                throw new InvalidDataException($"Specified file too long. Must be fewer than {int.MaxValue} bytes.");
 
             byte[] signatureBuffer = new byte[4];
             fs.Read(signatureBuffer, 0, 4);
