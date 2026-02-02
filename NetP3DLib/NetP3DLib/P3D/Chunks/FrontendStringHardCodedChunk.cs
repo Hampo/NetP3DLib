@@ -37,12 +37,13 @@ public class FrontendStringHardCodedChunk : Chunk
         String = @string;
     }
 
-    public override void Validate()
+    public override IEnumerable<InvalidP3DException> ValidateChunks()
     {
         if (!String.IsValidP3DString())
-            throw new InvalidP3DStringException(this, nameof(String), String);
+            yield return new InvalidP3DStringException(this, nameof(String), String);
 
-        base.Validate();
+        foreach (var error in base.ValidateChunks())
+            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

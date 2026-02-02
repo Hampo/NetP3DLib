@@ -215,7 +215,7 @@ public static class BinaryExtensions
     public static byte[] GetFourCCBytes(string value)
     {
         if (!value.IsValidFourCC())
-            throw new InvalidFourCCException(null, nameof(value), value);
+            throw new InvalidP3DFourCCException(null, nameof(value), value);
 
         char[] c = [(char)0, (char)0, (char)0, (char)0];
         value.ToCharArray().CopyTo(c, 0);
@@ -250,7 +250,7 @@ public static class BinaryExtensions
     public static void WriteFourCC(this BinaryWriter bw, string value)
     {
         if (!value.IsValidFourCC())
-            throw new InvalidFourCCException(null, nameof(value), value);
+            throw new InvalidP3DFourCCException(null, nameof(value), value);
 
         char[] c = [(char)0, (char)0, (char)0, (char)0];
         value.ToCharArray().CopyTo(c, 0);

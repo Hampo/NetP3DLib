@@ -100,12 +100,13 @@ public class CollisionMetaDataVectorChannelChunk : NamedChunk
         Values.AddRange(values);
     }
 
-    public override void Validate()
+    public override IEnumerable<InvalidP3DException> ValidateChunks()
     {
         if (Indices.Count != Values.Count)
-            throw new InvalidP3DException(this, $"{nameof(Indices)} and {nameof(Values)} must have equal counts.");
+            yield return new InvalidP3DException(this, $"{nameof(Indices)} and {nameof(Values)} must have equal counts.");
 
-        base.Validate();
+        foreach (var error in base.ValidateChunks())
+            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

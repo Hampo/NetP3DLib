@@ -51,12 +51,13 @@ public class AnimatedObjectFactoryChunk : NamedChunk
         NumAnimations = numAnimations;
     }
 
-    public override void Validate()
+    public override IEnumerable<InvalidP3DException> ValidateChunks()
     {
         if (!BaseAnimation.IsValidP3DString())
-            throw new InvalidP3DStringException(this, nameof(BaseAnimation), BaseAnimation);
+            yield return new InvalidP3DStringException(this, nameof(BaseAnimation), BaseAnimation);
 
-        base.Validate();
+        foreach (var error in base.ValidateChunks())
+            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

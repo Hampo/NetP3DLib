@@ -40,15 +40,16 @@ public class CompositeDrawableChunk : NamedChunk
         SkeletonName = skeletonName;
     }
 
-    public override void Validate()
+    public override IEnumerable<InvalidP3DException> ValidateChunks()
     {
         if (!SkeletonName.IsValidP3DString())
-            throw new InvalidP3DStringException(this, nameof(SkeletonName), SkeletonName);
+            yield return new InvalidP3DStringException(this, nameof(SkeletonName), SkeletonName);
 
         if ((ParentChunk != null || ParentFile != null) && FindNamedChunkInParentHierarchy<SkeletonChunk>(SkeletonName) == null && FindNamedChunkInParentHierarchy<Skeleton2Chunk>(SkeletonName) == null)
-            throw new InvalidP3DException(this, $"Could not find skeleton with name \"{SkeletonName}\" in the parent hierarchy.");
+            yield return new InvalidP3DException(this, $"Could not find skeleton with name \"{SkeletonName}\" in the parent hierarchy.");
 
-        base.Validate();
+        foreach (var error in base.ValidateChunks())
+            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

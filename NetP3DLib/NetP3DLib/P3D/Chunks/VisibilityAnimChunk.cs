@@ -57,12 +57,13 @@ public class VisibilityAnimChunk : NamedChunk
         FrameRate = frameRate;
     }
 
-    public override void Validate()
+    public override IEnumerable<InvalidP3DException> ValidateChunks()
     {
         if (!SceneName.IsValidP3DString())
-            throw new InvalidP3DStringException(this, nameof(SceneName), SceneName);
+            yield return new InvalidP3DStringException(this, nameof(SceneName), SceneName);
 
-        base.Validate();
+        foreach (var error in base.ValidateChunks())
+            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

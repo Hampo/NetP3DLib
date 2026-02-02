@@ -69,15 +69,16 @@ public class SmartPropChunk : NamedChunk
         NumStates = numStates;
     }
 
-    public override void Validate()
+    public override IEnumerable<InvalidP3DException> ValidateChunks()
     {
         if (!ObjectFactoryName.IsValidP3DString())
-            throw new InvalidP3DStringException(this, nameof(ObjectFactoryName), ObjectFactoryName);
+            yield return new InvalidP3DStringException(this, nameof(ObjectFactoryName), ObjectFactoryName);
 
         if (!Material.IsValidP3DString())
-            throw new InvalidP3DStringException(this, nameof(Material), Material);
+            yield return new InvalidP3DStringException(this, nameof(Material), Material);
 
-        base.Validate();
+        foreach (var error in base.ValidateChunks())
+            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

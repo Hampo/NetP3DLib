@@ -93,21 +93,22 @@ public class RoadChunk : NamedChunk
         Shortcut = shortcut;
     }
 
-    public override void Validate()
+    public override IEnumerable<InvalidP3DException> ValidateChunks()
     {
         if (!StartIntersection.IsValidP3DString())
-            throw new InvalidP3DStringException(this, nameof(StartIntersection), StartIntersection);
+            yield return new InvalidP3DStringException(this, nameof(StartIntersection), StartIntersection);
 
         if (!EndIntersection.IsValidP3DString())
-            throw new InvalidP3DStringException(this, nameof(EndIntersection), EndIntersection);
+            yield return new InvalidP3DStringException(this, nameof(EndIntersection), EndIntersection);
 
         if (Children.Count == 0)
-            throw new InvalidP3DException(this, $"There must be at least one Road Segment child chunk.");
+            yield return new InvalidP3DException(this, $"There must be at least one Road Segment child chunk.");
         foreach (var child in Children)
             if (child.ID != (uint)ChunkIdentifier.Road_Segment)
-                throw new InvalidP3DException(this, $"Child chunk {child} is invalid. Child chunks must be an instance of Road Segment.");
+                yield return new InvalidP3DException(this, $"Child chunk {child} is invalid. Child chunks must be an instance of Road Segment.");
 
-        base.Validate();
+        foreach (var error in base.ValidateChunks())
+            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

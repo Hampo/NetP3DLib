@@ -51,15 +51,16 @@ public class FrontendTextBibleResourceChunk : NamedChunk
         InventoryName = inventoryName;
     }
 
-    public override void Validate()
+    public override IEnumerable<InvalidP3DException> ValidateChunks()
     {
         if (!Filename.IsValidP3DString())
-            throw new InvalidP3DStringException(this, nameof(Filename), Filename);
+            yield return new InvalidP3DStringException(this, nameof(Filename), Filename);
 
         if (!InventoryName.IsValidP3DString())
-            throw new InvalidP3DStringException(this, nameof(InventoryName), InventoryName);
+            yield return new InvalidP3DStringException(this, nameof(InventoryName), InventoryName);
 
-        base.Validate();
+        foreach (var error in base.ValidateChunks())
+            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

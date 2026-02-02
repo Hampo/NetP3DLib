@@ -40,12 +40,13 @@ public class ExportInfoNamedStringChunk : NamedChunk
         Value = value;
     }
 
-    public override void Validate()
+    public override IEnumerable<InvalidP3DException> ValidateChunks()
     {
         if (!Value.IsValidP3DString())
-            throw new InvalidP3DStringException(this, nameof(Value), Value);
+            yield return new InvalidP3DStringException(this, nameof(Value), Value);
 
-        base.Validate();
+        foreach (var error in base.ValidateChunks())
+            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

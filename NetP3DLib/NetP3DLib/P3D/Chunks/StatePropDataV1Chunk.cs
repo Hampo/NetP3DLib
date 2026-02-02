@@ -51,18 +51,19 @@ public class StatePropDataV1Chunk : NamedChunk
         ObjectFactoryName = objectFactoryName;
     }
 
-    public override void Validate()
+    public override IEnumerable<InvalidP3DException> ValidateChunks()
     {
         if (!ObjectFactoryName.IsValidP3DString())
-            throw new InvalidP3DStringException(this, nameof(ObjectFactoryName), ObjectFactoryName);
+            yield return new InvalidP3DStringException(this, nameof(ObjectFactoryName), ObjectFactoryName);
 
         if (Children.Count == 0)
-            throw new InvalidP3DException(this, $"There must be at least one State Prop State Data V1 child chunk.");
+            yield return new InvalidP3DException(this, $"There must be at least one State Prop State Data V1 child chunk.");
         foreach (var child in Children)
             if (child.ID != (uint)ChunkIdentifier.State_Prop_State_Data_V1)
-                throw new InvalidP3DException(this, $"Child chunk {child} is invalid. Child chunks must be an instance of State Prop State Data V1.");
+                yield return new InvalidP3DException(this, $"Child chunk {child} is invalid. Child chunks must be an instance of State Prop State Data V1.");
 
-        base.Validate();
+        foreach (var error in base.ValidateChunks())
+            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

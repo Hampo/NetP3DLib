@@ -49,12 +49,13 @@ public class CompositeDrawable2Chunk : NamedChunk
         SkeletonName = skeletonName;
     }
 
-    public override void Validate()
+    public override IEnumerable<InvalidP3DException> ValidateChunks()
     {
         if (!SkeletonName.IsValidP3DString())
-            throw new InvalidP3DStringException(this, nameof(SkeletonName), SkeletonName);
+            yield return new InvalidP3DStringException(this, nameof(SkeletonName), SkeletonName);
 
-        base.Validate();
+        foreach (var error in base.ValidateChunks())
+            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

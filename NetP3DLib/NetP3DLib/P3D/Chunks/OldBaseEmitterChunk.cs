@@ -101,14 +101,15 @@ public class OldBaseEmitterChunk : NamedChunk
         TranslationCohesion = translationCohesion;
     }
 
-    public override void Validate()
+    public override IEnumerable<InvalidP3DException> ValidateChunks()
     {
         if (!ParticleType.IsValidFourCC())
-            throw new InvalidFourCCException(this,nameof(ParticleType), ParticleType);
+            yield return new InvalidP3DFourCCException(this,nameof(ParticleType), ParticleType);
 
         if (!GeneratorType.IsValidFourCC())
 
-        base.Validate();
+        foreach (var error in base.ValidateChunks())
+            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

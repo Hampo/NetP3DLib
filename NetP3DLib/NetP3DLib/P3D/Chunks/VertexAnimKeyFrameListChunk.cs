@@ -95,12 +95,13 @@ public class VertexAnimKeyFrameListChunk : Chunk
         KeyFrameCounts.AddRange(keyFrameCounts);
     }
 
-    public override void Validate()
+    public override IEnumerable<InvalidP3DException> ValidateChunks()
     {
         if (KeyFrameIds.Count != KeyFrameCounts.Count)
-            throw new InvalidP3DException(this, $"{nameof(KeyFrameIds)} and {nameof(KeyFrameCounts)} must have equal counts.");
+            yield return new InvalidP3DException(this, $"{nameof(KeyFrameIds)} and {nameof(KeyFrameCounts)} must have equal counts.");
 
-        base.Validate();
+        foreach (var error in base.ValidateChunks())
+            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

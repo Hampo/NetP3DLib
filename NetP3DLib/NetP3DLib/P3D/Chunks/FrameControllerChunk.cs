@@ -69,21 +69,22 @@ public class FrameControllerChunk : NamedChunk
         AnimationName = animationName;
     }
 
-    public override void Validate()
+    public override IEnumerable<InvalidP3DException> ValidateChunks()
     {
         if (!Type.IsValidFourCC())
-            throw new InvalidFourCCException(this,nameof(Type), Type);
+            yield return new InvalidP3DFourCCException(this,nameof(Type), Type);
 
         if (!CycleMode.IsValidFourCC())
-            throw new InvalidFourCCException(this,nameof(CycleMode), CycleMode);
+            yield return new InvalidP3DFourCCException(this,nameof(CycleMode), CycleMode);
 
         if (!HierarchyName.IsValidP3DString())
-            throw new InvalidP3DStringException(this, nameof(HierarchyName), HierarchyName);
+            yield return new InvalidP3DStringException(this, nameof(HierarchyName), HierarchyName);
 
         if (!AnimationName.IsValidP3DString())
-            throw new InvalidP3DStringException(this, nameof(AnimationName), AnimationName);
+            yield return new InvalidP3DStringException(this, nameof(AnimationName), AnimationName);
 
-        base.Validate();
+        foreach (var error in base.ValidateChunks())
+            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

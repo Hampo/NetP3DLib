@@ -68,12 +68,13 @@ public class MultiController2Chunk : NamedChunk
         FrameRate = frameRate;
     }
 
-    public override void Validate()
+    public override IEnumerable<InvalidP3DException> ValidateChunks()
     {
         if (!CycleMode.IsValidFourCC())
-            throw new InvalidFourCCException(this,nameof(CycleMode), CycleMode);
+            yield return new InvalidP3DFourCCException(this,nameof(CycleMode), CycleMode);
 
-        base.Validate();
+        foreach (var error in base.ValidateChunks())
+            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

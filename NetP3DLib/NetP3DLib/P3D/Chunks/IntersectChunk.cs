@@ -122,24 +122,25 @@ public class IntersectChunk : Chunk
         Normals.AddRange(normals);
     }
 
-    public override void Validate()
+    public override IEnumerable<InvalidP3DException> ValidateChunks()
     {
         if (Indices.Count % 3 != 0)
-            throw new InvalidP3DException(this, $"The number of {nameof(Indices)} must be divisible by 3.");
+            yield return new InvalidP3DException(this, $"The number of {nameof(Indices)} must be divisible by 3.");
         
         for (var i = 0; i < Indices.Count; i++)
             if (Indices[i] >= Positions.Count)
-                throw new InvalidP3DException(this, $"The {nameof(Indices)} at index {i} is out of bound of the {nameof(Positions)} list.");
+                yield return new InvalidP3DException(this, $"The {nameof(Indices)} at index {i} is out of bound of the {nameof(Positions)} list.");
 
         var numTriangles = Indices.Count / 3;
         if (Normals.Count != numTriangles)
-            throw new InvalidP3DException(this, $"The number of {nameof(Normals)} does not match the number of triangles ({numTriangles}).");
+            yield return new InvalidP3DException(this, $"The number of {nameof(Normals)} does not match the number of triangles ({numTriangles}).");
 
         var terrainTypeListChunk = GetFirstChunkOfType<TerrainTypeListChunk>();
         if (terrainTypeListChunk != null && terrainTypeListChunk.NumTypes != NumNormals)
-            throw new InvalidP3DException(this, $"The number of {nameof(Normals)} does not match the number of terrain types ({terrainTypeListChunk.NumTypes}).");
+            yield return new InvalidP3DException(this, $"The number of {nameof(Normals)} does not match the number of terrain types ({terrainTypeListChunk.NumTypes}).");
 
-        base.Validate();
+        foreach (var error in base.ValidateChunks())
+            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

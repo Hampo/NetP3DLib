@@ -81,7 +81,8 @@ public class TreeChunk : Chunk
     private void ComputeSubTreeSizeForAllNodes(IReadOnlyList<TreeNodeChunk> children)
     {
         foreach (var c in children)
-            c?._cachedSubTreeSize = 0;
+            if (c != null)
+                c._cachedSubTreeSize = 0;
 
         for (int i = children.Count - 1; i >= 0; i--)
         {

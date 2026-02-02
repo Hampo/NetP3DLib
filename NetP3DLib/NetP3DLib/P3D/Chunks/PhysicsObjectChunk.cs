@@ -59,12 +59,13 @@ public class PhysicsObjectChunk : NamedChunk
         RestingSensitivity = restingSensitivity;
     }
 
-    public override void Validate()
+    public override IEnumerable<InvalidP3DException> ValidateChunks()
     {
         if (!MaterialName.IsValidP3DString())
-            throw new InvalidP3DStringException(this, nameof(MaterialName), MaterialName);
+            yield return new InvalidP3DStringException(this, nameof(MaterialName), MaterialName);
 
-        base.Validate();
+        foreach (var error in base.ValidateChunks())
+            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

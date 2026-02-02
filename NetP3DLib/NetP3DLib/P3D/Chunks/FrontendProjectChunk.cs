@@ -67,21 +67,22 @@ public class FrontendProjectChunk : NamedChunk
         ScreenPath = screenPath;
     }
 
-    public override void Validate()
+    public override IEnumerable<InvalidP3DException> ValidateChunks()
     {
         if (!Platform.IsValidP3DString())
-            throw new InvalidP3DStringException(this, nameof(Platform), Platform);
+            yield return new InvalidP3DStringException(this, nameof(Platform), Platform);
 
         if (!PagePath.IsValidP3DString())
-            throw new InvalidP3DStringException(this, nameof(PagePath), PagePath);
+            yield return new InvalidP3DStringException(this, nameof(PagePath), PagePath);
 
         if (!ResourcePath.IsValidP3DString())
-            throw new InvalidP3DStringException(this, nameof(ResourcePath), ResourcePath);
+            yield return new InvalidP3DStringException(this, nameof(ResourcePath), ResourcePath);
 
         if (!ScreenPath.IsValidP3DString())
-            throw new InvalidP3DStringException(this, nameof(ScreenPath), ScreenPath);
+            yield return new InvalidP3DStringException(this, nameof(ScreenPath), ScreenPath);
 
-        base.Validate();
+        foreach (var error in base.ValidateChunks())
+            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

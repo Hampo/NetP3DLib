@@ -68,10 +68,10 @@ public class StatePropStateDataV1Chunk : NamedChunk
         OutFrame = outFrame;
     }
 
-    public override void Validate()
+    public override IEnumerable<InvalidP3DException> ValidateChunks()
     {
         if (Children.Count == 0)
-            throw new InvalidP3DException(this, $"There must be at least one child chunk.");
+            yield return new InvalidP3DException(this, $"There must be at least one child chunk.");
 
         var currentIndex = 0;
         foreach (var child in Children)
@@ -79,15 +79,16 @@ public class StatePropStateDataV1Chunk : NamedChunk
             var expectedIndex = ChunkSortPriority.IndexOf(child.ID);
 
             if (expectedIndex == -1)
-                throw new InvalidP3DException(this, $"Invalid child chunk: {child}.");
+                yield return new InvalidP3DException(this, $"Invalid child chunk: {child}.");
 
             if (expectedIndex < currentIndex)
-                throw new InvalidP3DException(this, $"Child chunk {child} is out of order. Expected order: {string.Join("; ", ChunkSortPriority.Select(x => $"{(ChunkIdentifier)x} (0x{x:X})"))}.");
+                yield return new InvalidP3DException(this, $"Child chunk {child} is out of order. Expected order: {string.Join("; ", ChunkSortPriority.Select(x => $"{(ChunkIdentifier)x} (0x{x:X})"))}.");
 
             currentIndex = expectedIndex;
         }
 
-        base.Validate();
+        foreach (var error in base.ValidateChunks())
+            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

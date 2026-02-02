@@ -64,12 +64,13 @@ public class BinormalListChunk : Chunk
         Binormals.AddRange(binormals);
     }
 
-    public override void Validate()
+    public override IEnumerable<InvalidP3DException> ValidateChunks()
     {
         if (ParentChunk is OldPrimitiveGroupChunk oldPrimitiveGroup && oldPrimitiveGroup.NumVertices != NumBinormals)
-            throw new InvalidP3DException(this, $"Num Binormals value {NumBinormals} does not match parent Num Vertices value {oldPrimitiveGroup.NumVertices}.");
+            yield return new InvalidP3DException(this, $"Num Binormals value {NumBinormals} does not match parent Num Vertices value {oldPrimitiveGroup.NumVertices}.");
 
-        base.Validate();
+        foreach (var error in base.ValidateChunks())
+            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

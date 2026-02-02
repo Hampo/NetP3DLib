@@ -90,12 +90,13 @@ public class OldBillboardQuadChunk : NamedChunk
         UVOffset = uvOffset;
     }
 
-    public override void Validate()
+    public override IEnumerable<InvalidP3DException> ValidateChunks()
     {
         if (!BillboardMode.IsValidFourCC())
-            throw new InvalidFourCCException(this,nameof(BillboardMode), BillboardMode);
+            yield return new InvalidP3DFourCCException(this,nameof(BillboardMode), BillboardMode);
 
-        base.Validate();
+        foreach (var error in base.ValidateChunks())
+            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

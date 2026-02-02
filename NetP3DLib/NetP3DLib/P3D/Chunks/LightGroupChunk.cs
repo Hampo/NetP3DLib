@@ -75,13 +75,14 @@ public class LightGroupChunk : NamedChunk
         Lights.AddRange(lights);
     }
 
-    public override void Validate()
+    public override IEnumerable<InvalidP3DException> ValidateChunks()
     {
         foreach (var light in Lights)
             if (!light.IsValidP3DString())
-                throw new InvalidP3DStringException(this, nameof(Lights), light);
+                yield return new InvalidP3DStringException(this, nameof(Lights), light);
 
-        base.Validate();
+        foreach (var error in base.ValidateChunks())
+            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

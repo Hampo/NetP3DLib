@@ -61,14 +61,15 @@ public class CollisionEffectChunk : Chunk
         SoundResourceDataName = soundResourceDataName;
     }
 
-    public override void Validate()
+    public override IEnumerable<InvalidP3DException> ValidateChunks()
     {
         if (!SoundResourceDataName.IsValidP3DString())
-            throw new InvalidP3DStringException(this, nameof(SoundResourceDataName), SoundResourceDataName);
+            yield return new InvalidP3DStringException(this, nameof(SoundResourceDataName), SoundResourceDataName);
 
-        base.Validate();
+        foreach (var error in base.ValidateChunks())
+            yield return error;
     }
-
+    
     protected override void WriteData(BinaryWriter bw)
     {
         bw.Write((uint)ClassType);

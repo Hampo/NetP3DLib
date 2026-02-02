@@ -52,15 +52,16 @@ public class TreeNodeChunk : Chunk
         ParentOffset = parentOffset;
     }
 
-    public override void Validate()
+    public override IEnumerable<InvalidP3DException> ValidateChunks()
     {
         if (Children.Count == 0)
-            throw new InvalidP3DException(this, $"There must be at least one Spatial Node child chunk.");
+            yield return new InvalidP3DException(this, $"There must be at least one Spatial Node child chunk.");
         foreach (var child in Children)
             if (child.ID != (uint)ChunkIdentifier.Spatial_Node)
-                throw new InvalidP3DException(this, $"Child chunk {child} is invalid. Child chunks must be an instance of Spatial Node.");
+                yield return new InvalidP3DException(this, $"Child chunk {child} is invalid. Child chunks must be an instance of Spatial Node.");
 
-        base.Validate();
+        foreach (var error in base.ValidateChunks())
+            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

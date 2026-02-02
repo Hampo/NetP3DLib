@@ -107,15 +107,16 @@ public class TextureChunk : NamedChunk
         Priority = priority;
     }
 
-    public override void Validate()
+    public override IEnumerable<InvalidP3DException> ValidateChunks()
     {
         if (!Width.IsPowerOfTwo())
-            throw new InvalidP3DException(this, $"{nameof(Width)} must be a power of 2.");
+            yield return new InvalidP3DException(this, $"{nameof(Width)} must be a power of 2.");
 
         if (!Height.IsPowerOfTwo())
-            throw new InvalidP3DException(this, $"{nameof(Height)} must be a power of 2.");
+            yield return new InvalidP3DException(this, $"{nameof(Height)} must be a power of 2.");
 
-        base.Validate();
+        foreach (var error in base.ValidateChunks())
+            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

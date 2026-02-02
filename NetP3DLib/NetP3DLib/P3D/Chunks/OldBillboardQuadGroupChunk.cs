@@ -73,15 +73,16 @@ public class OldBillboardQuadGroupChunk : NamedChunk
         Occlusion = occlusion;
     }
 
-    public override void Validate()
+    public override IEnumerable<InvalidP3DException> ValidateChunks()
     {
         if (!Shader.IsValidP3DString())
-            throw new InvalidP3DStringException(this, nameof(Shader), Shader);
+            yield return new InvalidP3DStringException(this, nameof(Shader), Shader);
 
         if ((ParentChunk != null || ParentFile != null) && FindNamedChunkInParentHierarchy<ShaderChunk>(Shader) == null)
-            throw new InvalidP3DException(this, $"Could not find shader with name \"{Shader}\" in the parent hierarchy.");
+            yield return new InvalidP3DException(this, $"Could not find shader with name \"{Shader}\" in the parent hierarchy.");
 
-        base.Validate();
+        foreach (var error in base.ValidateChunks())
+            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

@@ -117,12 +117,13 @@ public class CompressedQuaternionChannelChunk : ParamChunk
         Values.AddRange(values);
     }
 
-    public override void Validate()
+    public override IEnumerable<InvalidP3DException> ValidateChunks()
     {
         if (Frames.Count != Values.Count)
-            throw new InvalidP3DException(this, $"The number of ${nameof(Frames)} and ${nameof(Values)} much match.");
+            yield return new InvalidP3DException(this, $"The number of ${nameof(Frames)} and ${nameof(Values)} much match.");
 
-        base.Validate();
+        foreach (var error in base.ValidateChunks())
+            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

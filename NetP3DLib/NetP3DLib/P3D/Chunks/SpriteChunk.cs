@@ -65,12 +65,13 @@ public class SpriteChunk : NamedChunk
         BlitBorder = blitBorder;
     }
 
-    public override void Validate()
+    public override IEnumerable<InvalidP3DException> ValidateChunks()
     {
         if (!Shader.IsValidP3DString())
-            throw new InvalidP3DStringException(this, nameof(Shader), Shader);
+            yield return new InvalidP3DStringException(this, nameof(Shader), Shader);
 
-        base.Validate();
+        foreach (var error in base.ValidateChunks())
+            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

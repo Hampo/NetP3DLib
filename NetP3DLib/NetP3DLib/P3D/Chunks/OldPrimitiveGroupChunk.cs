@@ -176,29 +176,28 @@ public class OldPrimitiveGroupChunk : Chunk
         PrimitiveType = primitiveType;
     }
 
-    public override void Validate()
+    public override IEnumerable<InvalidP3DException> ValidateChunks()
     {
         if (!ShaderName.IsValidP3DString())
-            throw new InvalidP3DStringException(this, nameof(ShaderName), ShaderName);
+            yield return new InvalidP3DStringException(this, nameof(ShaderName), ShaderName);
 
-        if (GetChildCount(ChunkIdentifier.Matrix_Palette) == 0)
+        if (GetChildCount(ChunkIdentifier.Matrix_Palette) != 0)
         {
-            base.Validate();
-            return;
+            switch (ParentChunk)
+            {
+                case MeshChunk:
+                    yield return new InvalidP3DException(this, "Old Primitive Group chunks cannot have a Matrix Palette if the parent chunk is a Mesh.");
+                    break;
+                case SkinChunk skinChunk:
+                    if (FindNamedChunkInParentHierarchy<SkeletonChunk>(skinChunk.SkeletonName) == null)
+                        yield return new InvalidP3DException(this, $"Could not find the skeleton named \"{skinChunk.SkeletonName}\" in the parent hierarchy. This is required when the Old Primitive Group has a Matrix Palette.");
+
+                    break;
+            }
         }
 
-        switch (ParentChunk)
-        {
-            case MeshChunk:
-                throw new InvalidP3DException(this, "Old Primitive Group chunks cannot have a Matrix Palette if the parent chunk is a Mesh.");
-            case SkinChunk skinChunk:
-                if (FindNamedChunkInParentHierarchy<SkeletonChunk>(skinChunk.SkeletonName) == null)
-                    throw new InvalidP3DException(this, $"Could not find the skeleton named \"{skinChunk.SkeletonName}\" in the parent hierarchy. This is required when the Old Primitive Group has a Matrix Palette.");
-
-                break;
-        }
-
-        base.Validate();
+        foreach (var error in base.ValidateChunks())
+            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

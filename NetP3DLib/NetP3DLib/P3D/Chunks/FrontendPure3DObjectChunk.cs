@@ -93,12 +93,13 @@ public class FrontendPure3DObjectChunk : NamedChunk
         Pure3DFilename = pure3DFilename;
     }
 
-    public override void Validate()
+    public override IEnumerable<InvalidP3DException> ValidateChunks()
     {
         if (!Pure3DFilename.IsValidP3DString())
-            throw new InvalidP3DStringException(this, nameof(Pure3DFilename), Pure3DFilename);
+            yield return new InvalidP3DStringException(this, nameof(Pure3DFilename), Pure3DFilename);
 
-        base.Validate();
+        foreach (var error in base.ValidateChunks())
+            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

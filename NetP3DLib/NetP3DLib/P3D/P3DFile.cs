@@ -457,7 +457,8 @@ public class P3DFile
 
         if (validate)
             foreach (var c in Chunks)
-                c.Validate();
+                foreach (var error in c.ValidateChunks())
+                    throw error;
 
         EndianAwareBinaryWriter bw = new(stream, endianness);
 

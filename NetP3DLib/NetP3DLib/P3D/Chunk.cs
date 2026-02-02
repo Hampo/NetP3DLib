@@ -1,6 +1,7 @@
 ﻿using NetP3DLib.IO;
 using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
+using NetP3DLib.P3D.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -116,15 +117,17 @@ public abstract class Chunk
     protected Chunk(ChunkIdentifier chunkId) : this((uint)chunkId) { }
 
     /// <summary>
-    /// Runs validation on this chunk and all <see cref="Children"/>. Throws an exception if any invalid data is found.
+    /// Recursively validates this chunk and its children.
     /// </summary>
-    /// <exception cref="System.IO.InvalidDataException">
-    /// Thrown when any of the chunk's properties are invalid for a Pure3D file.
-    /// </exception>
-    public virtual void Validate()
+    /// <returns>
+    /// An enumerable of <see cref="InvalidP3DException"/> representing validation errors.
+    /// If the chunk and all children are valid, returns an empty enumerable.
+    /// </returns>
+    public virtual IEnumerable<InvalidP3DException> ValidateChunks()
     {
-        foreach (var chunk in Children)
-            chunk.Validate();
+        foreach (var child in Children)
+            foreach (var error in child.ValidateChunks())
+                yield return error;
     }
 
     /// <summary>

@@ -47,12 +47,13 @@ public class ParticleSystem2Chunk : NamedChunk
         FactoryName = factoryName;
     }
 
-    public override void Validate()
+    public override IEnumerable<InvalidP3DException> ValidateChunks()
     {
         if (!FactoryName.IsValidP3DString())
-            throw new InvalidP3DStringException(this, nameof(FactoryName), FactoryName);
+            yield return new InvalidP3DStringException(this, nameof(FactoryName), FactoryName);
 
-        base.Validate();
+        foreach (var error in base.ValidateChunks())
+            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

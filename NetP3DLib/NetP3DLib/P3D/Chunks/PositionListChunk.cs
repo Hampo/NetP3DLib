@@ -64,12 +64,13 @@ public class PositionListChunk : Chunk
         Positions.AddRange(positions);
     }
 
-    public override void Validate()
+    public override IEnumerable<InvalidP3DException> ValidateChunks()
     {
         if (ParentChunk is OldPrimitiveGroupChunk oldPrimitiveGroup && oldPrimitiveGroup.NumVertices != NumPositions)
-            throw new InvalidP3DException(this, $"Num Positions value {NumPositions} does not match parent Num Vertices value {oldPrimitiveGroup.NumVertices}.");
+            yield return new InvalidP3DException(this, $"Num Positions value {NumPositions} does not match parent Num Vertices value {oldPrimitiveGroup.NumVertices}.");
 
-        base.Validate();
+        foreach (var error in base.ValidateChunks())
+            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

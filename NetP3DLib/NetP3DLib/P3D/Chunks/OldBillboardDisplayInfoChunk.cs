@@ -62,12 +62,13 @@ public class OldBillboardDisplayInfoChunk : Chunk
         EdgeRange = edgeRange;
     }
 
-    public override void Validate()
+    public override IEnumerable<InvalidP3DException> ValidateChunks()
     {
         if (!CutOffMode.IsValidFourCC())
-            throw new InvalidFourCCException(this,nameof(CutOffMode), CutOffMode);
+            yield return new InvalidP3DFourCCException(this,nameof(CutOffMode), CutOffMode);
 
-        base.Validate();
+        foreach (var error in base.ValidateChunks())
+            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

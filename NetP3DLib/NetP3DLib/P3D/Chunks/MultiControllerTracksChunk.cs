@@ -72,12 +72,14 @@ public class MultiControllerTracksChunk : Chunk
         Tracks.AddRange(tracks);
     }
 
-    public override void Validate()
+    public override IEnumerable<InvalidP3DException> ValidateChunks()
     {
         foreach (var track in Tracks)
-            track.Validate(this);
+            foreach (var error in track.Validate(this))
+                yield return error;
 
-        base.Validate();
+        foreach (var error in base.ValidateChunks())
+            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)
@@ -143,10 +145,10 @@ public class MultiControllerTracksChunk : Chunk
             Scale = 0;
         }
 
-        public void Validate(MultiControllerTracksChunk chunk)
+        public IEnumerable<InvalidP3DException> Validate(MultiControllerTracksChunk chunk)
         {
             if (!Name.IsValidP3DString())
-                throw new InvalidP3DStringException(chunk, nameof(Name), Name);
+                yield return new InvalidP3DStringException(chunk, nameof(Name), Name);
         }
 
         internal void Write(BinaryWriter bw)

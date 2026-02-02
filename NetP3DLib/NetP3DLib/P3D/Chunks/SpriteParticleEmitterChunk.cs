@@ -89,12 +89,13 @@ public class SpriteParticleEmitterChunk : NamedChunk
         RotationalCohesion = rotationalCohesion;
     }
 
-    public override void Validate()
+    public override IEnumerable<InvalidP3DException> ValidateChunks()
     {
         if (!ShaderName.IsValidP3DString())
-            throw new InvalidP3DStringException(this, nameof(ShaderName), ShaderName);
+            yield return new InvalidP3DStringException(this, nameof(ShaderName), ShaderName);
 
-        base.Validate();
+        foreach (var error in base.ValidateChunks())
+            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

@@ -73,16 +73,17 @@ public class HistoryChunk : Chunk
         History.AddRange(history);
     }
 
-    public override void Validate()
+    public override IEnumerable<InvalidP3DException> ValidateChunks()
     {
         if (History.Count > MAX_HISTORY_LINES)
-            throw new InvalidP3DException(this, $"The max number of history lines is {MAX_HISTORY_LINES}.");
+            yield return new InvalidP3DException(this, $"The max number of history lines is {MAX_HISTORY_LINES}.");
 
         foreach (var history in History)
             if (!history.IsValidP3DString())
-                throw new InvalidP3DStringException(this, nameof(History), history);
+                yield return new InvalidP3DStringException(this, nameof(History), history);
 
-        base.Validate();
+        foreach (var error in base.ValidateChunks())
+            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

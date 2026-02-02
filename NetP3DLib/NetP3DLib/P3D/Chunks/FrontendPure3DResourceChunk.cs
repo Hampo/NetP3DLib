@@ -59,21 +59,22 @@ public class FrontendPure3DResourceChunk : NamedChunk
         AnimationName = animationName;
     }
 
-    public override void Validate()
+    public override IEnumerable<InvalidP3DException> ValidateChunks()
     {
         if (!Filename.IsValidP3DString())
-            throw new InvalidP3DStringException(this, nameof(Filename), Filename);
+            yield return new InvalidP3DStringException(this, nameof(Filename), Filename);
 
         if (!InventoryName.IsValidP3DString())
-            throw new InvalidP3DStringException(this, nameof(InventoryName), InventoryName);
+            yield return new InvalidP3DStringException(this, nameof(InventoryName), InventoryName);
 
         if (!CameraName.IsValidP3DString())
-            throw new InvalidP3DStringException(this, nameof(CameraName), CameraName);
+            yield return new InvalidP3DStringException(this, nameof(CameraName), CameraName);
 
         if (!AnimationName.IsValidP3DString())
-            throw new InvalidP3DStringException(this, nameof(AnimationName), AnimationName);
+            yield return new InvalidP3DStringException(this, nameof(AnimationName), AnimationName);
 
-        base.Validate();
+        foreach (var error in base.ValidateChunks())
+            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

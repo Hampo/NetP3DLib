@@ -72,12 +72,14 @@ public class ATCChunk : Chunk
         Entries.AddRange(entries);
     }
 
-    public override void Validate()
+    public override IEnumerable<InvalidP3DException> ValidateChunks()
     {
         foreach (var entry in Entries)
-            entry.Validate(this);
+            foreach (var error in entry.Validate(this))
+                yield return error;
 
-        base.Validate();
+        foreach (var error in base.ValidateChunks())
+            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)
@@ -151,16 +153,16 @@ public class ATCChunk : Chunk
             Elasticity = 0;
         }
 
-        public void Validate(ATCChunk chunk)
+        public IEnumerable<InvalidP3DException> Validate(ATCChunk chunk)
         {
             if (!SoundResourceDataName.IsValidP3DString())
-                throw new InvalidP3DStringException(chunk, nameof(SoundResourceDataName), SoundResourceDataName);
+                yield return new InvalidP3DStringException(chunk, nameof(SoundResourceDataName), SoundResourceDataName);
 
             if (!Particle.IsValidP3DString())
-                throw new InvalidP3DStringException(chunk, nameof(Particle), Particle);
+                yield return new InvalidP3DStringException(chunk, nameof(Particle), Particle);
 
             if (!BreakableObject.IsValidP3DString())
-                throw new InvalidP3DStringException(chunk, nameof(BreakableObject), BreakableObject);
+                yield return new InvalidP3DStringException(chunk, nameof(BreakableObject), BreakableObject);
         }
 
         internal void Write(BinaryWriter bw)

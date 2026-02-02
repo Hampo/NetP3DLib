@@ -1,6 +1,7 @@
 ﻿using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using System.Collections.Generic;
 
 namespace NetP3DLib.P3D;
 
@@ -12,12 +13,13 @@ public abstract class NamedChunk : Chunk
 
     public NamedChunk(ChunkIdentifier ID) : base(ID) { }
 
-    public override void Validate()
+    public override IEnumerable<InvalidP3DException> ValidateChunks()
     {
         if (!Name.IsValidP3DString())
-            throw new InvalidP3DStringException(this, nameof(Name), Name);
+            yield return new InvalidP3DStringException(this, nameof(Name), Name);
 
-        base.Validate();
+        foreach (var error in base.ValidateChunks())
+            yield return error;
     }
 
     public override string ToString() => $"\"{Name}\" ({GetChunkType(this)} (0x{ID:X}))";
