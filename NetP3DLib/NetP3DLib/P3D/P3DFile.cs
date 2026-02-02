@@ -183,7 +183,7 @@ public class P3DFile
             uint bytesRead = headerSize;
             if (bytesRead < fileSize)
             {
-                Chunks = new(this, (int)(fileSize - bytesRead) / 12);
+                Chunks = new(this, (int)((fileSize - bytesRead) / 12));
                 while (bytesRead < fileSize)
                 {
                     Chunk c = ChunkLoader.LoadChunk(br);
