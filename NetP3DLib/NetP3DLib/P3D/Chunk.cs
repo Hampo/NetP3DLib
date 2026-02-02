@@ -99,9 +99,6 @@ public abstract class Chunk
         }
     }
 
-    public string? ValidationErrorMessage { get; private set; } = null;
-    public bool IsValid => ValidationErrorMessage == null;
-
     /// <summary>
     /// This constructor initialises an unknown chunk with the given <paramref name="chunkId"/>.
     /// </summary>
@@ -128,19 +125,6 @@ public abstract class Chunk
     {
         foreach (var chunk in Children)
             chunk.Validate();
-    }
-
-    public void RefreshValidation()
-    {
-        try
-        {
-            Validate();
-            ValidationErrorMessage = null;
-        }
-        catch (Exception ex)
-        {
-            ValidationErrorMessage = ex.Message;
-        }
     }
 
     /// <summary>
