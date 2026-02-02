@@ -32,6 +32,38 @@ public class ChunkCollection : Collection<Chunk>
         }
     }
 
+    private void ValidateHierarchyOverflow(uint sizeToAdd)
+    {
+        if (sizeToAdd == 0)
+            return;
+
+        if (uint.MaxValue - _owner.Size < sizeToAdd)
+            throw new OverflowException($"Adding size {sizeToAdd} would overflow chunk {_owner}.");
+
+        var current = _owner;
+        while (current != null)
+        {
+            if (current.ParentFile != null)
+            {
+                if (uint.MaxValue - current.ParentFile.Size < sizeToAdd)
+                    throw new OverflowException($"Adding size {sizeToAdd} would overflow parent file {current.ParentFile}.");
+                break;
+            }
+
+            if (current.ParentChunk != null)
+            {
+                if (uint.MaxValue - current.ParentChunk.Size < sizeToAdd)
+                    throw new OverflowException($"Adding size {sizeToAdd} would overflow parent chunk {current.ParentChunk}.");
+
+                current = current.ParentChunk;
+            }
+            else
+            {
+                break;
+            }
+        }
+    }
+
     public ChunkCollection(Chunk owner, int capacity = 0) : base(new List<Chunk>(capacity))
     {
         _owner = owner;
@@ -45,31 +77,7 @@ public class ChunkCollection : Collection<Chunk>
         if (item.ParentChunk != null)
             throw new InvalidOperationException($"Cannot insert chunk \"{item}\" into \"{_owner}\" at index {index}. It already belongs to \"{item.ParentChunk}\".");
 
-        if (uint.MaxValue - _owner.Size < item.Size)
-            throw new OverflowException($"Adding chunk size {item.Size} would overflow owner size {_owner.Size}.");
-
-        if (_owner.ParentFile != null)
-        {
-            if (uint.MaxValue - _owner.ParentFile.Size < item.Size)
-                throw new OverflowException($"Adding chunk size {item.Size} would overflow parent file size {_owner.ParentFile.Size}.");
-        }
-        else if (_owner.ParentChunk != null)
-        {
-            var parentChunk = _owner.ParentChunk;
-            while (parentChunk != null)
-            {
-                if (uint.MaxValue - parentChunk.Size < item.Size)
-                    throw new OverflowException($"Adding chunk size {item.Size} would overflow parent chunk size {parentChunk.Size}.");
-
-                if (parentChunk.ParentFile != null)
-                {
-                    if (uint.MaxValue - parentChunk.ParentFile.Size < item.Size)
-                        throw new OverflowException($"Adding chunk size {item.Size} would overflow parent file size {parentChunk.ParentFile.Size}.");
-                    break;
-                }
-                parentChunk = parentChunk.ParentChunk;
-            }
-        }
+        ValidateHierarchyOverflow(item.Size);
 
         base.InsertItem(index, item);
 
@@ -104,6 +112,12 @@ public class ChunkCollection : Collection<Chunk>
 
         if (old != null)
         {
+            if (item.Size > old.Size)
+            {
+                uint diff = item.Size - old.Size;
+                ValidateHierarchyOverflow(diff);
+            }
+
             TotalSize -= old.Size;
             old.ParentChunk = null;
             old.IndexInParent = -1;
@@ -136,6 +150,7 @@ public class ChunkCollection : Collection<Chunk>
 
         var chunkList = items as ICollection<Chunk> ?? [.. items];
 
+        uint addedSize = 0;
         foreach (var item in chunkList)
         {
             if (item == null)
@@ -146,22 +161,23 @@ public class ChunkCollection : Collection<Chunk>
 
             if (item.ParentChunk != null)
                 throw new InvalidOperationException($"Cannot add chunk \"{item}\" into \"{_owner}\". It already belongs to \"{item.ParentChunk}\".");
+
+            addedSize += item.Size;
         }
+        ValidateHierarchyOverflow(addedSize);
 
         int startIndex = Count;
 
         ((List<Chunk>)Items).AddRange(items);
+        TotalSize += addedSize;
 
-        uint addedSize = 0;
         int i = startIndex;
         foreach (var item in chunkList)
         {
             item.ParentChunk = _owner;
             item.IndexInParent = i++;
-            addedSize += item.Size;
         }
 
-        TotalSize += addedSize;
     }
 
     public void InsertRange(int index, IEnumerable<Chunk> items)
@@ -171,6 +187,7 @@ public class ChunkCollection : Collection<Chunk>
 
         var chunkList = items as ICollection<Chunk> ?? [.. items];
 
+        uint addedSize = 0;
         foreach (var item in chunkList)
         {
             if (item == null)
@@ -181,17 +198,16 @@ public class ChunkCollection : Collection<Chunk>
 
             if (item.ParentChunk != null)
                 throw new InvalidOperationException($"Cannot insert chunk \"{item}\" into \"{_owner}\" at index {index}. It already belongs to \"{item.ParentChunk}\".");
-        }
 
-        ((List<Chunk>)Items).InsertRange(index, chunkList);
-
-        uint addedSize = 0;
-        foreach (var item in chunkList)
-        {
-            item.ParentChunk = _owner;
             addedSize += item.Size;
         }
+        ValidateHierarchyOverflow(addedSize);
+
+        ((List<Chunk>)Items).InsertRange(index, chunkList);
         TotalSize += addedSize;
+
+        foreach (var item in chunkList)
+            item.ParentChunk = _owner;
 
         UpdateChildIndices(index);
     }
@@ -244,7 +260,7 @@ public class ChunkCollection : Collection<Chunk>
                 if (diff > 0)
                     _owner.ParentChunk.Children.TotalSize += (uint)diff;
                 else if (diff < 0)
-                    _owner.ParentChunk.Children.TotalSize -= (uint)-diff;
+                    _owner.ParentChunk.Children.TotalSize -= (uint)-(long)diff;
             }
         }
         else if (_owner.ParentFile != null)
@@ -254,7 +270,7 @@ public class ChunkCollection : Collection<Chunk>
                 if (diff > 0)
                     _owner.ParentFile.Chunks.TotalSize += (uint)diff;
                 else if (diff < 0)
-                    _owner.ParentFile.Chunks.TotalSize -= (uint)-diff;
+                    _owner.ParentFile.Chunks.TotalSize -= (uint)-(long)diff;
             }
         }
     }

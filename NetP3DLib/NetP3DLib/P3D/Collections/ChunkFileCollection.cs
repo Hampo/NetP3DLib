@@ -12,7 +12,16 @@ public class ChunkFileCollection : Collection<Chunk>
     public uint TotalSize
     {
         get => _totalSize;
-        internal set => _totalSize = value;
+        internal set
+        {
+            if (value > _totalSize)
+            {
+                uint diff = value - _totalSize;
+                if (uint.MaxValue - _owner.Size < diff)
+                    throw new OverflowException($"Size update would overflow File size.");
+            }
+            _totalSize = value;
+        }
     }
 
     public ChunkFileCollection(P3DFile owner, int capacity = 0) : base(new List<Chunk>(capacity))
@@ -64,6 +73,13 @@ public class ChunkFileCollection : Collection<Chunk>
 
         if (old != null)
         {
+            if (item.Size > old.Size)
+            {
+                uint diff = item.Size - old.Size;
+                if (uint.MaxValue - _owner.Size < diff)
+                    throw new OverflowException($"Replacing chunk at index {index} would overflow owner size.");
+            }
+
             _totalSize -= old.Size;
             old.ParentFile = null;
             old.IndexInParent = -1;
@@ -96,6 +112,7 @@ public class ChunkFileCollection : Collection<Chunk>
 
         var chunkList = items as ICollection<Chunk> ?? [.. items];
 
+        uint addedSize = 0;
         foreach (var item in chunkList)
         {
             if (item == null)
@@ -106,21 +123,23 @@ public class ChunkFileCollection : Collection<Chunk>
 
             if (item.ParentChunk != null)
                 throw new InvalidOperationException($"Cannot add chunk \"{item}\" into \"{_owner}\". It already belongs to \"{item.ParentChunk}\".");
+
+            addedSize += item.Size;
         }
+
+        if (uint.MaxValue - _owner.Size < addedSize)
+            throw new OverflowException($"Adding chunks with total size {addedSize} would overflow owner size {_owner.Size}.");
 
         int startIndex = Count;
         ((List<Chunk>)Items).AddRange(items);
+        _totalSize += addedSize;
 
-        uint addedSize = 0;
         int i = startIndex;
         foreach (var item in chunkList)
         {
             item.ParentFile = _owner;
             item.IndexInParent = i++;
-            addedSize += item.Size;
         }
-
-        _totalSize += addedSize;
     }
 
     public void InsertRange(int index, IEnumerable<Chunk> items)
@@ -130,6 +149,7 @@ public class ChunkFileCollection : Collection<Chunk>
 
         var chunkList = items as ICollection<Chunk> ?? [.. items];
 
+        uint addedSize = 0;
         foreach (var item in chunkList)
         {
             if (item == null)
@@ -140,17 +160,18 @@ public class ChunkFileCollection : Collection<Chunk>
 
             if (item.ParentChunk != null)
                 throw new InvalidOperationException($"Cannot insert chunk \"{item}\" into \"{_owner}\" at index {index}. It already belongs to \"{item.ParentChunk}\".");
-        }
 
-        ((List<Chunk>)Items).InsertRange(index, chunkList);
-
-        uint addedSize = 0;
-        foreach (var item in chunkList)
-        {
-            item.ParentFile = _owner;
             addedSize += item.Size;
         }
+
+        if (uint.MaxValue - _owner.Size < addedSize)
+            throw new OverflowException($"Adding chunks with total size {addedSize} would overflow owner size {_owner.Size}.");
+
+        ((List<Chunk>)Items).InsertRange(index, chunkList);
         _totalSize += addedSize;
+
+        foreach (var item in chunkList)
+            item.ParentFile = _owner;
 
         UpdateChildIndices(index);
     }
