@@ -85,12 +85,16 @@ public class ChunkCollection : Collection<Chunk>
         item.ParentChunk = _owner;
         item.IndexInParent = index;
 
+        item.SizeChanged += OnChildSizeChanged;
+
         UpdateChildIndices(index + 1);
     }
 
     protected override void RemoveItem(int index)
     {
         Chunk old = this[index];
+        old.SizeChanged -= OnChildSizeChanged;
+
         base.RemoveItem(index);
 
         TotalSize -= old.Size;
@@ -121,12 +125,14 @@ public class ChunkCollection : Collection<Chunk>
             TotalSize -= old.Size;
             old.ParentChunk = null;
             old.IndexInParent = -1;
+            old.SizeChanged -= OnChildSizeChanged;
         }
 
         base.SetItem(index, item);
         TotalSize += item.Size;
         item.ParentChunk = _owner;
         item.IndexInParent = index;
+        item.SizeChanged += OnChildSizeChanged;
     }
 
     protected override void ClearItems()
@@ -135,6 +141,7 @@ public class ChunkCollection : Collection<Chunk>
         {
             child.ParentChunk = null;
             child.IndexInParent = -1;
+            child.SizeChanged -= OnChildSizeChanged;
         }
 
         base.ClearItems();
@@ -176,6 +183,7 @@ public class ChunkCollection : Collection<Chunk>
         {
             item.ParentChunk = _owner;
             item.IndexInParent = i++;
+            item.SizeChanged += OnChildSizeChanged;
         }
 
     }
@@ -207,7 +215,10 @@ public class ChunkCollection : Collection<Chunk>
         TotalSize += addedSize;
 
         foreach (var item in chunkList)
+        {
             item.ParentChunk = _owner;
+            item.SizeChanged += OnChildSizeChanged;
+        }
 
         UpdateChildIndices(index);
     }
@@ -235,6 +246,7 @@ public class ChunkCollection : Collection<Chunk>
             chunk.ParentChunk = null;
             chunk.IndexInParent = -1;
             removedSize += chunk.Size;
+            chunk.SizeChanged -= OnChildSizeChanged;
         }
 
         list.RemoveRange(index, count);
@@ -273,5 +285,13 @@ public class ChunkCollection : Collection<Chunk>
                     _owner.ParentFile.Chunks.TotalSize -= (uint)-(long)diff;
             }
         }
+    }
+
+    private void OnChildSizeChanged(Chunk child, int delta)
+    {
+        if (delta > 0)
+            TotalSize += (uint)delta;
+        else if (delta < 0)
+            TotalSize -= (uint)-(long)delta;
     }
 }

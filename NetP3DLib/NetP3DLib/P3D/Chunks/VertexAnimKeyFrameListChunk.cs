@@ -32,6 +32,8 @@ public class VertexAnimKeyFrameListChunk : Chunk
                     KeyFrameIds.Add(default);
             }
             NumKeyFrameCounts = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
         }
     }
     public List<uint> KeyFrameIds { get; } = [];
@@ -54,6 +56,8 @@ public class VertexAnimKeyFrameListChunk : Chunk
                     KeyFrameCounts.Add(default);
             }
             NumKeyFrameIds = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
         }
     }
     public List<uint> KeyFrameCounts { get; } = [];

@@ -11,9 +11,35 @@ namespace NetP3DLib.P3D.Chunks;
 public class FrontendStringTextBibleChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Frontend_String_Text_Bible;
-    
-    public string BibleName { get; set; }
-    public string StringID { get; set; }
+
+    private string _bibleName = string.Empty;
+    public string BibleName
+    {
+        get => _bibleName;
+        set
+        {
+            if (_bibleName == value)
+                return;
+
+            _bibleName = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
+    private string _stringID = string.Empty;
+    public string StringID
+    {
+        get => _stringID;
+        set
+        {
+            if (_stringID == value)
+                return;
+
+            _stringID = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
 
     public override byte[] DataBytes
     {

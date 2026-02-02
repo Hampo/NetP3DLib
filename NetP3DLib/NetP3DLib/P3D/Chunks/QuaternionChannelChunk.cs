@@ -36,6 +36,8 @@ public class QuaternionChannelChunk : ParamChunk
                     Frames.Add(default);
             }
             NumValues = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
         }
     }
     public List<ushort> Frames { get; } = [];
@@ -58,6 +60,8 @@ public class QuaternionChannelChunk : ParamChunk
                     Values.Add(default);
             }
             NumFrames = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
         }
     }
     public List<Quaternion> Values { get; } = [];

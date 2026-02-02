@@ -31,6 +31,8 @@ public class VisibilityAnimChannelChunk : NamedChunk
                 while (NumFrames < value)
                     Frames.Add(default);
             }
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
         }
     }
     public List<uint> Frames { get; } = [];

@@ -14,7 +14,20 @@ public class CompositeDrawable2Chunk : NamedChunk
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Composite_Drawable_2;
     
     public uint Version { get; set; }
-    public string SkeletonName { get; set; }
+    private string _skeletonName = string.Empty;
+    public string SkeletonName
+    {
+        get => _skeletonName;
+        set
+        {
+            if (_skeletonName == value)
+                return;
+
+            _skeletonName = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
     public uint NumPrimitives => GetChildCount(ChunkIdentifier.Composite_Drawable_Primitive);
 
     public override byte[] DataBytes

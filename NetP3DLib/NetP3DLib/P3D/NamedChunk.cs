@@ -7,7 +7,20 @@ namespace NetP3DLib.P3D;
 
 public abstract class NamedChunk : Chunk
 {
-    public string Name { get; set; } = string.Empty;
+    private string _name = string.Empty;
+    public string Name
+    {
+        get => _name;
+        set
+        {
+            if (_name == value)
+                return;
+
+            _name = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
 
     public NamedChunk(uint ID) : base(ID) { }
 

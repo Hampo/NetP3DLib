@@ -18,8 +18,34 @@ public class OldFrameControllerChunk : NamedChunk
     public uint Version { get; set; }
     public AnimationType Type { get; set; }
     public float FrameOffset { get; set; }
-    public string HierarchyName { get; set; }
-    public string AnimationName { get; set; }
+    private string _hierarchyName = string.Empty;
+    public string HierarchyName
+    {
+        get => _hierarchyName;
+        set
+        {
+            if (_hierarchyName == value)
+                return;
+
+            _hierarchyName = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
+    private string _animationName = string.Empty;
+    public string AnimationName
+    {
+        get => _animationName;
+        set
+        {
+            if (_animationName == value)
+                return;
+
+            _animationName = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
 
     public override byte[] DataBytes
     {

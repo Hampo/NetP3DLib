@@ -35,6 +35,8 @@ public class ExpressionChunk : NamedChunk
                     Keys.Add(default);
             }
             NumIndices = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
         }
     }
     public List<float> Keys { get; } = [];
@@ -57,6 +59,8 @@ public class ExpressionChunk : NamedChunk
                     Indices.Add(default);
             }
             NumKeys = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
         }
     }
     public List<uint> Indices { get; } = [];

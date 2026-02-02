@@ -14,8 +14,34 @@ public class SmartPropChunk : NamedChunk
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Smart_Prop;
     
     public uint Version { get; set; }
-    public string ObjectFactoryName { get; set; }
-    public string Material { get; set; }
+    private string _objectFactoryName = string.Empty;
+    public string ObjectFactoryName
+    {
+        get => _objectFactoryName;
+        set
+        {
+            if (_objectFactoryName == value)
+                return;
+
+            _objectFactoryName = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
+    private string _material = string.Empty;
+    public string Material
+    {
+        get => _material;
+        set
+        {
+            if (_material == value)
+                return;
+
+            _material = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
     public uint MaterialEnum { get; set; }
     public uint NumBreakables { get; set; }
     public uint RenderingCost { get; set; }

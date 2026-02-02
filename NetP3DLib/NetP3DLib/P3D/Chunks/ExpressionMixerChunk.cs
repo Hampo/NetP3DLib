@@ -25,8 +25,34 @@ public class ExpressionMixerChunk : NamedChunk
     [DefaultValue(0)]
     public uint Version { get; set; }
     public MixerType Type { get; set; }
-    public string TargetName { get; set; }
-    public string ExpressionGroupName { get; set; }
+    private string _targetName = string.Empty;
+    public string TargetName
+    {
+        get => _targetName;
+        set
+        {
+            if (_targetName == value)
+                return;
+
+            _targetName = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
+    private string _expressionGroupName = string.Empty;
+    public string ExpressionGroupName
+    {
+        get => _expressionGroupName;
+        set
+        {
+            if (_expressionGroupName == value)
+                return;
+
+            _expressionGroupName = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
 
     public override byte[] DataBytes
     {

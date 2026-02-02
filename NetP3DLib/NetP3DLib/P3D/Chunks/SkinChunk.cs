@@ -16,7 +16,20 @@ public class SkinChunk : NamedChunk
     
     [DefaultValue(4)]
     public uint Version { get; set; }
-    public string SkeletonName { get; set; }
+    private string _skeletonName = string.Empty;
+    public string SkeletonName
+    {
+        get => _skeletonName;
+        set
+        {
+            if (_skeletonName == value)
+                return;
+
+            _skeletonName = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
     public uint NumOldPrimitiveGroups => GetChildCount(ChunkIdentifier.Old_Primitive_Group);
     public uint NumPrimitiveGroups => GetChildCount(ChunkIdentifier.Primitive_Group);
 

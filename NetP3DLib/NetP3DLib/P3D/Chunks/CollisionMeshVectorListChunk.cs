@@ -31,6 +31,8 @@ public class CollisionMeshVectorListChunk : Chunk
                 while (NumVectors < value)
                     Vectors.Add(default);
             }
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
         }
     }
     public List<Vector3> Vectors { get; } = [];

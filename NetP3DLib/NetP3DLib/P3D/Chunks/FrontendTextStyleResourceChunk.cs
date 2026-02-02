@@ -16,8 +16,34 @@ public class FrontendTextStyleResourceChunk : NamedChunk
     
     [DefaultValue(1)]
     public uint Version { get; set; }
-    public string Filename { get; set; }
-    public string InventoryName { get; set; }
+    private string _filename = string.Empty;
+    public string Filename
+    {
+        get => _filename;
+        set
+        {
+            if (_filename == value)
+                return;
+
+            _filename = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
+    private string _inventoryName = string.Empty;
+    public string InventoryName
+    {
+        get => _inventoryName;
+        set
+        {
+            if (_inventoryName == value)
+                return;
+
+            _inventoryName = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
 
     public override byte[] DataBytes
     {

@@ -14,7 +14,20 @@ public class SpriteParticleEmitterChunk : NamedChunk
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Sprite_Particle_Emitter;
     
     public uint Version { get; set; }
-    public string ShaderName { get; set; }
+    private string _shaderName = string.Empty;
+    public string ShaderName
+    {
+        get => _shaderName;
+        set
+        {
+            if (_shaderName == value)
+                return;
+
+            _shaderName = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
     public uint UpdateMode { get; set; }
     public uint ZTest { get; set; }
     public uint ZWrite { get; set; }

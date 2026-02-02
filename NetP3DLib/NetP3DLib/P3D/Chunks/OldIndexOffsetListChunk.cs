@@ -30,6 +30,8 @@ public class OldIndexOffsetListChunk : Chunk
                 while (NumOffsets < value)
                     Offsets.Add(default);
             }
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
         }
     }
     public List<uint> Offsets { get; } = [];

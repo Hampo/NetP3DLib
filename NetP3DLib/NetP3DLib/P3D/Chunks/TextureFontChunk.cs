@@ -16,7 +16,20 @@ public class TextureFontChunk : NamedChunk
     
     [DefaultValue(0)]
     public uint Version { get; set; }
-    public string Shader { get; set; }
+    private string _shader = string.Empty;
+    public string Shader
+    {
+        get => _shader;
+        set
+        {
+            if (_shader == value)
+                return;
+
+            _shader = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
     public float FontSize { get; set; }
     public float FontWidth { get; set; }
     public float FontHeight { get; set; }

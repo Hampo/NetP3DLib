@@ -29,6 +29,8 @@ public class CollisionMeshTriangleListChunk : Chunk
                 while (NumTriangles < value)
                     Triangles.Add(new());
             }
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
         }
     }
     public List<Triangle> Triangles { get; } = [];

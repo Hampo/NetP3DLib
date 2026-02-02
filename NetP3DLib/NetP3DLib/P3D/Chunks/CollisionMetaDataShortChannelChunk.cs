@@ -33,6 +33,8 @@ public class CollisionMetaDataShortChannelChunk : NamedChunk
                     Indices.Add(default);
             }
             NumValues = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
         }
     }
     public List<ushort> Indices { get; } = [];
@@ -55,6 +57,8 @@ public class CollisionMetaDataShortChannelChunk : NamedChunk
                     Values.Add(default);
             }
             NumIndices = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
         }
     }
     public List<ushort> Values { get; } = [];

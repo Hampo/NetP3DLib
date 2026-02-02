@@ -31,11 +31,23 @@ public class OldOffsetListChunk : Chunk
                 while (NumOffsets < value)
                     Offsets.Add(new());
             }
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
         }
     }
     public uint KeyIndex { get; set; }
     public List<OffsetEntry> Offsets { get; } = [];
-    public bool HasPrimGroupIndex { get; set; }
+    private bool _hasPrimGroupIndex = false;
+    public bool HasPrimGroupIndex
+    {
+        get => _hasPrimGroupIndex;
+        set
+        {
+            _hasPrimGroupIndex = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
     public uint PrimGroupIndex { get; set; }
 
     public override byte[] DataBytes

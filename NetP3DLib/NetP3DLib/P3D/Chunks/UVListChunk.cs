@@ -32,6 +32,8 @@ public class UVListChunk : Chunk
                 while (NumUVs < value)
                     UVs.Add(default);
             }
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
         }
     }
     public uint Channel { get; set; }

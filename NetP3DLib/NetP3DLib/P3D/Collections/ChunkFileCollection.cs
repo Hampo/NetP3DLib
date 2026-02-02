@@ -46,12 +46,16 @@ public class ChunkFileCollection : Collection<Chunk>
         item.ParentFile = _owner;
         item.IndexInParent = index;
 
+        item.SizeChanged += OnChildSizeChanged;
+
         UpdateChildIndices(index + 1);
     }
 
     protected override void RemoveItem(int index)
     {
         Chunk old = this[index];
+        old.SizeChanged -= OnChildSizeChanged;
+
         base.RemoveItem(index);
 
         _totalSize -= old.Size;
@@ -83,12 +87,14 @@ public class ChunkFileCollection : Collection<Chunk>
             _totalSize -= old.Size;
             old.ParentFile = null;
             old.IndexInParent = -1;
+            old.SizeChanged -= OnChildSizeChanged;
         }
 
         base.SetItem(index, item);
         _totalSize += item.Size;
         item.ParentFile = _owner;
         item.IndexInParent = index;
+        item.SizeChanged += OnChildSizeChanged;
     }
 
     protected override void ClearItems()
@@ -97,6 +103,7 @@ public class ChunkFileCollection : Collection<Chunk>
         {
             child.ParentFile = null;
             child.IndexInParent = -1;
+            child.SizeChanged -= OnChildSizeChanged;
         }
 
         base.ClearItems();
@@ -139,6 +146,7 @@ public class ChunkFileCollection : Collection<Chunk>
         {
             item.ParentFile = _owner;
             item.IndexInParent = i++;
+            item.SizeChanged += OnChildSizeChanged;
         }
     }
 
@@ -171,7 +179,10 @@ public class ChunkFileCollection : Collection<Chunk>
         _totalSize += addedSize;
 
         foreach (var item in chunkList)
+        {
             item.ParentFile = _owner;
+            item.SizeChanged += OnChildSizeChanged;
+        }
 
         UpdateChildIndices(index);
     }
@@ -199,6 +210,7 @@ public class ChunkFileCollection : Collection<Chunk>
             chunk.ParentFile = null;
             chunk.IndexInParent = -1;
             removedSize += chunk.Size;
+            chunk.SizeChanged -= OnChildSizeChanged;
         }
 
         list.RemoveRange(index, count);
@@ -211,5 +223,13 @@ public class ChunkFileCollection : Collection<Chunk>
     {
         for (int i = startIndex; i < Count; i++)
             this[i].IndexInParent = i;
+    }
+
+    private void OnChildSizeChanged(Chunk child, int delta)
+    {
+        if (delta > 0)
+            TotalSize += (uint)delta;
+        else if (delta < 0)
+            TotalSize -= (uint)-(long)delta;
     }
 }

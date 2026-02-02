@@ -16,7 +16,20 @@ public class StatePropDataV1Chunk : NamedChunk
     
     [DefaultValue(1)]
     public uint Version { get; set; }
-    public string ObjectFactoryName { get; set; }
+    private string _objectFactoryName = string.Empty;
+    public string ObjectFactoryName
+    {
+        get => _objectFactoryName;
+        set
+        {
+            if (_objectFactoryName == value)
+                return;
+
+            _objectFactoryName = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
     public uint NumStates => GetChildCount(ChunkIdentifier.State_Prop_State_Data_V1);
 
     public override byte[] DataBytes

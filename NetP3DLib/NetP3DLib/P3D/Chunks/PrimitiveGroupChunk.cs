@@ -69,7 +69,20 @@ public class PrimitiveGroupChunk : Chunk
     };
 
     public uint Version { get; set; }
-    public string ShaderName { get; set; }
+    private string _shaderName = string.Empty;
+    public string ShaderName
+    {
+        get => _shaderName;
+        set
+        {
+            if (_shaderName == value)
+                return;
+
+            _shaderName = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
     public PrimitiveTypes PrimitiveType { get; set; }
     public VertexTypes VertexType
     {

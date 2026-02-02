@@ -16,10 +16,36 @@ public class OldBaseEmitterChunk : NamedChunk
     
     [DefaultValue(0)]
     public uint Version { get; set; }
+    private string _particleType = string.Empty;
     [MaxLength(4)]
-    public string ParticleType { get; set; }
+    public string ParticleType
+    {
+        get => _particleType;
+        set
+        {
+            if (_particleType == value)
+                return;
+
+            _particleType = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
+    private string _generatorType = string.Empty;
     [MaxLength(4)]
-    public string GeneratorType { get; set; }
+    public string GeneratorType
+    {
+        get => _generatorType;
+        set
+        {
+            if (_generatorType == value)
+                return;
+
+            _generatorType = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
     private uint zTest;
     public bool ZTest
     {

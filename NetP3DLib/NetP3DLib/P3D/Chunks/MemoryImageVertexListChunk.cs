@@ -31,6 +31,8 @@ public class MemoryImageVertexListChunk : Chunk
                 while (VertexSize < value)
                     Vertex.Add(default);
             }
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
         }
     }
     public List<byte> Vertex { get; } = [];

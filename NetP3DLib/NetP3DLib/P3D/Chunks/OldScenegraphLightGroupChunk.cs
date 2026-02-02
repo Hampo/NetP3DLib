@@ -11,8 +11,21 @@ namespace NetP3DLib.P3D.Chunks;
 public class OldScenegraphLightGroupChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Scenegraph_Light_Group;
-    
-    public string LightGroupName { get; set; }
+
+    private string _lightGroupName = string.Empty;
+    public string LightGroupName
+    {
+        get => _lightGroupName;
+        set
+        {
+            if (_lightGroupName == value)
+                return;
+
+            _lightGroupName = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
 
     public override byte[] DataBytes
     {

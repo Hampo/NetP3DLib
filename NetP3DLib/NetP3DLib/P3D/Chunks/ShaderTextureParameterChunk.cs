@@ -11,8 +11,21 @@ namespace NetP3DLib.P3D.Chunks;
 public class ShaderTextureParameterChunk : ParamChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Shader_Texture_Parameter;
-    
-    public string Value { get; set; }
+
+    private string _value = string.Empty;
+    public string Value
+    {
+        get => _value;
+        set
+        {
+            if (_value == value)
+                return;
+
+            _value = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
 
     public override byte[] DataBytes
     {

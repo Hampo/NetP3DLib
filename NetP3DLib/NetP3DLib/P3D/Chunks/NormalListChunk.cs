@@ -32,6 +32,8 @@ public class NormalListChunk : Chunk
                 while (NumNormals < value)
                     Normals.Add(default);
             }
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
         }
     }
     public List<Vector3> Normals { get; } = [];

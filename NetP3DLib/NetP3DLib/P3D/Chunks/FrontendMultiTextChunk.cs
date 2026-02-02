@@ -35,7 +35,20 @@ public class FrontendMultiTextChunk : NamedChunk
     public Color Colour { get; set; }
     public uint Translucency { get; set; }
     public float RotationValue { get; set; }
-    public string TextStyleName { get; set; }
+    private string _textStyleName = string.Empty;
+    public string TextStyleName
+    {
+        get => _textStyleName;
+        set
+        {
+            if (_textStyleName == value)
+                return;
+
+            _textStyleName = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
     public byte ShadowEnabled { get; set; }
     public Color ShadowColour { get; set; }
     public int ShadowOffsetX { get; set; }

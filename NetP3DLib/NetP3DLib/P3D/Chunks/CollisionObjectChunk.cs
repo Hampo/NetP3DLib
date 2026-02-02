@@ -16,7 +16,20 @@ public class CollisionObjectChunk : NamedChunk
     
     [DefaultValue(1)]
     public uint Version { get; set; }
-    public string MaterialName { get; set; }
+    private string _materialName = string.Empty;
+    public string MaterialName
+    {
+        get => _materialName;
+        set
+        {
+            if (_materialName == value)
+                return;
+
+            _materialName = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
     public uint NumSubObjects { get; set; }
     public uint NumOwners => GetChildCount(ChunkIdentifier.Collision_Volume_Owner);
 

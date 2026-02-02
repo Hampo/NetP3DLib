@@ -14,7 +14,20 @@ public class TextureAnimationChunk : NamedChunk
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Texture_Animation;
     
     public uint Version { get; set; }
-    public string MaterialName { get; set; }
+    private string _materialName = string.Empty;
+    public string MaterialName
+    {
+        get => _materialName;
+        set
+        {
+            if (_materialName == value)
+                return;
+
+            _materialName = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
     public uint NumFrames { get; set; }
     public float FrameRate { get; set; }
     private uint cyclic;

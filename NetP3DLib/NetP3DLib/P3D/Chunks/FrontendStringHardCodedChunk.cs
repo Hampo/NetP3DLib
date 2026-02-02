@@ -11,8 +11,21 @@ namespace NetP3DLib.P3D.Chunks;
 public class FrontendStringHardCodedChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Frontend_String_Hard_Coded;
-    
-    public string String { get; set; }
+
+    private string _string = string.Empty;
+    public string String
+    {
+        get => _string;
+        set
+        {
+            if (_string == value)
+                return;
+
+            _string = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
 
     public override byte[] DataBytes
     {

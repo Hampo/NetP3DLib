@@ -14,7 +14,20 @@ public class ShadowSkinChunk : NamedChunk
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Shadow_Skin;
     
     public uint Version { get; set; }
-    public string SkeletonName { get; set; }
+    private string _skeletonName = string.Empty;
+    public string SkeletonName
+    {
+        get => _skeletonName;
+        set
+        {
+            if (_skeletonName == value)
+                return;
+
+            _skeletonName = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
     // TODO: Calculate from children
     public uint NumVertices { get; set; }
     public uint NumTriangles { get; set; }

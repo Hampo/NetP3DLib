@@ -12,8 +12,21 @@ namespace NetP3DLib.P3D.Chunks;
 public class RoadSegmentChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Road_Segment;
-    
-    public string RoadDataSegment { get; set; }
+
+    private string _roadDataSegment = string.Empty;
+    public string RoadDataSegment
+    {
+        get => _roadDataSegment;
+        set
+        {
+            if (_roadDataSegment == value)
+                return;
+
+            _roadDataSegment = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
     public Matrix4x4 Transform { get; set; }
     public Matrix4x4 Scale { get; set; }
 

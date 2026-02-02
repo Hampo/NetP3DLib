@@ -76,11 +76,37 @@ public abstract class Chunk
     /// <para>This is usually <see cref="P3DFile.HEADER_SIZE"/> + <see cref="DataBytes"/><c>.Length</c>.</para>
     /// </summary>
     public uint HeaderSize => P3DFile.HEADER_SIZE + DataLength;
+
+    public event Action<Chunk, int>? SizeChanged;
+    protected void OnSizeChanged(int delta) => SizeChanged?.Invoke(this, delta);
+    protected SizeAwareList<T> CreateSizeAwareList<T>(int capacity = 0)
+    {
+        return new SizeAwareList<T>(() =>
+        {
+            int delta = checked((int)(Size - _cachedSize));
+            _cachedSize = Size;
+            OnSizeChanged(delta);
+        }, capacity);
+    }
+    internal uint _cachedSize = 0;
     /// <summary>
     /// Property <c>Size</c> is the chunk's size.
     /// <para>This is usually <see cref="HeaderSize"/> + SUM(<see cref="Children"/>.<see cref="Size"/>).</para>
     /// </summary>
-    public uint Size => HeaderSize + Children.TotalSize;
+    public uint Size
+    {
+        get
+        {
+            uint newSize = HeaderSize + Children.TotalSize;
+            if (_cachedSize != newSize)
+            {
+                int diff = (int)newSize - (int)_cachedSize;
+                _cachedSize = newSize;
+                SizeChanged?.Invoke(this, diff);
+            }
+            return _cachedSize;
+        }
+    }
     /// <summary>
     /// Property <c>Bytes</c> is the chunk's data, built from the chunk's properties and children.
     /// <para>NOTE: This will use the system's default <see cref="Endianness"/>.</para>

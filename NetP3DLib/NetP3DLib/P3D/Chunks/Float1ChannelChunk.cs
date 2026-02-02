@@ -35,6 +35,8 @@ public class Float1ChannelChunk : ParamChunk
                     Frames.Add(default);
             }
             NumValues = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
         }
     }
     public List<ushort> Frames { get; } = [];
@@ -57,6 +59,8 @@ public class Float1ChannelChunk : ParamChunk
                     Values.Add(default);
             }
             NumFrames = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
         }
     }
     public List<float> Values { get; } = [];

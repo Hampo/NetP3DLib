@@ -48,7 +48,20 @@ public class ShaderChunk : NamedChunk
 
     [DefaultValue(0)]
     public uint Version { get; set; }
-    public string PddiShaderName { get; set; }
+    private string _pddiShaderName = string.Empty;
+    public string PddiShaderName
+    {
+        get => _pddiShaderName;
+        set
+        {
+            if (_pddiShaderName == value)
+                return;
+
+            _pddiShaderName = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
     private uint hasTranslucency;
     public bool HasTranslucency
     {

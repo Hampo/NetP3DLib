@@ -35,7 +35,20 @@ public class FrontendPure3DObjectChunk : NamedChunk
     public Color Colour { get; set; }
     public uint Translucency { get; set; }
     public float RotationValue { get; set; }
-    public string Pure3DFilename { get; set; }
+    private string _pure3DFilename = string.Empty;
+    public string Pure3DFilename
+    {
+        get => _pure3DFilename;
+        set
+        {
+            if (_pure3DFilename == value)
+                return;
+
+            _pure3DFilename = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
 
     public override byte[] DataBytes
     {

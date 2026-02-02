@@ -1,4 +1,5 @@
 using NetP3DLib.P3D.Attributes;
+using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
@@ -32,9 +33,11 @@ public class HistoryChunk : Chunk
                 while (NumHistory < value)
                     History.Add(string.Empty);
             }
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
         }
     }
-    public List<string> History { get; } = [];
+    public SizeAwareList<string> History { get; }
 
     public override byte[] DataBytes
     {
@@ -63,14 +66,19 @@ public class HistoryChunk : Chunk
     public HistoryChunk(BinaryReader br) : base(ChunkID)
     {
         ushort lineCount = br.ReadUInt16();
-        History = new(lineCount);
+        History = CreateSizeAwareList<string>(lineCount);
+        History.SuspendNotifications();
         for (int i = 0; i < lineCount; i++)
             History.Add(br.ReadP3DString());
+        History.ResumeNotifications();
     }
 
     public HistoryChunk(IList<string> history) : base(ChunkID)
     {
+        History = CreateSizeAwareList<string>(history.Count);
+        History.SuspendNotifications();
         History.AddRange(history);
+        History.ResumeNotifications();
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunks()

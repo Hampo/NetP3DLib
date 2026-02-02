@@ -16,8 +16,21 @@ public class MultiController2Chunk : NamedChunk
     
     [DefaultValue(1)]
     public uint Version { get; set; }
+    private string _cycleMode = string.Empty;
     [MaxLength(4)]
-    public string CycleMode { get; set; }
+    public string CycleMode
+    {
+        get => _cycleMode;
+        set
+        {
+            if (_cycleMode == value)
+                return;
+
+            _cycleMode = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
     public uint NumCycles { get; set; }
     public uint InfiniteCycle { get; set; }
     public float NumFrames { get; set; }

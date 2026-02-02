@@ -16,7 +16,20 @@ public class AnimatedObjectFactoryChunk : NamedChunk
     
     [DefaultValue(0)]
     public uint Version { get; set; }
-    public string BaseAnimation { get; set; }
+    private string _baseAnimation = string.Empty;
+    public string BaseAnimation
+    {
+        get => _baseAnimation;
+        set
+        {
+            if (_baseAnimation == value)
+                return;
+
+            _baseAnimation = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
     public uint NumAnimations { get; set; }
 
     public override byte[] DataBytes

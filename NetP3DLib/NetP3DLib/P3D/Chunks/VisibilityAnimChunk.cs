@@ -12,8 +12,21 @@ namespace NetP3DLib.P3D.Chunks;
 public class VisibilityAnimChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Visibility_Anim;
-    
-    public string SceneName { get; set; }
+
+    private string _sceneName = string.Empty;
+    public string SceneName
+    {
+        get => _sceneName;
+        set
+        {
+            if (_sceneName == value)
+                return;
+
+            _sceneName = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
     public uint Version { get; set; }
     public uint NumFrames { get; set; }
     public float FrameRate { get; set; }

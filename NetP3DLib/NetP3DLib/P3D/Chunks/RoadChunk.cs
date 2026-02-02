@@ -17,8 +17,34 @@ public class RoadChunk : NamedChunk
     private const uint ShortcutMask = 0x00010000;
 
     public uint Type { get; set; }
-    public string StartIntersection { get; set; }
-    public string EndIntersection { get; set; }
+    private string _startIntersection = string.Empty;
+    public string StartIntersection
+    {
+        get => _startIntersection;
+        set
+        {
+            if (_startIntersection == value)
+                return;
+
+            _startIntersection = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
+    private string _endIntersection = string.Empty;
+    public string EndIntersection
+    {
+        get => _endIntersection;
+        set
+        {
+            if (_endIntersection == value)
+                return;
+
+            _endIntersection = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
     public uint MaximumCars { get; set; }
     private uint bitmask;
     public byte Speed

@@ -1,4 +1,5 @@
 using NetP3DLib.P3D.Attributes;
+using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
 using System;
@@ -35,7 +36,17 @@ public class LocatorChunk : NamedChunk
     
     public LocatorTypes LocatorType => TypeData.LocatorType;
     public uint DataLen => TypeData.DataLen;
-    public LocatorData TypeData { get; set; }
+    private LocatorData _typeData = new UnknownLocatorData(15, []);
+    public LocatorData TypeData
+    {
+        get => _typeData;
+        set
+        {
+            _typeData.SizeChanged -= TypeData_SizeChanged;
+            _typeData = value;
+            value.SizeChanged += TypeData_SizeChanged;
+        }
+    }
     public Vector3 Position { get; set; }
     public uint TriggerCount => GetChildCount(ChunkIdentifier.Trigger_Volume);
 
@@ -97,6 +108,13 @@ public class LocatorChunk : NamedChunk
         Position = position;
     }
 
+    private void TypeData_SizeChanged()
+    {
+        int delta = checked((int)(Size - _cachedSize));
+        _cachedSize = Size;
+        OnSizeChanged(delta);
+    }
+
     protected override void WriteData(BinaryWriter bw)
     {
         bw.WriteP3DString(Name);
@@ -113,6 +131,10 @@ public class LocatorChunk : NamedChunk
 
     public abstract class LocatorData
     {
+        public event Action? SizeChanged;
+        protected void OnSizeChanged() => SizeChanged?.Invoke();
+
+
         public LocatorTypes LocatorType { get; }
         public virtual uint DataLen => (uint)DataArray.Count;
         public abstract List<uint> DataArray { get; }
@@ -183,11 +205,12 @@ public class LocatorChunk : NamedChunk
 
     public class UnknownLocatorData : LocatorData
     {
-        public List<uint> Data { get; } = [];
-        public override List<uint> DataArray => Data;
+        public SizeAwareList<uint> Data { get; }
+        public override List<uint> DataArray => [..Data];
 
         public UnknownLocatorData(LocatorTypes locatorType, IList<uint> data) : base(locatorType)
         {
+            Data = new SizeAwareList<uint>(OnSizeChanged, data.Count);
             Data.AddRange(data);
         }
 
@@ -295,7 +318,16 @@ public class LocatorChunk : NamedChunk
         }
 
         public Events Event { get; set; }
-        public uint? Parameter { get; set; }
+        private uint? _parameter = null;
+        public uint? Parameter
+        {
+            get => _parameter;
+            set
+            {
+                _parameter = value;
+                OnSizeChanged();
+            }
+        }
 
         public override uint DataLen => Parameter.HasValue ? 2u : 1u;
         public override List<uint> DataArray
@@ -342,7 +374,19 @@ public class LocatorChunk : NamedChunk
     /// </summary>
     public class ScriptLocatorData : LocatorData
     {
-        public string Key { get; set; }
+        private string _key = string.Empty;
+        public string Key
+        {
+            get => _key;
+            set
+            {
+                if (_key == value)
+                    return;
+
+                _key = value;
+                OnSizeChanged();
+            }
+        }
 
         public override List<uint> DataArray => CreateStringData(Key);
 
@@ -384,8 +428,29 @@ public class LocatorChunk : NamedChunk
     public class CarStartLocatorData : LocatorData
     {
         public float Rotation { get; set; }
-        public uint? ParkedCar { get; set; }
-        public string? FreeCar { get; set; }
+        private uint? _parkedCar = null;
+        public uint? ParkedCar
+        {
+            get => _parkedCar;
+            set
+            {
+                _parkedCar = value;
+                OnSizeChanged();
+            }
+        }
+        private string? _freeCar = null;
+        public string? FreeCar
+        {
+            get => _freeCar;
+            set
+            {
+                if (_freeCar == value)
+                    return;
+
+                _freeCar = value;
+                OnSizeChanged();
+            }
+        }
 
         public override List<uint> DataArray
         {
@@ -461,7 +526,19 @@ public class LocatorChunk : NamedChunk
     /// </summary>
     public class DynamicZoneLocatorData : LocatorData
     {
-        public string DynaLoadData { get; set; }
+        private string _dynaLoadData = string.Empty;
+        public string DynaLoadData
+        {
+            get => _dynaLoadData;
+            set
+            {
+                if (_dynaLoadData == value)
+                    return;
+
+                _dynaLoadData = value;
+                OnSizeChanged();
+            }
+        }
 
         public override List<uint> DataArray => CreateStringData(DynaLoadData);
 
@@ -485,7 +562,17 @@ public class LocatorChunk : NamedChunk
     /// </summary>
     public class OcclusionLocatorData : LocatorData
     {
-        public uint? Occlusions { get; set; }
+        private uint? _occlusions = null;
+        public uint? Occlusions
+        {
+            get => _occlusions;
+            set
+            {
+                _occlusions = value;
+                OnSizeChanged();
+            }
+        }
+
         public override uint DataLen => Occlusions.HasValue ? 1u : 0u;
         public override List<uint> DataArray => Occlusions.HasValue ? [Occlusions.Value] : [];
 
@@ -512,7 +599,19 @@ public class LocatorChunk : NamedChunk
     /// </summary>
     public class InteriorEntranceLocatorData : LocatorData
     {
-        public string InteriorName { get; set; }
+        private string _interiorName = string.Empty;
+        public string InteriorName
+        {
+            get => _interiorName;
+            set
+            {
+                if (_interiorName == value)
+                    return;
+
+                _interiorName = value;
+                OnSizeChanged();
+            }
+        }
         public Vector3 Right { get; set; }
         public Vector3 Up { get; set; }
         public Vector3 Front { get; set; }
@@ -627,10 +726,46 @@ public class LocatorChunk : NamedChunk
             MouseLookRight,
         }
 
-        public string ObjectName { get; set; }
-        public string JointName { get; set; }
+        private string _objectName = string.Empty;
+        public string ObjectName
+        {
+            get => _objectName;
+            set
+            {
+                if (_objectName == value)
+                    return;
+
+                _objectName = value;
+                OnSizeChanged();
+            }
+        }
+        private string _jointName = string.Empty;
+        public string JointName
+        {
+            get => _jointName;
+            set
+            {
+                if (_jointName == value)
+                    return;
+
+                _jointName = value;
+                OnSizeChanged();
+            }
+        }
+        private string _actionName = string.Empty;
         [KnownValues(true, "ToggleOnOff", "ToggleReverse", "PlayAnim", "PlayAnimLoop", "AutoPlayAnim", "AutoPlayAnimLoop", "AutoPlayAnimInOut", "DestroyObject", "PowerCoupling", "UseVendingMachine", "PrankPhone", "SummonVehiclePhone", "Doorbell", "OpenDoor", "TalkFood", "TalkCollectible", "TalkDialog", "TalkMission", "FoodSmall", "FoodLarge", "CollectorCard", "AlienCamera", "PlayOnce", "AutomaticDoor", "Wrench", "Teleport", "PurchaseCar", "PurchaseSkin", "Nitro")]
-        public string ActionName { get; set; }
+        public string ActionName
+        {
+            get => _actionName;
+            set
+            {
+                if (_actionName == value)
+                    return;
+
+                _actionName = value;
+                OnSizeChanged();
+            }
+        }
         public Intention ButtonInput { get; set; }
         private uint shouldTransform;
         public bool ShouldTransform
@@ -742,10 +877,46 @@ public class LocatorChunk : NamedChunk
         public float FOV { get; set; }
         public float TargetLag { get; set; }
         public uint FollowPlayer { get; set; }
-        public float? TransitionTargetRate { get; set; }
-        public uint? Flags { get; set; }
-        public uint? CutInOut { get; set; }
-        public uint? Data { get; set; }
+        private float? _transitionTargetRate = null;
+        public float? TransitionTargetRate
+        {
+            get => _transitionTargetRate;
+            set
+            {
+                _transitionTargetRate = value;
+                OnSizeChanged();
+            }
+        }
+        private uint? _flags = null;
+        public uint? Flags
+        {
+            get => _flags;
+            set
+            {
+                _flags = value;
+                OnSizeChanged();
+            }
+        }
+        private uint? _cutInOut = null;
+        public uint? CutInOut
+        {
+            get => _cutInOut;
+            set
+            {
+                _cutInOut = value;
+                OnSizeChanged();
+            }
+        }
+        private uint? _data = null;
+        public uint? Data
+        {
+            get => _data;
+            set
+            {
+                _data = value;
+                OnSizeChanged();
+            }
+        }
 
         public override List<uint> DataArray
         {

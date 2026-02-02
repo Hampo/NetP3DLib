@@ -31,6 +31,8 @@ public class TextureGlyphListChunk : Chunk
                 while (NumGlyphs < value)
                     Glyphs.Add(new());
             }
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
         }
     }
     public List<Glyph> Glyphs { get; } = [];

@@ -8,8 +8,21 @@ namespace NetP3DLib.P3D;
 
 public abstract class ParamChunk : Chunk
 {
+    private string _param = string.Empty;
     [MaxLength(4)]
-    public string Param { get; set; } = string.Empty;
+    public string Param
+    {
+        get => _param;
+        set
+        {
+            if (_param == value)
+                return;
+
+            _param = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
 
     public ParamChunk(uint ID) : base(ID) { }
 

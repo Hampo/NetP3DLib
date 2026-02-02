@@ -18,8 +18,21 @@ public class OldBillboardQuadChunk : NamedChunk
     
     [DefaultValue(2)]
     public uint Version { get; set; }
+    private string _billboardMode = string.Empty;
     [MaxLength(4)]
-    public string BillboardMode { get; set; }
+    public string BillboardMode
+    {
+        get => _billboardMode;
+        set
+        {
+            if (_billboardMode == value)
+                return;
+
+            _billboardMode = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
     public Vector3 Translation { get; set; }
     public Color Colour { get; set; }
     public Vector2 UV0 { get; set; }

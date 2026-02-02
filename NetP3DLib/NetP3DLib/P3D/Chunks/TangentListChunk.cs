@@ -32,6 +32,8 @@ public class TangentListChunk : Chunk
                 while (NumTangents < value)
                     Tangents.Add(default);
             }
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
         }
     }
     public List<Vector3> Tangents { get; } = [];

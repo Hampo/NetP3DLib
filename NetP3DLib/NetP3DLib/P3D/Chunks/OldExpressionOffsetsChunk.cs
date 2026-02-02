@@ -29,6 +29,8 @@ public class OldExpressionOffsetsChunk : Chunk
                 while (NumPrimitiveGroups < value)
                     PrimitiveGroupIndices.Add(default);
             }
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
         }
     }
     public uint NumOffsetLists => GetChildCount(ChunkIdentifier.Old_Offset_List);

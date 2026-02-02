@@ -16,7 +16,20 @@ public class ParticleSystem2Chunk : NamedChunk
     
     [DefaultValue(0)]
     public uint Version { get; set; }
-    public string FactoryName { get; set; }
+    private string _factoryName = string.Empty;
+    public string FactoryName
+    {
+        get => _factoryName;
+        set
+        {
+            if (_factoryName == value)
+                return;
+
+            _factoryName = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
 
     public override byte[] DataBytes
     {

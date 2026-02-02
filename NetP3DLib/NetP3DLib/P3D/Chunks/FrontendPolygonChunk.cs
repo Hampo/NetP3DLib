@@ -38,6 +38,8 @@ public class FrontendPolygonChunk : NamedChunk
                     Points.Add(default);
             }
             NumColours = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
         }
     }
     public List<Vector3> Points { get; } = [];
@@ -60,6 +62,8 @@ public class FrontendPolygonChunk : NamedChunk
                     Colours.Add(default);
             }
             NumPoints = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
         }
     }
     public List<Color> Colours { get; } = [];

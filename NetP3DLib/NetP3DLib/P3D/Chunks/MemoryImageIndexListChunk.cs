@@ -31,6 +31,8 @@ public class MemoryImageIndexListChunk : Chunk
                 while (NumIndices < value)
                     Indices.Add(default);
             }
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
         }
     }
     public List<ushort> Indices { get; } = [];

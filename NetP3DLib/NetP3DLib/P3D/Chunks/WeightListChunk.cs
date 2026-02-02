@@ -32,6 +32,8 @@ public class WeightListChunk : Chunk
                 while (NumWeights < value)
                     Weights.Add(default);
             }
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
         }
     }
     public List<Vector3> Weights { get; } = [];

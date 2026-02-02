@@ -29,6 +29,8 @@ public class TopologyChunk : Chunk
                 while (NumTopology < value)
                     Topologies.Add(new());
             }
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
         }
     }
     public List<Topology> Topologies { get; } = [];

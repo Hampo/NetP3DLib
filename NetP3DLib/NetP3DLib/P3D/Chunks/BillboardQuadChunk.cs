@@ -17,8 +17,21 @@ public class BillboardQuadChunk : NamedChunk
     public uint Version { get; set; }
     public uint CutOffEnabled { get; set; }
     public uint Perspective { get; set; }
+    private string _axisMode = string.Empty;
     [MaxLength(4)]
-    public string AxisMode { get; set; }
+    public string AxisMode
+    {
+        get => _axisMode;
+        set
+        {
+            if (_axisMode == value)
+                return;
+
+            _axisMode = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
     public Color Colour { get; set; }
     public float Width { get; set; }
     public float Height { get; set; }

@@ -1,4 +1,5 @@
 using NetP3DLib.P3D.Attributes;
+using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
@@ -31,9 +32,11 @@ public class MultiControllerTracksChunk : Chunk
                 while (NumTracks < value)
                     Tracks.Add(new());
             }
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
         }
     }
-    public List<Track> Tracks { get; } = [];
+    public SizeAwareList<Track> Tracks { get; }
 
     public override byte[] DataBytes
     {
@@ -62,14 +65,44 @@ public class MultiControllerTracksChunk : Chunk
     public MultiControllerTracksChunk(BinaryReader br) : base(ChunkID)
     {
         var numTracks = br.ReadInt32();
-        Tracks = new(numTracks);
+        Tracks = CreateSizeAwareList<Track>(numTracks);
+        Tracks.CollectionChanged += Tracks_CollectionChanged;
+        Tracks.SuspendNotifications();
         for (int i = 0; i < numTracks; i++)
             Tracks.Add(new(br));
+        Tracks.ResumeNotifications();
     }
 
     public MultiControllerTracksChunk(IList<Track> tracks) : base(ChunkID)
     {
+        Tracks = CreateSizeAwareList<Track>(tracks.Count);
+        Tracks.CollectionChanged += Tracks_CollectionChanged;
+
+        Tracks.SuspendNotifications();
         Tracks.AddRange(tracks);
+        Tracks.ResumeNotifications();
+    }
+
+    private void Tracks_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
+        if (e.OldItems != null)
+            foreach (Track oldTrack in e.OldItems)
+                oldTrack.SizeChanged -= Track_SizeChanged;
+
+        if (e.NewItems != null)
+            foreach (Track newTrack in e.NewItems)
+                newTrack.SizeChanged += Track_SizeChanged;
+
+        int delta = checked((int)(Size - _cachedSize));
+        _cachedSize = Size;
+        OnSizeChanged(delta);
+    }
+
+    private void Track_SizeChanged()
+    {
+        int delta = checked((int)(Size - _cachedSize));
+        _cachedSize = Size;
+        OnSizeChanged(delta);
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunks()
@@ -99,7 +132,19 @@ public class MultiControllerTracksChunk : Chunk
 
     public class Track
     {
-        public string Name { get; set; }
+        public event Action? SizeChanged;
+
+        private string _name = string.Empty;
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                if (_name == value) return;
+                _name = value;
+                SizeChanged?.Invoke();
+            }
+        }
         public float StartTime { get; set; }
         public float EndTime { get; set; }
         public float Scale { get; set; }

@@ -16,7 +16,20 @@ public class OldBillboardQuadGroupChunk : NamedChunk
     
     [DefaultValue(0)]
     public uint Version { get; set; }
-    public string Shader { get; set; }
+    private string _shader = string.Empty;
+    public string Shader
+    {
+        get => _shader;
+        set
+        {
+            if (_shader == value)
+                return;
+
+            _shader = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
     private uint zTest;
     public bool ZTest
     {

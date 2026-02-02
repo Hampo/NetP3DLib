@@ -16,14 +16,66 @@ public class FrameControllerChunk : NamedChunk
     
     [DefaultValue(1)]
     public uint Version { get; set; }
+    private string _type = string.Empty;
     [MaxLength(4)]
-    public string Type { get; set; }
+    public string Type
+    {
+        get => _type;
+        set
+        {
+            if (_type == value)
+                return;
+
+            _type = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
+    private string _cycleMode = string.Empty;
     [MaxLength(4)]
-    public string CycleMode { get; set; }
+    public string CycleMode
+    {
+        get => _cycleMode;
+        set
+        {
+            if (_cycleMode == value)
+                return;
+
+            _cycleMode = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
     public uint NumCycles { get; set; }
     public uint InfiniteCycle { get; set; }
-    public string HierarchyName { get; set; }
-    public string AnimationName { get; set; }
+    private string _hierarchyName = string.Empty;
+    public string HierarchyName
+    {
+        get => _hierarchyName;
+        set
+        {
+            if (_hierarchyName == value)
+                return;
+
+            _hierarchyName = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
+    private string _animationName = string.Empty;
+    public string AnimationName
+    {
+        get => _animationName;
+        set
+        {
+            if (_animationName == value)
+                return;
+
+            _animationName = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
 
     public override byte[] DataBytes
     {

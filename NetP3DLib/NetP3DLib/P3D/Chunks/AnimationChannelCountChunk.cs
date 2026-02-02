@@ -1,4 +1,5 @@
 using NetP3DLib.P3D.Attributes;
+using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using System;
 using System.Collections.Generic;
@@ -33,6 +34,8 @@ public class AnimationChannelCountChunk : Chunk
                 while (NumNumKeys < value)
                     NumKeys.Add(default);
             }
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
         }
     }
     public List<ushort> NumKeys { get; } = [];

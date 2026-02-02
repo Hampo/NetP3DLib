@@ -15,7 +15,20 @@ public class SpriteChunk : NamedChunk
     
     public uint NativeX { get; set; }
     public uint NativeY { get; set; }
-    public string Shader { get; set; }
+    private string _shader = string.Empty;
+    public string Shader
+    {
+        get => _shader;
+        set
+        {
+            if (_shader == value)
+                return;
+
+            _shader = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
     public uint ImageWidth { get; set; }
     public uint ImageHeight { get; set; }
     public uint ImageCount => GetChildCount(ChunkIdentifier.Image);

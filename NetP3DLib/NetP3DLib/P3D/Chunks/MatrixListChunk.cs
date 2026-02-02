@@ -30,6 +30,8 @@ public class MatrixListChunk : Chunk
                 while (NumMatrices < value)
                     Matrices.Add(new());
             }
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
         }
     }
     public List<Matrix> Matrices { get; } = [];

@@ -1,4 +1,5 @@
 using NetP3DLib.P3D.Attributes;
+using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
@@ -34,9 +35,11 @@ public class FrontendScreenChunk : NamedChunk
                 while (NumPageNames < value)
                     PageNames.Add(string.Empty);
             }
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
         }
     }
-    public List<string> PageNames { get; } = [];
+    public SizeAwareList<string> PageNames { get; }
 
     public override byte[] DataBytes
     {
@@ -66,19 +69,25 @@ public class FrontendScreenChunk : NamedChunk
 
     public FrontendScreenChunk(BinaryReader br) : base(ChunkID)
     {
+        PageNames = CreateSizeAwareList<string>();
         Name = br.ReadP3DString();
         Version = br.ReadUInt32();
         var numPageNames = br.ReadInt32();
-        PageNames = new(numPageNames);
+        PageNames = CreateSizeAwareList<string>(numPageNames);
+        PageNames.SuspendNotifications();
         for (int i = 0; i < numPageNames; i++)
             PageNames.Add(br.ReadP3DString());
+        PageNames.ResumeNotifications();
     }
 
     public FrontendScreenChunk(string name, uint version, IList<string> pageNames) : base(ChunkID)
     {
+        PageNames = CreateSizeAwareList<string>(pageNames.Count);
         Name = name;
         Version = version;
+        PageNames.SuspendNotifications();
         PageNames.AddRange(pageNames);
+        PageNames.ResumeNotifications();
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunks()

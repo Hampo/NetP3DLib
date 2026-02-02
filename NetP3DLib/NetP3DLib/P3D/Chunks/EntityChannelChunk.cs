@@ -1,4 +1,5 @@
 using NetP3DLib.P3D.Attributes;
+using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
@@ -35,6 +36,8 @@ public class EntityChannelChunk : ParamChunk
                     Frames.Add(default);
             }
             NumValues = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
         }
     }
     public List<ushort> Frames { get; } = [];
@@ -57,9 +60,11 @@ public class EntityChannelChunk : ParamChunk
                     Values.Add(string.Empty);
             }
             NumFrames = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
         }
     }
-    public List<string> Values { get; } = [];
+    public SizeAwareList<string> Values { get; }
 
     public override byte[] DataBytes
     {
@@ -91,23 +96,29 @@ public class EntityChannelChunk : ParamChunk
 
     public EntityChannelChunk(BinaryReader br) : base(ChunkID)
     {
+        Values = CreateSizeAwareList<string>();
         Version = br.ReadUInt32();
         Param = br.ReadFourCC();
         var numFrames = br.ReadInt32();
         Frames = new(numFrames);
-        Values = new(numFrames);
+        Values = CreateSizeAwareList<string>(numFrames);
+        Values.SuspendNotifications();
         for (var i = 0; i < numFrames; i++)
             Frames.Add(br.ReadUInt16());
         for (var i = 0; i < numFrames; i++)
             Values.Add(br.ReadP3DString());
+        Values.ResumeNotifications();
     }
 
     public EntityChannelChunk(uint version, string param, IList<ushort> frames, IList<string> values) : base(ChunkID)
     {
+        Values = CreateSizeAwareList<string>(values.Count);
         Version = version;
         Param = param;
         Frames.AddRange(frames);
+        Values.SuspendNotifications();
         Values.AddRange(values);
+        Values.ResumeNotifications();
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunks()

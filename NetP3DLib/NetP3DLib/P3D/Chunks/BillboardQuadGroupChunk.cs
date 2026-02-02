@@ -14,7 +14,20 @@ public class BillboardQuadGroupChunk : NamedChunk
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Billboard_Quad_Group;
     
     public uint Version { get; set; }
-    public string Shader { get; set; }
+    private string _shader = string.Empty;
+    public string Shader
+    {
+        get => _shader;
+        set
+        {
+            if (_shader == value)
+                return;
+
+            _shader = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
     public uint CutOffEnabled { get; set; }
     public uint ZTest { get; set; }
     public uint ZWrite { get; set; }

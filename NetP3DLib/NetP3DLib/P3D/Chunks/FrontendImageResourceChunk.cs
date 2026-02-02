@@ -16,7 +16,20 @@ public class FrontendImageResourceChunk : NamedChunk
     
     [DefaultValue(1)]
     public uint Version { get; set; }
-    public string Filename { get; set; }
+    private string _filename = string.Empty;
+    public string Filename
+    {
+        get => _filename;
+        set
+        {
+            if (_filename == value)
+                return;
+
+            _filename = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
 
     public override byte[] DataBytes
     {

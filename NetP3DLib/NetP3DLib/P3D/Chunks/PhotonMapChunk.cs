@@ -1,4 +1,5 @@
 using NetP3DLib.P3D.Attributes;
+using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
@@ -34,9 +35,11 @@ public class PhotonMapChunk : NamedChunk
                     Lights.Add(string.Empty);
             }
             NumLightScales = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
         }
     }
-    public List<string> Lights { get; } = [];
+    public SizeAwareList<string> Lights { get; }
     public uint NumLightScales
     {
         get => (uint)LightScales.Count;
@@ -56,6 +59,8 @@ public class PhotonMapChunk : NamedChunk
                     LightScales.Add(default);
             }
             NumLights = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
         }
     }
     public List<float> LightScales { get; } = [];
@@ -77,6 +82,8 @@ public class PhotonMapChunk : NamedChunk
                 while (NumPhotons < value)
                     Photons.Add(new());
             }
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
         }
     }
     public List<Photon> Photons { get; } = [];
@@ -114,13 +121,16 @@ public class PhotonMapChunk : NamedChunk
 
     public PhotonMapChunk(BinaryReader br) : base(ChunkID)
     {
+        Lights = CreateSizeAwareList<string>();
         Name = br.ReadP3DString();
         Version = br.ReadUInt32();
         var numLights = br.ReadInt32();
-        Lights = new(numLights);
+        Lights = CreateSizeAwareList<string>(numLights);
         LightScales = new(numLights);
+        Lights.SuspendNotifications();
         for (var i = 0; i < numLights; i++)
             Lights.Add(br.ReadP3DString());
+        Lights.ResumeNotifications();
         for (var i = 0; i < numLights; i++)
             LightScales.Add(br.ReadSingle());
         var numPhotons = br.ReadInt32();
@@ -131,9 +141,12 @@ public class PhotonMapChunk : NamedChunk
 
     public PhotonMapChunk(string name, uint version, IList<string> lights, IList<float> lightScales, IList<Photon> photons) : base(ChunkID)
     {
+        Lights = CreateSizeAwareList<string>(lights.Count);
         Name = name;
         Version = version;
+        Lights.SuspendNotifications();
         Lights.AddRange(lights);
+        Lights.ResumeNotifications();
         LightScales.AddRange(lightScales);
         Photons.AddRange(photons);
     }

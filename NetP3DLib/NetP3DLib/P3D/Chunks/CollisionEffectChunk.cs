@@ -30,7 +30,20 @@ public class CollisionEffectChunk : Chunk
 
     public ClassTypes ClassType { get; set; }
     public uint PhysPropID { get; set; }
-    public string SoundResourceDataName { get; set; }
+    private string _soundResourceDataName = string.Empty;
+    public string SoundResourceDataName
+    {
+        get => _soundResourceDataName;
+        set
+        {
+            if (_soundResourceDataName == value)
+                return;
+
+            _soundResourceDataName = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
 
     public override byte[] DataBytes
     {

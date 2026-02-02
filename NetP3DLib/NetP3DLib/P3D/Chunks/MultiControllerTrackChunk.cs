@@ -16,8 +16,21 @@ public class MultiControllerTrackChunk : NamedChunk
     
     [DefaultValue(0)]
     public uint Version { get; set; }
+    private string _type = string.Empty;
     [MaxLength(4)]
-    public string Type { get; set; }
+    public string Type
+    {
+        get => _type;
+        set
+        {
+            if (_type == value)
+                return;
+
+            _type = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
 
     public override byte[] DataBytes
     {

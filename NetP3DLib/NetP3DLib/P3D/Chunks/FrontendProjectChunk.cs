@@ -18,10 +18,62 @@ public class FrontendProjectChunk : NamedChunk
     public uint Version { get; set; }
     public uint ResolutionX { get; set; }
     public uint ResolutionY { get; set; }
-    public string Platform { get; set; }
-    public string PagePath { get; set; }
-    public string ResourcePath { get; set; }
-    public string ScreenPath { get; set; }
+    private string _platform = string.Empty;
+    public string Platform
+    {
+        get => _platform;
+        set
+        {
+            if (_platform == value)
+                return;
+
+            _platform = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
+    private string _pagePath = string.Empty;
+    public string PagePath
+    {
+        get => _pagePath;
+        set
+        {
+            if (_pagePath == value)
+                return;
+
+            _pagePath = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
+    private string _resourcePath = string.Empty;
+    public string ResourcePath
+    {
+        get => _resourcePath;
+        set
+        {
+            if (_resourcePath == value)
+                return;
+
+            _resourcePath = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
+    private string _screenPath = string.Empty;
+    public string ScreenPath
+    {
+        get => _screenPath;
+        set
+        {
+            if (_screenPath == value)
+                return;
+
+            _screenPath = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
 
     public override byte[] DataBytes
     {

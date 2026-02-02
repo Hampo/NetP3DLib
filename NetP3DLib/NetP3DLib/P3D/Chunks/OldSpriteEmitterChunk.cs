@@ -16,12 +16,51 @@ public class OldSpriteEmitterChunk : NamedChunk
     
     [DefaultValue(0)]
     public uint Version { get; set; }
-    public string ShaderName { get; set; }
+    private string _shaderName = string.Empty;
+    public string ShaderName
+    {
+        get => _shaderName;
+        set
+        {
+            if (_shaderName == value)
+                return;
+
+            _shaderName = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
+    private string _angleMode = string.Empty;
     [MaxLength(4)]
-    public string AngleMode { get; set; }
+    public string AngleMode
+    {
+        get => _angleMode;
+        set
+        {
+            if (_angleMode == value)
+                return;
+
+            _angleMode = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
     public float Angle { get; set; }
+    private string _textureAnimMode = string.Empty;
     [MaxLength(4)]
-    public string TextureAnimMode { get; set; }
+    public string TextureAnimMode
+    {
+        get => _textureAnimMode;
+        set
+        {
+            if (_textureAnimMode == value)
+                return;
+
+            _textureAnimMode = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
     public uint NumTextureFrames { get; set; }
     public uint TextureFrameRate { get; set; }
 

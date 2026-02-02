@@ -10,8 +10,21 @@ namespace NetP3DLib.P3D.Chunks;
 public class ShaderDefinitionChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Shader_Definition;
-    
-    public string Definition { get; set; }
+
+    private string _definition = string.Empty;
+    public string Definition
+    {
+        get => _definition;
+        set
+        {
+            if (_definition == value)
+                return;
+
+            _definition = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
 
     public override byte[] DataBytes
     {

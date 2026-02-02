@@ -32,6 +32,8 @@ public class OldVector2OffsetListChunk : ParamChunk
                 while (NumOffsets < value)
                     Offsets.Add(default);
             }
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
         }
     }
     public List<Vector2> Offsets { get; } = [];

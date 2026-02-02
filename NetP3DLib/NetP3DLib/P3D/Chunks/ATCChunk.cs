@@ -1,4 +1,5 @@
 using NetP3DLib.P3D.Attributes;
+using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
@@ -33,7 +34,7 @@ public class ATCChunk : Chunk
             }
         }
     }
-    public List<Entry> Entries { get; } = [];
+    public SizeAwareList<Entry> Entries { get; }
 
     public override byte[] DataBytes
     {
@@ -62,14 +63,45 @@ public class ATCChunk : Chunk
     public ATCChunk(BinaryReader br) : base(ChunkID)
     {
         var numEntries = br.ReadInt32();
-        Entries = new(numEntries);
+        Entries = CreateSizeAwareList<Entry>(numEntries);
+        Entries.SuspendNotifications();
+        Entries.CollectionChanged += Entries_CollectionChanged;
+
         for (int i = 0; i < numEntries; i++)
             Entries.Add(new(br));
+        Entries.ResumeNotifications();
     }
 
     public ATCChunk(IList<Entry> entries) : base(ChunkID)
     {
+        Entries = CreateSizeAwareList<Entry>(entries.Count);
+        Entries.CollectionChanged += Entries_CollectionChanged;
+
+        Entries.SuspendNotifications();
         Entries.AddRange(entries);
+        Entries.ResumeNotifications();
+    }
+
+    private void Entries_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
+        if (e.OldItems != null)
+            foreach (Entry oldEntry in e.OldItems)
+                oldEntry.SizeChanged -= Entry_SizeChanged;
+
+        if (e.NewItems != null)
+            foreach (Entry newEntry in e.NewItems)
+                newEntry.SizeChanged += Entry_SizeChanged;
+
+        int delta = checked((int)(Size - _cachedSize));
+        _cachedSize = Size;
+        OnSizeChanged(delta);
+    }
+
+    private void Entry_SizeChanged()
+    {
+        int delta = checked((int)(Size - _cachedSize));
+        _cachedSize = Size;
+        OnSizeChanged(delta);
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunks()
@@ -99,9 +131,43 @@ public class ATCChunk : Chunk
 
     public class Entry
     {
-        public string SoundResourceDataName { get; set; }
-        public string Particle { get; set; }
-        public string BreakableObject { get; set; }
+        public event Action? SizeChanged;
+
+        private string _soundResourceDataName = string.Empty;
+        public string SoundResourceDataName
+        {
+            get => _soundResourceDataName;
+            set
+            {
+                if (_soundResourceDataName == value) return;
+                _soundResourceDataName = value;
+                SizeChanged?.Invoke();
+            }
+        }
+
+        private string _particle = string.Empty;
+        public string Particle
+        {
+            get => _particle;
+            set
+            {
+                if (_particle == value) return;
+                _particle = value;
+                SizeChanged?.Invoke();
+            }
+        }
+
+        private string _breakableObject = string.Empty;
+        public string BreakableObject
+        {
+            get => _breakableObject;
+            set
+            {
+                if (_breakableObject == value) return;
+                _breakableObject = value;
+                SizeChanged?.Invoke();
+            }
+        }
         public float Friction { get; set; }
         public float Mass { get; set; }
         public float Elasticity { get; set; }

@@ -30,6 +30,8 @@ public class SkeletonPartitionChunk : NamedChunk
                 while (NumJointValues < value)
                     JointBits.Add(0);
             }
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
         }
     }
     public List<uint> JointBits { get; } = [];

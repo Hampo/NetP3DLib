@@ -1,4 +1,5 @@
 using NetP3DLib.P3D.Attributes;
+using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
@@ -31,9 +32,11 @@ public class LightGroupChunk : NamedChunk
                 while (NumLights < value)
                     Lights.Add(string.Empty);
             }
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
         }
     }
-    public List<string> Lights { get; } = [];
+    public SizeAwareList<string> Lights { get; }
 
     public override byte[] DataBytes
     {
@@ -62,17 +65,23 @@ public class LightGroupChunk : NamedChunk
 
     public LightGroupChunk(BinaryReader br) : base(ChunkID)
     {
+        Lights = CreateSizeAwareList<string>();
         Name = br.ReadP3DString();
         var numLights = br.ReadInt32();
-        Lights = new(numLights);
+        Lights = CreateSizeAwareList<string>(numLights);
+        Lights.SuspendNotifications();
         for (int i = 0; i < numLights; i++)
             Lights.Add(br.ReadP3DString());
+        Lights.ResumeNotifications();
     }
 
     public LightGroupChunk(string name, IList<string> lights) : base(ChunkID)
     {
+        Lights = CreateSizeAwareList<string>(lights.Count);
         Name = name;
+        Lights.SuspendNotifications();
         Lights.AddRange(lights);
+        Lights.ResumeNotifications();
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunks()

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.ComponentModel;
 using System.IO;
+using NetP3DLib.P3D.Collections;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -53,9 +54,11 @@ public class FrontendMultiSpriteChunk : NamedChunk
                 while (NumImageNames < value)
                     ImageNames.Add(string.Empty);
             }
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
         }
     }
-    public List<string> ImageNames { get; } = [];
+    public SizeAwareList<string> ImageNames { get; }
 
     public override byte[] DataBytes
     {
@@ -94,6 +97,7 @@ public class FrontendMultiSpriteChunk : NamedChunk
 
     public FrontendMultiSpriteChunk(BinaryReader br) : base(ChunkID)
     {
+        ImageNames = CreateSizeAwareList<string>();
         Name = br.ReadP3DString();
         Version = br.ReadUInt32();
         PositionX = br.ReadInt32();
@@ -106,13 +110,16 @@ public class FrontendMultiSpriteChunk : NamedChunk
         Translucency = br.ReadUInt32();
         RotationValue = br.ReadSingle();
         var numImageNames = br.ReadInt32();
-        ImageNames = new(numImageNames);
+        ImageNames = CreateSizeAwareList<string>(numImageNames);
+        ImageNames.SuspendNotifications();
         for (int i = 0; i < numImageNames; i++)
             ImageNames.Add(br.ReadP3DString());
+        ImageNames.ResumeNotifications();
     }
 
     public FrontendMultiSpriteChunk(string name, uint version, int positionX, int positionY, uint dimensionX, uint dimensionY, Justifications justificationX, Justifications justificationY, Color colour, uint translucency, float rotationValue, IList<string> imageNames) : base(ChunkID)
     {
+        ImageNames = CreateSizeAwareList<string>(imageNames.Count);
         Name = name;
         Version = version;
         PositionX = positionX;
@@ -124,7 +131,9 @@ public class FrontendMultiSpriteChunk : NamedChunk
         Colour = colour;
         Translucency = translucency;
         RotationValue = rotationValue;
+        ImageNames.SuspendNotifications();
         ImageNames.AddRange(imageNames);
+        ImageNames.ResumeNotifications();
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunks()

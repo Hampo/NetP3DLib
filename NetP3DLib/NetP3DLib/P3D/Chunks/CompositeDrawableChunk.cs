@@ -11,8 +11,21 @@ namespace NetP3DLib.P3D.Chunks;
 public class CompositeDrawableChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Composite_Drawable;
-    
-    public string SkeletonName { get; set; }
+
+    private string _skeletonName = string.Empty;
+    public string SkeletonName
+    {
+        get => _skeletonName;
+        set
+        {
+            if (_skeletonName == value)
+                return;
+
+            _skeletonName = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
 
     public override byte[] DataBytes
     {

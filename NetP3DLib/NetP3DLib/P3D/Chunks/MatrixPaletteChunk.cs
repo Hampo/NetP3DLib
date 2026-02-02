@@ -29,6 +29,8 @@ public class MatrixPaletteChunk : Chunk
                 while (NumMatrices < value)
                     Matrices.Add(default);
             }
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
         }
     }
     public List<uint> Matrices { get; } = [];

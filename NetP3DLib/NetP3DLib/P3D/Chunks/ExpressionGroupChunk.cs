@@ -23,7 +23,20 @@ public class ExpressionGroupChunk : NamedChunk
     
     [DefaultValue(0)]
     public uint Version { get; set; }
-    public string TargetName { get; set; }
+    private string _targetName = string.Empty;
+    public string TargetName
+    {
+        get => _targetName;
+        set
+        {
+            if (_targetName == value)
+                return;
+
+            _targetName = value;
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
+        }
+    }
     public uint NumStages
     {
         get => (uint)Stages.Count;
@@ -42,6 +55,8 @@ public class ExpressionGroupChunk : NamedChunk
                 while (NumStages < value)
                     Stages.Add(default);
             }
+            OnSizeChanged((int)(Size - _cachedSize));
+            _cachedSize = Size;
         }
     }
     public List<Stage> Stages { get; } = [];
