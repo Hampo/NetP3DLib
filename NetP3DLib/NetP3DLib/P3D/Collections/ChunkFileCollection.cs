@@ -6,7 +6,14 @@ namespace NetP3DLib.P3D.Collections;
 public class ChunkFileCollection : Collection<Chunk>
 {
     private readonly P3DFile _owner;
+    private uint _totalSize;
+
     public P3DFile Owner => _owner;
+    public uint TotalSize
+    {
+        get => _totalSize;
+        internal set => _totalSize = value;
+    }
 
     public ChunkFileCollection(P3DFile owner, int capacity = 0) : base(new List<Chunk>(capacity))
     {
@@ -21,7 +28,12 @@ public class ChunkFileCollection : Collection<Chunk>
         if (item.ParentChunk != null)
             throw new InvalidOperationException($"Cannot insert chunk \"{item}\" into \"{_owner}\" at index {index}. It already belongs to \"{item.ParentChunk}\".");
 
+        if (uint.MaxValue - _owner.Size < item.Size)
+            throw new OverflowException($"Adding chunk size {item.Size} would overflow owner size {_owner.Size}.");
+
         base.InsertItem(index, item);
+
+        _totalSize += item.Size;
         item.ParentFile = _owner;
         item.IndexInParent = index;
 
@@ -32,6 +44,8 @@ public class ChunkFileCollection : Collection<Chunk>
     {
         Chunk old = this[index];
         base.RemoveItem(index);
+
+        _totalSize -= old.Size;
         old.ParentFile = null;
         old.IndexInParent = -1;
 
@@ -50,24 +64,27 @@ public class ChunkFileCollection : Collection<Chunk>
 
         if (old != null)
         {
+            _totalSize -= old.Size;
             old.ParentFile = null;
             old.IndexInParent = -1;
         }
 
         base.SetItem(index, item);
+        _totalSize += item.Size;
         item.ParentFile = _owner;
         item.IndexInParent = index;
     }
 
     protected override void ClearItems()
     {
-        foreach (var child in new List<Chunk>(this))
+        foreach (var child in this)
         {
             child.ParentFile = null;
             child.IndexInParent = -1;
         }
 
         base.ClearItems();
+        _totalSize = 0;
     }
 
     public IReadOnlyList<Chunk> GetRange(int index, int count) => ((List<Chunk>)Items).GetRange(index, count);
@@ -92,15 +109,18 @@ public class ChunkFileCollection : Collection<Chunk>
         }
 
         int startIndex = Count;
-
         ((List<Chunk>)Items).AddRange(items);
 
+        uint addedSize = 0;
         int i = startIndex;
         foreach (var item in chunkList)
         {
             item.ParentFile = _owner;
             item.IndexInParent = i++;
+            addedSize += item.Size;
         }
+
+        _totalSize += addedSize;
     }
 
     public void InsertRange(int index, IEnumerable<Chunk> items)
@@ -124,8 +144,13 @@ public class ChunkFileCollection : Collection<Chunk>
 
         ((List<Chunk>)Items).InsertRange(index, chunkList);
 
+        uint addedSize = 0;
         foreach (var item in chunkList)
+        {
             item.ParentFile = _owner;
+            addedSize += item.Size;
+        }
+        _totalSize += addedSize;
 
         UpdateChildIndices(index);
     }
@@ -146,14 +171,17 @@ public class ChunkFileCollection : Collection<Chunk>
 
         var list = (List<Chunk>)Items;
 
+        uint removedSize = 0;
         for (int i = index; i < index + count; i++)
         {
             var chunk = list[i];
             chunk.ParentFile = null;
             chunk.IndexInParent = -1;
+            removedSize += chunk.Size;
         }
 
         list.RemoveRange(index, count);
+        _totalSize -= removedSize;
         if (index < Count)
             UpdateChildIndices(index);
     }
