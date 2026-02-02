@@ -37,7 +37,7 @@ public class ChunkCollection : Collection<Chunk>
         if (sizeToAdd == 0)
             return;
 
-        if (uint.MaxValue - _owner.Size < sizeToAdd)
+        if (int.MaxValue - _owner.Size < sizeToAdd)
             throw new OverflowException($"Adding size {sizeToAdd} would overflow chunk {_owner}.");
 
         var current = _owner;
@@ -45,14 +45,14 @@ public class ChunkCollection : Collection<Chunk>
         {
             if (current.ParentFile != null)
             {
-                if (uint.MaxValue - current.ParentFile.Size < sizeToAdd)
+                if (int.MaxValue - current.ParentFile.Size < sizeToAdd)
                     throw new OverflowException($"Adding size {sizeToAdd} would overflow parent file {current.ParentFile}.");
                 break;
             }
 
             if (current.ParentChunk != null)
             {
-                if (uint.MaxValue - current.ParentChunk.Size < sizeToAdd)
+                if (int.MaxValue - current.ParentChunk.Size < sizeToAdd)
                     throw new OverflowException($"Adding size {sizeToAdd} would overflow parent chunk {current.ParentChunk}.");
 
                 current = current.ParentChunk;

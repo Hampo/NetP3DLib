@@ -17,7 +17,7 @@ public class ChunkFileCollection : Collection<Chunk>
             if (value > _totalSize)
             {
                 uint diff = value - _totalSize;
-                if (uint.MaxValue - _owner.Size < diff)
+                if (int.MaxValue - _owner.Size < diff)
                     throw new OverflowException($"Size update would overflow File size.");
             }
             _totalSize = value;
@@ -37,7 +37,7 @@ public class ChunkFileCollection : Collection<Chunk>
         if (item.ParentChunk != null)
             throw new InvalidOperationException($"Cannot insert chunk \"{item}\" into \"{_owner}\" at index {index}. It already belongs to \"{item.ParentChunk}\".");
 
-        if (uint.MaxValue - _owner.Size < item.Size)
+        if (int.MaxValue - _owner.Size < item.Size)
             throw new OverflowException($"Adding chunk size {item.Size} would overflow owner size {_owner.Size}.");
 
         base.InsertItem(index, item);
@@ -76,7 +76,7 @@ public class ChunkFileCollection : Collection<Chunk>
             if (item.Size > old.Size)
             {
                 uint diff = item.Size - old.Size;
-                if (uint.MaxValue - _owner.Size < diff)
+                if (int.MaxValue - _owner.Size < diff)
                     throw new OverflowException($"Replacing chunk at index {index} would overflow owner size.");
             }
 
@@ -127,7 +127,7 @@ public class ChunkFileCollection : Collection<Chunk>
             addedSize += item.Size;
         }
 
-        if (uint.MaxValue - _owner.Size < addedSize)
+        if (int.MaxValue - _owner.Size < addedSize)
             throw new OverflowException($"Adding chunks with total size {addedSize} would overflow owner size {_owner.Size}.");
 
         int startIndex = Count;
@@ -164,7 +164,7 @@ public class ChunkFileCollection : Collection<Chunk>
             addedSize += item.Size;
         }
 
-        if (uint.MaxValue - _owner.Size < addedSize)
+        if (int.MaxValue - _owner.Size < addedSize)
             throw new OverflowException($"Adding chunks with total size {addedSize} would overflow owner size {_owner.Size}.");
 
         ((List<Chunk>)Items).InsertRange(index, chunkList);
