@@ -11,8 +11,24 @@ namespace NetP3DLib.P3D.Chunks;
 public class ImageDataChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Image_Data;
-    
-    public byte[] ImageData { get; set; }
+
+    private byte[] _imageData = [];
+    public byte[] ImageData
+    {
+        get => _imageData;
+        set
+        {
+            if (ReferenceEquals(_imageData, value))
+                return;
+
+            int oldSize = _imageData.Length;
+            _imageData = value ?? [];
+            int delta = _imageData.Length - oldSize;
+
+            OnSizeChanged(delta);
+            _cachedSize = Size;
+        }
+    }
 
     public override byte[] DataBytes
     {

@@ -417,10 +417,26 @@ public abstract class Chunk
 
 public class UnknownChunk : Chunk
 {
+    private byte[] _data = [];
     /// <summary>
     /// Property <c>Data</c> is the chunk's header data.
     /// </summary>
-    public byte[] Data { get; set; }
+    public byte[] Data
+    {
+        get => _data;
+        set
+        {
+            if (ReferenceEquals(_data, value))
+                return;
+
+            int oldSize = _data.Length;
+            _data = value ?? [];
+            int delta = _data.Length - oldSize;
+
+            OnSizeChanged(delta);
+            _cachedSize = Size;
+        }
+    }
 
     public override byte[] DataBytes => Data;
 
