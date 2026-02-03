@@ -116,62 +116,60 @@ public static class ChunkLoader
     /// </summary>
     /// <param name="br">The <see cref="BinaryReader"/> to read from. <see cref="EndianAwareBinaryReader"/> is preferred.</param>
     /// <returns>A known chunk class if one exists in <see cref="ChunkTypes"/>, or <see cref="UnknownChunk"/> otherwise.</returns>
-    public static Chunk LoadChunk(BinaryReader br, ref uint totalBytesRead)
+    public static Chunk LoadChunk(BinaryReader br, out uint bytesRead)
     {
         uint chunkId = br.ReadUInt32();
         uint headerSize = br.ReadUInt32() - P3DFile.HEADER_SIZE;
         uint chunkSize = br.ReadUInt32();
 
-        byte[] headerData = br.ReadBytes((int)headerSize);
-
         Chunk c;
 
-        uint actualHeaderSize = headerSize;
+        uint actualHeaderSize;
         if (ChunkTypes.TryGetValue(chunkId, out var entry))
         {
             var (chunkType, chunkConstructor) = entry;
 
-            Endianness endianness;
-            if (br is EndianAwareBinaryReader eabr)
-                endianness = eabr.Endianness;
-            else
-                endianness = BinaryExtensions.DefaultEndian;
+            Endianness endianness = br is EndianAwareBinaryReader eabr ? eabr.Endianness : BinaryExtensions.DefaultEndian;
 
-            using MemoryStream ms = new(headerData);
-            using EndianAwareBinaryReader br2 = new(ms, endianness);
+            using var bs = new BoundedStream(br.BaseStream, headerSize);
+            using var br2 = new EndianAwareBinaryReader(bs, true, endianness);
+
             c = chunkConstructor(br2);
-            actualHeaderSize = (uint)ms.Position;
+            actualHeaderSize = (uint)bs.Position;
         }
         else
         {
-            c = new UnknownChunk(chunkId, headerData);
+            c = new UnknownChunk(chunkId, br.ReadBytes((int)headerSize));
+            actualHeaderSize = headerSize;
 #if DEBUG
             UnknownChunks.Add(chunkId);
 #endif
         }
 
+#if DEBUG
         if (headerSize != actualHeaderSize)
         {
-            var diff = headerSize - actualHeaderSize;
-#if DEBUG
             if (chunkId != (uint)ChunkIdentifier.Physics_Object && chunkId != (uint)ChunkIdentifier.Animation_Header)
                 Debugger.Break();
-#endif
-            br.BaseStream.Position -= diff;
         }
+#endif
 
-        uint bytesRead = actualHeaderSize + P3DFile.HEADER_SIZE;
+        bytesRead = actualHeaderSize + P3DFile.HEADER_SIZE;
         if (bytesRead < chunkSize)
         {
-            c.Children = new(c, (int)(chunkSize - bytesRead) / 12);
+            c.Children = new(c, (int)((chunkSize - bytesRead) / 12));
             while (bytesRead < chunkSize)
             {
-                Chunk subChunk = LoadChunk(br, ref bytesRead);
+                Chunk subChunk = LoadChunk(br, out var childBytesRead);
+
+                if (childBytesRead == 0)
+                    throw new InvalidDataException("Child chunk consumed 0 bytes.");
+
+                bytesRead += childBytesRead;
                 c.Children.Add(subChunk);
             }
         }
-            
-        totalBytesRead += bytesRead;
+
         return c;
     }
 

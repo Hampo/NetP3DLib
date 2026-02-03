@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NetP3DLib.P3D.Extensions;
+using System;
 using System.IO;
 using System.Text;
 
@@ -8,32 +9,31 @@ public class EndianAwareBinaryReader : BinaryReader
 {
     public Endianness Endianness { get; } = BitConverter.IsLittleEndian ? Endianness.Little : Endianness.Big;
 
-    public EndianAwareBinaryReader(Stream input) : base(input)
-    {
-    }
-
-    public EndianAwareBinaryReader(Stream input, Encoding encoding) : base(input, encoding)
-    {
-    }
-
-    public EndianAwareBinaryReader(Stream input, Encoding encoding, bool leaveOpen) : base(input, encoding, leaveOpen)
-    {
-    }
-
-    public EndianAwareBinaryReader(Stream input, Endianness endianness) : base(input)
-    {
-        Endianness = endianness;
-    }
-
-    public EndianAwareBinaryReader(Stream input, Encoding encoding, Endianness endianness) : base(input, encoding)
-    {
-        Endianness = endianness;
-    }
-
     public EndianAwareBinaryReader(Stream input, Encoding encoding, bool leaveOpen, Endianness endianness) : base(input, encoding, leaveOpen)
     {
         Endianness = endianness;
     }
+
+    public EndianAwareBinaryReader(Stream input) : this(input, Encoding.UTF8, leaveOpen: false, BinaryExtensions.DefaultEndian)
+    {}
+
+    public EndianAwareBinaryReader(Stream input, bool leaveOpen) : this(input, Encoding.UTF8, leaveOpen, BinaryExtensions.DefaultEndian)
+    {}
+
+    public EndianAwareBinaryReader(Stream input, Encoding encoding) : this(input, encoding, leaveOpen: false, BinaryExtensions.DefaultEndian)
+    {}
+
+    public EndianAwareBinaryReader(Stream input, Encoding encoding, bool leaveOpen) : this(input, encoding, leaveOpen, BinaryExtensions.DefaultEndian)
+    {}
+
+    public EndianAwareBinaryReader(Stream input, Endianness endianness) : this(input, Encoding.UTF8, leaveOpen: false, endianness)
+    {}
+
+    public EndianAwareBinaryReader(Stream input, bool leaveOpen, Endianness endianness) : this(input, Encoding.UTF8, leaveOpen, endianness)
+    {}
+
+    public EndianAwareBinaryReader(Stream input, Encoding encoding, Endianness endianness) : this(input, encoding, leaveOpen: false, endianness)
+    {}
 
     public override short ReadInt16() => ReadInt16(Endianness);
 

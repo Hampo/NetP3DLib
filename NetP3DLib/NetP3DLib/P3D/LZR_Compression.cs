@@ -7,111 +7,6 @@ namespace NetP3DLib.P3D;
 
 public static class LZR_Compression
 {
-    private static List<byte> DecompressBlock(BinaryReader br, uint size)
-    {
-        List<byte> output = new((int)size);
-
-        int written = 0;
-
-        while (written < size)
-        {
-            byte code = br.ReadByte();
-
-            if (code > 15)
-            {
-                int matchLength = code & 15;
-                byte tmp;
-
-                if (matchLength == 0)
-                {
-                    matchLength = 15;
-                    tmp = br.ReadByte();
-                    while (tmp == 0)
-                    {
-                        matchLength += 255;
-                        tmp = br.ReadByte();
-                    }
-                    matchLength += tmp;
-                }
-
-                tmp = br.ReadByte();
-                int offset = (code >> 4) | tmp << 4;
-                int matchPos = written - offset;
-
-                int len = matchLength >> 2;
-                matchLength -= len << 2;
-
-                do
-                {
-                    output.Add(output[matchPos]);
-                    written++;
-                    matchPos++;
-                    output.Add(output[matchPos]);
-                    written++;
-                    matchPos++;
-                    output.Add(output[matchPos]);
-                    written++;
-                    matchPos++;
-                    output.Add(output[matchPos]);
-                    written++;
-                    matchPos++;
-
-                    len--;
-                } while (len != 0);
-
-                while (matchLength != 0)
-                {
-                    output.Add(output[matchPos]);
-                    written++;
-                    matchPos++;
-
-                    matchLength--;
-                }
-            }
-            else
-            {
-                int runLength = code;
-
-                if (runLength == 0)
-                {
-                    code = br.ReadByte();
-                    while (code == 0)
-                    {
-                        runLength += 255;
-                        code = br.ReadByte();
-                    }
-                    runLength += code;
-
-                    output.AddRange(br.ReadBytes(15));
-                    written += 15;
-                }
-
-                output.AddRange(br.ReadBytes(runLength));
-                written += runLength;
-            }
-        }
-
-        return output;
-    }
-
-    private static List<byte> Decompress(BinaryReader file, uint UncompressedLength)
-    {
-        uint decompressedLength = 0;
-        List<byte> output = [];
-        uint compressedLength;
-        uint uncompressedBlock;
-        long startPos;
-        while (decompressedLength < UncompressedLength)
-        {
-            compressedLength = file.ReadUInt32();
-            uncompressedBlock = file.ReadUInt32();
-            startPos = file.BaseStream.Position;
-            output.AddRange(DecompressBlock(file, uncompressedBlock));
-            decompressedLength += uncompressedBlock;
-            file.BaseStream.Seek(startPos + compressedLength, SeekOrigin.Begin);
-        }
-        return output;
-    }
 
     /// <summary>
     /// Reads <paramref name="file"/>, and decompresses it if a compressed Pure3D File is detected.
@@ -128,11 +23,102 @@ public static class LZR_Compression
             return file.ReadBytes((int)file.BaseStream.Length);
         }
 
-        uint length = file.ReadUInt32();
-        List<byte> decompressed = Decompress(file, length);
-        return [.. decompressed];
+        uint uncompressedLength = file.ReadUInt32();
+        return Decompress(file, uncompressedLength);
     }
 
+    private static byte[] Decompress(BinaryReader file, uint uncompressedLength)
+    {
+        byte[] output = new byte[uncompressedLength];
+        uint decompressedLength = 0;
+
+        while (decompressedLength < uncompressedLength)
+        {
+            uint compressedLength = file.ReadUInt32();
+            uint blockSize = file.ReadUInt32();
+            long blockStart = file.BaseStream.Position;
+
+            DecompressBlock(file, output, decompressedLength, blockSize);
+            decompressedLength += blockSize;
+
+            file.BaseStream.Seek(blockStart + compressedLength, SeekOrigin.Begin);
+        }
+        return output;
+    }
+
+    private static void DecompressBlock(BinaryReader br, byte[] output, uint offset, uint size)
+    {
+        int written = 0;
+
+        while (written < size)
+        {
+            byte code = br.ReadByte();
+
+            if (code > 15)
+            {
+                int matchLength = code & 15;
+
+                if (matchLength == 0)
+                {
+                    matchLength = 15;
+                    byte tmp = br.ReadByte();
+                    while (tmp == 0)
+                    {
+                        matchLength += 255;
+                        tmp = br.ReadByte();
+                    }
+                    matchLength += tmp;
+                }
+
+                byte tmpByte = br.ReadByte();
+                int matchOffset = (code >> 4) | tmpByte << 4;
+                int matchPos = (int)(offset + written - matchOffset);
+
+                int len = matchLength >> 2;
+                matchLength -= len << 2;
+
+                do
+                {
+                    output[(int)(offset + written++)] = output[matchPos++];
+                    output[(int)(offset + written++)] = output[matchPos++];
+                    output[(int)(offset + written++)] = output[matchPos++];
+                    output[(int)(offset + written++)] = output[matchPos++];
+
+                    len--;
+                } while (len != 0);
+
+                while (matchLength != 0)
+                {
+                    output[(int)(offset + written++)] = output[matchPos++];
+
+                    matchLength--;
+                }
+            }
+            else
+            {
+                int runLength = code;
+
+                if (runLength == 0)
+                {
+                    byte tmp = br.ReadByte();
+                    while (tmp == 0)
+                    {
+                        runLength += 255;
+                        tmp = br.ReadByte();
+                    }
+                    runLength += tmp;
+
+                    br.Read(output, (int)(offset + written), 15);
+                    written += 15;
+                }
+
+                br.Read(output, (int)(offset + written), runLength);
+                written += runLength;
+            }
+        }
+    }
+
+    // TODO: Stop using `List<byte>` for compression
     private const int MINIMUM_MATCH_LENGTH = 4;
     private const int LZR_BLOCK_SIZE = 4096;
     private const int TREE_ROOT = LZR_BLOCK_SIZE;

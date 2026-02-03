@@ -140,23 +140,25 @@ public class P3DFile
         if (!File.Exists(filePath))
             throw new FileNotFoundException($"Could not find the specified file.", filePath);
 
-        FileStream? fs = null;
-        MemoryStream? ms = null;
+        using var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+
+        if (fs.Length < HEADER_SIZE)
+            throw new InvalidDataException($"Specified file too short. Must be at least {HEADER_SIZE} bytes.");
+        if (fs.Length > int.MaxValue)
+            throw new InvalidDataException($"Specified file too long. Must be fewer than {int.MaxValue} bytes.");
+
+        byte[] signatureBuffer = new byte[4];
+        if (fs.Read(signatureBuffer, 0, 4) != 4)
+            throw new InvalidDataException("Failed to read file signature.");
+        uint signature = BitConverter.ToUInt32(signatureBuffer, 0);
+
+        var endianness = (signature == SIGNATURE_SWAP || signature == COMPRESSED_SIGNATURE_SWAP) ? BinaryExtensions.SwappedEndian : BinaryExtensions.DefaultEndian;
+
         EndianAwareBinaryReader? br = null;
+        MemoryStream? ms = null;
+
         try
         {
-            fs = new(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
-            if (fs.Length < HEADER_SIZE)
-                throw new InvalidDataException($"Specified file too short. Must be at least {HEADER_SIZE} bytes.");
-            if (fs.Length > int.MaxValue)
-                throw new InvalidDataException($"Specified file too long. Must be fewer than {int.MaxValue} bytes.");
-
-            byte[] signatureBuffer = new byte[4];
-            fs.Read(signatureBuffer, 0, 4);
-            uint signature = BitConverter.ToUInt32(signatureBuffer, 0);
-
-            var endianness = (signature == SIGNATURE_SWAP || signature == COMPRESSED_SIGNATURE_SWAP) ? BinaryExtensions.SwappedEndian : BinaryExtensions.DefaultEndian;
-
             switch (signature)
             {
                 case SIGNATURE:
@@ -169,8 +171,9 @@ public class P3DFile
                     using (EndianAwareBinaryReader br2 = new(fs, endianness))
                     {
                         byte[] decryptedBytes = LZR_Compression.DecompressFile(br2);
-                        ms = new(decryptedBytes);
+                        ms = new(decryptedBytes, true);
                         br = new(ms, endianness);
+
                         if (br.ReadUInt32() != SIGNATURE)
                             throw new InvalidDataException($"Decompressed file signature 0x{signature:X} is invalid.");
                     }
@@ -181,7 +184,7 @@ public class P3DFile
 
             uint headerSize = br.ReadUInt32();
             if (headerSize != HEADER_SIZE)
-                throw new InvalidDataException($"P3D File header size incorrect. Expected 12, read {headerSize}.");
+                throw new InvalidDataException($"P3D File header size incorrect. Expected {HEADER_SIZE}, read {headerSize}.");
 
             uint fileSize = br.ReadUInt32();
             if (fileSize != br.BaseStream.Length)
@@ -193,7 +196,10 @@ public class P3DFile
                 Chunks = new(this, (int)((fileSize - bytesRead) / 12));
                 while (bytesRead < fileSize)
                 {
-                    Chunk c = ChunkLoader.LoadChunk(br, ref bytesRead);
+                    Chunk c = ChunkLoader.LoadChunk(br, out var childBytesRead);
+                    if (childBytesRead == 0)
+                        throw new InvalidDataException("Child chunk consumed 0 bytes.");
+                    bytesRead += childBytesRead;
                     Chunks.Add(c);
                 }
             }
@@ -204,14 +210,8 @@ public class P3DFile
         }
         finally
         {
-            br?.Close();
             br?.Dispose();
-            
-            ms?.Close();
             ms?.Dispose();
-
-            fs?.Close();
-            fs?.Dispose();
         }
     }
 
