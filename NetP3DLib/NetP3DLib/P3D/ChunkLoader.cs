@@ -116,7 +116,7 @@ public static class ChunkLoader
     /// </summary>
     /// <param name="br">The <see cref="BinaryReader"/> to read from. <see cref="EndianAwareBinaryReader"/> is preferred.</param>
     /// <returns>A known chunk class if one exists in <see cref="ChunkTypes"/>, or <see cref="UnknownChunk"/> otherwise.</returns>
-    public static Chunk LoadChunk(BinaryReader br)
+    public static Chunk LoadChunk(BinaryReader br, ref uint totalBytesRead)
     {
         uint chunkId = br.ReadUInt32();
         uint headerSize = br.ReadUInt32() - P3DFile.HEADER_SIZE;
@@ -166,12 +166,12 @@ public static class ChunkLoader
             c.Children = new(c, (int)(chunkSize - bytesRead) / 12);
             while (bytesRead < chunkSize)
             {
-                Chunk subChunk = LoadChunk(br);
+                Chunk subChunk = LoadChunk(br, ref bytesRead);
                 c.Children.Add(subChunk);
-                bytesRead += subChunk.Size;
             }
         }
             
+        totalBytesRead += bytesRead;
         return c;
     }
 

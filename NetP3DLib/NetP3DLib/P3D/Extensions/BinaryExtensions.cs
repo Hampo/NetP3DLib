@@ -1,5 +1,6 @@
 ﻿using NetP3DLib.IO;
 using NetP3DLib.Numerics;
+using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using System;
 using System.Drawing;
@@ -20,6 +21,20 @@ public static class BinaryExtensions
     /// </summary>
     public static Endianness SwappedEndian { get; } = BitConverter.IsLittleEndian ? Endianness.Big : Endianness.Little;
 
+    private static int GetP3DStringAlignedLength(int byteLength)
+    {
+        int alignLength = P3DFile.StringPaddingMode == StringPaddingMode.IncludeLength ? byteLength + 1 : byteLength;
+
+        if (alignLength < 252)
+        {
+            int diff = alignLength & 3;
+            if (diff > 0)
+                alignLength += 4 - diff;
+        }
+
+        return P3DFile.StringPaddingMode == StringPaddingMode.IncludeLength ? alignLength - 1 : alignLength;
+    }
+
     /// <summary>
     /// Gets the byte array for a Pure3D string.
     /// <para>The format is 1 byte for the string length, followed by that many bytes representing the string.</para>
@@ -34,17 +49,10 @@ public static class BinaryExtensions
             throw new InvalidP3DStringException(null, nameof(value), value);
 
         byte[] bytes = Encoding.UTF8.GetBytes(value);
-        int length = bytes.Length;
+        int paddedLength = GetP3DStringAlignedLength(bytes.Length);
 
-        if (length < 252)
-        {
-            int diff = length & 3;
-            if (diff > 0)
-                length += 4 - diff;
-        }
-
-        byte[] buffer = new byte[length + 1];
-        buffer[0] = (byte)length;
+        byte[] buffer = new byte[paddedLength + 1];
+        buffer[0] = (byte)paddedLength;
         bytes.CopyTo(buffer, 1);
         return buffer;
     }
@@ -62,16 +70,10 @@ public static class BinaryExtensions
         if (!value.IsValidP3DString())
             throw new InvalidP3DStringException(null, nameof(value), value);
 
-        int length = Encoding.UTF8.GetByteCount(value);
+        int byteLength = Encoding.UTF8.GetByteCount(value);
+        int paddedLength = GetP3DStringAlignedLength(byteLength);
 
-        if (length < 252)
-        {
-            int diff = length & 3;
-            if (diff > 0)
-                length += 4 - diff;
-        }
-
-        return (uint)length + 1;
+        return (uint)paddedLength + 1;
     }
 
     /// <summary>
@@ -101,18 +103,12 @@ public static class BinaryExtensions
             throw new InvalidP3DStringException(null, nameof(value), value);
 
         byte[] bytes = Encoding.UTF8.GetBytes(value);
-        int length = bytes.Length;
+        int paddedLength = GetP3DStringAlignedLength(bytes.Length);
 
-        if (length < 252)
-        {
-            int diff = length & 3;
-            if (diff > 0)
-                length += 4 - diff;
-        }
+        bw.Write((byte)paddedLength);
+        bw.Write(bytes);
 
-        bw.Write((byte)length);
-        bw.Write(bytes, 0, bytes.Length);
-        int padding = length - bytes.Length;
+        int padding = paddedLength - bytes.Length;
         for (int i = 0; i < padding; i++)
             bw.Write((byte)0);
     }

@@ -20,6 +20,11 @@ public class P3DFile
     public const uint COMPRESSED_SIGNATURE_SWAP = 0x5033445A;
     public const uint HEADER_SIZE = sizeof(uint) + sizeof(uint) + sizeof(uint); // ID + HeaderLength + ChunkLength
 
+    /// <summary>
+    /// Which padding mode to use for P3D strings.
+    /// </summary>
+    public static StringPaddingMode StringPaddingMode { get; set; } = StringPaddingMode.LegacyExcludeLength;
+
     public ChunkFileCollection Chunks { get; private set; }
     public ReadOnlyCollection<Chunk> AllChunks
     {
@@ -188,9 +193,8 @@ public class P3DFile
                 Chunks = new(this, (int)((fileSize - bytesRead) / 12));
                 while (bytesRead < fileSize)
                 {
-                    Chunk c = ChunkLoader.LoadChunk(br);
+                    Chunk c = ChunkLoader.LoadChunk(br, ref bytesRead);
                     Chunks.Add(c);
-                    bytesRead += c.Size;
                 }
             }
             else
