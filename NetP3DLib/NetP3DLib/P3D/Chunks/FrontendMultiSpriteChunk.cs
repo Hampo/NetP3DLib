@@ -136,14 +136,11 @@ public class FrontendMultiSpriteChunk : NamedChunk
         ImageNames.ResumeNotifications();
     }
 
-    public override IEnumerable<InvalidP3DException> ValidateChunks()
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
         foreach (var imageName in ImageNames)
             if (!imageName.IsValidP3DString())
                 yield return new InvalidP3DStringException(this, nameof(ImageNames), imageName);
-
-        foreach (var error in base.ValidateChunks())
-            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

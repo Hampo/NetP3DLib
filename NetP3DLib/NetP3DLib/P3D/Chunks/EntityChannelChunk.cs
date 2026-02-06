@@ -121,7 +121,7 @@ public class EntityChannelChunk : ParamChunk
         Values.ResumeNotifications();
     }
 
-    public override IEnumerable<InvalidP3DException> ValidateChunks()
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
         if (Frames.Count != Values.Count)
             yield return new InvalidP3DException(this, $"{nameof(Frames)} and {nameof(Values)} must have equal counts.");
@@ -129,9 +129,6 @@ public class EntityChannelChunk : ParamChunk
         foreach (var value in Values)
             if (!value.IsValidP3DString())
                 yield return new InvalidP3DStringException(this, nameof(Values), value);
-
-        foreach (var error in base.ValidateChunks())
-            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

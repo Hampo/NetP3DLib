@@ -53,13 +53,10 @@ public class ShaderTextureParameterChunk : ParamChunk
         Value = value;
     }
 
-    public override IEnumerable<InvalidP3DException> ValidateChunks()
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
         if (!Value.IsValidP3DString())
             yield return new InvalidP3DStringException(this, nameof(Value), Value);
-
-        foreach (var error in base.ValidateChunks())
-            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

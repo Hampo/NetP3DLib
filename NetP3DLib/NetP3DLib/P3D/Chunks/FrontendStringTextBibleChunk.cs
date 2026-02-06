@@ -67,16 +67,13 @@ public class FrontendStringTextBibleChunk : Chunk
         StringID = stringID;
     }
 
-    public override IEnumerable<InvalidP3DException> ValidateChunks()
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
         if (!BibleName.IsValidP3DString())
             yield return new InvalidP3DStringException(this, nameof(BibleName), BibleName);
 
         if (!StringID.IsValidP3DString())
             yield return new InvalidP3DStringException(this, nameof(StringID), StringID);
-
-        foreach (var error in base.ValidateChunks())
-            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

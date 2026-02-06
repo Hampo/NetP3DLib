@@ -98,13 +98,10 @@ public class ExpressionGroupChunk : NamedChunk
         Stages.AddRange(stages);
     }
 
-    public override IEnumerable<InvalidP3DException> ValidateChunks()
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
         if (!TargetName.IsValidP3DString())
             yield return new InvalidP3DStringException(this, nameof(TargetName), TargetName);
-
-        foreach (var error in base.ValidateChunks())
-            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

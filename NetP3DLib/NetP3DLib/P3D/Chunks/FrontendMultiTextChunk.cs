@@ -126,13 +126,10 @@ public class FrontendMultiTextChunk : NamedChunk
         CurrentText = currentText;
     }
 
-    public override IEnumerable<InvalidP3DException> ValidateChunks()
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
         if (!TextStyleName.IsValidP3DString())
             yield return new InvalidP3DStringException(this, nameof(TextStyleName), TextStyleName);
-
-        foreach (var error in base.ValidateChunks())
-            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

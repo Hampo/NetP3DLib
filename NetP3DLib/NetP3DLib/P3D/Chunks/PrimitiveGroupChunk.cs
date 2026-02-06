@@ -173,13 +173,10 @@ public class PrimitiveGroupChunk : Chunk
         VertexAnimationMask = vertexAnimationMask;
     }
 
-    public override IEnumerable<InvalidP3DException> ValidateChunks()
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
 		if (!ShaderName.IsValidP3DString())
 			yield return new InvalidP3DStringException(this, nameof(ShaderName), ShaderName);
-
-        foreach (var error in base.ValidateChunks())
-            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

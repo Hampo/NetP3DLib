@@ -47,13 +47,10 @@ public class SetChunk : NamedChunk
         Version = version;
     }
 
-    public override IEnumerable<InvalidP3DException> ValidateChunks()
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
         if (GetChildCount(ChunkIdentifier.Texture) > byte.MaxValue)
             yield return new InvalidP3DException(this, $"The max number of child textures is {byte.MinValue}.");
-
-        foreach (var error in base.ValidateChunks())
-            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

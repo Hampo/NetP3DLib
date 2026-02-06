@@ -108,7 +108,7 @@ public class OldSpriteEmitterChunk : NamedChunk
         TextureFrameRate = textureFrameRate;
     }
 
-    public override IEnumerable<InvalidP3DException> ValidateChunks()
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
         if (!ShaderName.IsValidP3DString())
             yield return new InvalidP3DStringException(this, nameof(ShaderName), ShaderName);
@@ -118,9 +118,6 @@ public class OldSpriteEmitterChunk : NamedChunk
 
         if (!TextureAnimMode.IsValidFourCC())
             yield return new InvalidP3DFourCCException(this,nameof(TextureAnimMode), TextureAnimMode);
-
-        foreach (var error in base.ValidateChunks())
-            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

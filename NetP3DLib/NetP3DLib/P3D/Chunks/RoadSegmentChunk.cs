@@ -62,13 +62,10 @@ public class RoadSegmentChunk : NamedChunk
         Scale = scale;
     }
 
-    public override IEnumerable<InvalidP3DException> ValidateChunks()
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
         if (!RoadDataSegment.IsValidP3DString())
             yield return new InvalidP3DStringException(this, nameof(RoadDataSegment), RoadDataSegment);
-
-        foreach (var error in base.ValidateChunks())
-            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

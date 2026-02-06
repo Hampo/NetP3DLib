@@ -105,13 +105,10 @@ public class ExpressionChunk : NamedChunk
         Indices.AddRange(indices);
     }
 
-    public override IEnumerable<InvalidP3DException> ValidateChunks()
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
         if (Keys.Count != Indices.Count)
             yield return new InvalidP3DException(this, $"{nameof(Keys)} and {nameof(Indices)} must have equal counts.");
-
-        foreach (var error in base.ValidateChunks())
-            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

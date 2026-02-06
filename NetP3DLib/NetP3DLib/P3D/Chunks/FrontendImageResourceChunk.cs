@@ -60,13 +60,10 @@ public class FrontendImageResourceChunk : NamedChunk
         Filename = filename;
     }
 
-    public override IEnumerable<InvalidP3DException> ValidateChunks()
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
         if (!Filename.IsValidP3DString())
             yield return new InvalidP3DStringException(this, nameof(Filename), Filename);
-
-        foreach (var error in base.ValidateChunks())
-            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

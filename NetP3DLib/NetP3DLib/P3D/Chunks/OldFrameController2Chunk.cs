@@ -99,16 +99,13 @@ public class OldFrameController2Chunk : NamedChunk
         AnimationName = animationName;
     }
 
-    public override IEnumerable<InvalidP3DException> ValidateChunks()
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
         if (!HierarchyName.IsValidP3DString())
             yield return new InvalidP3DStringException(this, nameof(HierarchyName), HierarchyName);
 
         if (!AnimationName.IsValidP3DString())
             yield return new InvalidP3DStringException(this, nameof(AnimationName), AnimationName);
-
-        foreach (var error in base.ValidateChunks())
-            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

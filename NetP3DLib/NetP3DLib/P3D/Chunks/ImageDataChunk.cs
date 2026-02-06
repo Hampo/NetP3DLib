@@ -55,13 +55,10 @@ public class ImageDataChunk : Chunk
         ImageData = (byte[])imageData.Clone();
     }
 
-    public override IEnumerable<InvalidP3DException> ValidateChunks()
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
         if (ImageData.LongLength > int.MaxValue)
             yield return new InvalidP3DException(this, $"The max length of {nameof(ImageData)} is {int.MaxValue} bytes.");
-
-        foreach (var error in base.ValidateChunks())
-            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

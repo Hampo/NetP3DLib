@@ -89,16 +89,13 @@ public class ExpressionMixerChunk : NamedChunk
         ExpressionGroupName = expressionGroupName;
     }
 
-    public override IEnumerable<InvalidP3DException> ValidateChunks()
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
         if (!TargetName.IsValidP3DString())
             yield return new InvalidP3DStringException(this, nameof(TargetName), TargetName);
 
         if (!ExpressionGroupName.IsValidP3DString())
             yield return new InvalidP3DStringException(this, nameof(ExpressionGroupName), ExpressionGroupName);
-
-        foreach (var error in base.ValidateChunks())
-            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

@@ -69,13 +69,10 @@ public class SplineChunk : NamedChunk
         Positions.AddRange(positions);
     }
 
-    public override IEnumerable<InvalidP3DException> ValidateChunks()
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
         if (Children.Count != 1 || Children[0].ID != (uint)ChunkIdentifier.Rail_Cam)
             yield return new InvalidP3DException(this, $"Children must be one Rail Cam child chunk.");
-
-        foreach (var error in base.ValidateChunks())
-            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

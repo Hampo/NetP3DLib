@@ -119,7 +119,7 @@ public class FrontendProjectChunk : NamedChunk
         ScreenPath = screenPath;
     }
 
-    public override IEnumerable<InvalidP3DException> ValidateChunks()
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
         if (!Platform.IsValidP3DString())
             yield return new InvalidP3DStringException(this, nameof(Platform), Platform);
@@ -132,9 +132,6 @@ public class FrontendProjectChunk : NamedChunk
 
         if (!ScreenPath.IsValidP3DString())
             yield return new InvalidP3DStringException(this, nameof(ScreenPath), ScreenPath);
-
-        foreach (var error in base.ValidateChunks())
-            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

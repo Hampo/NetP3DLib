@@ -61,13 +61,10 @@ public class MultiControllerTrackChunk : NamedChunk
         Type = type;
     }
 
-    public override IEnumerable<InvalidP3DException> ValidateChunks()
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
         if (!Type.IsValidFourCC())
             yield return new InvalidP3DFourCCException(this,nameof(Type), Type);
-
-        foreach (var error in base.ValidateChunks())
-            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

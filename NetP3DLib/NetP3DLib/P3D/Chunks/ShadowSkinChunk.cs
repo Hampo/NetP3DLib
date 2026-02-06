@@ -67,13 +67,10 @@ public class ShadowSkinChunk : NamedChunk
         NumTriangles = numTriangles;
     }
 
-    public override IEnumerable<InvalidP3DException> ValidateChunks()
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
         if (!SkeletonName.IsValidP3DString())
             yield return new InvalidP3DStringException(this, nameof(SkeletonName), SkeletonName);
-
-        foreach (var error in base.ValidateChunks())
-            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

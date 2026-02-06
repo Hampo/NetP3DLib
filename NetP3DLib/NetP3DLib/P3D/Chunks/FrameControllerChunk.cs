@@ -121,7 +121,7 @@ public class FrameControllerChunk : NamedChunk
         AnimationName = animationName;
     }
 
-    public override IEnumerable<InvalidP3DException> ValidateChunks()
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
         if (!Type.IsValidFourCC())
             yield return new InvalidP3DFourCCException(this,nameof(Type), Type);
@@ -134,9 +134,6 @@ public class FrameControllerChunk : NamedChunk
 
         if (!AnimationName.IsValidP3DString())
             yield return new InvalidP3DStringException(this, nameof(AnimationName), AnimationName);
-
-        foreach (var error in base.ValidateChunks())
-            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

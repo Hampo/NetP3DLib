@@ -119,7 +119,7 @@ public class RoadChunk : NamedChunk
         Shortcut = shortcut;
     }
 
-    public override IEnumerable<InvalidP3DException> ValidateChunks()
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
         if (!StartIntersection.IsValidP3DString())
             yield return new InvalidP3DStringException(this, nameof(StartIntersection), StartIntersection);
@@ -132,9 +132,6 @@ public class RoadChunk : NamedChunk
         foreach (var child in Children)
             if (child.ID != (uint)ChunkIdentifier.Road_Segment)
                 yield return new InvalidP3DException(this, $"Child chunk {child} is invalid. Child chunks must be an instance of Road Segment.");
-
-        foreach (var error in base.ValidateChunks())
-            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

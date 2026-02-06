@@ -113,13 +113,10 @@ public class ShaderChunk : NamedChunk
         VertexMask = vertexMask;
     }
 
-    public override IEnumerable<InvalidP3DException> ValidateChunks()
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
         if (!PddiShaderName.IsValidP3DString())
             yield return new InvalidP3DStringException(this, nameof(PddiShaderName), PddiShaderName);
-
-        foreach (var error in base.ValidateChunks())
-            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

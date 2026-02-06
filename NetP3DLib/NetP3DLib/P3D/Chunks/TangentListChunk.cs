@@ -66,13 +66,10 @@ public class TangentListChunk : Chunk
         Tangents.AddRange(tangents);
     }
 
-    public override IEnumerable<InvalidP3DException> ValidateChunks()
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
         if (ParentChunk is OldPrimitiveGroupChunk oldPrimitiveGroup && oldPrimitiveGroup.NumVertices != NumTangents)
             yield return new InvalidP3DException(this, $"Num Tangents value {NumTangents} does not match parent Num Vertices value {oldPrimitiveGroup.NumVertices}.");
-
-        foreach (var error in base.ValidateChunks())
-            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

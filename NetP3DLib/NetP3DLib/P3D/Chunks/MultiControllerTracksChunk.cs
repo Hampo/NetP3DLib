@@ -105,14 +105,11 @@ public class MultiControllerTracksChunk : Chunk
         OnSizeChanged(delta);
     }
 
-    public override IEnumerable<InvalidP3DException> ValidateChunks()
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
         foreach (var track in Tracks)
             foreach (var error in track.Validate(this))
                 yield return error;
-
-        foreach (var error in base.ValidateChunks())
-            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

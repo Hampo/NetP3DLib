@@ -151,13 +151,10 @@ public class PhotonMapChunk : NamedChunk
         Photons.AddRange(photons);
     }
 
-    public override IEnumerable<InvalidP3DException> ValidateChunks()
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
         if (Lights.Count != LightScales.Count)
             yield return new InvalidP3DException(this, $"{nameof(Lights)} and {nameof(LightScales)} must have equal counts.");
-
-        foreach (var error in base.ValidateChunks())
-            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

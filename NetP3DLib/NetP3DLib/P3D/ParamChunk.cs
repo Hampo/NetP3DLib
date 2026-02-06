@@ -28,13 +28,10 @@ public abstract class ParamChunk : Chunk
 
     public ParamChunk(ChunkIdentifier ID) : base(ID) { }
 
-    public override IEnumerable<InvalidP3DException> ValidateChunks()
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
         if (!Param.IsValidFourCC())
             yield return new InvalidP3DFourCCException(this,nameof(Param), Param);
-
-        foreach (var error in base.ValidateChunks())
-            yield return error;
     }
 
     public override string ToString() => $"\"{Param}\" ({GetChunkType(this)} (0x{ID:X}))";

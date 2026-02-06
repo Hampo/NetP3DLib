@@ -128,7 +128,7 @@ public class IntersectChunk : Chunk
         Normals.AddRange(normals);
     }
 
-    public override IEnumerable<InvalidP3DException> ValidateChunks()
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
         if (Indices.Count % 3 != 0)
             yield return new InvalidP3DException(this, $"The number of {nameof(Indices)} must be divisible by 3.");
@@ -144,9 +144,6 @@ public class IntersectChunk : Chunk
         var terrainTypeListChunk = GetFirstChunkOfType<TerrainTypeListChunk>();
         if (terrainTypeListChunk != null && terrainTypeListChunk.NumTypes != NumNormals)
             yield return new InvalidP3DException(this, $"The number of {nameof(Normals)} does not match the number of terrain types ({terrainTypeListChunk.NumTypes}).");
-
-        foreach (var error in base.ValidateChunks())
-            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

@@ -26,13 +26,10 @@ public abstract class NamedChunk : Chunk
 
     public NamedChunk(ChunkIdentifier ID) : base(ID) { }
 
-    public override IEnumerable<InvalidP3DException> ValidateChunks()
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
         if (!Name.IsValidP3DString())
             yield return new InvalidP3DStringException(this, nameof(Name), Name);
-
-        foreach (var error in base.ValidateChunks())
-            yield return error;
     }
 
     public override string ToString() => $"\"{Name}\" ({GetChunkType(this)} (0x{ID:X}))";

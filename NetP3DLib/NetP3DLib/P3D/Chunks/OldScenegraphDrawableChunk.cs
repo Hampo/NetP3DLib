@@ -63,13 +63,10 @@ public class OldScenegraphDrawableChunk : NamedChunk
         IsTranslucent = isTranslucent;
     }
 
-    public override IEnumerable<InvalidP3DException> ValidateChunks()
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
         if (!DrawableName.IsValidP3DString())
             yield return new InvalidP3DStringException(this, nameof(DrawableName), DrawableName);
-
-        foreach (var error in base.ValidateChunks())
-            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

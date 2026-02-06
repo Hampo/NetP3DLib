@@ -68,7 +68,7 @@ public class StatePropStateDataV1Chunk : NamedChunk
         OutFrame = outFrame;
     }
 
-    public override IEnumerable<InvalidP3DException> ValidateChunks()
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
         if (Children.Count == 0)
             yield return new InvalidP3DException(this, $"There must be at least one child chunk.");
@@ -86,9 +86,6 @@ public class StatePropStateDataV1Chunk : NamedChunk
 
             currentIndex = expectedIndex;
         }
-
-        foreach (var error in base.ValidateChunks())
-            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

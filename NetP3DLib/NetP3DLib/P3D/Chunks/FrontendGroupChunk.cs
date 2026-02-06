@@ -47,13 +47,10 @@ public class FrontendGroupChunk : NamedChunk
         Alpha = alpha;
     }
 
-    public override IEnumerable<InvalidP3DException> ValidateChunks()
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
         if (Alpha > 256)
             yield return new InvalidP3DException(this, $"{nameof(Alpha)} must be between 0 and 256.");
-
-        foreach (var error in base.ValidateChunks())
-            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

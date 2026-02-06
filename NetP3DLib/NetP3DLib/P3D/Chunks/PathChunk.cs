@@ -67,13 +67,10 @@ public class PathChunk : Chunk
         Positions.AddRange(positions);
     }
 
-    public override IEnumerable<InvalidP3DException> ValidateChunks()
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
         if (Positions.Count < MIN_POSITIONS)
             yield return new InvalidP3DException(this, $"The min number of positions is {MIN_POSITIONS}.");
-
-        foreach (var error in base.ValidateChunks())
-            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

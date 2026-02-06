@@ -81,7 +81,7 @@ public class HistoryChunk : Chunk
         History.ResumeNotifications();
     }
 
-    public override IEnumerable<InvalidP3DException> ValidateChunks()
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
         if (History.Count > MAX_HISTORY_LINES)
             yield return new InvalidP3DException(this, $"The max number of history lines is {MAX_HISTORY_LINES}.");
@@ -89,9 +89,6 @@ public class HistoryChunk : Chunk
         foreach (var history in History)
             if (!history.IsValidP3DString())
                 yield return new InvalidP3DStringException(this, nameof(History), history);
-
-        foreach (var error in base.ValidateChunks())
-            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

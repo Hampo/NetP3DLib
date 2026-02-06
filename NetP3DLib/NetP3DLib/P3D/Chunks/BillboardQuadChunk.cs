@@ -84,13 +84,10 @@ public class BillboardQuadChunk : NamedChunk
         Distance = distance;
     }
 
-    public override IEnumerable<InvalidP3DException> ValidateChunks()
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
         if (!AxisMode.IsValidFourCC())
             yield return new InvalidP3DFourCCException(this,nameof(AxisMode), AxisMode);
-
-        foreach (var error in base.ValidateChunks())
-            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

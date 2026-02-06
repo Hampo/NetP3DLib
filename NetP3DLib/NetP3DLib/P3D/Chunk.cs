@@ -143,14 +143,29 @@ public abstract class Chunk
     protected Chunk(ChunkIdentifier chunkId) : this((uint)chunkId) { }
 
     /// <summary>
+    /// Validates this chunk.
+    /// </summary>
+    /// <returns>
+    /// An enumerable of <see cref="InvalidP3DException"/> representing validation errors.
+    /// If the chunk is valid, returns an empty enumerable.
+    /// </returns>
+    public virtual IEnumerable<InvalidP3DException> ValidateChunk()
+    {
+        yield break;
+    }
+
+    /// <summary>
     /// Recursively validates this chunk and its children.
     /// </summary>
     /// <returns>
     /// An enumerable of <see cref="InvalidP3DException"/> representing validation errors.
     /// If the chunk and all children are valid, returns an empty enumerable.
     /// </returns>
-    public virtual IEnumerable<InvalidP3DException> ValidateChunks()
+    public IEnumerable<InvalidP3DException> ValidateChunks()
     {
+        foreach (var error in ValidateChunk())
+            yield return error;
+
         foreach (var child in Children)
             foreach (var error in child.ValidateChunks())
                 yield return error;

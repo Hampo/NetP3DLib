@@ -111,13 +111,10 @@ public class FrontendPolygonChunk : NamedChunk
         Colours.AddRange(colours);
     }
 
-    public override IEnumerable<InvalidP3DException> ValidateChunks()
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
         if (Points.Count != Colours.Count)
             yield return new InvalidP3DException(this, $"{nameof(Points)} and {nameof(Colours)} must have equal counts.");
-
-        foreach (var error in base.ValidateChunks())
-            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)

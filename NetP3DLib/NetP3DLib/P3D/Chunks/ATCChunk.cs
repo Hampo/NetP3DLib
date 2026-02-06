@@ -104,14 +104,11 @@ public class ATCChunk : Chunk
         OnSizeChanged(delta);
     }
 
-    public override IEnumerable<InvalidP3DException> ValidateChunks()
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
         foreach (var entry in Entries)
             foreach (var error in entry.Validate(this))
                 yield return error;
-
-        foreach (var error in base.ValidateChunks())
-            yield return error;
     }
 
     protected override void WriteData(BinaryWriter bw)
