@@ -11,9 +11,17 @@ public class ChunkFileCollection : Collection<Chunk>
     public P3DFile Owner => _owner;
     public uint TotalSize
     {
-        get => _totalSize;
+        //get => _totalSize;
+        get
+        {
+            var size = 0u;
+            foreach (var chunk in this)
+                size += chunk.Size;
+            return size;
+        }
         internal set
         {
+            return;
             if (value > _totalSize)
             {
                 uint diff = value - _totalSize;

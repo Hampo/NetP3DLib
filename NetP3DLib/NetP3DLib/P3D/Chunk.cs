@@ -79,10 +79,11 @@ public abstract class Chunk
 
     public event Action<Chunk, int>? SizeChanged;
     protected void OnSizeChanged(int delta) => SizeChanged?.Invoke(this, delta);
-    protected SizeAwareList<T> CreateSizeAwareList<T>(int capacity = 0) => new SizeAwareList<T>(RecalculateSize, capacity);
+    protected SizeAwareList<T> CreateSizeAwareList<T>(int capacity = 0) => new(RecalculateSize, capacity);
     private uint _cachedSize = 0;
     internal void RecalculateSize()
     {
+        return;
         uint newSize = HeaderSize + Children.TotalSize;
         if (_cachedSize == newSize)
             return;
