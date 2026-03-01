@@ -43,7 +43,7 @@ public class TextureChunk : NamedChunk
     public enum UsageHints : uint
     {
         Static,
-        Dyanmic,
+        Dynamic,
         NoCache,
     }
     
