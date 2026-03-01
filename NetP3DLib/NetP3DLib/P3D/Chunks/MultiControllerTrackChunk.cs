@@ -27,8 +27,7 @@ public class MultiControllerTrackChunk : NamedChunk
                 return;
 
             _type = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
 

@@ -35,8 +35,7 @@ public class ExpressionMixerChunk : NamedChunk
                 return;
 
             _targetName = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     private string _expressionGroupName = string.Empty;
@@ -49,8 +48,7 @@ public class ExpressionMixerChunk : NamedChunk
                 return;
 
             _expressionGroupName = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
 

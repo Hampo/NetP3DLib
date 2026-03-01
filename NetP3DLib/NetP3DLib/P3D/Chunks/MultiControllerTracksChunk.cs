@@ -32,8 +32,7 @@ public class MultiControllerTracksChunk : Chunk
                 while (NumTracks < value)
                     Tracks.Add(new());
             }
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public SizeAwareList<Track> Tracks { get; }
@@ -93,16 +92,12 @@ public class MultiControllerTracksChunk : Chunk
             foreach (Track newTrack in e.NewItems)
                 newTrack.SizeChanged += Track_SizeChanged;
 
-        int delta = checked((int)(Size - _cachedSize));
-        _cachedSize = Size;
-        OnSizeChanged(delta);
+        RecalculateSize();
     }
 
     private void Track_SizeChanged()
     {
-        int delta = checked((int)(Size - _cachedSize));
-        _cachedSize = Size;
-        OnSizeChanged(delta);
+        RecalculateSize();
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

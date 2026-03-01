@@ -32,8 +32,7 @@ public class OldColourOffsetListChunk : Chunk
                 while (NumOffsets < value)
                     Offsets.Add(default);
             }
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public List<Color> Offsets { get; } = [];

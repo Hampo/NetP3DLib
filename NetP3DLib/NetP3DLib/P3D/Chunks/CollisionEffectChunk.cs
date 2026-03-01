@@ -40,8 +40,7 @@ public class CollisionEffectChunk : Chunk
                 return;
 
             _soundResourceDataName = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
 

@@ -32,8 +32,7 @@ public class LightGroupChunk : NamedChunk
                 while (NumLights < value)
                     Lights.Add(string.Empty);
             }
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public SizeAwareList<string> Lights { get; }

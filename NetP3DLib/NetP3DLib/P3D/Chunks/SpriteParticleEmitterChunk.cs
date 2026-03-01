@@ -24,8 +24,7 @@ public class SpriteParticleEmitterChunk : NamedChunk
                 return;
 
             _shaderName = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public uint UpdateMode { get; set; }

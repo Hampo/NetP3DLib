@@ -21,12 +21,8 @@ public class ImageDataChunk : Chunk
             if (ReferenceEquals(_imageData, value))
                 return;
 
-            int oldSize = _imageData.Length;
             _imageData = value ?? [];
-            int delta = _imageData.Length - oldSize;
-
-            OnSizeChanged(delta);
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
 

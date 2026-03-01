@@ -27,8 +27,7 @@ public class RoadChunk : NamedChunk
                 return;
 
             _startIntersection = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     private string _endIntersection = string.Empty;
@@ -41,8 +40,7 @@ public class RoadChunk : NamedChunk
                 return;
 
             _endIntersection = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public uint MaximumCars { get; set; }

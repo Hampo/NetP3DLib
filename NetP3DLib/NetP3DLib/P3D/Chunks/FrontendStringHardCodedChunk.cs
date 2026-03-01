@@ -22,8 +22,7 @@ public class FrontendStringHardCodedChunk : Chunk
                 return;
 
             _string = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
 

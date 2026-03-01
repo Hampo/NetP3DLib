@@ -28,8 +28,7 @@ public class BillboardQuadChunk : NamedChunk
                 return;
 
             _axisMode = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public Color Colour { get; set; }

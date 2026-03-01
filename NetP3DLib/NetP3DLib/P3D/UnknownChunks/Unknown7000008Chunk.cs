@@ -26,8 +26,7 @@ public class Unknown7000008Chunk : Chunk
                 while (NumUnknown < value)
                     Unknown.Add(default);
             }
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public List<short> Unknown { get; } = [];

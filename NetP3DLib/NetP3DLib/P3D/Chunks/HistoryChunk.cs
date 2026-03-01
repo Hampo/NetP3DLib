@@ -33,8 +33,7 @@ public class HistoryChunk : Chunk
                 while (NumHistory < value)
                     History.Add(string.Empty);
             }
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public SizeAwareList<string> History { get; }

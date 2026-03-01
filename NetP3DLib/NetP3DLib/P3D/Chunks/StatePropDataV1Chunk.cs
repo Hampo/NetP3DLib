@@ -26,8 +26,7 @@ public class StatePropDataV1Chunk : NamedChunk
                 return;
 
             _objectFactoryName = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public uint NumStates => GetChildCount(ChunkIdentifier.State_Prop_State_Data_V1);

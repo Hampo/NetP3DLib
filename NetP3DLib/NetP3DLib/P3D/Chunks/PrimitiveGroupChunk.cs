@@ -79,8 +79,7 @@ public class PrimitiveGroupChunk : Chunk
                 return;
 
             _shaderName = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public PrimitiveTypes PrimitiveType { get; set; }

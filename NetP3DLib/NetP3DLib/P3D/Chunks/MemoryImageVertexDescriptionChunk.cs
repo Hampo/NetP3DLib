@@ -31,8 +31,7 @@ public class MemoryImageVertexDescriptionChunk : Chunk
                 while (DescriptionSize < value)
                     Description.Add(default);
             }
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public List<byte> Description { get; } = [];

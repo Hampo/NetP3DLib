@@ -110,9 +110,7 @@ public class LocatorChunk : NamedChunk
 
     private void TypeData_SizeChanged()
     {
-        int delta = checked((int)(Size - _cachedSize));
-        _cachedSize = Size;
-        OnSizeChanged(delta);
+        RecalculateSize();
     }
 
     protected override void WriteData(BinaryWriter bw)

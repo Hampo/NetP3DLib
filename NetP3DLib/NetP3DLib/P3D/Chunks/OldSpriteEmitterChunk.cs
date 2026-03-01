@@ -26,8 +26,7 @@ public class OldSpriteEmitterChunk : NamedChunk
                 return;
 
             _shaderName = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     private string _angleMode = string.Empty;
@@ -41,8 +40,7 @@ public class OldSpriteEmitterChunk : NamedChunk
                 return;
 
             _angleMode = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public float Angle { get; set; }
@@ -57,8 +55,7 @@ public class OldSpriteEmitterChunk : NamedChunk
                 return;
 
             _textureAnimMode = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public uint NumTextureFrames { get; set; }

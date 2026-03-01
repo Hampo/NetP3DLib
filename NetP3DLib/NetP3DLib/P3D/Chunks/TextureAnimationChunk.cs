@@ -24,8 +24,7 @@ public class TextureAnimationChunk : NamedChunk
                 return;
 
             _materialName = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public uint NumFrames { get; set; }

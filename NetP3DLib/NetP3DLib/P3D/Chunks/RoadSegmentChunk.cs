@@ -23,8 +23,7 @@ public class RoadSegmentChunk : NamedChunk
                 return;
 
             _roadDataSegment = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public Matrix4x4 Transform { get; set; }

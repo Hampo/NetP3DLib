@@ -34,8 +34,7 @@ public class CollisionMetaDataVectorChannelChunk : NamedChunk
                     Indices.Add(default);
             }
             NumValues = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public List<ushort> Indices { get; } = [];
@@ -58,8 +57,7 @@ public class CollisionMetaDataVectorChannelChunk : NamedChunk
                     Values.Add(default);
             }
             NumIndices = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public List<Vector3> Values { get; } = [];

@@ -26,8 +26,7 @@ public class SkinChunk : NamedChunk
                 return;
 
             _skeletonName = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public uint NumOldPrimitiveGroups => GetChildCount(ChunkIdentifier.Old_Primitive_Group);

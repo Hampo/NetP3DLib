@@ -32,8 +32,7 @@ public class MultiColourListChunk : Chunk
                 while (NumColours < value)
                     Colours.Add(default);
             }
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public uint Channel { get; set; }

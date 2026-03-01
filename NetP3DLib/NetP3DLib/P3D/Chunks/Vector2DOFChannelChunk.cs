@@ -38,8 +38,7 @@ public class Vector2DOFChannelChunk : ParamChunk
                     Frames.Add(default);
             }
             NumValues = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public List<ushort> Frames { get; } = [];
@@ -62,8 +61,7 @@ public class Vector2DOFChannelChunk : ParamChunk
                     Values.Add(default);
             }
             NumFrames = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public List<Vector2> Values { get; } = [];

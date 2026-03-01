@@ -29,8 +29,7 @@ public class OldBillboardDisplayInfoChunk : Chunk
                 return;
 
             _cutOffMode = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public Vector2 UVOffsetRange { get; set; }

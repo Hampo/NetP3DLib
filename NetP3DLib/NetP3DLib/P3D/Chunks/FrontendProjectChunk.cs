@@ -28,8 +28,7 @@ public class FrontendProjectChunk : NamedChunk
                 return;
 
             _platform = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     private string _pagePath = string.Empty;
@@ -42,8 +41,7 @@ public class FrontendProjectChunk : NamedChunk
                 return;
 
             _pagePath = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     private string _resourcePath = string.Empty;
@@ -56,8 +54,7 @@ public class FrontendProjectChunk : NamedChunk
                 return;
 
             _resourcePath = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     private string _screenPath = string.Empty;
@@ -70,8 +67,7 @@ public class FrontendProjectChunk : NamedChunk
                 return;
 
             _screenPath = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
 

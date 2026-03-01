@@ -26,8 +26,7 @@ public class CollisionObjectChunk : NamedChunk
                 return;
 
             _materialName = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public uint NumSubObjects { get; set; }

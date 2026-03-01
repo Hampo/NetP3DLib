@@ -24,8 +24,7 @@ public class LensFlareGroupChunk : NamedChunk
                 return;
 
             _shaderName = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     private uint zTest;

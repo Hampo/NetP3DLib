@@ -34,8 +34,7 @@ public class AnimationChannelCountChunk : Chunk
                 while (NumNumKeys < value)
                     NumKeys.Add(default);
             }
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public List<ushort> NumKeys { get; } = [];

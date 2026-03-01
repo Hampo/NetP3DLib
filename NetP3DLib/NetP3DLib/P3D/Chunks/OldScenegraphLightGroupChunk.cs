@@ -22,8 +22,7 @@ public class OldScenegraphLightGroupChunk : NamedChunk
                 return;
 
             _lightGroupName = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
 

@@ -22,8 +22,7 @@ public class ShaderTextureParameterChunk : ParamChunk
                 return;
 
             _value = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
 

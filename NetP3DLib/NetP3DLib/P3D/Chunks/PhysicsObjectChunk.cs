@@ -26,8 +26,7 @@ public class PhysicsObjectChunk : NamedChunk
                 return;
 
             _materialName = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public uint NumJoints { get; set; }

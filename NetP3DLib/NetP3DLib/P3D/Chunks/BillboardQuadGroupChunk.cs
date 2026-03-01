@@ -24,8 +24,7 @@ public class BillboardQuadGroupChunk : NamedChunk
                 return;
 
             _shader = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public uint CutOffEnabled { get; set; }

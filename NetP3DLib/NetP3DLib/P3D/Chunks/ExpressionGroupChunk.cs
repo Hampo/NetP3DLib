@@ -33,8 +33,7 @@ public class ExpressionGroupChunk : NamedChunk
                 return;
 
             _targetName = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public uint NumStages
@@ -55,8 +54,7 @@ public class ExpressionGroupChunk : NamedChunk
                 while (NumStages < value)
                     Stages.Add(default);
             }
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public List<Stage> Stages { get; } = [];

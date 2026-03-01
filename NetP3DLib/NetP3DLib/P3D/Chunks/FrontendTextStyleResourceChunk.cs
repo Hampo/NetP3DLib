@@ -26,8 +26,7 @@ public class FrontendTextStyleResourceChunk : NamedChunk
                 return;
 
             _filename = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     private string _inventoryName = string.Empty;
@@ -40,8 +39,7 @@ public class FrontendTextStyleResourceChunk : NamedChunk
                 return;
 
             _inventoryName = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
 

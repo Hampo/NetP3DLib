@@ -45,8 +45,7 @@ public class FrontendMultiTextChunk : NamedChunk
                 return;
 
             _textStyleName = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public byte ShadowEnabled { get; set; }

@@ -32,8 +32,7 @@ public class TerrainTypeListChunk : Chunk
                 while (NumTypes < value)
                     Types.Add(new());
             }
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public List<TerrainType> Types { get; } = [];

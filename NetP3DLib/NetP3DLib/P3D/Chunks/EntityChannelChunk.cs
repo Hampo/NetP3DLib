@@ -36,8 +36,7 @@ public class EntityChannelChunk : ParamChunk
                     Frames.Add(default);
             }
             NumValues = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public List<ushort> Frames { get; } = [];
@@ -60,8 +59,7 @@ public class EntityChannelChunk : ParamChunk
                     Values.Add(string.Empty);
             }
             NumFrames = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public SizeAwareList<string> Values { get; }

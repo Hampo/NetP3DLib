@@ -29,8 +29,7 @@ public class ImageGlyphListChunk : Chunk
                 while (NumGlyphs < value)
                     Glyphs.Add(new());
             }
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public List<Glyph> Glyphs { get; } = [];

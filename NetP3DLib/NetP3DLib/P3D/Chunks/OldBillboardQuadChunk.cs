@@ -29,8 +29,7 @@ public class OldBillboardQuadChunk : NamedChunk
                 return;
 
             _billboardMode = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public Vector3 Translation { get; set; }

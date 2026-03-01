@@ -30,8 +30,7 @@ public class PackedNormalListChunk : Chunk
                 while (NumNormals < value)
                     Normals.Add(default);
             }
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public List<byte> Normals { get; } = [];

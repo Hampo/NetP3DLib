@@ -25,8 +25,7 @@ public class SpriteChunk : NamedChunk
                 return;
 
             _shader = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public uint ImageWidth { get; set; }

@@ -27,8 +27,7 @@ public class FrameControllerChunk : NamedChunk
                 return;
 
             _type = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     private string _cycleMode = string.Empty;
@@ -42,8 +41,7 @@ public class FrameControllerChunk : NamedChunk
                 return;
 
             _cycleMode = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public uint NumCycles { get; set; }
@@ -58,8 +56,7 @@ public class FrameControllerChunk : NamedChunk
                 return;
 
             _hierarchyName = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     private string _animationName = string.Empty;
@@ -72,8 +69,7 @@ public class FrameControllerChunk : NamedChunk
                 return;
 
             _animationName = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
 

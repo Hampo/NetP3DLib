@@ -26,8 +26,7 @@ public class ParticleSystem2Chunk : NamedChunk
                 return;
 
             _factoryName = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
 

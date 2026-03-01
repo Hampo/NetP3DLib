@@ -32,8 +32,7 @@ public class ColourListChunk : Chunk
                 while (NumColours < value)
                     Colours.Add(default);
             }
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public List<Color> Colours { get; } = [];

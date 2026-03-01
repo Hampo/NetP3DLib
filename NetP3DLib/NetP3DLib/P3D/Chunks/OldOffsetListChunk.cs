@@ -31,8 +31,7 @@ public class OldOffsetListChunk : Chunk
                 while (NumOffsets < value)
                     Offsets.Add(new());
             }
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public uint KeyIndex { get; set; }
@@ -44,8 +43,7 @@ public class OldOffsetListChunk : Chunk
         set
         {
             _hasPrimGroupIndex = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public uint PrimGroupIndex { get; set; }

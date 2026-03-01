@@ -26,8 +26,7 @@ public class AnimatedObjectFactoryChunk : NamedChunk
                 return;
 
             _baseAnimation = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public uint NumAnimations { get; set; }

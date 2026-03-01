@@ -129,16 +129,12 @@ public class FrontendLanguageChunk : NamedChunk
             foreach (Entry newEntry in e.NewItems)
                 newEntry.SizeChanged += Entry_SizeChanged;
 
-        int delta = checked((int)(Size - _cachedSize));
-        _cachedSize = Size;
-        OnSizeChanged(delta);
+        RecalculateSize();
     }
 
     private void Entry_SizeChanged()
     {
-        int delta = checked((int)(Size - _cachedSize));
-        _cachedSize = Size;
-        OnSizeChanged(delta);
+        RecalculateSize();
     }
 
     protected override void WriteData(BinaryWriter bw)

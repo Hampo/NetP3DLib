@@ -45,8 +45,7 @@ public class OldFrameController2Chunk : NamedChunk
                 return;
 
             _hierarchyName = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     private string _animationName = string.Empty;
@@ -59,8 +58,7 @@ public class OldFrameController2Chunk : NamedChunk
                 return;
 
             _animationName = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
 

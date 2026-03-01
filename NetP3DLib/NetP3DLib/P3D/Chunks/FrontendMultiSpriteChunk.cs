@@ -54,8 +54,7 @@ public class FrontendMultiSpriteChunk : NamedChunk
                 while (NumImageNames < value)
                     ImageNames.Add(string.Empty);
             }
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public SizeAwareList<string> ImageNames { get; }

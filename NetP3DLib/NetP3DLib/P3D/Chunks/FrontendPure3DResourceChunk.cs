@@ -26,8 +26,7 @@ public class FrontendPure3DResourceChunk : NamedChunk
                 return;
 
             _filename = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     private string _inventoryName = string.Empty;
@@ -40,8 +39,7 @@ public class FrontendPure3DResourceChunk : NamedChunk
                 return;
 
             _inventoryName = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     private string _cameraName = string.Empty;
@@ -54,8 +52,7 @@ public class FrontendPure3DResourceChunk : NamedChunk
                 return;
 
             _cameraName = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     private string _animationName = string.Empty;
@@ -68,8 +65,7 @@ public class FrontendPure3DResourceChunk : NamedChunk
                 return;
 
             _animationName = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
 

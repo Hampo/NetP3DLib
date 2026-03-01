@@ -26,8 +26,7 @@ public class FrontendImageResourceChunk : NamedChunk
                 return;
 
             _filename = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
 

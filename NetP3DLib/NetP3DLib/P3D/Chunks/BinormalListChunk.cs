@@ -33,8 +33,7 @@ public class BinormalListChunk : Chunk
                 while (NumBinormals < value)
                     Binormals.Add(default);
             }
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public List<Vector3> Binormals { get; } = [];

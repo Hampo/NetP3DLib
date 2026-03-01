@@ -22,8 +22,7 @@ public class CompositeDrawableChunk : NamedChunk
                 return;
 
             _skeletonName = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
 

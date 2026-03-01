@@ -45,8 +45,7 @@ public class FrontendPure3DObjectChunk : NamedChunk
                 return;
 
             _pure3DFilename = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
 

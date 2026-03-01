@@ -27,8 +27,7 @@ public class OldBaseEmitterChunk : NamedChunk
                 return;
 
             _particleType = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     private string _generatorType = string.Empty;
@@ -42,8 +41,7 @@ public class OldBaseEmitterChunk : NamedChunk
                 return;
 
             _generatorType = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     private uint zTest;

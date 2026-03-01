@@ -17,8 +17,7 @@ public abstract class NamedChunk : Chunk
                 return;
 
             _name = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
 

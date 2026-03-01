@@ -23,8 +23,7 @@ public class OldScenegraphDrawableChunk : NamedChunk
                 return;
 
             _drawableName = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     private uint isTranslucent;

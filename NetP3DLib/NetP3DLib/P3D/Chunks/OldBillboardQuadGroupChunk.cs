@@ -26,8 +26,7 @@ public class OldBillboardQuadGroupChunk : NamedChunk
                 return;
 
             _shader = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     private uint zTest;

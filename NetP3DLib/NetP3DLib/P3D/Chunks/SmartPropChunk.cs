@@ -24,8 +24,7 @@ public class SmartPropChunk : NamedChunk
                 return;
 
             _objectFactoryName = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     private string _material = string.Empty;
@@ -38,8 +37,7 @@ public class SmartPropChunk : NamedChunk
                 return;
 
             _material = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public uint MaterialEnum { get; set; }

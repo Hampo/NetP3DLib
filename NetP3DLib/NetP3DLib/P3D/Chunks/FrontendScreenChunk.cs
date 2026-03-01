@@ -35,8 +35,7 @@ public class FrontendScreenChunk : NamedChunk
                 while (NumPageNames < value)
                     PageNames.Add(string.Empty);
             }
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public SizeAwareList<string> PageNames { get; }

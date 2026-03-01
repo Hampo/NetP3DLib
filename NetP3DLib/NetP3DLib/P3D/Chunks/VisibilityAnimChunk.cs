@@ -23,8 +23,7 @@ public class VisibilityAnimChunk : NamedChunk
                 return;
 
             _sceneName = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public uint Version { get; set; }

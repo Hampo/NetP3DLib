@@ -79,34 +79,23 @@ public abstract class Chunk
 
     public event Action<Chunk, int>? SizeChanged;
     protected void OnSizeChanged(int delta) => SizeChanged?.Invoke(this, delta);
-    protected SizeAwareList<T> CreateSizeAwareList<T>(int capacity = 0)
+    protected SizeAwareList<T> CreateSizeAwareList<T>(int capacity = 0) => new SizeAwareList<T>(RecalculateSize, capacity);
+    private uint _cachedSize = 0;
+    internal void RecalculateSize()
     {
-        return new SizeAwareList<T>(() =>
-        {
-            int delta = checked((int)(Size - _cachedSize));
-            _cachedSize = Size;
-            OnSizeChanged(delta);
-        }, capacity);
+        uint newSize = HeaderSize + Children.TotalSize;
+        if (_cachedSize == newSize)
+            return;
+
+        int delta = checked((int)newSize - (int)_cachedSize);
+        _cachedSize = newSize;
+        SizeChanged?.Invoke(this, delta);
     }
-    internal uint _cachedSize = 0;
     /// <summary>
     /// Property <c>Size</c> is the chunk's size.
     /// <para>This is usually <see cref="HeaderSize"/> + SUM(<see cref="Children"/>.<see cref="Size"/>).</para>
     /// </summary>
-    public uint Size
-    {
-        get
-        {
-            uint newSize = HeaderSize + Children.TotalSize;
-            if (_cachedSize != newSize)
-            {
-                int diff = (int)newSize - (int)_cachedSize;
-                _cachedSize = newSize;
-                SizeChanged?.Invoke(this, diff);
-            }
-            return _cachedSize;
-        }
-    }
+    public uint Size => HeaderSize + Children.TotalSize;
     /// <summary>
     /// Property <c>Bytes</c> is the chunk's data, built from the chunk's properties and children.
     /// <para>NOTE: This will use the system's default <see cref="Endianness"/>.</para>
@@ -444,12 +433,8 @@ public class UnknownChunk : Chunk
             if (ReferenceEquals(_data, value))
                 return;
 
-            int oldSize = _data.Length;
             _data = value ?? [];
-            int delta = _data.Length - oldSize;
-
-            OnSizeChanged(delta);
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
 

@@ -35,8 +35,7 @@ public class PhotonMapChunk : NamedChunk
                     Lights.Add(string.Empty);
             }
             NumLightScales = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public SizeAwareList<string> Lights { get; }
@@ -59,8 +58,7 @@ public class PhotonMapChunk : NamedChunk
                     LightScales.Add(default);
             }
             NumLights = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public List<float> LightScales { get; } = [];
@@ -82,8 +80,7 @@ public class PhotonMapChunk : NamedChunk
                 while (NumPhotons < value)
                     Photons.Add(new());
             }
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public List<Photon> Photons { get; } = [];

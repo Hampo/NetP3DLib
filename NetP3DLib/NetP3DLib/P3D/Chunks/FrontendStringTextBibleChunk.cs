@@ -22,8 +22,7 @@ public class FrontendStringTextBibleChunk : Chunk
                 return;
 
             _bibleName = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     private string _stringID = string.Empty;
@@ -36,8 +35,7 @@ public class FrontendStringTextBibleChunk : Chunk
                 return;
 
             _stringID = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
 

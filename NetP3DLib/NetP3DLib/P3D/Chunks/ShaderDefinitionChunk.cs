@@ -21,8 +21,7 @@ public class ShaderDefinitionChunk : NamedChunk
                 return;
 
             _definition = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
 

@@ -32,8 +32,7 @@ public class IntersectChunk : Chunk
                 while (NumIndices < value)
                     Indices.Add(default);
             }
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public List<uint> Indices { get; } = [];
@@ -55,8 +54,7 @@ public class IntersectChunk : Chunk
                 while (NumPositions < value)
                     Positions.Add(default);
             }
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public List<Vector3> Positions { get; } = [];
@@ -78,8 +76,7 @@ public class IntersectChunk : Chunk
                 while (NumNormals < value)
                     Normals.Add(default);
             }
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public List<Vector3> Normals { get; } = [];

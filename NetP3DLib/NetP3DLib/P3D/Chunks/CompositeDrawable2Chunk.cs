@@ -24,8 +24,7 @@ public class CompositeDrawable2Chunk : NamedChunk
                 return;
 
             _skeletonName = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public uint NumPrimitives => GetChildCount(ChunkIdentifier.Composite_Drawable_Primitive);

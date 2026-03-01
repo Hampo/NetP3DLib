@@ -19,8 +19,7 @@ public abstract class ParamChunk : Chunk
                 return;
 
             _param = value;
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
 

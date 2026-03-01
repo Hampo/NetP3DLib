@@ -34,8 +34,7 @@ public class BooleanChannelChunk : ParamChunk
                 while (NumValues < value)
                     Values.Add(default);
             }
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public List<ushort> Values { get; } = [];

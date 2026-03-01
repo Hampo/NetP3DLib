@@ -33,8 +33,7 @@ public class PathChunk : Chunk
                 while (NumPositions < value)
                     Positions.Add(default);
             }
-            OnSizeChanged((int)(Size - _cachedSize));
-            _cachedSize = Size;
+            RecalculateSize();
         }
     }
     public List<Vector3> Positions { get; } = [];
