@@ -30,6 +30,9 @@ public abstract class ParamChunk : Chunk
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
+        foreach (var error in base.ValidateChunk())
+            yield return error;
+
         if (!Param.IsValidFourCC())
             yield return new InvalidP3DFourCCException(this,nameof(Param), Param);
     }

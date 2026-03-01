@@ -72,6 +72,9 @@ public class UVListChunk : Chunk
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
+        foreach (var error in base.ValidateChunk())
+            yield return error;
+
         if (ParentChunk is OldPrimitiveGroupChunk oldPrimitiveGroup && oldPrimitiveGroup.NumVertices != NumUVs)
             yield return new InvalidP3DException(this, $"Num UVs value {NumUVs} does not match parent Num Vertices value {oldPrimitiveGroup.NumVertices}.");
     }

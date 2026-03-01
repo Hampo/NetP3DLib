@@ -129,6 +129,9 @@ public class OldBaseEmitterChunk : NamedChunk
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
+        foreach (var error in base.ValidateChunk())
+            yield return error;
+
         if (!ParticleType.IsValidFourCC())
             yield return new InvalidP3DFourCCException(this,nameof(ParticleType), ParticleType);
 

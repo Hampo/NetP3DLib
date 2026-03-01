@@ -71,6 +71,9 @@ public class SplineChunk : NamedChunk
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
+        foreach (var error in base.ValidateChunk())
+            yield return error;
+
         if (Children.Count != 1 || Children[0].ID != (uint)ChunkIdentifier.Rail_Cam)
             yield return new InvalidP3DException(this, $"Children must be one Rail Cam child chunk.");
     }

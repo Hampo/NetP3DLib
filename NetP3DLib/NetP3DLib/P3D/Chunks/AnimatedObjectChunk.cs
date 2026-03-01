@@ -66,6 +66,9 @@ public class AnimatedObjectChunk : NamedChunk
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
+        foreach (var error in base.ValidateChunk())
+            yield return error;
+
         if (!FactoryName.IsValidP3DString())
             yield return new InvalidP3DStringException(this, nameof(FactoryName), FactoryName);
     }

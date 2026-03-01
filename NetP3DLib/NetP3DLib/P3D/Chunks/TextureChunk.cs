@@ -109,6 +109,9 @@ public class TextureChunk : NamedChunk
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
+        foreach (var error in base.ValidateChunk())
+            yield return error;
+
         if (!Width.IsPowerOfTwo())
             yield return new InvalidP3DException(this, $"{nameof(Width)} must be a power of 2.");
 

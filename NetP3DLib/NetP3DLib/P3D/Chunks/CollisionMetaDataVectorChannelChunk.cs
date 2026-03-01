@@ -106,6 +106,9 @@ public class CollisionMetaDataVectorChannelChunk : NamedChunk
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
+        foreach (var error in base.ValidateChunk())
+            yield return error;
+
         if (Indices.Count != Values.Count)
             yield return new InvalidP3DException(this, $"{nameof(Indices)} and {nameof(Values)} must have equal counts.");
     }

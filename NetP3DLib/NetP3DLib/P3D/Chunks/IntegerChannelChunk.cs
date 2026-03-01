@@ -107,6 +107,9 @@ public class IntegerChannelChunk : ParamChunk
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
+        foreach (var error in base.ValidateChunk())
+            yield return error;
+
         if (Frames.Count != Values.Count)
             yield return new InvalidP3DException(this, $"{nameof(Frames)} and {nameof(Values)} must have equal counts.");
     }

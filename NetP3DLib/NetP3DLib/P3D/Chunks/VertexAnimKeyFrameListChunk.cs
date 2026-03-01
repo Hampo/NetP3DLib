@@ -101,6 +101,9 @@ public class VertexAnimKeyFrameListChunk : Chunk
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
+        foreach (var error in base.ValidateChunk())
+            yield return error;
+
         if (KeyFrameIds.Count != KeyFrameCounts.Count)
             yield return new InvalidP3DException(this, $"{nameof(KeyFrameIds)} and {nameof(KeyFrameCounts)} must have equal counts.");
     }

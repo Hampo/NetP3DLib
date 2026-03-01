@@ -86,6 +86,9 @@ public class OldFrameControllerChunk : NamedChunk
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
+        foreach (var error in base.ValidateChunk())
+            yield return error;
+
         if (!HierarchyName.IsValidP3DString())
             yield return new InvalidP3DStringException(this, nameof(HierarchyName), HierarchyName);
 

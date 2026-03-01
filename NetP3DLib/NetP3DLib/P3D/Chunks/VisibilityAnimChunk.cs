@@ -72,6 +72,9 @@ public class VisibilityAnimChunk : NamedChunk
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
+        foreach (var error in base.ValidateChunk())
+            yield return error;
+
         if (!SceneName.IsValidP3DString())
             yield return new InvalidP3DStringException(this, nameof(SceneName), SceneName);
     }

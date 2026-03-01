@@ -67,6 +67,9 @@ public class FrontendLayerChunk : NamedChunk
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
+        foreach (var error in base.ValidateChunk())
+            yield return error;
+
         if (Alpha > 256)
             yield return new InvalidP3DException(this, $"{nameof(Alpha)} must be between 0 and 256.");
     }

@@ -69,6 +69,9 @@ public class PathChunk : Chunk
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
+        foreach (var error in base.ValidateChunk())
+            yield return error;
+
         if (Positions.Count < MIN_POSITIONS)
             yield return new InvalidP3DException(this, $"The min number of positions is {MIN_POSITIONS}.");
     }

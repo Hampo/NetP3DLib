@@ -92,6 +92,9 @@ public class FrontendScreenChunk : NamedChunk
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
+        foreach (var error in base.ValidateChunk())
+            yield return error;
+
         foreach (var pageName in PageNames)
             if (!pageName.IsValidP3DString())
                 yield return new InvalidP3DStringException(this, nameof(PageNames), pageName);

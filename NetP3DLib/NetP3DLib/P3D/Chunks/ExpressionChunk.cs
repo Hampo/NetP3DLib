@@ -107,6 +107,9 @@ public class ExpressionChunk : NamedChunk
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
+        foreach (var error in base.ValidateChunk())
+            yield return error;
+
         if (Keys.Count != Indices.Count)
             yield return new InvalidP3DException(this, $"{nameof(Keys)} and {nameof(Indices)} must have equal counts.");
     }

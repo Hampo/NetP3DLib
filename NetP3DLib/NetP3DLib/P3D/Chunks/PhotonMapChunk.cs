@@ -153,6 +153,9 @@ public class PhotonMapChunk : NamedChunk
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
+        foreach (var error in base.ValidateChunk())
+            yield return error;
+
         if (Lights.Count != LightScales.Count)
             yield return new InvalidP3DException(this, $"{nameof(Lights)} and {nameof(LightScales)} must have equal counts.");
     }

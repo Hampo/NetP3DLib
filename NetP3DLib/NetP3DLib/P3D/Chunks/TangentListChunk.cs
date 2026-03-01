@@ -68,6 +68,9 @@ public class TangentListChunk : Chunk
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
+        foreach (var error in base.ValidateChunk())
+            yield return error;
+
         if (ParentChunk is OldPrimitiveGroupChunk oldPrimitiveGroup && oldPrimitiveGroup.NumVertices != NumTangents)
             yield return new InvalidP3DException(this, $"Num Tangents value {NumTangents} does not match parent Num Vertices value {oldPrimitiveGroup.NumVertices}.");
     }

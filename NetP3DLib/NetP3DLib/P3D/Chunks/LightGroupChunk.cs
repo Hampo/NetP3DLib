@@ -86,6 +86,9 @@ public class LightGroupChunk : NamedChunk
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
+        foreach (var error in base.ValidateChunk())
+            yield return error;
+
         foreach (var light in Lights)
             if (!light.IsValidP3DString())
                 yield return new InvalidP3DStringException(this, nameof(Lights), light);

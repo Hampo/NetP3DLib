@@ -57,6 +57,9 @@ public class ImageDataChunk : Chunk
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
+        foreach (var error in base.ValidateChunk())
+            yield return error;
+
         if (ImageData.LongLength > int.MaxValue)
             yield return new InvalidP3DException(this, $"The max length of {nameof(ImageData)} is {int.MaxValue} bytes.");
     }

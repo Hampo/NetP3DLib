@@ -121,6 +121,9 @@ public class RoadChunk : NamedChunk
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
+        foreach (var error in base.ValidateChunk())
+            yield return error;
+
         if (!StartIntersection.IsValidP3DString())
             yield return new InvalidP3DStringException(this, nameof(StartIntersection), StartIntersection);
 

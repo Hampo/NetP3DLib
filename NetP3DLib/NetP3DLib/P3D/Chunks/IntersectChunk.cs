@@ -130,6 +130,9 @@ public class IntersectChunk : Chunk
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
+        foreach (var error in base.ValidateChunk())
+            yield return error;
+
         if (Indices.Count % 3 != 0)
             yield return new InvalidP3DException(this, $"The number of {nameof(Indices)} must be divisible by 3.");
         

@@ -113,6 +113,9 @@ public class FrontendPolygonChunk : NamedChunk
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
+        foreach (var error in base.ValidateChunk())
+            yield return error;
+
         if (Points.Count != Colours.Count)
             yield return new InvalidP3DException(this, $"{nameof(Points)} and {nameof(Colours)} must have equal counts.");
     }

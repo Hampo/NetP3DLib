@@ -108,6 +108,9 @@ public class FrontendPure3DObjectChunk : NamedChunk
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
+        foreach (var error in base.ValidateChunk())
+            yield return error;
+
         if (!Pure3DFilename.IsValidP3DString())
             yield return new InvalidP3DStringException(this, nameof(Pure3DFilename), Pure3DFilename);
     }

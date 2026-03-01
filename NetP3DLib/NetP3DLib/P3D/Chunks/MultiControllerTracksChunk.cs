@@ -107,6 +107,9 @@ public class MultiControllerTracksChunk : Chunk
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
+        foreach (var error in base.ValidateChunk())
+            yield return error;
+
         foreach (var track in Tracks)
             foreach (var error in track.Validate(this))
                 yield return error;

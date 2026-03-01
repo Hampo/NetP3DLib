@@ -52,6 +52,9 @@ public class FrontendStringHardCodedChunk : Chunk
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
+        foreach (var error in base.ValidateChunk())
+            yield return error;
+
         if (!String.IsValidP3DString())
             yield return new InvalidP3DStringException(this, nameof(String), String);
     }

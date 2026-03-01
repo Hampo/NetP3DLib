@@ -106,6 +106,9 @@ public class ATCChunk : Chunk
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
+        foreach (var error in base.ValidateChunk())
+            yield return error;
+
         foreach (var entry in Entries)
             foreach (var error in entry.Validate(this))
                 yield return error;

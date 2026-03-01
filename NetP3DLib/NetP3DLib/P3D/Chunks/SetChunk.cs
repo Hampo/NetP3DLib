@@ -49,6 +49,9 @@ public class SetChunk : NamedChunk
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
+        foreach (var error in base.ValidateChunk())
+            yield return error;
+
         if (GetChildCount(ChunkIdentifier.Texture) > byte.MaxValue)
             yield return new InvalidP3DException(this, $"The max number of child textures is {byte.MinValue}.");
     }

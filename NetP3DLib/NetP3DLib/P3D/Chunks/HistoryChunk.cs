@@ -83,6 +83,9 @@ public class HistoryChunk : Chunk
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
+        foreach (var error in base.ValidateChunk())
+            yield return error;
+
         if (History.Count > MAX_HISTORY_LINES)
             yield return new InvalidP3DException(this, $"The max number of history lines is {MAX_HISTORY_LINES}.");
 

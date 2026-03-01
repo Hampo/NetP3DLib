@@ -105,6 +105,9 @@ public class OldBillboardQuadChunk : NamedChunk
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
+        foreach (var error in base.ValidateChunk())
+            yield return error;
+
         if (!BillboardMode.IsValidFourCC())
             yield return new InvalidP3DFourCCException(this,nameof(BillboardMode), BillboardMode);
     }

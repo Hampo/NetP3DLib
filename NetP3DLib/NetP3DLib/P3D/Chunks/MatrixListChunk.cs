@@ -66,6 +66,9 @@ public class MatrixListChunk : Chunk
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
+        foreach (var error in base.ValidateChunk())
+            yield return error;
+
         if (ParentChunk is OldPrimitiveGroupChunk oldPrimitiveGroup && oldPrimitiveGroup.NumVertices != NumMatrices)
             yield return new InvalidP3DException(this, $"Num Matrices value {NumMatrices} does not match parent Num Vertices value {oldPrimitiveGroup.NumVertices}.");
     }

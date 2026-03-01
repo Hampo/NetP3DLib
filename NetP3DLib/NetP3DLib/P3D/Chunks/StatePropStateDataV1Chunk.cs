@@ -70,6 +70,9 @@ public class StatePropStateDataV1Chunk : NamedChunk
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
+        foreach (var error in base.ValidateChunk())
+            yield return error;
+
         if (Children.Count == 0)
             yield return new InvalidP3DException(this, $"There must be at least one child chunk.");
 

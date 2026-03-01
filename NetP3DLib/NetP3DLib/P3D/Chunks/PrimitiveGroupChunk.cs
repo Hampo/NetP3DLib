@@ -175,7 +175,10 @@ public class PrimitiveGroupChunk : Chunk
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
-		if (!ShaderName.IsValidP3DString())
+        foreach (var error in base.ValidateChunk())
+            yield return error;
+
+        if (!ShaderName.IsValidP3DString())
 			yield return new InvalidP3DStringException(this, nameof(ShaderName), ShaderName);
     }
 
