@@ -891,18 +891,25 @@ public class LocatorChunk : NamedChunk
             }
         }
         private uint? _flags = null;
-        public bool OneShot
+        public bool? OneShot
         {
-            get => ((_flags ?? 0) & 1u) != 0;
+            get
+            {
+                if (_flags == null)
+                    return null;
+
+                return (_flags & 1u) == 1u;
+            }
             set
             {
+                bool value2 = value ?? false;
                 uint current = _flags ?? 0;
 
                 bool isSet = (current & 1u) != 0;
-                if (isSet == value)
+                if (isSet == value2)
                     return;
 
-                if (value)
+                if (value2)
                     current |= 1u;
                 else
                     current &= ~1u;
@@ -911,18 +918,25 @@ public class LocatorChunk : NamedChunk
                 OnSizeChanged();
             }
         }
-        public bool DisableFOV
+        public bool? DisableFOV
         {
-            get => ((_flags ?? 0) & (1u << 1)) != 0;
+            get
+            {
+                if (_flags == null)
+                    return null;
+
+                return (_flags & (1u << 1)) == (1u << 1);
+            }
             set
             {
+                bool value2 = value ?? false;
                 uint current = _flags ?? 0;
 
                 bool isSet = (current & (1u << 1)) != 0;
-                if (isSet == value)
+                if (isSet == value2)
                     return;
 
-                if (value)
+                if (value2)
                     current |= (1u << 1);
                 else
                     current &= ~(1u << 1);
@@ -932,31 +946,48 @@ public class LocatorChunk : NamedChunk
             }
         }
         private uint? _cutInOut = null;
-        public bool CutInOut
+        public bool? CutInOut
         {
             get => _cutInOut == 1u;
             set
             {
+                if (value == null)
+                {
+                    if (_cutInOut != null)
+                    {
+                        _cutInOut = null;
+                        OnSizeChanged();
+                    }
+                    return;
+                }
+
                 if (CutInOut == value)
                     return;
 
-                _cutInOut = value ? 1u : 0u;
+                _cutInOut = value.Value ? 1u : 0u;
                 OnSizeChanged();
             }
         }
         private uint? _flags2 = null;
-        public bool CarOnly
+        public bool? CarOnly
         {
-            get => ((_flags2 ?? 0) & 1u) == 1u;
+            get
+            {
+                if (_flags2 == null)
+                    return null;
+
+                return (_flags2 & 1u) == 1u;
+            }
             set
             {
+                bool value2 = value ?? false;
                 uint current = _flags2 ?? 0;
 
                 bool isSet = (current & 1u) == 1u;
-                if (isSet == value)
+                if (isSet == value2)
                     return;
 
-                if (value)
+                if (value2)
                     current |= 1u;
                 else
                     current &= ~1u;
@@ -965,18 +996,25 @@ public class LocatorChunk : NamedChunk
                 OnSizeChanged();
             }
         }
-        public bool OnFootOnly
+        public bool? OnFootOnly
         {
-            get => ((_flags2 ?? 0) & (1u << 1)) == (1u << 1);
+            get
+            {
+                if (_flags2 == null)
+                    return null;
+
+                return (_flags2 & (1u << 1)) == (1u << 1);
+            }
             set
             {
+                bool value2 = value ?? false;
                 uint current = _flags2 ?? 0;
 
                 bool isSet = (current & (1u << 1)) == (1u << 1);
-                if (isSet == value)
+                if (isSet == value2)
                     return;
 
-                if (value)
+                if (value2)
                     current |= (1u << 1);
                 else
                     current &= ~(1u << 1);
@@ -1082,10 +1120,10 @@ public class LocatorChunk : NamedChunk
         {
             (true, true, true, true) =>
                 new StaticCameraLocatorData(TargetPosition, FOV, TargetLag, _followPlayer,
-                                        TransitionTargetRate!.Value!, OneShot, DisableFOV, CutInOut, CarOnly, OnFootOnly),
+                                        TransitionTargetRate!.Value!, OneShot!.Value!, DisableFOV!.Value!, CutInOut!.Value!, CarOnly!.Value!, OnFootOnly!.Value!),
             (true, true, _, _) =>
                 new StaticCameraLocatorData(TargetPosition, FOV, TargetLag, _followPlayer,
-                                        TransitionTargetRate!.Value, OneShot, DisableFOV),
+                                        TransitionTargetRate!.Value, OneShot!.Value!, DisableFOV!.Value!),
             (true, _, _, _) =>
                 new StaticCameraLocatorData(TargetPosition, FOV, TargetLag, _followPlayer,
                                         TransitionTargetRate!.Value),
