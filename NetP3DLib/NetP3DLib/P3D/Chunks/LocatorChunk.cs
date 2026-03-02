@@ -874,7 +874,12 @@ public class LocatorChunk : NamedChunk
         public Vector3 TargetPosition { get; set; }
         public float FOV { get; set; }
         public float TargetLag { get; set; }
-        public uint FollowPlayer { get; set; }
+        private uint _followPlayer;
+        public bool FollowPlayer
+        {
+            get => _followPlayer == 1u;
+            set => _followPlayer = value ? 1u : 0u;
+        }
         private float? _transitionTargetRate = null;
         public float? TransitionTargetRate
         {
@@ -886,32 +891,97 @@ public class LocatorChunk : NamedChunk
             }
         }
         private uint? _flags = null;
-        public uint? Flags
+        public bool OneShot
         {
-            get => _flags;
+            get => ((_flags ?? 0) & 1u) != 0;
             set
             {
-                _flags = value;
+                uint current = _flags ?? 0;
+
+                bool isSet = (current & 1u) != 0;
+                if (isSet == value)
+                    return;
+
+                if (value)
+                    current |= 1u;
+                else
+                    current &= ~1u;
+
+                _flags = current;
+                OnSizeChanged();
+            }
+        }
+        public bool DisableFOV
+        {
+            get => ((_flags ?? 0) & (1u << 1)) != 0;
+            set
+            {
+                uint current = _flags ?? 0;
+
+                bool isSet = (current & (1u << 1)) != 0;
+                if (isSet == value)
+                    return;
+
+                if (value)
+                    current |= (1u << 1);
+                else
+                    current &= ~(1u << 1);
+
+                _flags = current;
                 OnSizeChanged();
             }
         }
         private uint? _cutInOut = null;
-        public uint? CutInOut
+        public bool CutInOut
         {
-            get => _cutInOut;
+            get => _cutInOut == 1u;
             set
             {
-                _cutInOut = value;
+                if (CutInOut == value)
+                    return;
+
+                _cutInOut = value ? 1u : 0u;
                 OnSizeChanged();
             }
         }
-        private uint? _data = null;
-        public uint? Data
+        private uint? _flags2 = null;
+        public bool CarOnly
         {
-            get => _data;
+            get => ((_flags2 ?? 0) & 1u) == 1u;
             set
             {
-                _data = value;
+                uint current = _flags2 ?? 0;
+
+                bool isSet = (current & 1u) == 1u;
+                if (isSet == value)
+                    return;
+
+                if (value)
+                    current |= 1u;
+                else
+                    current &= ~1u;
+
+                _flags2 = current;
+                OnSizeChanged();
+            }
+        }
+        public bool OnFootOnly
+        {
+            get => ((_flags2 ?? 0) & (1u << 1)) == (1u << 1);
+            set
+            {
+                uint current = _flags2 ?? 0;
+
+                bool isSet = (current & (1u << 1)) == (1u << 1);
+                if (isSet == value)
+                    return;
+
+                if (value)
+                    current |= (1u << 1);
+                else
+                    current &= ~(1u << 1);
+
+                _flags2 = current;
                 OnSizeChanged();
             }
         }
@@ -927,20 +997,20 @@ public class LocatorChunk : NamedChunk
                 data.Add(CreateFloatData(TargetPosition.Z));
                 data.Add(CreateFloatData(FOV));
                 data.Add(CreateFloatData(TargetLag));
-                data.Add(FollowPlayer);
+                data.Add(_followPlayer);
 
                 if (!TransitionTargetRate.HasValue)
                     return [.. data];
                 data.Add(CreateFloatData(TransitionTargetRate.Value));
 
-                if (!Flags.HasValue)
+                if (!_flags.HasValue)
                     return [.. data];
-                data.Add(Flags.Value);
+                data.Add(_flags.Value);
 
-                if (!CutInOut.HasValue || !Data.HasValue)
+                if (!_cutInOut.HasValue || !_flags2.HasValue)
                     return [.. data];
-                data.Add(CutInOut.Value);
-                data.Add(Data.Value);
+                data.Add(_cutInOut.Value);
+                data.Add(_flags2.Value);
 
                 return [.. data];
             }
@@ -951,11 +1021,11 @@ public class LocatorChunk : NamedChunk
             TargetPosition = new(ParseDataFloat(data[0]), ParseDataFloat(data[1]), ParseDataFloat(data[2]));
             FOV = ParseDataFloat(data[3]);
             TargetLag = ParseDataFloat(data[4]);
-            FollowPlayer = data[5];
+            _followPlayer = data[5];
             TransitionTargetRate = data.Count > 6 ? ParseDataFloat(data[6]) : null;
-            Flags = data.Count > 7 ? data[7] : null;
-            CutInOut = data.Count > 8 ? data[8] : null;
-            Data = data.Count > 9 ? data[9] : null;
+            _flags = data.Count > 7 ? data[7] : null;
+            _cutInOut = data.Count > 8 ? data[8] : null;
+            _flags2 = data.Count > 9 ? data[9] : null;
         }
 
         public StaticCameraLocatorData(Vector3 targetPosition, float fov, float targetLag, uint followPlayer) : base(LocatorTypes.StaticCamera)
@@ -963,11 +1033,11 @@ public class LocatorChunk : NamedChunk
             TargetPosition = targetPosition;
             FOV = fov;
             TargetLag = targetLag;
-            FollowPlayer = followPlayer;
+            _followPlayer = followPlayer;
             TransitionTargetRate = null;
-            Flags = null;
-            CutInOut = null;
-            Data = null;
+            _flags = null;
+            _cutInOut = null;
+            _flags2 = null;
         }
 
         public StaticCameraLocatorData(Vector3 targetPosition, float fov, float targetLag, uint followPlayer, float? transitionTargetRate) : base(LocatorTypes.StaticCamera)
@@ -975,53 +1045,55 @@ public class LocatorChunk : NamedChunk
             TargetPosition = targetPosition;
             FOV = fov;
             TargetLag = targetLag;
-            FollowPlayer = followPlayer;
+            _followPlayer = followPlayer;
             TransitionTargetRate = transitionTargetRate;
-            Flags = null;
-            CutInOut = null;
-            Data = null;
+            _flags = null;
+            _cutInOut = null;
+            _flags2 = null;
         }
 
-        public StaticCameraLocatorData(Vector3 targetPosition, float fov, float targetLag, uint followPlayer, float? transitionTargetRate, uint? flags) : base(LocatorTypes.StaticCamera)
+        public StaticCameraLocatorData(Vector3 targetPosition, float fov, float targetLag, uint followPlayer, float? transitionTargetRate, bool oneShot, bool disableFOV) : base(LocatorTypes.StaticCamera)
         {
             TargetPosition = targetPosition;
             FOV = fov;
             TargetLag = targetLag;
-            FollowPlayer = followPlayer;
+            _followPlayer = followPlayer;
             TransitionTargetRate = transitionTargetRate;
-            Flags = flags;
-            CutInOut = null;
-            Data = null;
+            OneShot = oneShot;
+            DisableFOV = disableFOV;
+            _cutInOut = null;
+            _flags2 = null;
         }
 
-        public StaticCameraLocatorData(Vector3 targetPosition, float fov, float targetLag, uint followPlayer, float? transitionTargetRate, uint? flags, uint? cutInOut, uint? data) : base(LocatorTypes.StaticCamera)
+        public StaticCameraLocatorData(Vector3 targetPosition, float fov, float targetLag, uint followPlayer, float? transitionTargetRate, bool oneShot, bool disableFOV, bool cutInOut, bool carOnly, bool onFootOnly) : base(LocatorTypes.StaticCamera)
         {
             TargetPosition = targetPosition;
             FOV = fov;
             TargetLag = targetLag;
-            FollowPlayer = followPlayer;
+            _followPlayer = followPlayer;
             TransitionTargetRate = transitionTargetRate;
-            Flags = flags;
-            CutInOut = cutInOut;
-            Data = data;
+            OneShot = oneShot;
+            DisableFOV = disableFOV;
+            CarOnly = carOnly;
+            OnFootOnly = onFootOnly;
         }
 
-        internal override LocatorData Clone() => (TransitionTargetRate.HasValue, Flags.HasValue, CutInOut.HasValue, Data.HasValue) switch
+        internal override LocatorData Clone() => (TransitionTargetRate.HasValue, _flags.HasValue, _cutInOut.HasValue, _flags2.HasValue) switch
         {
             (true, true, true, true) =>
-                new StaticCameraLocatorData(TargetPosition, FOV, TargetLag, FollowPlayer,
-                                        TransitionTargetRate!.Value!, Flags!.Value, CutInOut!.Value, Data!.Value),
+                new StaticCameraLocatorData(TargetPosition, FOV, TargetLag, _followPlayer,
+                                        TransitionTargetRate!.Value!, OneShot, DisableFOV, CutInOut, CarOnly, OnFootOnly),
             (true, true, _, _) =>
-                new StaticCameraLocatorData(TargetPosition, FOV, TargetLag, FollowPlayer,
-                                        TransitionTargetRate!.Value, Flags!.Value),
+                new StaticCameraLocatorData(TargetPosition, FOV, TargetLag, _followPlayer,
+                                        TransitionTargetRate!.Value, OneShot, DisableFOV),
             (true, _, _, _) =>
-                new StaticCameraLocatorData(TargetPosition, FOV, TargetLag, FollowPlayer,
+                new StaticCameraLocatorData(TargetPosition, FOV, TargetLag, _followPlayer,
                                         TransitionTargetRate!.Value),
             _ =>
-                new StaticCameraLocatorData(TargetPosition, FOV, TargetLag, FollowPlayer)
+                new StaticCameraLocatorData(TargetPosition, FOV, TargetLag, _followPlayer)
         };
 
-        public override string ToString() => $"TargetPosition = {TargetPosition}, FOV = {FOV}, TargetLag = {TargetLag}, FollowPlayer = {FollowPlayer}, TransitionTargetRate = {TransitionTargetRate?.ToString() ?? "null"}, Flags = {Flags?.ToString() ?? "null"}, CutInOut = {CutInOut?.ToString() ?? "null"}, Data = {Data?.ToString() ?? "null"}";
+        public override string ToString() => $"TargetPosition = {TargetPosition}, FOV = {FOV}, TargetLag = {TargetLag}, FollowPlayer = {_followPlayer}, TransitionTargetRate = {TransitionTargetRate?.ToString() ?? "null"}, OneShot = {OneShot}, DisableFOV = {DisableFOV}, CutInOut = {CutInOut}, CarOnly = {CarOnly}, OnFootOnly = {OnFootOnly}";
     }
 
     /// <summary>
