@@ -196,53 +196,116 @@ public abstract class Chunk
         return chunk;
     }
 
-    public T? GetFirstChunkOfType<T>() where T : Chunk
+    public Chunk? GetFirstChunkOfType(Type chunkType)
     {
+        if (chunkType == null)
+            throw new ArgumentNullException(nameof(chunkType));
+
+        if (!typeof(Chunk).IsAssignableFrom(chunkType))
+            throw new ArgumentException($"{chunkType.Name} must inherit from {nameof(Chunk)}", nameof(chunkType));
+
         foreach (var child in Children)
-            if (child is T chunk)
-                return chunk;
+            if (chunkType.IsAssignableFrom(child.GetType()))
+                return child;
+
         return null;
     }
 
-    public T? GetFirstChunkOfType<T>(string name) where T : NamedChunk
+    public T? GetFirstChunkOfType<T>() where T : Chunk => (T?)GetFirstChunkOfType(typeof(T));
+
+    public NamedChunk? GetFirstChunkOfType(Type chunkType, string name)
     {
+        if (chunkType == null)
+            throw new ArgumentNullException(nameof(chunkType));
+
+        if (!typeof(NamedChunk).IsAssignableFrom(chunkType))
+            throw new ArgumentException($"{chunkType.Name} must inherit from {nameof(NamedChunk)}", nameof(chunkType));
+
         foreach (var child in Children)
-            if (child is T chunk && chunk.Name == name)
+            if (chunkType.IsAssignableFrom(child.GetType()) && child is NamedChunk chunk && chunk.Name == name)
                 return chunk;
+
         return null;
     }
 
-    public T? GetFirstParamOfType<T>(string param) where T : ParamChunk
+    public T? GetFirstChunkOfType<T>(string name) where T : NamedChunk => (T?)GetFirstChunkOfType(typeof(T), name);
+
+    public ParamChunk? GetFirstParamOfType(Type chunkType, string param)
     {
+        if (chunkType == null)
+            throw new ArgumentNullException(nameof(chunkType));
+
+        if (!typeof(ParamChunk).IsAssignableFrom(chunkType))
+            throw new ArgumentException($"{chunkType.Name} must inherit from {nameof(ParamChunk)}", nameof(chunkType));
+
         foreach (var child in Children)
-            if (child is T chunk && chunk.Param == param)
+            if (chunkType.IsAssignableFrom(child.GetType()) && child is ParamChunk chunk && chunk.Param == param)
                 return chunk;
+
         return null;
     }
 
-    public T? GetLastChunkOfType<T>() where T : Chunk
+    public T? GetFirstParamOfType<T>(string param) where T : ParamChunk => (T?)GetFirstParamOfType(typeof(T), param);
+
+    public Chunk? GetLastChunkOfType(Type chunkType)
     {
+        if (chunkType == null)
+            throw new ArgumentNullException(nameof(chunkType));
+
+        if (!typeof(Chunk).IsAssignableFrom(chunkType))
+            throw new ArgumentException($"{chunkType.Name} must inherit from {nameof(Chunk)}", nameof(chunkType));
+
         for (int i = Children.Count - 1; i >= 0; i--)
-            if (Children[i] is T chunk)
-                return chunk;
+        {
+            var child = Children[i];
+            if (chunkType.IsAssignableFrom(child.GetType()))
+                return child;
+        }
+
         return null;
     }
 
-    public T? GetLastChunkOfType<T>(string name) where T : NamedChunk
+    public T? GetLastChunkOfType<T>() where T : Chunk => (T?)GetLastChunkOfType(typeof(T));
+
+    public NamedChunk? GetLastChunkOfType(Type chunkType, string name)
     {
+        if (chunkType == null)
+            throw new ArgumentNullException(nameof(chunkType));
+
+        if (!typeof(NamedChunk).IsAssignableFrom(chunkType))
+            throw new ArgumentException($"{chunkType.Name} must inherit from {nameof(NamedChunk)}", nameof(chunkType));
+
         for (int i = Children.Count - 1; i >= 0; i--)
-            if (Children[i] is T chunk && chunk.Name == name)
+        {
+            var child = Children[i];
+            if (chunkType.IsAssignableFrom(child.GetType()) && child is NamedChunk chunk && chunk.Name == name)
                 return chunk;
+        }
+
         return null;
     }
 
-    public T? GetLastParamOfType<T>(string param) where T : ParamChunk
+    public T? GetLastChunkOfType<T>(string name) where T : NamedChunk => (T?)GetLastChunkOfType(typeof(T), name);
+
+    public ParamChunk? GetLastParamOfType(Type chunkType, string param)
     {
+        if (chunkType == null)
+            throw new ArgumentNullException(nameof(chunkType));
+
+        if (!typeof(ParamChunk).IsAssignableFrom(chunkType))
+            throw new ArgumentException($"{chunkType.Name} must inherit from {nameof(ParamChunk)}", nameof(chunkType));
+
         for (int i = Children.Count - 1; i >= 0; i--)
-            if (Children[i] is T chunk && chunk.Param == param)
+        {
+            var child = Children[i];
+            if (chunkType.IsAssignableFrom(child.GetType()) && child is ParamChunk chunk && chunk.Param == param)
                 return chunk;
+        }
+
         return null;
     }
+
+    public T? GetLastParamOfType<T>(string param) where T : ParamChunk => (T?)GetLastParamOfType(typeof(T), param);
 
     public IReadOnlyList<T> GetChunksOfType<T>() where T : Chunk
     {
@@ -277,15 +340,22 @@ public abstract class Chunk
         return result;
     }
 
-    public T? FindNamedChunkInParentHierarchy<T>(string name) where T : NamedChunk
+    public NamedChunk? FindNamedChunkInParentHierarchy(Type chunkType, string name)
     {
+        if (chunkType == null)
+            throw new ArgumentNullException(nameof(chunkType));
+
+        if (!typeof(NamedChunk).IsAssignableFrom(chunkType))
+            throw new ArgumentException($"{chunkType.Name} must inherit from {nameof(NamedChunk)}", nameof(chunkType));
+
         if (ParentFile != null)
-            return ParentFile.GetFirstChunkOfType<T>(name);
+            return ParentFile.GetFirstChunkOfType(chunkType, name);
 
         var current = ParentChunk;
         while (current != null)
         {
-            var found = current.GetFirstChunkOfType<T>(name) ?? current.ParentFile?.GetFirstChunkOfType<T>(name);
+            var found = current.GetFirstChunkOfType(chunkType, name) ?? current.ParentFile?.GetFirstChunkOfType(chunkType, name);
+
             if (found != null)
                 return found;
 
@@ -294,6 +364,8 @@ public abstract class Chunk
 
         return null;
     }
+
+    public T? FindNamedChunkInParentHierarchy<T>(string name) where T : NamedChunk => (T?)FindNamedChunkInParentHierarchy(typeof(T), name);
 
     public uint GetChildCount() => (uint)Children.Count;
 

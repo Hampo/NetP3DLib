@@ -12,6 +12,27 @@ namespace NetP3DLib.P3D.Chunks;
 [ChunkAttributes(ChunkID)]
 public class OldFrameControllerChunk : NamedChunk
 {
+    private readonly static Dictionary<AnimationType, Type> AnimationTypeToChunkTypeMap = [];
+    private static void Add<T>(AnimationType type) where T : Chunk => AnimationTypeToChunkTypeMap.Add(type, typeof(T));
+
+    static OldFrameControllerChunk()
+    {
+        Add<AnimatedObjectChunk>(AnimationType.AnimatedObject);
+        Add<CameraChunk>(AnimationType.Camera);
+        Add<ExpressionMixerChunk>(AnimationType.Expression);
+        Add<LightChunk>(AnimationType.Light);
+        Add<CompositeDrawableChunk>(AnimationType.PoseTransform);
+        Add<CompositeDrawableChunk>(AnimationType.PoseVisibility);
+        Add<ScenegraphChunk>(AnimationType.ScenegraphTransform);
+        Add<ScenegraphChunk>(AnimationType.ScenegraphVisibility);
+        Add<ShaderChunk>(AnimationType.Texture);
+        Add<OldBillboardQuadGroupChunk>(AnimationType.BillboardQuadGroup);
+        Add<ParticleSystem2Chunk>(AnimationType.Effect);
+        Add<MeshChunk>(AnimationType.Vertex);
+        Add<ShaderChunk>(AnimationType.Shader);
+    }
+
+
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Frame_Controller;
 
     [DefaultValue(0)]
@@ -92,6 +113,12 @@ public class OldFrameControllerChunk : NamedChunk
 
         if (!AnimationName.IsValidP3DString())
             yield return new InvalidP3DStringException(this, nameof(AnimationName), AnimationName);
+
+        if (Type != AnimationType.AnimatedObject && Type != AnimationType.Effect && FindNamedChunkInParentHierarchy<AnimatedObjectChunk>(AnimationName) == null)
+            yield return new InvalidP3DException(this, $"Could not find animation with name \"{AnimationName}\" in the parent hierarchy.");
+
+        if (AnimationTypeToChunkTypeMap.TryGetValue(Type, out var hierarchyType) && FindNamedChunkInParentHierarchy(hierarchyType, HierarchyName) == null)
+            yield return new InvalidP3DException(this, $"Could not find {hierarchyType} with name \"{HierarchyName}\" in the parent hierarchy.");
     }
 
     protected override void WriteData(BinaryWriter bw)
