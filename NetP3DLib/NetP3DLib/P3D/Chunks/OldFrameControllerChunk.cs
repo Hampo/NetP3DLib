@@ -114,11 +114,11 @@ public class OldFrameControllerChunk : NamedChunk
         if (!AnimationName.IsValidP3DString())
             yield return new InvalidP3DStringException(this, nameof(AnimationName), AnimationName);
 
-        if (Type != AnimationType.AnimatedObject && Type != AnimationType.Effect && FindNamedChunkInParentHierarchy<AnimatedObjectChunk>(AnimationName) == null)
+        if (Type != AnimationType.AnimatedObject && Type != AnimationType.Effect && FindNamedChunkInParentHierarchy<AnimationChunk>(AnimationName) == null)
             yield return new InvalidP3DException(this, $"Could not find animation with name \"{AnimationName}\" in the parent hierarchy.");
 
         if (AnimationTypeToChunkTypeMap.TryGetValue(Type, out var hierarchyType) && FindNamedChunkInParentHierarchy(hierarchyType, HierarchyName) == null)
-            yield return new InvalidP3DException(this, $"Could not find {hierarchyType} with name \"{HierarchyName}\" in the parent hierarchy.");
+            yield return new InvalidP3DException(this, $"Could not find {hierarchyType.Name} with name \"{HierarchyName}\" in the parent hierarchy.");
     }
 
     protected override void WriteData(BinaryWriter bw)
