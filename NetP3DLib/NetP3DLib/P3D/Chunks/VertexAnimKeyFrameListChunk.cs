@@ -1,4 +1,5 @@
 using NetP3DLib.P3D.Attributes;
+using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using System;
@@ -15,7 +16,7 @@ public class VertexAnimKeyFrameListChunk : Chunk
     public uint Version { get; set; }
     public uint NumKeyFrameIds
     {
-        get => (uint)KeyFrameIds.Count;
+        get => (uint)(KeyFrameIds?.Count ?? 0);
         set
         {
             if (value == NumKeyFrameIds)
@@ -32,13 +33,12 @@ public class VertexAnimKeyFrameListChunk : Chunk
                     KeyFrameIds.Add(default);
             }
             NumKeyFrameCounts = value;
-            RecalculateSize();
         }
     }
-    public List<uint> KeyFrameIds { get; } = [];
+    public SizeAwareList<uint> KeyFrameIds { get; }
     public uint NumKeyFrameCounts
     {
-        get => (uint)KeyFrameCounts.Count;
+        get => (uint)(KeyFrameCounts?.Count ?? 0);
         set
         {
             if (value == NumKeyFrameCounts)
@@ -55,10 +55,9 @@ public class VertexAnimKeyFrameListChunk : Chunk
                     KeyFrameCounts.Add(default);
             }
             NumKeyFrameIds = value;
-            RecalculateSize();
         }
     }
-    public List<uint> KeyFrameCounts { get; } = [];
+    public SizeAwareList<uint> KeyFrameCounts { get; }
 
     public override byte[] DataBytes
     {
@@ -82,19 +81,21 @@ public class VertexAnimKeyFrameListChunk : Chunk
     {
         Version = br.ReadUInt32();
         var numKeyFrameIds = br.ReadInt32();
-        KeyFrameIds = new(numKeyFrameIds);
-        KeyFrameCounts = new(numKeyFrameIds);
+        var keyFrameIds = new List<uint>(numKeyFrameIds);
         for (int i = 0; i < numKeyFrameIds; i++)
-            KeyFrameIds.Add(br.ReadUInt32());
+            keyFrameIds.Add(br.ReadUInt32());
+        KeyFrameIds = CreateSizeAwareList(keyFrameIds);
+        var keyFrameCounts = new List<uint>(numKeyFrameIds);
         for (int i = 0; i < numKeyFrameIds; i++)
-            KeyFrameCounts.Add(br.ReadUInt32());
+            keyFrameCounts.Add(br.ReadUInt32());
+        KeyFrameCounts = CreateSizeAwareList(keyFrameCounts);
     }
 
     public VertexAnimKeyFrameListChunk(uint version, IList<uint> keyFrameIds, IList<uint> keyFrameCounts) : base(ChunkID)
     {
         Version = version;
-        KeyFrameIds.AddRange(keyFrameIds);
-        KeyFrameCounts.AddRange(keyFrameCounts);
+        KeyFrameIds = CreateSizeAwareList(keyFrameIds);
+        KeyFrameCounts = CreateSizeAwareList(keyFrameCounts);
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

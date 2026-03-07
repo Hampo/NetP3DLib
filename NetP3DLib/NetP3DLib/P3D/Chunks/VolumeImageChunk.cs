@@ -81,7 +81,7 @@ public class VolumeImageChunk : NamedChunk
 
     public VolumeImageChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Version = br.ReadUInt32();
         Width = br.ReadUInt32();
         Height = br.ReadUInt32();
@@ -94,7 +94,7 @@ public class VolumeImageChunk : NamedChunk
 
     public VolumeImageChunk(string name, uint version, uint width, uint height, uint depth, uint bpp, bool palettized, bool hasAlpha, Formats format) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         Version = version;
         Width = width;
         Height = height;

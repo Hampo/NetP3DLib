@@ -1,4 +1,5 @@
 using NetP3DLib.P3D.Attributes;
+using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
@@ -16,7 +17,7 @@ public class PositionListChunk : Chunk
     
     public uint NumPositions
     {
-        get => (uint)Positions.Count;
+        get => (uint)(Positions?.Count ?? 0);
         set
         {
             if (value == NumPositions)
@@ -32,10 +33,9 @@ public class PositionListChunk : Chunk
                 while (NumPositions < value)
                     Positions.Add(default);
             }
-            RecalculateSize();
         }
     }
-    public List<Vector3> Positions { get; } = [];
+    public SizeAwareList<Vector3> Positions { get; }
 
     public override byte[] DataBytes
     {
@@ -55,14 +55,15 @@ public class PositionListChunk : Chunk
     public PositionListChunk(BinaryReader br) : base(ChunkID)
     {
         var numPositions = br.ReadInt32();
-        Positions = new(numPositions);
+        var positions = new List<Vector3>(numPositions);
         for (var i = 0; i < numPositions; i++)
-            Positions.Add(br.ReadVector3());
+            positions.Add(br.ReadVector3());
+        Positions = CreateSizeAwareList(positions);
     }
 
     public PositionListChunk(IList<Vector3> positions) : base(ChunkID)
     {
-        Positions.AddRange(positions);
+        Positions = CreateSizeAwareList(positions);
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

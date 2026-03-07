@@ -1,4 +1,5 @@
 using NetP3DLib.P3D.Attributes;
+using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ public class CollisionMeshTriangleListChunk : Chunk
     
     public uint NumTriangles
     {
-        get => (uint)Triangles.Count;
+        get => (uint)(Triangles?.Count ?? 0);
         set
         {
             if (value == NumTriangles)
@@ -29,10 +30,9 @@ public class CollisionMeshTriangleListChunk : Chunk
                 while (NumTriangles < value)
                     Triangles.Add(new());
             }
-            RecalculateSize();
         }
     }
-    public List<Triangle> Triangles { get; } = [];
+    public SizeAwareList<Triangle> Triangles { get; }
 
     public override byte[] DataBytes
     {
@@ -52,14 +52,14 @@ public class CollisionMeshTriangleListChunk : Chunk
     public CollisionMeshTriangleListChunk(BinaryReader br) : base(ChunkID)
     {
         var numEntries = br.ReadInt32();
-        Triangles = new(numEntries);
+        Triangles = CreateSizeAwareList<Triangle>(numEntries);
         for (int i = 0; i < numEntries; i++)
             Triangles.Add(new(br));
     }
 
-    public CollisionMeshTriangleListChunk(IList<Triangle> entries) : base(ChunkID)
+    public CollisionMeshTriangleListChunk(IList<Triangle> triangles) : base(ChunkID)
     {
-        Triangles.AddRange(entries);
+        Triangles = CreateSizeAwareList(triangles);
     }
 
     protected override void WriteData(BinaryWriter bw)

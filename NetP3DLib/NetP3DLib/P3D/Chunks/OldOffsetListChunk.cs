@@ -1,4 +1,5 @@
 using NetP3DLib.P3D.Attributes;
+using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
 using System;
@@ -15,7 +16,7 @@ public class OldOffsetListChunk : Chunk
     
     public uint NumOffsets
     {
-        get => (uint)Offsets.Count;
+        get => (uint)(Offsets?.Count ?? 0);
         set
         {
             if (value == NumOffsets)
@@ -31,19 +32,22 @@ public class OldOffsetListChunk : Chunk
                 while (NumOffsets < value)
                     Offsets.Add(new());
             }
-            RecalculateSize();
         }
     }
     public uint KeyIndex { get; set; }
-    public List<OffsetEntry> Offsets { get; } = [];
+    public SizeAwareList<OffsetEntry> Offsets { get; }
     private bool _hasPrimGroupIndex = false;
     public bool HasPrimGroupIndex
     {
         get => _hasPrimGroupIndex;
         set
         {
+            if (_hasPrimGroupIndex == value)
+                return;
+
+            var oldSize = HeaderSize;
             _hasPrimGroupIndex = value;
-            RecalculateSize();
+            RecalculateSize(oldSize);
         }
     }
     public uint PrimGroupIndex { get; set; }
@@ -70,7 +74,7 @@ public class OldOffsetListChunk : Chunk
     {
         var numOffsets = br.ReadInt32();
         KeyIndex = br.ReadUInt32();
-        Offsets = new(numOffsets);
+        Offsets = CreateSizeAwareList<OffsetEntry>(numOffsets);
         for (int i = 0; i < numOffsets; i++)
             Offsets.Add(new(br));
         if (br.BaseStream.Position == br.BaseStream.Length)
@@ -85,7 +89,7 @@ public class OldOffsetListChunk : Chunk
     public OldOffsetListChunk(uint keyIndex, IList<OffsetEntry> offsets, uint primGroupIndex) : base(ChunkID)
     {
         KeyIndex = keyIndex;
-        Offsets.AddRange(offsets);
+        Offsets = CreateSizeAwareList(offsets);
         HasPrimGroupIndex = true;
         PrimGroupIndex = primGroupIndex;
     }
@@ -93,7 +97,7 @@ public class OldOffsetListChunk : Chunk
     public OldOffsetListChunk(uint keyIndex, IList<OffsetEntry> offsets) : base(ChunkID)
     {
         KeyIndex = keyIndex;
-        Offsets.AddRange(offsets);
+        Offsets = CreateSizeAwareList(offsets);
         HasPrimGroupIndex = false;
     }
 

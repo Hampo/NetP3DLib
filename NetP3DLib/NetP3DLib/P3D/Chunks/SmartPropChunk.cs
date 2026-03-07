@@ -2,6 +2,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,31 +15,17 @@ public class SmartPropChunk : NamedChunk
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Smart_Prop;
     
     public uint Version { get; set; }
-    private string _objectFactoryName = string.Empty;
+    private readonly P3DString _objectFactoryName;
     public string ObjectFactoryName
     {
-        get => _objectFactoryName;
-        set
-        {
-            if (_objectFactoryName == value)
-                return;
-
-            _objectFactoryName = value;
-            RecalculateSize();
-        }
+        get => _objectFactoryName?.Value ?? string.Empty;
+        set => _objectFactoryName.Value = value;
     }
-    private string _material = string.Empty;
+    private readonly P3DString _material;
     public string Material
     {
-        get => _material;
-        set
-        {
-            if (_material == value)
-                return;
-
-            _material = value;
-            RecalculateSize();
-        }
+        get => _material?.Value ?? string.Empty;
+        set => _material.Value = value;
     }
     public uint MaterialEnum { get; set; }
     public uint NumBreakables { get; set; }
@@ -70,9 +57,9 @@ public class SmartPropChunk : NamedChunk
     public SmartPropChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
-        Name = br.ReadP3DString();
-        ObjectFactoryName = br.ReadP3DString();
-        Material = br.ReadP3DString();
+        _name = new(this, br);
+        _objectFactoryName = new(this, br);
+        _material = new(this, br);
         MaterialEnum = br.ReadUInt32();
         NumBreakables = br.ReadUInt32();
         RenderingCost = br.ReadUInt32();
@@ -83,9 +70,9 @@ public class SmartPropChunk : NamedChunk
     public SmartPropChunk(uint version, string name, string objectFactoryName, string material, uint materialEnum, uint numBreakables, uint renderingCost, uint simulationCost, uint numStates) : base(ChunkID)
     {
         Version = version;
-        Name = name;
-        ObjectFactoryName = objectFactoryName;
-        Material = material;
+        _name = new(this, name);
+        _objectFactoryName = new(this, objectFactoryName);
+        _material = new(this, material);
         MaterialEnum = materialEnum;
         NumBreakables = numBreakables;
         RenderingCost = renderingCost;

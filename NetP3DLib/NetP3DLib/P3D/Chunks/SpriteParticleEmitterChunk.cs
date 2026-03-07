@@ -2,6 +2,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,18 +15,11 @@ public class SpriteParticleEmitterChunk : NamedChunk
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Sprite_Particle_Emitter;
     
     public uint Version { get; set; }
-    private string _shaderName = string.Empty;
+    private readonly P3DString _shaderName;
     public string ShaderName
     {
-        get => _shaderName;
-        set
-        {
-            if (_shaderName == value)
-                return;
-
-            _shaderName = value;
-            RecalculateSize();
-        }
+        get => _shaderName?.Value ?? string.Empty;
+        set => _shaderName.Value = value;
     }
     public uint UpdateMode { get; set; }
     public uint ZTest { get; set; }
@@ -68,8 +62,8 @@ public class SpriteParticleEmitterChunk : NamedChunk
     public SpriteParticleEmitterChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
-        Name = br.ReadP3DString();
-        ShaderName = br.ReadP3DString();
+        _name = new(this, br);
+        _shaderName = new(this, br);
         UpdateMode = br.ReadUInt32();
         ZTest = br.ReadUInt32();
         ZWrite = br.ReadUInt32();
@@ -86,8 +80,8 @@ public class SpriteParticleEmitterChunk : NamedChunk
     public SpriteParticleEmitterChunk(uint version, string name, string shaderName, uint updateMode, uint zTest, uint zWrite, uint maxParticles, uint infiniteLife, uint numTextureFrames, uint textureFrameRate, float initialAngle, float initialAngleVariance, float translationalCohesion, float rotationalCohesion) : base(ChunkID)
     {
         Version = version;
-        Name = name;
-        ShaderName = shaderName;
+        _name = new(this, name);
+        _shaderName = new(this, shaderName);
         UpdateMode = updateMode;
         ZTest = zTest;
         ZWrite = zWrite;

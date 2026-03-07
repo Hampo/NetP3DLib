@@ -38,7 +38,7 @@ public class Skeleton2Chunk : NamedChunk
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
     public Skeleton2Chunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Version = br.ReadUInt32();
         var numJoints = br.ReadUInt32();
         var numPartitions = br.ReadUInt32();
@@ -47,7 +47,7 @@ public class Skeleton2Chunk : NamedChunk
 
     public Skeleton2Chunk(string name, uint version, uint numLimbs) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         Version = version;
         NumLimbs = numLimbs;
     }

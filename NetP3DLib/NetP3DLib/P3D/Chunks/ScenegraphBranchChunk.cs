@@ -34,14 +34,14 @@ public class ScenegraphBranchChunk : NamedChunk
     public ScenegraphBranchChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         var numChildren = br.ReadUInt32();
     }
 
     public ScenegraphBranchChunk(uint version, string name) : base(ChunkID)
     {
         Version = version;
-        Name = name;
+        _name = new(this, name);
     }
 
     protected override void WriteData(BinaryWriter bw)

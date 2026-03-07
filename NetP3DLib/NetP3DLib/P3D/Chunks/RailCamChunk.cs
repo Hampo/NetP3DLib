@@ -67,7 +67,7 @@ public class RailCamChunk : NamedChunk
 
     public RailCamChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Behaviour = (Behaviours)br.ReadUInt32();
         MinRadius = br.ReadSingle();
         MaxRadius = br.ReadSingle();
@@ -83,7 +83,7 @@ public class RailCamChunk : NamedChunk
 
     public RailCamChunk(string name, Behaviours behaviour, float minRadius, float maxRadius, bool trackRail, float trackDist, bool reverseSense, float fov, Vector3 targetOffset, Vector3 axisPlay, float positionLag, float targetLag) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         Behaviour = behaviour;
         MinRadius = minRadius;
         MaxRadius = maxRadius;

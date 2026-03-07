@@ -50,7 +50,7 @@ public class StatePropStateDataV1Chunk : NamedChunk
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
     public StatePropStateDataV1Chunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         autoTransition = br.ReadUInt32();
         OutState = br.ReadUInt32();
         var numDrawables = br.ReadUInt32();
@@ -62,7 +62,7 @@ public class StatePropStateDataV1Chunk : NamedChunk
 
     public StatePropStateDataV1Chunk(string name, bool autoTransition, uint outState, float outFrame) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         AutoTransition = autoTransition;
         OutState = outState;
         OutFrame = outFrame;

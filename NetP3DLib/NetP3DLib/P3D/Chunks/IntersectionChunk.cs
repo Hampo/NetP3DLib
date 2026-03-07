@@ -41,7 +41,7 @@ public class IntersectionChunk : NamedChunk
 
     public IntersectionChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Position = br.ReadVector3();
         Radius = br.ReadSingle();
         TrafficBehaviour = (TrafficBehaviours)br.ReadUInt32();
@@ -49,7 +49,7 @@ public class IntersectionChunk : NamedChunk
 
     public IntersectionChunk(string name, Vector3 position, float radius, TrafficBehaviours trafficBehaviour) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         Position = position;
         Radius = radius;
         TrafficBehaviour = trafficBehaviour;

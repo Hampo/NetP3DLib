@@ -1,4 +1,5 @@
 using NetP3DLib.P3D.Attributes;
+using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ public class MemoryImageIndexListChunk : Chunk
     public uint Param { get; set; }
     public uint NumIndices
     {
-        get => (uint)Indices.Count;
+        get => (uint)(Indices?.Count ?? 0);
         set
         {
             if (value == NumIndices)
@@ -31,10 +32,9 @@ public class MemoryImageIndexListChunk : Chunk
                 while (NumIndices < value)
                     Indices.Add(default);
             }
-            RecalculateSize();
         }
     }
-    public List<ushort> Indices { get; } = [];
+    public SizeAwareList<ushort> Indices { get; }
 
     public override byte[] DataBytes
     {
@@ -58,16 +58,17 @@ public class MemoryImageIndexListChunk : Chunk
         Version = br.ReadUInt32();
         Param = br.ReadUInt32();
         int numIndices = br.ReadInt32() / sizeof(ushort);
-        Indices = new(numIndices);
+        var indices = new List<ushort>(numIndices);
         for (int i = 0; i < numIndices; i++)
-            Indices.Add(br.ReadUInt16());
+            indices.Add(br.ReadUInt16());
+        Indices = CreateSizeAwareList(indices);
     }
 
     public MemoryImageIndexListChunk(uint version, uint param, IList<ushort> indices) : base(ChunkID)
     {
         Version = version;
         Param = param;
-        Indices.AddRange(indices);
+        Indices = CreateSizeAwareList(indices);
     }
 
     protected override void WriteData(BinaryWriter bw)

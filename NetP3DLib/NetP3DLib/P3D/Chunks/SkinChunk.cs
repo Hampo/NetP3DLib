@@ -2,6 +2,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,18 +17,11 @@ public class SkinChunk : NamedChunk
     
     [DefaultValue(4)]
     public uint Version { get; set; }
-    private string _skeletonName = string.Empty;
+    private readonly P3DString _skeletonName;
     public string SkeletonName
     {
-        get => _skeletonName;
-        set
-        {
-            if (_skeletonName == value)
-                return;
-
-            _skeletonName = value;
-            RecalculateSize();
-        }
+        get => _skeletonName?.Value ?? string.Empty;
+        set => _skeletonName.Value = value;
     }
     public uint NumOldPrimitiveGroups => GetChildCount(ChunkIdentifier.Old_Primitive_Group);
     public uint NumPrimitiveGroups => GetChildCount(ChunkIdentifier.Primitive_Group);
@@ -51,17 +45,17 @@ public class SkinChunk : NamedChunk
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
     public SkinChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Version = br.ReadUInt32();
-        SkeletonName = br.ReadP3DString();
+        _skeletonName = new(this, br);
         var numPrimitiveGroups = br.ReadUInt32();
     }
 
     public SkinChunk(string name, uint version, string skeletonName) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         Version = version;
-        SkeletonName = skeletonName;
+        _skeletonName = new(this, skeletonName);
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

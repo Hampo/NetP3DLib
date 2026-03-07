@@ -1,4 +1,5 @@
 using NetP3DLib.P3D.Attributes;
+using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
 using System;
@@ -15,7 +16,7 @@ public class TextureGlyphListChunk : Chunk
     
     public uint NumGlyphs
     {
-        get => (uint)Glyphs.Count;
+        get => (uint)(Glyphs?.Count ?? 0);
         set
         {
             if (value == NumGlyphs)
@@ -31,10 +32,9 @@ public class TextureGlyphListChunk : Chunk
                 while (NumGlyphs < value)
                     Glyphs.Add(new());
             }
-            RecalculateSize();
         }
     }
-    public List<Glyph> Glyphs { get; } = [];
+    public SizeAwareList<Glyph> Glyphs { get; }
 
     public override byte[] DataBytes
     {
@@ -54,14 +54,14 @@ public class TextureGlyphListChunk : Chunk
     public TextureGlyphListChunk(BinaryReader br) : base(ChunkID)
     {
         var numGlyphs = br.ReadInt32();
-        Glyphs = new(numGlyphs);
+        Glyphs = CreateSizeAwareList<Glyph>(numGlyphs);
         for (int i = 0; i < numGlyphs; i++)
             Glyphs.Add(new(br));
     }
 
     public TextureGlyphListChunk(IList<Glyph> glyphs) : base(ChunkID)
     {
-        Glyphs.AddRange(glyphs);
+        Glyphs = CreateSizeAwareList(glyphs);
     }
 
     protected override void WriteData(BinaryWriter bw)

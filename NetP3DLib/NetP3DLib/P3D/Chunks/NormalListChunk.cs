@@ -1,4 +1,5 @@
 using NetP3DLib.P3D.Attributes;
+using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
@@ -16,7 +17,7 @@ public class NormalListChunk : Chunk
     
     public uint NumNormals
     {
-        get => (uint)Normals.Count;
+        get => (uint)(Normals?.Count ?? 0);
         set
         {
             if (value == NumNormals)
@@ -32,10 +33,9 @@ public class NormalListChunk : Chunk
                 while (NumNormals < value)
                     Normals.Add(default);
             }
-            RecalculateSize();
         }
     }
-    public List<Vector3> Normals { get; } = [];
+    public SizeAwareList<Vector3> Normals { get; }
 
     public override byte[] DataBytes
     {
@@ -55,14 +55,15 @@ public class NormalListChunk : Chunk
     public NormalListChunk(BinaryReader br) : base(ChunkID)
     {
         var numNormals = br.ReadInt32();
-        Normals = new(numNormals);
+        var normals = new List<Vector3>(numNormals);
         for (var i = 0; i < numNormals; i++)
-            Normals.Add(br.ReadVector3());
+            normals.Add(br.ReadVector3());
+        Normals = CreateSizeAwareList(normals);
     }
 
     public NormalListChunk(IList<Vector3> normals) : base(ChunkID)
     {
-        Normals.AddRange(normals);
+        Normals = CreateSizeAwareList(normals);
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

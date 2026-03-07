@@ -2,6 +2,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -30,18 +31,11 @@ public class CollisionEffectChunk : Chunk
 
     public ClassTypes ClassType { get; set; }
     public uint PhysPropID { get; set; }
-    private string _soundResourceDataName = string.Empty;
+    private readonly P3DString _soundResourceDataName;
     public string SoundResourceDataName
     {
-        get => _soundResourceDataName;
-        set
-        {
-            if (_soundResourceDataName == value)
-                return;
-
-            _soundResourceDataName = value;
-            RecalculateSize();
-        }
+        get => _soundResourceDataName?.Value ?? string.Empty;
+        set => _soundResourceDataName.Value = value;
     }
 
     public override byte[] DataBytes
@@ -63,14 +57,14 @@ public class CollisionEffectChunk : Chunk
     {
         ClassType = (ClassTypes)br.ReadUInt32();
         PhysPropID = br.ReadUInt32();
-        SoundResourceDataName = br.ReadP3DString();
+        _soundResourceDataName = new(this, br);
     }
 
     public CollisionEffectChunk(ClassTypes classType, uint phyPropID, string soundResourceDataName) : base(ChunkID)
     {
         ClassType = classType;
         PhysPropID = phyPropID;
-        SoundResourceDataName = soundResourceDataName;
+        _soundResourceDataName = new(this, soundResourceDataName);
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

@@ -38,7 +38,7 @@ public class AnimatedObjectAnimationChunk : NamedChunk
     public AnimatedObjectAnimationChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         FrameRate = br.ReadSingle();
         var numOldFrameControllers = br.ReadUInt32();
     }
@@ -46,7 +46,7 @@ public class AnimatedObjectAnimationChunk : NamedChunk
     public AnimatedObjectAnimationChunk(uint version, string name, float frameRate) : base(ChunkID)
     {
         Version = version;
-        Name = name;
+        _name = new(this, name);
         FrameRate = frameRate;
     }
 

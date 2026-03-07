@@ -35,7 +35,7 @@ public class ShadowMeshChunk : NamedChunk
 
     public ShadowMeshChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Version = br.ReadUInt32();
         NumVertices = br.ReadUInt32();
         NumTriangles = br.ReadUInt32();
@@ -43,7 +43,7 @@ public class ShadowMeshChunk : NamedChunk
 
     public ShadowMeshChunk(string name, uint version, uint numVertices, uint numTriangles) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         Version = version;
         NumVertices = numVertices;
         NumTriangles = numTriangles;

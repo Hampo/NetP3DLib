@@ -14,7 +14,7 @@ public class CompositeDrawablePrimitiveChunk : NamedChunk
     
     public uint Version { get; set; }
     public uint CreateInstance { get; set; }
-    // TODO: Type num
+    // TODO: Type enum
     public uint Type { get; set; }
     public uint SkeletonJointID { get; set; }
 
@@ -39,7 +39,7 @@ public class CompositeDrawablePrimitiveChunk : NamedChunk
     {
         Version = br.ReadUInt32();
         CreateInstance = br.ReadUInt32();
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Type = br.ReadUInt32();
         SkeletonJointID = br.ReadUInt32();
     }
@@ -48,7 +48,7 @@ public class CompositeDrawablePrimitiveChunk : NamedChunk
     {
         Version = version;
         CreateInstance = createInstance;
-        Name = name;
+        _name = new(this, name);
         Type = type;
         SkeletonJointID = skeletonJointId;
     }

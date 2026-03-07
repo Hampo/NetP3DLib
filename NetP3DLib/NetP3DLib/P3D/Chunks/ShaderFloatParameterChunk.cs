@@ -30,13 +30,13 @@ public class ShaderFloatParameterChunk : ParamChunk
 
     public ShaderFloatParameterChunk(BinaryReader br) : base(ChunkID)
     {
-        Param = br.ReadFourCC();
+        _param = new(this, br);
         Value = br.ReadSingle();
     }
 
     public ShaderFloatParameterChunk(string param, float value) : base(ChunkID)
     {
-        Param = param;
+        _param = new(this, param);
         Value = value;
     }
 

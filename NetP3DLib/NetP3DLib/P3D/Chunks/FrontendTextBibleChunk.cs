@@ -14,7 +14,7 @@ public class FrontendTextBibleChunk : NamedChunk
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Frontend_Text_Bible;
     
     public uint NumLanguages => (uint)Languages.Length;
-    public string Languages
+    public string Languages // TODO: This is probably fucked with the dynamic size changes, but also it never changes so... Future me problem
     {
         get
         {
@@ -43,14 +43,14 @@ public class FrontendTextBibleChunk : NamedChunk
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
     public FrontendTextBibleChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         var numLanguages = br.ReadUInt32();
         var languages = br.ReadP3DString();
     }
 
     public FrontendTextBibleChunk(string name) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
     }
 
     protected override void WriteData(BinaryWriter bw)

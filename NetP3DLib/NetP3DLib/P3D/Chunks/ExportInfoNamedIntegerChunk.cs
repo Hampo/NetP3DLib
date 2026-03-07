@@ -30,13 +30,13 @@ public class ExportInfoNamedIntegerChunk : NamedChunk
 
     public ExportInfoNamedIntegerChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Value = br.ReadUInt32();
     }
 
     public ExportInfoNamedIntegerChunk(string name, uint value) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         Value = value;
     }
 

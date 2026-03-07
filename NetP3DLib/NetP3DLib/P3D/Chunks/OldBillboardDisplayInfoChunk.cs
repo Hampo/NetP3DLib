@@ -2,6 +2,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -18,19 +19,12 @@ public class OldBillboardDisplayInfoChunk : Chunk
     [DefaultValue(1)]
     public uint Version { get; set; }
     public Quaternion Rotation { get; set; }
-    private string _cutOffMode = string.Empty;
+    private readonly FourCC _cutOffMode;
     [MaxLength(4)]
     public string CutOffMode
     {
-        get => _cutOffMode;
-        set
-        {
-            if (_cutOffMode == value)
-                return;
-
-            _cutOffMode = value;
-            RecalculateSize();
-        }
+        get => _cutOffMode?.Value ?? string.Empty;
+        set => _cutOffMode.Value = value;
     }
     public Vector2 UVOffsetRange { get; set; }
     public float SourceRange { get; set; }
@@ -58,7 +52,7 @@ public class OldBillboardDisplayInfoChunk : Chunk
     {
         Version = br.ReadUInt32();
         Rotation = br.ReadQuaternion();
-        CutOffMode = br.ReadFourCC();
+        _cutOffMode = new(this, br);
         UVOffsetRange = br.ReadVector2();
         SourceRange = br.ReadSingle();
         EdgeRange = br.ReadSingle();
@@ -68,7 +62,7 @@ public class OldBillboardDisplayInfoChunk : Chunk
     {
         Version = version;
         Rotation = rotation;
-        CutOffMode = cutOffMode;
+        _cutOffMode = new(this, cutOffMode);
         UVOffsetRange = uvOffsetRange;
         SourceRange = sourceRange;
         EdgeRange = edgeRange;

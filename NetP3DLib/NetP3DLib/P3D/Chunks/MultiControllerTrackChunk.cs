@@ -2,6 +2,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,19 +17,12 @@ public class MultiControllerTrackChunk : NamedChunk
     
     [DefaultValue(0)]
     public uint Version { get; set; }
-    private string _type = string.Empty;
+    private readonly FourCC _type;
     [MaxLength(4)]
     public string Type
     {
-        get => _type;
-        set
-        {
-            if (_type == value)
-                return;
-
-            _type = value;
-            RecalculateSize();
-        }
+        get => _type?.Value ?? string.Empty;
+        set => _type.Value = value;
     }
 
     public override byte[] DataBytes
@@ -49,15 +43,15 @@ public class MultiControllerTrackChunk : NamedChunk
     public MultiControllerTrackChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
-        Name = br.ReadP3DString();
-        Type = br.ReadFourCC();
+        _name = new(this, br);
+        _type = new(this, br);
     }
 
     public MultiControllerTrackChunk(uint version, string name, string type) : base(ChunkID)
     {
         Version = version;
-        Name = name;
-        Type = type;
+        _name = new(this, name);
+        _type = new(this, type);
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

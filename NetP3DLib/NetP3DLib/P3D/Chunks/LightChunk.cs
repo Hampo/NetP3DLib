@@ -56,7 +56,7 @@ public class LightChunk : NamedChunk
 
     public LightChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Version = br.ReadUInt32();
         Type = (Types)br.ReadUInt32();
         Colour = br.ReadColor();
@@ -68,7 +68,7 @@ public class LightChunk : NamedChunk
 
     public LightChunk(string name, uint version, Types type, Color colour, float constant, float linear, float squared, bool enabled) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         Version = version;
         Type = type;
         Colour = colour;

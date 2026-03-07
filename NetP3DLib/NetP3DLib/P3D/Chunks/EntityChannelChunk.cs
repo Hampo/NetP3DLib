@@ -19,7 +19,7 @@ public class EntityChannelChunk : ParamChunk
     public uint Version { get; set; }
     public uint NumFrames
     {
-        get => (uint)Frames.Count;
+        get => (uint)(Frames?.Count ?? 0);
         set
         {
             if (value == NumFrames)
@@ -36,13 +36,12 @@ public class EntityChannelChunk : ParamChunk
                     Frames.Add(default);
             }
             NumValues = value;
-            RecalculateSize();
         }
     }
-    public List<ushort> Frames { get; } = [];
+    public SizeAwareList<ushort> Frames { get; }
     public uint NumValues
     {
-        get => (uint)Values.Count;
+        get => (uint)(Values?.Count ?? 0);
         set
         {
             if (value == NumValues)
@@ -59,7 +58,6 @@ public class EntityChannelChunk : ParamChunk
                     Values.Add(string.Empty);
             }
             NumFrames = value;
-            RecalculateSize();
         }
     }
     public SizeAwareList<string> Values { get; }
@@ -86,37 +84,36 @@ public class EntityChannelChunk : ParamChunk
         get
         {
             uint size = sizeof(uint) + 4 + sizeof(uint) + sizeof(short) * NumValues;
-            foreach (var value in Values)
-                size += BinaryExtensions.GetP3DStringLength(value);
+
+            if (Values != null)
+                foreach (var value in Values)
+                    size += BinaryExtensions.GetP3DStringLength(value);
+
             return size;
         }
     }
 
     public EntityChannelChunk(BinaryReader br) : base(ChunkID)
     {
-        Values = CreateSizeAwareList<string>();
         Version = br.ReadUInt32();
-        Param = br.ReadFourCC();
+        _param = new(this, br);
         var numFrames = br.ReadInt32();
-        Frames = new(numFrames);
-        Values = CreateSizeAwareList<string>(numFrames);
-        Values.SuspendNotifications();
+        var frames = new List<ushort>(numFrames);
         for (var i = 0; i < numFrames; i++)
-            Frames.Add(br.ReadUInt16());
+            frames.Add(br.ReadUInt16());
+        Frames = CreateSizeAwareList(frames);
+        var values = new List<string>(numFrames);
         for (var i = 0; i < numFrames; i++)
-            Values.Add(br.ReadP3DString());
-        Values.ResumeNotifications();
+            values.Add(br.ReadP3DString());
+        Values = CreateSizeAwareList(values);
     }
 
     public EntityChannelChunk(uint version, string param, IList<ushort> frames, IList<string> values) : base(ChunkID)
     {
-        Values = CreateSizeAwareList<string>(values.Count);
         Version = version;
-        Param = param;
-        Frames.AddRange(frames);
-        Values.SuspendNotifications();
-        Values.AddRange(values);
-        Values.ResumeNotifications();
+        _param = new(this, param);
+        Frames = CreateSizeAwareList(frames);
+        Values = CreateSizeAwareList(values);
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

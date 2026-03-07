@@ -26,12 +26,12 @@ public class ExportInfoChunk : NamedChunk
 
     public ExportInfoChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
     }
 
     public ExportInfoChunk(string name) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
     }
 
     protected override void WriteData(BinaryWriter bw)

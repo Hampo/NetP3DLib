@@ -2,6 +2,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Types;
 using System.Collections.Generic;
 using System.IO;
 
@@ -12,31 +13,17 @@ public class FrontendStringTextBibleChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Frontend_String_Text_Bible;
 
-    private string _bibleName = string.Empty;
+    private readonly P3DString _bibleName;
     public string BibleName
     {
-        get => _bibleName;
-        set
-        {
-            if (_bibleName == value)
-                return;
-
-            _bibleName = value;
-            RecalculateSize();
-        }
+        get => _bibleName?.Value ?? string.Empty;
+        set => _bibleName.Value = value;
     }
-    private string _stringID = string.Empty;
+    private readonly P3DString _stringID;
     public string StringID
     {
-        get => _stringID;
-        set
-        {
-            if (_stringID == value)
-                return;
-
-            _stringID = value;
-            RecalculateSize();
-        }
+        get => _stringID?.Value ?? string.Empty;
+        set => _stringID.Value = value;
     }
 
     public override byte[] DataBytes
@@ -55,14 +42,14 @@ public class FrontendStringTextBibleChunk : Chunk
 
     public FrontendStringTextBibleChunk(BinaryReader br) : base(ChunkID)
     {
-        BibleName = br.ReadP3DString();
-        StringID = br.ReadP3DString();
+        _bibleName = new(this, br);
+        _stringID = new(this, br);
     }
 
     public FrontendStringTextBibleChunk(string bibleName, string stringID) : base(ChunkID)
     {
-        BibleName = bibleName;
-        StringID = stringID;
+        _bibleName = new(this, bibleName);
+        _stringID = new(this, stringID);
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

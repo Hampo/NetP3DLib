@@ -1,4 +1,5 @@
 using NetP3DLib.P3D.Attributes;
+using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
 using System;
@@ -18,7 +19,7 @@ public class BooleanChannelChunk : ParamChunk
     public bool StartState { get; set; }
     public uint NumValues
     {
-        get => (uint)Values.Count;
+        get => (uint)(Values?.Count ?? 0);
         set
         {
             if (value == NumValues)
@@ -34,10 +35,9 @@ public class BooleanChannelChunk : ParamChunk
                 while (NumValues < value)
                     Values.Add(default);
             }
-            RecalculateSize();
         }
     }
-    public List<ushort> Values { get; } = [];
+    public SizeAwareList<ushort> Values { get; }
 
     public override byte[] DataBytes
     {
@@ -60,20 +60,21 @@ public class BooleanChannelChunk : ParamChunk
     public BooleanChannelChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
-        Param = br.ReadFourCC();
+        _param = new(this, br);
         StartState = br.ReadUInt16() == 1;
         var numValues = br.ReadInt32();
-        Values = new(numValues);
+        var values = new List<ushort>(numValues);
         for (int i = 0; i < numValues; i++)
-            Values.Add(br.ReadUInt16());
+            values.Add(br.ReadUInt16());
+        Values = CreateSizeAwareList(values);
     }
 
     public BooleanChannelChunk(uint version, string param, bool startState, IList<ushort> values) : base(ChunkID)
     {
         Version = version;
-        Param = param;
+        _param = new(this, param);
         StartState = startState;
-        Values.AddRange(values);
+        Values = CreateSizeAwareList(values);
     }
 
     protected override void WriteData(BinaryWriter bw)

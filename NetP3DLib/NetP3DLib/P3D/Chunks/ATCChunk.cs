@@ -16,7 +16,7 @@ public class ATCChunk : Chunk
     
     public uint NumEntries
     {
-        get => (uint)Entries.Count;
+        get => (uint)(Entries?.Count ?? 0);
         set
         {
             if (value == NumEntries)
@@ -54,8 +54,11 @@ public class ATCChunk : Chunk
         get
         {
             uint size = sizeof(uint);
-            foreach (var entry in Entries)
-                size += (uint)entry.DataBytes.Length;
+
+            if (Entries != null)
+                foreach (var entry in Entries)
+                    size += entry.DataLength;
+
             return size;
         }
     }
@@ -64,12 +67,11 @@ public class ATCChunk : Chunk
     {
         var numEntries = br.ReadInt32();
         Entries = CreateSizeAwareList<Entry>(numEntries);
-        Entries.SuspendNotifications();
         Entries.CollectionChanged += Entries_CollectionChanged;
-
+        var entries = new List<Entry>(numEntries);
         for (int i = 0; i < numEntries; i++)
-            Entries.Add(new(br));
-        Entries.ResumeNotifications();
+            entries.Add(new(br));
+        Entries.AddRange(entries);
     }
 
     public ATCChunk(IList<Entry> entries) : base(ChunkID)
@@ -77,9 +79,7 @@ public class ATCChunk : Chunk
         Entries = CreateSizeAwareList<Entry>(entries.Count);
         Entries.CollectionChanged += Entries_CollectionChanged;
 
-        Entries.SuspendNotifications();
         Entries.AddRange(entries);
-        Entries.ResumeNotifications();
     }
 
     private void Entries_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -91,13 +91,11 @@ public class ATCChunk : Chunk
         if (e.NewItems != null)
             foreach (Entry newEntry in e.NewItems)
                 newEntry.SizeChanged += Entry_SizeChanged;
-
-        RecalculateSize();
     }
 
-    private void Entry_SizeChanged()
+    private void Entry_SizeChanged(int delta)
     {
-        RecalculateSize();
+        RecalculateSize((uint)(HeaderSize - delta));
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
@@ -127,7 +125,7 @@ public class ATCChunk : Chunk
 
     public class Entry
     {
-        public event Action? SizeChanged;
+        public event Action<int>? SizeChanged;
 
         private string _soundResourceDataName = string.Empty;
         public string SoundResourceDataName
@@ -136,8 +134,11 @@ public class ATCChunk : Chunk
             set
             {
                 if (_soundResourceDataName == value) return;
+
+                var oldSize = DataLength;
                 _soundResourceDataName = value;
-                SizeChanged?.Invoke();
+                var newSize = DataLength;
+                SizeChanged?.Invoke((int)(newSize - oldSize));
             }
         }
 
@@ -148,8 +149,11 @@ public class ATCChunk : Chunk
             set
             {
                 if (_particle == value) return;
+
+                var oldSize = DataLength;
                 _particle = value;
-                SizeChanged?.Invoke();
+                var newSize = DataLength;
+                SizeChanged?.Invoke((int)(newSize - oldSize));
             }
         }
 
@@ -160,8 +164,11 @@ public class ATCChunk : Chunk
             set
             {
                 if (_breakableObject == value) return;
+
+                var oldSize = DataLength;
                 _breakableObject = value;
-                SizeChanged?.Invoke();
+                var newSize = DataLength;
+                SizeChanged?.Invoke((int)(newSize - oldSize));
             }
         }
         public float Friction { get; set; }
@@ -185,9 +192,11 @@ public class ATCChunk : Chunk
             }
         }
 
+        public uint DataLength => BinaryExtensions.GetP3DStringLength(SoundResourceDataName) + BinaryExtensions.GetP3DStringLength(Particle) + BinaryExtensions.GetP3DStringLength(BreakableObject) + sizeof(float) + sizeof(float) + sizeof(float);
+
         public Entry(BinaryReader br)
         {
-            SoundResourceDataName = br.ReadP3DString();
+            _soundResourceDataName = br.ReadP3DString();
             Particle = br.ReadP3DString();
             BreakableObject = br.ReadP3DString();
             Friction = br.ReadSingle();
@@ -197,7 +206,7 @@ public class ATCChunk : Chunk
 
         public Entry(string soundResourceDataName, string particle, string breakableObject, float friction, float mass, float elasticity)
         {
-            SoundResourceDataName = soundResourceDataName;
+            _soundResourceDataName = soundResourceDataName;
             Particle = particle;
             BreakableObject = breakableObject;
             Friction = friction;

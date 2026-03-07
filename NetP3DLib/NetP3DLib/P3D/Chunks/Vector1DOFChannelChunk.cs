@@ -1,4 +1,5 @@
 using NetP3DLib.P3D.Attributes;
+using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
@@ -21,7 +22,7 @@ public class Vector1DOFChannelChunk : ParamChunk
     public Vector3 Constants { get; set; }
     public uint NumFrames
     {
-        get => (uint)Frames.Count;
+        get => (uint)(Frames?.Count ?? 0);
         set
         {
             if (value == NumFrames)
@@ -38,13 +39,12 @@ public class Vector1DOFChannelChunk : ParamChunk
                     Frames.Add(default);
             }
             NumValues = value;
-            RecalculateSize();
         }
     }
-    public List<ushort> Frames { get; } = [];
+    public SizeAwareList<ushort> Frames { get; }
     public uint NumValues
     {
-        get => (uint)Values.Count;
+        get => (uint)(Values?.Count ?? 0);
         set
         {
             if (value == NumValues)
@@ -61,10 +61,9 @@ public class Vector1DOFChannelChunk : ParamChunk
                     Values.Add(default);
             }
             NumFrames = value;
-            RecalculateSize();
         }
     }
-    public List<float> Values { get; } = [];
+    public SizeAwareList<float> Values { get; }
 
     public override byte[] DataBytes
     {
@@ -90,26 +89,28 @@ public class Vector1DOFChannelChunk : ParamChunk
     public Vector1DOFChannelChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
-        Param = br.ReadFourCC();
+        _param = new(this, br);
         DynamicIndex = (Coordinate)br.ReadUInt16();
         Constants = br.ReadVector3();
         var numFrames = br.ReadInt32();
-        Frames = new(numFrames);
-        Values = new(numFrames);
+        var frames = new List<ushort>(numFrames);
         for (var i = 0; i < numFrames; i++)
-            Frames.Add(br.ReadUInt16());
+            frames.Add(br.ReadUInt16());
+        Frames = CreateSizeAwareList(frames);
+        var values = new List<float>(numFrames);
         for (var i = 0; i < numFrames; i++)
-            Values.Add(br.ReadSingle());
+            values.Add(br.ReadSingle());
+        Values = CreateSizeAwareList(values);
     }
 
     public Vector1DOFChannelChunk(uint version, string param, Coordinate dynamicIndex, Vector3 constants, IList<ushort> frames, IList<float> values) : base(ChunkID)
     {
         Version = version;
-        Param = param;
+        _param = new(this, param);
         DynamicIndex = dynamicIndex;
         Constants = constants;
-        Frames.AddRange(frames);
-        Values.AddRange(values);
+        Frames = CreateSizeAwareList(frames);
+        Values = CreateSizeAwareList(values);
     }
 
     public List<Vector3> GetValues()

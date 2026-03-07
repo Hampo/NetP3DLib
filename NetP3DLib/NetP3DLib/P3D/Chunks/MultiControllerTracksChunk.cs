@@ -6,6 +6,7 @@ using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -16,7 +17,7 @@ public class MultiControllerTracksChunk : Chunk
     
     public uint NumTracks
     {
-        get => (uint)Tracks.Count;
+        get => (uint)(Tracks?.Count ?? 0);
         set
         {
             if (value == NumTracks)
@@ -32,7 +33,6 @@ public class MultiControllerTracksChunk : Chunk
                 while (NumTracks < value)
                     Tracks.Add(new());
             }
-            RecalculateSize();
         }
     }
     public SizeAwareList<Track> Tracks { get; }
@@ -55,8 +55,11 @@ public class MultiControllerTracksChunk : Chunk
         get
         {
             uint size = sizeof(uint);
-            foreach (var track in Tracks)
-                size += track.DataLength;
+
+            if (Tracks != null)
+                foreach (var track in Tracks)
+                    size += track.DataLength;
+
             return size;
         }
     }
@@ -66,10 +69,8 @@ public class MultiControllerTracksChunk : Chunk
         var numTracks = br.ReadInt32();
         Tracks = CreateSizeAwareList<Track>(numTracks);
         Tracks.CollectionChanged += Tracks_CollectionChanged;
-        Tracks.SuspendNotifications();
         for (int i = 0; i < numTracks; i++)
             Tracks.Add(new(br));
-        Tracks.ResumeNotifications();
     }
 
     public MultiControllerTracksChunk(IList<Track> tracks) : base(ChunkID)
@@ -77,9 +78,7 @@ public class MultiControllerTracksChunk : Chunk
         Tracks = CreateSizeAwareList<Track>(tracks.Count);
         Tracks.CollectionChanged += Tracks_CollectionChanged;
 
-        Tracks.SuspendNotifications();
         Tracks.AddRange(tracks);
-        Tracks.ResumeNotifications();
     }
 
     private void Tracks_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -91,13 +90,11 @@ public class MultiControllerTracksChunk : Chunk
         if (e.NewItems != null)
             foreach (Track newTrack in e.NewItems)
                 newTrack.SizeChanged += Track_SizeChanged;
-
-        RecalculateSize();
     }
 
-    private void Track_SizeChanged()
+    private void Track_SizeChanged(int delta)
     {
-        RecalculateSize();
+        RecalculateSize((uint)(HeaderSize - delta));
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
@@ -127,7 +124,7 @@ public class MultiControllerTracksChunk : Chunk
 
     public class Track
     {
-        public event Action? SizeChanged;
+        public event Action<int>? SizeChanged;
 
         private string _name = string.Empty;
         public string Name
@@ -136,8 +133,11 @@ public class MultiControllerTracksChunk : Chunk
             set
             {
                 if (_name == value) return;
+
+                var oldSize = BinaryExtensions.GetP3DStringLength(_name);
                 _name = value;
-                SizeChanged?.Invoke();
+                var newSize = BinaryExtensions.GetP3DStringLength(_name);
+                SizeChanged?.Invoke((int)(newSize - oldSize));
             }
         }
         public float StartTime { get; set; }
@@ -163,7 +163,7 @@ public class MultiControllerTracksChunk : Chunk
 
         public Track(BinaryReader br)
         {
-            Name = br.ReadP3DString();
+            _name = br.ReadP3DString();
             StartTime = br.ReadSingle();
             EndTime = br.ReadSingle();
             Scale = br.ReadSingle();
@@ -171,7 +171,7 @@ public class MultiControllerTracksChunk : Chunk
 
         public Track(string name, float startTime, float endTime, float scale)
         {
-            Name = name;
+            _name = name;
             StartTime = startTime;
             EndTime = endTime;
             Scale = scale;

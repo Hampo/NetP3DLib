@@ -30,13 +30,13 @@ public class GameAttributeVectorParameterChunk : NamedChunk
 
     public GameAttributeVectorParameterChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Value = br.ReadVector3();
     }
 
     public GameAttributeVectorParameterChunk(string name, Vector3 value) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         Value = value;
     }
 

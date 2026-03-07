@@ -33,7 +33,6 @@ public class HistoryChunk : Chunk
                 while (NumHistory < value)
                     History.Add(string.Empty);
             }
-            RecalculateSize();
         }
     }
     public SizeAwareList<string> History { get; }
@@ -56,8 +55,11 @@ public class HistoryChunk : Chunk
         get
         {
             uint size = sizeof(ushort);
-            foreach (var item in History)
-                size += BinaryExtensions.GetP3DStringLength(item);
+
+            if (History != null)
+                foreach (var item in History)
+                    size += BinaryExtensions.GetP3DStringLength(item);
+
             return size;
         }
     }
@@ -65,19 +67,15 @@ public class HistoryChunk : Chunk
     public HistoryChunk(BinaryReader br) : base(ChunkID)
     {
         ushort lineCount = br.ReadUInt16();
-        History = CreateSizeAwareList<string>(lineCount);
-        History.SuspendNotifications();
+        var history = new List<string>(lineCount);
         for (int i = 0; i < lineCount; i++)
-            History.Add(br.ReadP3DString());
-        History.ResumeNotifications();
+            history.Add(br.ReadP3DString());
+        History = CreateSizeAwareList(history);
     }
 
     public HistoryChunk(IList<string> history) : base(ChunkID)
     {
-        History = CreateSizeAwareList<string>(history.Count);
-        History.SuspendNotifications();
-        History.AddRange(history);
-        History.ResumeNotifications();
+        History = CreateSizeAwareList(history);
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

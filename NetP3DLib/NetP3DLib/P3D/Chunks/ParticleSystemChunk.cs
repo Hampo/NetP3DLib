@@ -45,7 +45,7 @@ public class ParticleSystemChunk : NamedChunk
     public ParticleSystemChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         FrameRate = br.ReadSingle();
         NumFrames = br.ReadUInt32();
         IsCyclic = br.ReadUInt32();
@@ -57,7 +57,7 @@ public class ParticleSystemChunk : NamedChunk
     public ParticleSystemChunk(uint version, string name, float frameRate, uint numFrames, uint isCyclic, Quaternion rotation, Vector3 translation) : base(ChunkID)
     {
         Version = version;
-        Name = name;
+        _name = new(this, name);
         FrameRate = frameRate;
         NumFrames = numFrames;
         IsCyclic = isCyclic;

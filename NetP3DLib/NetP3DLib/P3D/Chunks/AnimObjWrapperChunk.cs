@@ -38,14 +38,14 @@ public class AnimObjWrapperChunk : NamedChunk
 
     public AnimObjWrapperChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Version = br.ReadByte();
         hasAlpha = br.ReadByte();
     }
 
     public AnimObjWrapperChunk(string name, byte version, bool hasAlpha) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         Version = version;
         HasAlpha = hasAlpha;
     }

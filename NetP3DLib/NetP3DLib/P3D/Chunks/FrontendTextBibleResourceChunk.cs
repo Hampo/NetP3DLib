@@ -2,6 +2,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,31 +17,17 @@ public class FrontendTextBibleResourceChunk : NamedChunk
     
     [DefaultValue(1)]
     public uint Version { get; set; }
-    private string _filename = string.Empty;
+    private readonly P3DString _filename;
     public string Filename
     {
-        get => _filename;
-        set
-        {
-            if (_filename == value)
-                return;
-
-            _filename = value;
-            RecalculateSize();
-        }
+        get => _filename?.Value ?? string.Empty;
+        set => _filename.Value = value;
     }
-    private string _inventoryName = string.Empty;
+    private readonly P3DString _inventoryName;
     public string InventoryName
     {
-        get => _inventoryName;
-        set
-        {
-            if (_inventoryName == value)
-                return;
-
-            _inventoryName = value;
-            RecalculateSize();
-        }
+        get => _inventoryName?.Value ?? string.Empty;
+        set => _inventoryName.Value = value;
     }
 
     public override byte[] DataBytes
@@ -61,18 +48,18 @@ public class FrontendTextBibleResourceChunk : NamedChunk
 
     public FrontendTextBibleResourceChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Version = br.ReadUInt32();
-        Filename = br.ReadP3DString();
-        InventoryName = br.ReadP3DString();
+        _filename = new(this, br);
+        _inventoryName = new(this, br);
     }
 
     public FrontendTextBibleResourceChunk(string name, uint version, string filename, string inventoryName) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         Version = version;
-        Filename = filename;
-        InventoryName = inventoryName;
+        _filename = new(this, filename);
+        _inventoryName = new(this, inventoryName);
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

@@ -8,6 +8,7 @@ using System.Drawing;
 using System.ComponentModel;
 using System.IO;
 using System.Numerics;
+using NetP3DLib.P3D.Types;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -18,19 +19,12 @@ public class OldBillboardQuadChunk : NamedChunk
     
     [DefaultValue(2)]
     public uint Version { get; set; }
-    private string _billboardMode = string.Empty;
+    private readonly FourCC _billboardMode;
     [MaxLength(4)]
     public string BillboardMode
     {
-        get => _billboardMode;
-        set
-        {
-            if (_billboardMode == value)
-                return;
-
-            _billboardMode = value;
-            RecalculateSize();
-        }
+        get => _billboardMode?.Value ?? string.Empty;
+        set => _billboardMode.Value = value;
     }
     public Vector3 Translation { get; set; }
     public Color Colour { get; set; }
@@ -71,8 +65,8 @@ public class OldBillboardQuadChunk : NamedChunk
     public OldBillboardQuadChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
-        Name = br.ReadP3DString();
-        BillboardMode = br.ReadFourCC();
+        _name = new(this, br);
+        _billboardMode = new(this, br);
         Translation = br.ReadVector3();
         Colour = br.ReadColor();
         UV0 = br.ReadVector2();
@@ -88,8 +82,8 @@ public class OldBillboardQuadChunk : NamedChunk
     public OldBillboardQuadChunk(uint version, string name, string billboardMode, Vector3 translation, Color colour, Vector2 uv0, Vector2 uv1, Vector2 uv2, Vector2 uv3, float width, float height, float distance, Vector2 uvOffset) : base(ChunkID)
     {
         Version = version;
-        Name = name;
-        BillboardMode = billboardMode;
+        _name = new(this, name);
+        _billboardMode = new(this, billboardMode);
         Translation = translation;
         Colour = colour;
         UV0 = uv0;

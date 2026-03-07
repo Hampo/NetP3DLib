@@ -1,4 +1,5 @@
 using NetP3DLib.P3D.Attributes;
+using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
@@ -16,7 +17,7 @@ public class TangentListChunk : Chunk
     
     public uint NumTangents
     {
-        get => (uint)Tangents.Count;
+        get => (uint)(Tangents?.Count ?? 0);
         set
         {
             if (value == NumTangents)
@@ -32,10 +33,9 @@ public class TangentListChunk : Chunk
                 while (NumTangents < value)
                     Tangents.Add(default);
             }
-            RecalculateSize();
         }
     }
-    public List<Vector3> Tangents { get; } = [];
+    public SizeAwareList<Vector3> Tangents { get; }
 
     public override byte[] DataBytes
     {
@@ -55,14 +55,15 @@ public class TangentListChunk : Chunk
     public TangentListChunk(BinaryReader br) : base(ChunkID)
     {
         var numNormals = br.ReadInt32();
-        Tangents = new(numNormals);
+        var tangents = new List<Vector3>(numNormals);
         for (var i = 0; i < numNormals; i++)
-            Tangents.Add(br.ReadVector3());
+            tangents.Add(br.ReadVector3());
+        Tangents = CreateSizeAwareList(tangents);
     }
 
     public TangentListChunk(IList<Vector3> tangents) : base(ChunkID)
     {
-        Tangents.AddRange(tangents);
+        Tangents = CreateSizeAwareList(tangents);
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

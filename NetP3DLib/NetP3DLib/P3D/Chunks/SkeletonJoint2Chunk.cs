@@ -33,14 +33,14 @@ public class SkeletonJoint2Chunk : NamedChunk
 
     public SkeletonJoint2Chunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Parent = br.ReadUInt32();
         RestPose = br.ReadMatrix4x4();
     }
 
     public SkeletonJoint2Chunk(string name, uint parent, Matrix4x4 restPose) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         Parent = parent;
         RestPose = restPose;
     }

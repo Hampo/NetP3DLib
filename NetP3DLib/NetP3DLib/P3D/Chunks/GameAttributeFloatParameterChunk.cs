@@ -30,13 +30,13 @@ public class GameAttributeFloatParameterChunk : NamedChunk
 
     public GameAttributeFloatParameterChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Value = br.ReadSingle();
     }
 
     public GameAttributeFloatParameterChunk(string name, float value) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         Value = value;
     }
 

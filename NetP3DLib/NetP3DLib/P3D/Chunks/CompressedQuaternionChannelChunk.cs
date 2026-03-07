@@ -1,4 +1,5 @@
 using NetP3DLib.P3D.Attributes;
+using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
@@ -19,7 +20,7 @@ public class CompressedQuaternionChannelChunk : ParamChunk
     public uint Version { get; set; }
     public uint NumFrames
     {
-        get => (uint)Frames.Count;
+        get => (uint)(Frames?.Count ?? 0);
         set
         {
             if (value == NumFrames)
@@ -36,13 +37,12 @@ public class CompressedQuaternionChannelChunk : ParamChunk
                     Frames.Add(default);
             }
             NumValues = value;
-            RecalculateSize();
         }
     }
-    public List<ushort> Frames { get; } = [];
+    public SizeAwareList<ushort> Frames { get; }
     public uint NumValues
     {
-        get => (uint)Values.Count;
+        get => (uint)(Values?.Count ?? 0);
         set
         {
             if (value == NumValues)
@@ -59,10 +59,9 @@ public class CompressedQuaternionChannelChunk : ParamChunk
                     Values.Add(default);
             }
             NumFrames = value;
-            RecalculateSize();
         }
     }
-    public List<Quaternion> Values { get; } = [];
+    public SizeAwareList<Quaternion> Values { get; }
 
     public override byte[] DataBytes
     {
@@ -95,28 +94,30 @@ public class CompressedQuaternionChannelChunk : ParamChunk
     public CompressedQuaternionChannelChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
-        Param = br.ReadFourCC();
+        _param = new(this, br);
         int numFrames = br.ReadInt32();
-        Frames = new(numFrames);
-        Values = new(numFrames);
+        var frames = new List<ushort>(numFrames);
         for (uint i = 0; i < numFrames; i++)
-            Frames.Add(br.ReadUInt16());
+            frames.Add(br.ReadUInt16());
+        Frames = CreateSizeAwareList(frames);
+        var values = new List<Quaternion>(numFrames);
         for (uint i = 0; i < numFrames; i++)
         {
             short W = br.ReadInt16();
             short X = br.ReadInt16();
             short Y = br.ReadInt16();
             short Z = br.ReadInt16();
-            Values.Add(new(X / (float)short.MaxValue, Y / (float)short.MaxValue, Z / (float)short.MaxValue, W / (float)short.MaxValue));
+            values.Add(new(X / (float)short.MaxValue, Y / (float)short.MaxValue, Z / (float)short.MaxValue, W / (float)short.MaxValue));
         }
+        Values = CreateSizeAwareList(values);
     }
 
-    public CompressedQuaternionChannelChunk(uint version, string param, List<ushort> frames, List<Quaternion> values) : base(ChunkID)
+    public CompressedQuaternionChannelChunk(uint version, string param, IList<ushort> frames, IList<Quaternion> values) : base(ChunkID)
     {
         Version = version;
-        Param = param;
-        Frames.AddRange(frames);
-        Values.AddRange(values);
+        _param = new(this, param);
+        Frames = CreateSizeAwareList(frames);
+        Values = CreateSizeAwareList(values);
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

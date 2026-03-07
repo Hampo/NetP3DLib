@@ -2,6 +2,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -17,19 +18,12 @@ public class BillboardQuadChunk : NamedChunk
     public uint Version { get; set; }
     public uint CutOffEnabled { get; set; }
     public uint Perspective { get; set; }
-    private string _axisMode = string.Empty;
+    private readonly FourCC _axisMode;
     [MaxLength(4)]
     public string AxisMode
     {
-        get => _axisMode;
-        set
-        {
-            if (_axisMode == value)
-                return;
-
-            _axisMode = value;
-            RecalculateSize();
-        }
+        get => _axisMode?.Value ?? string.Empty;
+        set => _axisMode.Value = value;
     }
     public Color Colour { get; set; }
     public float Width { get; set; }
@@ -60,10 +54,10 @@ public class BillboardQuadChunk : NamedChunk
     public BillboardQuadChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         CutOffEnabled = br.ReadUInt32();
         Perspective = br.ReadUInt32();
-        AxisMode = br.ReadFourCC();
+        _axisMode = new(this, br);
         Colour = br.ReadColor();
         Width = br.ReadSingle();
         Height = br.ReadSingle();
@@ -73,10 +67,10 @@ public class BillboardQuadChunk : NamedChunk
     public BillboardQuadChunk(uint version, string name, uint cutOffEnabled, uint perspective, string axisMode, Color colour, float width, float height, float distance) : base(ChunkID)
     {
         Version = version;
-        Name = name;
+        _name = new(this, name);
         CutOffEnabled = cutOffEnabled;
         Perspective = perspective;
-        AxisMode = axisMode;
+        _axisMode = new(this, axisMode);
         Colour = colour;
         Width = width;
         Height = height;

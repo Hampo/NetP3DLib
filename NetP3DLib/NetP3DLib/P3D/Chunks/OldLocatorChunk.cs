@@ -35,14 +35,14 @@ public class OldLocatorChunk : NamedChunk
 
     public OldLocatorChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Version = br.ReadUInt32();
         Position = br.ReadVector3();
     }
 
     public OldLocatorChunk(string name, uint version, Vector3 position) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         Version = version;
         Position = position;
     }

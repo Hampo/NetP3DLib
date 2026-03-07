@@ -2,6 +2,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -25,31 +26,17 @@ public class ExpressionMixerChunk : NamedChunk
     [DefaultValue(0)]
     public uint Version { get; set; }
     public MixerType Type { get; set; }
-    private string _targetName = string.Empty;
+    private readonly P3DString _targetName;
     public string TargetName
     {
-        get => _targetName;
-        set
-        {
-            if (_targetName == value)
-                return;
-
-            _targetName = value;
-            RecalculateSize();
-        }
+        get => _targetName?.Value ?? string.Empty;
+        set => _targetName.Value = value;
     }
-    private string _expressionGroupName = string.Empty;
+    private readonly P3DString _expressionGroupName;
     public string ExpressionGroupName
     {
-        get => _expressionGroupName;
-        set
-        {
-            if (_expressionGroupName == value)
-                return;
-
-            _expressionGroupName = value;
-            RecalculateSize();
-        }
+        get => _expressionGroupName?.Value ?? string.Empty;
+        set => _expressionGroupName.Value = value;
     }
 
     public override byte[] DataBytes
@@ -72,19 +59,19 @@ public class ExpressionMixerChunk : NamedChunk
     public ExpressionMixerChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Type = (MixerType)br.ReadUInt32();
-        TargetName = br.ReadP3DString();
-        ExpressionGroupName = br.ReadP3DString();
+        _targetName = new(this, br);
+        _expressionGroupName = new(this, br);
     }
 
     public ExpressionMixerChunk(uint version, string name, MixerType type, string targetName, string expressionGroupName) : base(ChunkID)
     {
         Version = version;
-        Name = name;
+        _name = new(this, name);
         Type = type;
-        TargetName = targetName;
-        ExpressionGroupName = expressionGroupName;
+        _targetName = new(this, targetName);
+        _expressionGroupName = new(this, expressionGroupName);
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

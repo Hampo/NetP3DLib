@@ -2,6 +2,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,18 +15,11 @@ public class TextureAnimationChunk : NamedChunk
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Texture_Animation;
     
     public uint Version { get; set; }
-    private string _materialName = string.Empty;
+    private readonly P3DString _materialName;
     public string MaterialName
     {
-        get => _materialName;
-        set
-        {
-            if (_materialName == value)
-                return;
-
-            _materialName = value;
-            RecalculateSize();
-        }
+        get => _materialName?.Value ?? string.Empty;
+        set => _materialName.Value = value;
     }
     public uint NumFrames { get; set; }
     public float FrameRate { get; set; }
@@ -56,9 +50,9 @@ public class TextureAnimationChunk : NamedChunk
 
     public TextureAnimationChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Version = br.ReadUInt32();
-        MaterialName = br.ReadP3DString();
+        _materialName = new(this, br);
         NumFrames = br.ReadUInt32();
         FrameRate = br.ReadSingle();
         cyclic = br.ReadUInt32();
@@ -66,9 +60,9 @@ public class TextureAnimationChunk : NamedChunk
 
     public TextureAnimationChunk(string name, uint version, string materialName, uint numFrames, float frameRate, bool cyclic) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         Version = version;
-        MaterialName = materialName;
+        _materialName = new(this, materialName);
         NumFrames = numFrames;
         FrameRate = frameRate;
         Cyclic = cyclic;

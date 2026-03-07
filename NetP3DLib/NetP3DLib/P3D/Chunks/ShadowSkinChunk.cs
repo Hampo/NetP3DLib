@@ -2,6 +2,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,18 +15,11 @@ public class ShadowSkinChunk : NamedChunk
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Shadow_Skin;
     
     public uint Version { get; set; }
-    private string _skeletonName = string.Empty;
+    private readonly P3DString _skeletonName;
     public string SkeletonName
     {
-        get => _skeletonName;
-        set
-        {
-            if (_skeletonName == value)
-                return;
-
-            _skeletonName = value;
-            RecalculateSize();
-        }
+        get => _skeletonName?.Value ?? string.Empty;
+        set => _skeletonName.Value = value;
     }
     // TODO: Calculate from children
     public uint NumVertices { get; set; }
@@ -50,18 +44,18 @@ public class ShadowSkinChunk : NamedChunk
 
     public ShadowSkinChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Version = br.ReadUInt32();
-        SkeletonName = br.ReadP3DString();
+        _skeletonName = new(this, br);
         NumVertices = br.ReadUInt32();
         NumTriangles = br.ReadUInt32();
     }
 
     public ShadowSkinChunk(string name, uint version, string skeletonName, uint numVertices, uint numTriangles) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         Version = version;
-        SkeletonName = skeletonName;
+        _skeletonName = new(this, skeletonName);
         NumVertices = numVertices;
         NumTriangles = numTriangles;
     }

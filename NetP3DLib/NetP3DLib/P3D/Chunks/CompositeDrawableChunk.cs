@@ -2,6 +2,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Types;
 using System.Collections.Generic;
 using System.IO;
 
@@ -12,18 +13,11 @@ public class CompositeDrawableChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Composite_Drawable;
 
-    private string _skeletonName = string.Empty;
+    private readonly P3DString _skeletonName;
     public string SkeletonName
     {
-        get => _skeletonName;
-        set
-        {
-            if (_skeletonName == value)
-                return;
-
-            _skeletonName = value;
-            RecalculateSize();
-        }
+        get => _skeletonName?.Value ?? string.Empty;
+        set => _skeletonName.Value = value;
     }
 
     public override byte[] DataBytes
@@ -42,14 +36,14 @@ public class CompositeDrawableChunk : NamedChunk
 
     public CompositeDrawableChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
-        SkeletonName = br.ReadP3DString();
+        _name = new(this, br);
+        _skeletonName = new(this, br);
     }
 
     public CompositeDrawableChunk(string name, string skeletonName) : base(ChunkID)
     {
-        Name = name;
-        SkeletonName = skeletonName;
+        _name = new(this, name);
+        _skeletonName = new(this, skeletonName);
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

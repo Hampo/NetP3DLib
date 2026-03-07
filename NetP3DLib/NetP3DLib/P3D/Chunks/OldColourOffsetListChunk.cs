@@ -1,4 +1,5 @@
 using NetP3DLib.P3D.Attributes;
+using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
 using System;
@@ -16,7 +17,7 @@ public class OldColourOffsetListChunk : Chunk
     public uint Version { get; set; }
     public uint NumOffsets
     {
-        get => (uint)Offsets.Count;
+        get => (uint)(Offsets?.Count ?? 0);
         set
         {
             if (value == NumOffsets)
@@ -32,10 +33,9 @@ public class OldColourOffsetListChunk : Chunk
                 while (NumOffsets < value)
                     Offsets.Add(default);
             }
-            RecalculateSize();
         }
     }
-    public List<Color> Offsets { get; } = [];
+    public SizeAwareList<Color> Offsets { get; }
 
     public override byte[] DataBytes
     {
@@ -57,15 +57,16 @@ public class OldColourOffsetListChunk : Chunk
     {
         Version = br.ReadUInt32();
         var numOffsets = br.ReadInt32();
-        Offsets = new(numOffsets);
+        var offsets = new List<Color>(numOffsets);
         for (int i = 0; i < numOffsets; i++)
-            Offsets.Add(br.ReadColor());
+            offsets.Add(br.ReadColor());
+        Offsets = CreateSizeAwareList(offsets);
     }
 
     public OldColourOffsetListChunk(uint version, IList<Color> offsets) : base(ChunkID)
     {
         Version = version;
-        Offsets.AddRange(offsets);
+        Offsets = CreateSizeAwareList(offsets);
     }
 
     protected override void WriteData(BinaryWriter bw)

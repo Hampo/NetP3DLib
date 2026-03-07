@@ -19,7 +19,7 @@ public class FrontendScreenChunk : NamedChunk
     public uint Version { get; set; }
     public uint NumPageNames
     {
-        get => (uint)PageNames.Count;
+        get => (uint)(PageNames?.Count ?? 0);
         set
         {
             if (value == NumPageNames)
@@ -35,7 +35,6 @@ public class FrontendScreenChunk : NamedChunk
                 while (NumPageNames < value)
                     PageNames.Add(string.Empty);
             }
-            RecalculateSize();
         }
     }
     public SizeAwareList<string> PageNames { get; }
@@ -60,33 +59,31 @@ public class FrontendScreenChunk : NamedChunk
         get
         {
             uint size = BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint);
-            foreach (var pageName in PageNames)
-                size += BinaryExtensions.GetP3DStringLength(pageName);
+
+            if (PageNames != null)
+                foreach (var pageName in PageNames)
+                    size += BinaryExtensions.GetP3DStringLength(pageName);
+
             return size;
         }
     }
 
     public FrontendScreenChunk(BinaryReader br) : base(ChunkID)
     {
-        PageNames = CreateSizeAwareList<string>();
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Version = br.ReadUInt32();
         var numPageNames = br.ReadInt32();
-        PageNames = CreateSizeAwareList<string>(numPageNames);
-        PageNames.SuspendNotifications();
+        var pageNames = new List<string>(numPageNames);
         for (int i = 0; i < numPageNames; i++)
-            PageNames.Add(br.ReadP3DString());
-        PageNames.ResumeNotifications();
+            pageNames.Add(br.ReadP3DString());
+        PageNames = CreateSizeAwareList(pageNames);
     }
 
     public FrontendScreenChunk(string name, uint version, IList<string> pageNames) : base(ChunkID)
     {
-        PageNames = CreateSizeAwareList<string>(pageNames.Count);
-        Name = name;
+        _name = new(this, name);
         Version = version;
-        PageNames.SuspendNotifications();
-        PageNames.AddRange(pageNames);
-        PageNames.ResumeNotifications();
+        PageNames = CreateSizeAwareList(pageNames);
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

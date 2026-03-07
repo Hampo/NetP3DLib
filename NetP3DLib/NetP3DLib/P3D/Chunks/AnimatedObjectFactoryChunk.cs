@@ -2,6 +2,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,18 +17,11 @@ public class AnimatedObjectFactoryChunk : NamedChunk
     
     [DefaultValue(0)]
     public uint Version { get; set; }
-    private string _baseAnimation = string.Empty;
+    private readonly P3DString _baseAnimation;
     public string BaseAnimation
     {
-        get => _baseAnimation;
-        set
-        {
-            if (_baseAnimation == value)
-                return;
-
-            _baseAnimation = value;
-            RecalculateSize();
-        }
+        get => _baseAnimation?.Value ?? string.Empty;
+        set => _baseAnimation.Value = value;
     }
     public uint NumAnimations { get; set; }
 
@@ -50,16 +44,16 @@ public class AnimatedObjectFactoryChunk : NamedChunk
     public AnimatedObjectFactoryChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
-        Name = br.ReadP3DString();
-        BaseAnimation = br.ReadP3DString();
+        _name = new(this, br);
+        _baseAnimation = new(this, br);
         NumAnimations = br.ReadUInt32();
     }
 
     public AnimatedObjectFactoryChunk(uint version, string name, string baseAnimation, uint numAnimations) : base(ChunkID)
     {
         Version = version;
-        Name = name;
-        BaseAnimation = baseAnimation;
+        _name = new(this, name);
+        _baseAnimation = new(this, baseAnimation);
         NumAnimations = numAnimations;
     }
 

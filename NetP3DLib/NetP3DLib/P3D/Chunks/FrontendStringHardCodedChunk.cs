@@ -2,6 +2,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Types;
 using System.Collections.Generic;
 using System.IO;
 
@@ -12,18 +13,11 @@ public class FrontendStringHardCodedChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Frontend_String_Hard_Coded;
 
-    private string _string = string.Empty;
+    private readonly P3DString _string;
     public string String
     {
-        get => _string;
-        set
-        {
-            if (_string == value)
-                return;
-
-            _string = value;
-            RecalculateSize();
-        }
+        get => _string?.Value ?? string.Empty;
+        set => _string.Value = value;
     }
 
     public override byte[] DataBytes
@@ -41,12 +35,12 @@ public class FrontendStringHardCodedChunk : Chunk
 
     public FrontendStringHardCodedChunk(BinaryReader br) : base(ChunkID)
     {
-        String = br.ReadP3DString();
+        _string = new(this, br);
     }
 
     public FrontendStringHardCodedChunk(string @string) : base(ChunkID)
     {
-        String = @string;
+        _string = new(this, @string);
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

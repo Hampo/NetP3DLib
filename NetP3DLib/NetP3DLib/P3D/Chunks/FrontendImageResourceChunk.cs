@@ -2,6 +2,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,18 +17,11 @@ public class FrontendImageResourceChunk : NamedChunk
     
     [DefaultValue(1)]
     public uint Version { get; set; }
-    private string _filename = string.Empty;
+    private readonly P3DString _filename;
     public string Filename
     {
-        get => _filename;
-        set
-        {
-            if (_filename == value)
-                return;
-
-            _filename = value;
-            RecalculateSize();
-        }
+        get => _filename?.Value ?? string.Empty;
+        set => _filename.Value = value;
     }
 
     public override byte[] DataBytes
@@ -47,16 +41,16 @@ public class FrontendImageResourceChunk : NamedChunk
 
     public FrontendImageResourceChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Version = br.ReadUInt32();
-        Filename = br.ReadP3DString();
+        _filename = new(this, br);
     }
 
     public FrontendImageResourceChunk(string name, uint version, string filename) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         Version = version;
-        Filename = filename;
+        _filename = new(this, filename);
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

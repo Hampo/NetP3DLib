@@ -30,13 +30,13 @@ public class ShaderColourParameterChunk : ParamChunk
 
     public ShaderColourParameterChunk(BinaryReader br) : base(ChunkID)
     {
-        Param = br.ReadFourCC();
+        _param = new(this, br);
         Value = br.ReadColor();
     }
 
     public ShaderColourParameterChunk(string param, Color value) : base(ChunkID)
     {
-        Param = param;
+        _param = new(this, param);
         Value = value;
     }
 

@@ -2,6 +2,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,33 +17,19 @@ public class OldBaseEmitterChunk : NamedChunk
     
     [DefaultValue(0)]
     public uint Version { get; set; }
-    private string _particleType = string.Empty;
+    private readonly FourCC _particleType;
     [MaxLength(4)]
     public string ParticleType
     {
-        get => _particleType;
-        set
-        {
-            if (_particleType == value)
-                return;
-
-            _particleType = value;
-            RecalculateSize();
-        }
+        get => _particleType?.Value ?? string.Empty;
+        set => _particleType.Value = value;
     }
-    private string _generatorType = string.Empty;
+    private readonly FourCC _generatorType;
     [MaxLength(4)]
     public string GeneratorType
     {
-        get => _generatorType;
-        set
-        {
-            if (_generatorType == value)
-                return;
-
-            _generatorType = value;
-            RecalculateSize();
-        }
+        get => _generatorType?.Value ?? string.Empty;
+        set => _generatorType.Value = value;
     }
     private uint zTest;
     public bool ZTest
@@ -98,9 +85,9 @@ public class OldBaseEmitterChunk : NamedChunk
     public OldBaseEmitterChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
-        Name = br.ReadP3DString();
-        ParticleType = br.ReadFourCC();
-        GeneratorType = br.ReadFourCC();
+        _name = new(this, br);
+        _particleType = new(this, br);
+        _generatorType = new(this, br);
         zTest = br.ReadUInt32();
         zWrite = br.ReadUInt32();
         fog = br.ReadUInt32();
@@ -113,9 +100,9 @@ public class OldBaseEmitterChunk : NamedChunk
     public OldBaseEmitterChunk(uint version, string name, string particleType, string generatorType, bool zTest, bool zWrite, bool fog, uint maxParticles, bool infiniteLife, float rotationalCohesion, float translationCohesion) : base(ChunkID)
     {
         Version = version;
-        Name = name;
-        ParticleType = particleType;
-        GeneratorType = generatorType;
+        _name = new(this, name);
+        _particleType = new(this, particleType);
+        _generatorType = new(this, generatorType);
         ZTest = zTest;
         ZWrite = zWrite;
         Fog = fog;

@@ -37,7 +37,7 @@ public class WorldSphereChunk : NamedChunk
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
     public WorldSphereChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Version = br.ReadUInt32();
         var numMeshes = br.ReadUInt32();
         var numOldBillboardQuadGroups = br.ReadUInt32();
@@ -45,7 +45,7 @@ public class WorldSphereChunk : NamedChunk
 
     public WorldSphereChunk(string name, uint version) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         Version = version;
     }
 

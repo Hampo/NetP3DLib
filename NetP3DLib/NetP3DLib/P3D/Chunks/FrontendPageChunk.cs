@@ -36,7 +36,7 @@ public class FrontendPageChunk : NamedChunk
 
     public FrontendPageChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Version = br.ReadUInt32();
         ResolutionX = br.ReadUInt32();
         ResolutionY = br.ReadUInt32();
@@ -44,7 +44,7 @@ public class FrontendPageChunk : NamedChunk
 
     public FrontendPageChunk(string name, uint version, uint resolutionX, uint resolutionY) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         Version = version;
         ResolutionX = resolutionX;
         ResolutionY = resolutionY;

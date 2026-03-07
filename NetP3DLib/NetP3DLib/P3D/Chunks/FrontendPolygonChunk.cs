@@ -1,4 +1,5 @@
 using NetP3DLib.P3D.Attributes;
+using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
@@ -21,7 +22,7 @@ public class FrontendPolygonChunk : NamedChunk
     public uint Translucency { get; set; }
     public uint NumPoints
     {
-        get => (uint)Points.Count;
+        get => (uint)(Points?.Count ?? 0);
         set
         {
             if (value == NumPoints)
@@ -38,13 +39,12 @@ public class FrontendPolygonChunk : NamedChunk
                     Points.Add(default);
             }
             NumColours = value;
-            RecalculateSize();
         }
     }
-    public List<Vector3> Points { get; } = [];
+    public SizeAwareList<Vector3> Points { get; }
     public uint NumColours
     {
-        get => (uint)Colours.Count;
+        get => (uint)(Colours?.Count ?? 0);
         set
         {
             if (value == NumColours)
@@ -61,10 +61,9 @@ public class FrontendPolygonChunk : NamedChunk
                     Colours.Add(default);
             }
             NumPoints = value;
-            RecalculateSize();
         }
     }
-    public List<Color> Colours { get; } = [];
+    public SizeAwareList<Color> Colours { get; }
 
     public override byte[] DataBytes
     {
@@ -88,25 +87,27 @@ public class FrontendPolygonChunk : NamedChunk
 
     public FrontendPolygonChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Version = br.ReadUInt32();
         Translucency = br.ReadUInt32();
         var num = br.ReadInt32();
-        Points = new(num);
+        var points = new List<Vector3>(num);
         for (int i = 0; i < num; i++)
-            Points.Add(br.ReadVector3());
-        Colours = new(num);
+            points.Add(br.ReadVector3());
+        Points = CreateSizeAwareList(points);
+        var colours = new List<Color>(num);
         for (int i = 0; i < num; i++)
-            Colours.Add(br.ReadColor());
+            colours.Add(br.ReadColor());
+        Colours = CreateSizeAwareList(colours);
     }
 
     public FrontendPolygonChunk(string name, uint version, uint translucency, IList<Vector3> points, IList<Color> colours) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         Version = version;
         Translucency = translucency;
-        Points.AddRange(points);
-        Colours.AddRange(colours);
+        Points = CreateSizeAwareList(points);
+        Colours = CreateSizeAwareList(colours);
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

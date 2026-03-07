@@ -37,14 +37,14 @@ public class CompositeDrawablePropChunk : NamedChunk
 
     public CompositeDrawablePropChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         isTranslucent = br.ReadUInt32();
         SkeletonJointId = br.ReadUInt32();
     }
 
     public CompositeDrawablePropChunk(string name, bool isTranslucent, uint skeletonJointId) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         IsTranslucent = isTranslucent;
         SkeletonJointId = skeletonJointId;
     }

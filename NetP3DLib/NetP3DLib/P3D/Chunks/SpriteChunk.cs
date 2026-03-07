@@ -2,6 +2,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,18 +16,11 @@ public class SpriteChunk : NamedChunk
     
     public uint NativeX { get; set; }
     public uint NativeY { get; set; }
-    private string _shader = string.Empty;
+    private readonly P3DString _shader;
     public string Shader
     {
-        get => _shader;
-        set
-        {
-            if (_shader == value)
-                return;
-
-            _shader = value;
-            RecalculateSize();
-        }
+        get => _shader?.Value ?? string.Empty;
+        set => _shader.Value = value;
     }
     public uint ImageWidth { get; set; }
     public uint ImageHeight { get; set; }
@@ -56,10 +50,10 @@ public class SpriteChunk : NamedChunk
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
     public SpriteChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         NativeX = br.ReadUInt32();
         NativeY = br.ReadUInt32();
-        Shader = br.ReadP3DString();
+        _shader = new(this, br);
         ImageWidth = br.ReadUInt32();
         ImageHeight = br.ReadUInt32();
         var imageCount = br.ReadUInt32();
@@ -68,10 +62,10 @@ public class SpriteChunk : NamedChunk
 
     public SpriteChunk(string name, uint nativeX, uint nativeY, string shader, uint imageWidth, uint imageHeight, uint blitBorder) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         NativeX = nativeX;
         NativeY = nativeY;
-        Shader = shader;
+        _shader = new(this, shader);
         ImageWidth = imageWidth;
         ImageHeight = imageHeight;
         BlitBorder = blitBorder;

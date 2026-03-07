@@ -2,6 +2,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Types;
 using System.Collections.Generic;
 using System.IO;
 
@@ -12,18 +13,11 @@ public class ShaderTextureParameterChunk : ParamChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Shader_Texture_Parameter;
 
-    private string _value = string.Empty;
+    private readonly P3DString _value;
     public string Value
     {
-        get => _value;
-        set
-        {
-            if (_value == value)
-                return;
-
-            _value = value;
-            RecalculateSize();
-        }
+        get => _value?.Value ?? string.Empty;
+        set => _value.Value = value;
     }
 
     public override byte[] DataBytes
@@ -42,14 +36,14 @@ public class ShaderTextureParameterChunk : ParamChunk
 
     public ShaderTextureParameterChunk(BinaryReader br) : base(ChunkID)
     {
-        Param = br.ReadFourCC();
-        Value = br.ReadP3DString();
+        _param = new(this, br);
+        _value = new(this, br);
     }
 
     public ShaderTextureParameterChunk(string param, string value) : base(ChunkID)
     {
-        Param = param;
-        Value = value;
+        _param = new(this, param);
+        _value = new(this, value);
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

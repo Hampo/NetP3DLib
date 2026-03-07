@@ -2,6 +2,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,18 +15,11 @@ public class LensFlareGroupChunk : NamedChunk
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Lens_Flare_Group;
     
     public uint Version { get; set; }
-    private string _shaderName = string.Empty;
+    private readonly P3DString _shaderName;
     public string ShaderName
     {
-        get => _shaderName;
-        set
-        {
-            if (_shaderName == value)
-                return;
-
-            _shaderName = value;
-            RecalculateSize();
-        }
+        get => _shaderName?.Value ?? string.Empty;
+        set => _shaderName.Value = value;
     }
     private uint zTest;
     public bool ZTest
@@ -74,8 +68,8 @@ public class LensFlareGroupChunk : NamedChunk
     public LensFlareGroupChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
-        Name = br.ReadP3DString();
-        ShaderName = br.ReadP3DString();
+        _name = new(this, br);
+        _shaderName = new(this, br);
         zTest = br.ReadUInt32();
         zWrite = br.ReadUInt32();
         fog = br.ReadUInt32();
@@ -87,8 +81,8 @@ public class LensFlareGroupChunk : NamedChunk
     public LensFlareGroupChunk(uint version, string name, string shaderName, bool zTest, bool zWrite, bool fog, float sourceRadius, float edgeRadius) : base(ChunkID)
     {
         Version = version;
-        Name = name;
-        ShaderName = shaderName;
+        _name = new(this, name);
+        _shaderName = new(this, shaderName);
         ZTest = zTest;
         ZWrite = zWrite;
         Fog = fog;

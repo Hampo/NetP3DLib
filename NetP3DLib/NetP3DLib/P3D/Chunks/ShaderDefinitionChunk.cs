@@ -1,6 +1,7 @@
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Types;
 using System.Collections.Generic;
 using System.IO;
 
@@ -11,18 +12,11 @@ public class ShaderDefinitionChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Shader_Definition;
 
-    private string _definition = string.Empty;
+    private readonly P3DLongString _definition;
     public string Definition
     {
-        get => _definition;
-        set
-        {
-            if (_definition == value)
-                return;
-
-            _definition = value;
-            RecalculateSize();
-        }
+        get => _definition?.Value ?? string.Empty;
+        set => _definition.Value = value;
     }
 
     public override byte[] DataBytes
@@ -41,14 +35,14 @@ public class ShaderDefinitionChunk : NamedChunk
 
     public ShaderDefinitionChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
-        Definition = br.ReadP3DLongString();
+        _name = new(this, br);
+        _definition = new(this, br);
     }
 
     public ShaderDefinitionChunk(string name, string definition) : base(ChunkID)
     {
-        Name = name;
-        Definition = definition;
+        _name = new(this, name);
+        _definition = new(this, definition);
     }
 
     protected override void WriteData(BinaryWriter bw)

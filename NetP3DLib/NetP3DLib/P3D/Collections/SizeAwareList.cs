@@ -5,70 +5,43 @@ using System.Collections.ObjectModel;
 namespace NetP3DLib.P3D.Collections;
 public class SizeAwareList<T> : ObservableCollection<T>
 {
-    private readonly Action _onChange;
-    private bool _suspendNotifications = false;
+    private readonly Chunk _chunk;
+    private readonly Action<uint> _onChange;
 
-    public SizeAwareList(Action onChange, int capacity = 0) : base(new List<T>(capacity))
+    public SizeAwareList(Chunk chunk, Action<uint> onChange, int capacity = 0) : base(new List<T>(capacity))
     {
+        _chunk = chunk;
         _onChange = onChange ?? throw new ArgumentNullException(nameof(onChange));
     }
 
-    public void SuspendNotifications() => _suspendNotifications = true;
-
-    public void ResumeNotifications()
+    private void TrackSizeChange(Action action)
     {
-        _suspendNotifications = false;
-        _onChange();
-        OnCollectionChanged(new System.Collections.Specialized.NotifyCollectionChangedEventArgs(System.Collections.Specialized.NotifyCollectionChangedAction.Reset));
+        uint oldSize = _chunk.HeaderSize;
+        action();
+        _onChange(oldSize);
     }
 
-    protected override void OnCollectionChanged(System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-    {
-        if (_suspendNotifications)
-            return;
-        base.OnCollectionChanged(e);
-    }
+    protected override void InsertItem(int index, T item) => TrackSizeChange(() => base.InsertItem(index, item));
 
-    protected override void InsertItem(int index, T item)
-    {
-        base.InsertItem(index, item);
-        if (!_suspendNotifications)
-            _onChange();
-    }
+    protected override void RemoveItem(int index) => TrackSizeChange(() => base.RemoveItem(index));
 
-    protected override void RemoveItem(int index)
-    {
-        base.RemoveItem(index);
-        if (!_suspendNotifications)
-            _onChange();
-    }
+    protected override void SetItem(int index, T item) => TrackSizeChange(() => base.SetItem(index, item));
 
-    protected override void SetItem(int index, T item)
-    {
-        base.SetItem(index, item);
-        if (!_suspendNotifications)
-            _onChange();
-    }
-
-    protected override void ClearItems()
-    {
-        base.ClearItems();
-        if (!_suspendNotifications)
-            _onChange();
-    }
+    protected override void ClearItems() => TrackSizeChange(base.ClearItems);
 
     /// <summary>
     /// Adds a collection of items at the end.
     /// </summary>
     public void AddRange(IEnumerable<T> items)
     {
-        if (items == null) throw new ArgumentNullException(nameof(items));
+        if (items == null)
+            throw new ArgumentNullException(nameof(items));
 
-        foreach (var item in items)
-            Items.Add(item);
-
-        if (!_suspendNotifications)
-            _onChange();
+        TrackSizeChange(() =>
+        {
+            foreach (var item in items)
+                Items.Add(item);
+        });
     }
 
     /// <summary>
@@ -78,18 +51,19 @@ public class SizeAwareList<T> : ObservableCollection<T>
     {
         if (items == null) throw new ArgumentNullException(nameof(items));
 
-        if (Items is List<T> list)
+        TrackSizeChange(() =>
         {
-            list.InsertRange(index, items);
-            if (!_suspendNotifications)
-                _onChange();
-        }
-        else
-        {
-            int i = index;
-            foreach (var item in items)
-                base.InsertItem(i++, item);
-        }
+            if (Items is List<T> list)
+            {
+                list.InsertRange(index, items);
+            }
+            else
+            {
+                int i = index;
+                foreach (var item in items)
+                    base.InsertItem(i++, item);
+            }
+        });
     }
 
     /// <summary>
@@ -101,17 +75,18 @@ public class SizeAwareList<T> : ObservableCollection<T>
         if (count < 0) throw new ArgumentOutOfRangeException(nameof(count));
         if (index + count > Count) throw new ArgumentException("Range exceeds list bounds.");
 
-        if (Items is List<T> list)
+        TrackSizeChange(() =>
         {
-            list.RemoveRange(index, count);
-            if (!_suspendNotifications)
-                _onChange();
-        }
-        else
-        {
-            for (int i = 0; i < count; i++)
-                base.RemoveItem(index);
-        }
+            if (Items is List<T> list)
+            {
+                list.RemoveRange(index, count);
+            }
+            else
+            {
+                for (int i = 0; i < count; i++)
+                    base.RemoveItem(index);
+            }
+        });
     }
 
     /// <summary>Finds the index of the first element matching the predicate.</summary>

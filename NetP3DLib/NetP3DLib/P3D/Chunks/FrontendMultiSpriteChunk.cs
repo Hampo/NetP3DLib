@@ -38,7 +38,7 @@ public class FrontendMultiSpriteChunk : NamedChunk
     public float RotationValue { get; set; }
     public uint NumImageNames
     {
-        get => (uint)ImageNames.Count;
+        get => (uint)(ImageNames?.Count ?? 0);
         set
         {
             if (value == NumImageNames)
@@ -54,7 +54,6 @@ public class FrontendMultiSpriteChunk : NamedChunk
                 while (NumImageNames < value)
                     ImageNames.Add(string.Empty);
             }
-            RecalculateSize();
         }
     }
     public SizeAwareList<string> ImageNames { get; }
@@ -88,16 +87,18 @@ public class FrontendMultiSpriteChunk : NamedChunk
         get
         {
             uint size = BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(int) + sizeof(int) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(float) + sizeof(uint);
-            foreach (var imageName in ImageNames)
-                size += BinaryExtensions.GetP3DStringLength(imageName);
+
+            if (ImageNames != null)
+                foreach (var imageName in ImageNames)
+                    size += BinaryExtensions.GetP3DStringLength(imageName);
+
             return size;
         }
     }
 
     public FrontendMultiSpriteChunk(BinaryReader br) : base(ChunkID)
     {
-        ImageNames = CreateSizeAwareList<string>();
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Version = br.ReadUInt32();
         PositionX = br.ReadInt32();
         PositionY = br.ReadInt32();
@@ -109,17 +110,15 @@ public class FrontendMultiSpriteChunk : NamedChunk
         Translucency = br.ReadUInt32();
         RotationValue = br.ReadSingle();
         var numImageNames = br.ReadInt32();
-        ImageNames = CreateSizeAwareList<string>(numImageNames);
-        ImageNames.SuspendNotifications();
+        var imageNames = new List<string>(numImageNames);
         for (int i = 0; i < numImageNames; i++)
-            ImageNames.Add(br.ReadP3DString());
-        ImageNames.ResumeNotifications();
+            imageNames.Add(br.ReadP3DString());
+        ImageNames = CreateSizeAwareList(imageNames);
     }
 
     public FrontendMultiSpriteChunk(string name, uint version, int positionX, int positionY, uint dimensionX, uint dimensionY, Justifications justificationX, Justifications justificationY, Color colour, uint translucency, float rotationValue, IList<string> imageNames) : base(ChunkID)
     {
-        ImageNames = CreateSizeAwareList<string>(imageNames.Count);
-        Name = name;
+        _name = new(this, name);
         Version = version;
         PositionX = positionX;
         PositionY = positionY;
@@ -130,9 +129,7 @@ public class FrontendMultiSpriteChunk : NamedChunk
         Colour = colour;
         Translucency = translucency;
         RotationValue = rotationValue;
-        ImageNames.SuspendNotifications();
-        ImageNames.AddRange(imageNames);
-        ImageNames.ResumeNotifications();
+        ImageNames = CreateSizeAwareList(imageNames);
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

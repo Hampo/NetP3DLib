@@ -1,4 +1,5 @@
 using NetP3DLib.P3D.Attributes;
+using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
@@ -19,7 +20,7 @@ public class Vector3DOFChannelChunk : ParamChunk
     public uint Version { get; set; }
     public uint NumFrames
     {
-        get => (uint)Frames.Count;
+        get => (uint)(Frames?.Count ?? 0);
         set
         {
             if (value == NumFrames)
@@ -36,13 +37,12 @@ public class Vector3DOFChannelChunk : ParamChunk
                     Frames.Add(default);
             }
             NumValues = value;
-            RecalculateSize();
         }
     }
-    public List<ushort> Frames { get; } = [];
+    public SizeAwareList<ushort> Frames { get; }
     public uint NumValues
     {
-        get => (uint)Values.Count;
+        get => (uint)(Values?.Count ?? 0);
         set
         {
             if (value == NumValues)
@@ -59,10 +59,9 @@ public class Vector3DOFChannelChunk : ParamChunk
                     Values.Add(default);
             }
             NumFrames = value;
-            RecalculateSize();
         }
     }
-    public List<Vector3> Values { get; } = [];
+    public SizeAwareList<Vector3> Values { get; }
 
     public override byte[] DataBytes
     {
@@ -86,22 +85,24 @@ public class Vector3DOFChannelChunk : ParamChunk
     public Vector3DOFChannelChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
-        Param = br.ReadFourCC();
+        _param = new(this, br);
         var numFrames = br.ReadInt32();
-        Frames = new(numFrames);
-        Values = new(numFrames);
+        var frames = new List<ushort>(numFrames);
         for (var i = 0; i < numFrames; i++)
-            Frames.Add(br.ReadUInt16());
+            frames.Add(br.ReadUInt16());
+        Frames = CreateSizeAwareList(frames);
+        var values = new List<Vector3>(numFrames);
         for (var i = 0; i < numFrames; i++)
-            Values.Add(br.ReadVector3());
+            values.Add(br.ReadVector3());
+        Values = CreateSizeAwareList(values);
     }
 
     public Vector3DOFChannelChunk(uint version, string param, IList<ushort> frames, IList<Vector3> values) : base(ChunkID)
     {
         Version = version;
-        Param = param;
-        Frames.AddRange(frames);
-        Values.AddRange(values);
+        _param = new(this, param);
+        Frames = CreateSizeAwareList(frames);
+        Values = CreateSizeAwareList(values);
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

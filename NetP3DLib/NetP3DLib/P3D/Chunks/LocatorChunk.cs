@@ -4,8 +4,10 @@ using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.IO;
 using System.Numerics;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
@@ -72,7 +74,7 @@ public class LocatorChunk : NamedChunk
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
     public LocatorChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         var type = (LocatorTypes)br.ReadUInt32();
         var len = br.ReadInt32();
         List<uint> data = new(len);
@@ -103,14 +105,14 @@ public class LocatorChunk : NamedChunk
 
     public LocatorChunk(string name, LocatorData typeData, Vector3 position) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         TypeData = typeData;
         Position = position;
     }
 
-    private void TypeData_SizeChanged()
+    private void TypeData_SizeChanged(int delta)
     {
-        RecalculateSize();
+        RecalculateSize((uint)(HeaderSize - delta));
     }
 
     protected override void WriteData(BinaryWriter bw)
@@ -129,8 +131,8 @@ public class LocatorChunk : NamedChunk
 
     public abstract class LocatorData
     {
-        public event Action? SizeChanged;
-        protected void OnSizeChanged() => SizeChanged?.Invoke();
+        public event Action<int>? SizeChanged;
+        protected void OnSizeChanged(int delta) => SizeChanged?.Invoke(delta);
 
 
         public LocatorTypes LocatorType { get; }
@@ -203,13 +205,26 @@ public class LocatorChunk : NamedChunk
 
     public class UnknownLocatorData : LocatorData
     {
-        public SizeAwareList<uint> Data { get; }
+        private uint[] _data;
+        public uint[] Data
+        {
+            get => _data;
+            set
+            {
+                if (ReferenceEquals(_data, value))
+                    return;
+
+                var oldSize = _data.Length;
+                _data = value ?? [];
+                var newSize = _data.Length;
+                OnSizeChanged((newSize - oldSize) * sizeof(uint));
+            }
+        }
         public override List<uint> DataArray => [..Data];
 
         public UnknownLocatorData(LocatorTypes locatorType, IList<uint> data) : base(locatorType)
         {
-            Data = new SizeAwareList<uint>(OnSizeChanged, data.Count);
-            Data.AddRange(data);
+            _data = [..data];
         }
 
         public UnknownLocatorData(uint locatorType, IList<uint> data) : this((LocatorTypes)locatorType, data)
@@ -322,8 +337,20 @@ public class LocatorChunk : NamedChunk
             get => _parameter;
             set
             {
+                if (_parameter == value)
+                    return;
+
+                var oldHasValue = _parameter.HasValue;
                 _parameter = value;
-                OnSizeChanged();
+                var newHasValue = _parameter.HasValue;
+
+                if (oldHasValue != newHasValue)
+                {
+                    if (oldHasValue)
+                        OnSizeChanged(-sizeof(uint));
+                    else
+                        OnSizeChanged(sizeof(uint));
+                }
             }
         }
 
@@ -381,8 +408,10 @@ public class LocatorChunk : NamedChunk
                 if (_key == value)
                     return;
 
+                var oldSize = DataArray.Count;
                 _key = value;
-                OnSizeChanged();
+                var newSize = DataArray.Count;
+                OnSizeChanged(newSize - oldSize);
             }
         }
 
@@ -432,8 +461,20 @@ public class LocatorChunk : NamedChunk
             get => _parkedCar;
             set
             {
+                if (_parkedCar == value)
+                    return;
+
+                var oldHasValue = _parkedCar.HasValue;
                 _parkedCar = value;
-                OnSizeChanged();
+                var newHasValue = _parkedCar.HasValue;
+
+                if (oldHasValue != newHasValue)
+                {
+                    if (oldHasValue)
+                        OnSizeChanged(-sizeof(uint));
+                    else
+                        OnSizeChanged(sizeof(uint));
+                }
             }
         }
         private string? _freeCar = null;
@@ -445,8 +486,10 @@ public class LocatorChunk : NamedChunk
                 if (_freeCar == value)
                     return;
 
+                var oldSize = DataArray.Count;
                 _freeCar = value;
-                OnSizeChanged();
+                var newSize = DataArray.Count;
+                OnSizeChanged(newSize - oldSize);
             }
         }
 
@@ -533,8 +576,10 @@ public class LocatorChunk : NamedChunk
                 if (_dynaLoadData == value)
                     return;
 
+                var oldSize = DataArray.Count;
                 _dynaLoadData = value;
-                OnSizeChanged();
+                var newSize = DataArray.Count;
+                OnSizeChanged(newSize - oldSize);
             }
         }
 
@@ -566,8 +611,20 @@ public class LocatorChunk : NamedChunk
             get => _occlusions;
             set
             {
+                if (_occlusions == value)
+                    return;
+
+                var oldHasValue = _occlusions.HasValue;
                 _occlusions = value;
-                OnSizeChanged();
+                var newHasValue = _occlusions.HasValue;
+
+                if (oldHasValue != newHasValue)
+                {
+                    if (oldHasValue)
+                        OnSizeChanged(-sizeof(uint));
+                    else
+                        OnSizeChanged(sizeof(uint));
+                }
             }
         }
 
@@ -606,8 +663,10 @@ public class LocatorChunk : NamedChunk
                 if (_interiorName == value)
                     return;
 
+                var oldSize = DataArray.Count;
                 _interiorName = value;
-                OnSizeChanged();
+                var newSize = DataArray.Count;
+                OnSizeChanged(newSize - oldSize);
             }
         }
         public Vector3 Right { get; set; }
@@ -733,8 +792,10 @@ public class LocatorChunk : NamedChunk
                 if (_objectName == value)
                     return;
 
+                var oldSize = DataArray.Count;
                 _objectName = value;
-                OnSizeChanged();
+                var newSize = DataArray.Count;
+                OnSizeChanged(newSize - oldSize);
             }
         }
         private string _jointName = string.Empty;
@@ -746,8 +807,10 @@ public class LocatorChunk : NamedChunk
                 if (_jointName == value)
                     return;
 
+                var oldSize = DataArray.Count;
                 _jointName = value;
-                OnSizeChanged();
+                var newSize = DataArray.Count;
+                OnSizeChanged(newSize - oldSize);
             }
         }
         private string _actionName = string.Empty;
@@ -760,8 +823,10 @@ public class LocatorChunk : NamedChunk
                 if (_actionName == value)
                     return;
 
+                var oldSize = DataArray.Count;
                 _actionName = value;
-                OnSizeChanged();
+                var newSize = DataArray.Count;
+                OnSizeChanged(newSize - oldSize);
             }
         }
         public Intention ButtonInput { get; set; }
@@ -886,8 +951,20 @@ public class LocatorChunk : NamedChunk
             get => _transitionTargetRate;
             set
             {
+                if (_transitionTargetRate == value)
+                    return;
+
+                var oldHasValue = _transitionTargetRate.HasValue;
                 _transitionTargetRate = value;
-                OnSizeChanged();
+                var newHasValue = _transitionTargetRate.HasValue;
+
+                if (oldHasValue != newHasValue)
+                {
+                    if (oldHasValue)
+                        OnSizeChanged(-sizeof(float));
+                    else
+                        OnSizeChanged(sizeof(float));
+                }
             }
         }
         private uint? _flags = null;
@@ -914,8 +991,17 @@ public class LocatorChunk : NamedChunk
                 else
                     current &= ~1u;
 
+                var oldHasValue = _flags.HasValue;
                 _flags = current;
-                OnSizeChanged();
+                var newHasValue = _flags.HasValue;
+
+                if (oldHasValue != newHasValue)
+                {
+                    if (oldHasValue)
+                        OnSizeChanged(-sizeof(uint));
+                    else
+                        OnSizeChanged(sizeof(uint));
+                }
             }
         }
         public bool? DisableFOV
@@ -941,8 +1027,17 @@ public class LocatorChunk : NamedChunk
                 else
                     current &= ~(1u << 1);
 
+                var oldHasValue = _flags.HasValue;
                 _flags = current;
-                OnSizeChanged();
+                var newHasValue = _flags.HasValue;
+
+                if (oldHasValue != newHasValue)
+                {
+                    if (oldHasValue)
+                        OnSizeChanged(-sizeof(uint));
+                    else
+                        OnSizeChanged(sizeof(uint));
+                }
             }
         }
         private uint? _cutInOut = null;
@@ -956,7 +1051,7 @@ public class LocatorChunk : NamedChunk
                     if (_cutInOut != null)
                     {
                         _cutInOut = null;
-                        OnSizeChanged();
+                        OnSizeChanged(-sizeof(uint));
                     }
                     return;
                 }
@@ -964,8 +1059,17 @@ public class LocatorChunk : NamedChunk
                 if (CutInOut == value)
                     return;
 
+                var oldHasValue = _cutInOut.HasValue;
                 _cutInOut = value.Value ? 1u : 0u;
-                OnSizeChanged();
+                var newHasValue = _cutInOut.HasValue;
+
+                if (oldHasValue != newHasValue)
+                {
+                    if (oldHasValue)
+                        OnSizeChanged(-sizeof(uint));
+                    else
+                        OnSizeChanged(sizeof(uint));
+                }
             }
         }
         private uint? _flags2 = null;
@@ -992,8 +1096,17 @@ public class LocatorChunk : NamedChunk
                 else
                     current &= ~1u;
 
+                var oldHasValue = _flags2.HasValue;
                 _flags2 = current;
-                OnSizeChanged();
+                var newHasValue = _flags2.HasValue;
+
+                if (oldHasValue != newHasValue)
+                {
+                    if (oldHasValue)
+                        OnSizeChanged(-sizeof(uint));
+                    else
+                        OnSizeChanged(sizeof(uint));
+                }
             }
         }
         public bool? OnFootOnly
@@ -1019,8 +1132,17 @@ public class LocatorChunk : NamedChunk
                 else
                     current &= ~(1u << 1);
 
+                var oldHasValue = _flags2.HasValue;
                 _flags2 = current;
-                OnSizeChanged();
+                var newHasValue = _flags2.HasValue;
+
+                if (oldHasValue != newHasValue)
+                {
+                    if (oldHasValue)
+                        OnSizeChanged(-sizeof(uint));
+                    else
+                        OnSizeChanged(sizeof(uint));
+                }
             }
         }
 

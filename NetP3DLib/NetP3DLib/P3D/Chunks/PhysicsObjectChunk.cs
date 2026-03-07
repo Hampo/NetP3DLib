@@ -2,6 +2,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,18 +17,11 @@ public class PhysicsObjectChunk : NamedChunk
     
     [DefaultValue(1)]
     public uint Version { get; set; }
-    private string _materialName = string.Empty;
+    private readonly P3DString _materialName;
     public string MaterialName
     {
-        get => _materialName;
-        set
-        {
-            if (_materialName == value)
-                return;
-
-            _materialName = value;
-            RecalculateSize();
-        }
+        get => _materialName?.Value ?? string.Empty;
+        set => _materialName.Value = value;
     }
     public uint NumJoints { get; set; }
     public float Volume { get; set; }
@@ -53,9 +47,9 @@ public class PhysicsObjectChunk : NamedChunk
 
     public PhysicsObjectChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Version = br.ReadUInt32();
-        MaterialName = br.ReadP3DString();
+        _materialName = new(this, br);
         NumJoints = br.ReadUInt32();
         Volume = br.ReadSingle();
         RestingSensitivity = br.ReadSingle();
@@ -63,9 +57,9 @@ public class PhysicsObjectChunk : NamedChunk
 
     public PhysicsObjectChunk(string name, uint version, string materialName, uint numJoints, float volume, float restingSensitivity) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         Version = version;
-        MaterialName = materialName;
+        _materialName = new(this, materialName);
         NumJoints = numJoints;
         Volume = volume;
         RestingSensitivity = restingSensitivity;

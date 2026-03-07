@@ -2,6 +2,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Types;
 using System.Collections.Generic;
 using System.IO;
 
@@ -12,18 +13,11 @@ public class OldScenegraphLightGroupChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Scenegraph_Light_Group;
 
-    private string _lightGroupName = string.Empty;
+    private readonly P3DString _lightGroupName;
     public string LightGroupName
     {
-        get => _lightGroupName;
-        set
-        {
-            if (_lightGroupName == value)
-                return;
-
-            _lightGroupName = value;
-            RecalculateSize();
-        }
+        get => _lightGroupName?.Value ?? string.Empty;
+        set => _lightGroupName.Value = value;
     }
 
     public override byte[] DataBytes
@@ -42,14 +36,14 @@ public class OldScenegraphLightGroupChunk : NamedChunk
 
     public OldScenegraphLightGroupChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
-        LightGroupName = br.ReadP3DString();
+        _name = new(this, br);
+        _lightGroupName = new(this, br);
     }
 
     public OldScenegraphLightGroupChunk(string name, string lightGroupName) : base(ChunkID)
     {
-        Name = name;
-        LightGroupName = lightGroupName;
+        _name = new(this, name);
+        _lightGroupName = new(this, lightGroupName);
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

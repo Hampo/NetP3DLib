@@ -47,7 +47,7 @@ public class FrontendLayer2Chunk : NamedChunk
 
     public FrontendLayer2Chunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Version = br.ReadUInt32();
         visible = br.ReadUInt32();
         editable = br.ReadUInt32();
@@ -56,7 +56,7 @@ public class FrontendLayer2Chunk : NamedChunk
 
     public FrontendLayer2Chunk(string name, uint version, bool visible, bool editable, uint alpha) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         Version = version;
         Visible = visible;
         Editable = editable;

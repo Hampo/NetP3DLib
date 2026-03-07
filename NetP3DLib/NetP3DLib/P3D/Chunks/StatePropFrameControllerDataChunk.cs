@@ -50,7 +50,7 @@ public class StatePropFrameControllerDataChunk : NamedChunk
 
     public StatePropFrameControllerDataChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         cyclic = br.ReadUInt32();
         NumCycles = br.ReadUInt32();
         holdFrame = br.ReadUInt32();
@@ -61,7 +61,7 @@ public class StatePropFrameControllerDataChunk : NamedChunk
 
     public StatePropFrameControllerDataChunk(string name, bool cyclic, uint numCycles, bool holdFrame, float minFrame, float maxFrame, float relativeSpeed) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         Cyclic = cyclic;
         NumCycles = numCycles;
         HoldFrame = holdFrame;

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.ComponentModel;
 using System.IO;
+using NetP3DLib.P3D.Types;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -35,18 +36,11 @@ public class FrontendPure3DObjectChunk : NamedChunk
     public Color Colour { get; set; }
     public uint Translucency { get; set; }
     public float RotationValue { get; set; }
-    private string _pure3DFilename = string.Empty;
+    private readonly P3DString _pure3DFilename;
     public string Pure3DFilename
     {
-        get => _pure3DFilename;
-        set
-        {
-            if (_pure3DFilename == value)
-                return;
-
-            _pure3DFilename = value;
-            RecalculateSize();
-        }
+        get => _pure3DFilename?.Value ?? string.Empty;
+        set => _pure3DFilename.Value = value;
     }
 
     public override byte[] DataBytes
@@ -75,7 +69,7 @@ public class FrontendPure3DObjectChunk : NamedChunk
 
     public FrontendPure3DObjectChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Version = br.ReadUInt32();
         PositionX = br.ReadInt32();
         PositionY = br.ReadInt32();
@@ -86,12 +80,12 @@ public class FrontendPure3DObjectChunk : NamedChunk
         Colour = br.ReadColor();
         Translucency = br.ReadUInt32();
         RotationValue = br.ReadSingle();
-        Pure3DFilename = br.ReadP3DString();
+        _pure3DFilename = new(this, br);
     }
 
     public FrontendPure3DObjectChunk(string name, uint version, int positionX, int positionY, uint dimensionX, uint dimensionY, Justifications justificationX, Justifications justificationY, Color colour, uint translucency, float rotationValue, string pure3DFilename) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         Version = version;
         PositionX = positionX;
         PositionY = positionY;
@@ -102,7 +96,7 @@ public class FrontendPure3DObjectChunk : NamedChunk
         Colour = colour;
         Translucency = translucency;
         RotationValue = rotationValue;
-        Pure3DFilename = pure3DFilename;
+        _pure3DFilename = new(this, pure3DFilename);
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

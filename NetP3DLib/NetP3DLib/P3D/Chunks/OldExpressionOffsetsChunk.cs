@@ -1,4 +1,5 @@
 using NetP3DLib.P3D.Attributes;
+using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ public class OldExpressionOffsetsChunk : Chunk
     
     public uint NumPrimitiveGroups
     {
-        get => (uint)PrimitiveGroupIndices.Count;
+        get => (uint)(PrimitiveGroupIndices?.Count ?? 0);
         set
         {
             if (value == NumPrimitiveGroups)
@@ -29,11 +30,10 @@ public class OldExpressionOffsetsChunk : Chunk
                 while (NumPrimitiveGroups < value)
                     PrimitiveGroupIndices.Add(default);
             }
-            RecalculateSize();
         }
     }
     public uint NumOffsetLists => GetChildCount(ChunkIdentifier.Old_Offset_List);
-    public List<uint> PrimitiveGroupIndices { get; } = [];
+    public SizeAwareList<uint> PrimitiveGroupIndices { get; }
 
     public override byte[] DataBytes
     {
@@ -56,14 +56,15 @@ public class OldExpressionOffsetsChunk : Chunk
     {
         var numPrimitiveGroups = br.ReadInt32();
         var numOffsetLists = br.ReadUInt32();
-        PrimitiveGroupIndices = new(numPrimitiveGroups);
+        var primitiveGroupIndices = new List<uint>(numPrimitiveGroups);
         for (var i = 0; i < numPrimitiveGroups; i++)
-            PrimitiveGroupIndices.Add(br.ReadUInt32());
+            primitiveGroupIndices.Add(br.ReadUInt32());
+        PrimitiveGroupIndices = CreateSizeAwareList(primitiveGroupIndices);
     }
 
     public OldExpressionOffsetsChunk(IList<uint> primitiveGroupIndices) : base(ChunkID)
     {
-        PrimitiveGroupIndices.AddRange(primitiveGroupIndices);
+        PrimitiveGroupIndices = CreateSizeAwareList(primitiveGroupIndices);
     }
 
     protected override void WriteData(BinaryWriter bw)

@@ -1,4 +1,5 @@
 using NetP3DLib.P3D.Attributes;
+using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
@@ -18,7 +19,7 @@ public class IntegerChannelChunk : ParamChunk
     public uint Version { get; set; }
     public uint NumFrames
     {
-        get => (uint)Frames.Count;
+        get => (uint)(Frames?.Count ?? 0);
         set
         {
             if (value == NumFrames)
@@ -35,13 +36,12 @@ public class IntegerChannelChunk : ParamChunk
                     Frames.Add(default);
             }
             NumValues = value;
-            RecalculateSize();
         }
     }
-    public List<ushort> Frames { get; } = [];
+    public SizeAwareList<ushort> Frames { get; }
     public uint NumValues
     {
-        get => (uint)Values.Count;
+        get => (uint)(Values?.Count ?? 0);
         set
         {
             if (value == NumValues)
@@ -58,10 +58,9 @@ public class IntegerChannelChunk : ParamChunk
                     Values.Add(default);
             }
             NumFrames = value;
-            RecalculateSize();
         }
     }
-    public List<int> Values { get; } = [];
+    public SizeAwareList<int> Values { get; }
 
     public override byte[] DataBytes
     {
@@ -85,22 +84,24 @@ public class IntegerChannelChunk : ParamChunk
     public IntegerChannelChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
-        Param = br.ReadFourCC();
+        _param = new(this, br);
         var numFrames = br.ReadInt32();
-        Frames = new(numFrames);
-        Values = new(numFrames);
+        var frames = new List<ushort>(numFrames);
         for (var i = 0; i < numFrames; i++)
-            Frames.Add(br.ReadUInt16());
+            frames.Add(br.ReadUInt16());
+        Frames = CreateSizeAwareList(frames);
+        var values = new List<int>(numFrames);
         for (var i = 0; i < numFrames; i++)
-            Values.Add(br.ReadInt32());
+            values.Add(br.ReadInt32());
+        Values = CreateSizeAwareList(values);
     }
 
     public IntegerChannelChunk(uint version, string param, IList<ushort> frames, IList<int> values) : base(ChunkID)
     {
         Version = version;
-        Param = param;
-        Frames.AddRange(frames);
-        Values.AddRange(values);
+        _param = new(this, param);
+        Frames = CreateSizeAwareList(frames);
+        Values = CreateSizeAwareList(values);
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

@@ -55,14 +55,14 @@ public class StatePropCallbackDataChunk : NamedChunk
 
     public StatePropCallbackDataChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Event = (Events)br.ReadUInt32();
         OnFrame = br.ReadSingle();
     }
 
     public StatePropCallbackDataChunk(string name, Events @event, float onFrame) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         Event = @event;
         OnFrame = onFrame;
     }

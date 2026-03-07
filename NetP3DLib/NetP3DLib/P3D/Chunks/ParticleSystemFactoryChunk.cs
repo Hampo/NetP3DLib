@@ -46,7 +46,7 @@ public class ParticleSystemFactoryChunk : NamedChunk
     public ParticleSystemFactoryChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         FrameRate = br.ReadSingle();
         NumAnimFrames = br.ReadUInt32();
         NumOLFrames = br.ReadUInt32();
@@ -58,7 +58,7 @@ public class ParticleSystemFactoryChunk : NamedChunk
     public ParticleSystemFactoryChunk(uint version, string name, float frameRate, uint numAnimFrames, uint numOLFrames, ushort cycleAnim, ushort enableSorting) : base(ChunkID)
     {
         Version = version;
-        Name = name;
+        _name = new(this, name);
         FrameRate = frameRate;
         NumAnimFrames = numAnimFrames;
         NumOLFrames = numOLFrames;

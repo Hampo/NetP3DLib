@@ -1,4 +1,5 @@
 using NetP3DLib.P3D.Attributes;
+using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
 using System;
@@ -16,7 +17,7 @@ public class OldVector2OffsetListChunk : ParamChunk
     public uint Version { get; set; }
     public uint NumOffsets
     {
-        get => (uint)Offsets.Count;
+        get => (uint)(Offsets?.Count ?? 0);
         set
         {
             if (value == NumOffsets)
@@ -32,10 +33,9 @@ public class OldVector2OffsetListChunk : ParamChunk
                 while (NumOffsets < value)
                     Offsets.Add(default);
             }
-            RecalculateSize();
         }
     }
-    public List<Vector2> Offsets { get; } = [];
+    public SizeAwareList<Vector2> Offsets { get; }
 
     public override byte[] DataBytes
     {
@@ -58,17 +58,18 @@ public class OldVector2OffsetListChunk : ParamChunk
     {
         Version = br.ReadUInt32();
         var numOffsets = br.ReadInt32();
-        Param = br.ReadFourCC();
-        Offsets = new(numOffsets);
+        _param = new(this, br);
+        var offsets = new List<Vector2>(numOffsets);
         for (int i = 0; i < numOffsets; i++)
-            Offsets.Add(br.ReadVector2());
+            offsets.Add(br.ReadVector2());
+        Offsets = CreateSizeAwareList(offsets);
     }
 
     public OldVector2OffsetListChunk(uint version, string param, IList<Vector2> offsets) : base(ChunkID)
     {
         Version = version;
-        Param = param;
-        Offsets.AddRange(offsets);
+        _param = new(this, param);
+        Offsets = CreateSizeAwareList(offsets);
     }
 
     protected override void WriteData(BinaryWriter bw)

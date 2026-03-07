@@ -1,4 +1,5 @@
 using NetP3DLib.P3D.Attributes;
+using NetP3DLib.P3D.Collections;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,7 +11,7 @@ public class Unknown7000008Chunk : Chunk
 {    
     public uint NumUnknown
     {
-        get => (uint)Unknown.Count;
+        get => (uint)(Unknown?.Count ?? 0);
         set
         {
             if (value == NumUnknown)
@@ -26,10 +27,9 @@ public class Unknown7000008Chunk : Chunk
                 while (NumUnknown < value)
                     Unknown.Add(default);
             }
-            RecalculateSize();
         }
     }
-    public List<short> Unknown { get; } = [];
+    public SizeAwareList<short> Unknown { get; }
 
     public override byte[] DataBytes
     {
@@ -49,14 +49,15 @@ public class Unknown7000008Chunk : Chunk
     public Unknown7000008Chunk(BinaryReader br) : base(0x7000008)
     {
         var numUnknown = br.ReadInt32();
-        Unknown = new(numUnknown);
+        var unknown = new List<short>(numUnknown);
         for (var i = 0; i < numUnknown; i++)
-            Unknown.Add(br.ReadInt16());
+            unknown.Add(br.ReadInt16());
+        Unknown = CreateSizeAwareList(unknown);
     }
 
     public Unknown7000008Chunk(IList<short> unknown) : base(0x7000008)
     {
-        Unknown.AddRange(unknown);
+        Unknown = CreateSizeAwareList(unknown);
     }
 
     protected override void WriteData(BinaryWriter bw)

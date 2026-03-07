@@ -1,4 +1,5 @@
 using NetP3DLib.P3D.Attributes;
+using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
@@ -16,7 +17,7 @@ public class UVListChunk : Chunk
     
     public uint NumUVs
     {
-        get => (uint)UVs.Count;
+        get => (uint)(UVs?.Count ?? 0);
         set
         {
             if (value == NumUVs)
@@ -32,11 +33,10 @@ public class UVListChunk : Chunk
                 while (NumUVs < value)
                     UVs.Add(default);
             }
-            RecalculateSize();
         }
     }
     public uint Channel { get; set; }
-    public List<Vector2> UVs { get; } = [];
+    public SizeAwareList<Vector2> UVs { get; }
 
     public override byte[] DataBytes
     {
@@ -58,15 +58,16 @@ public class UVListChunk : Chunk
     {
         var numUVs = br.ReadInt32();
         Channel = br.ReadUInt32();
-        UVs = new(numUVs);
+        var uvs = new List<Vector2>(numUVs);
         for (int i = 0; i < numUVs; i++)
-            UVs.Add(br.ReadVector2());
+            uvs.Add(br.ReadVector2());
+        UVs = CreateSizeAwareList(uvs);
     }
 
     public UVListChunk(uint channel, IList<Vector2> uvs) : base(ChunkID)
     {
         Channel = channel;
-        UVs.AddRange(uvs);
+        UVs = CreateSizeAwareList(uvs);
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

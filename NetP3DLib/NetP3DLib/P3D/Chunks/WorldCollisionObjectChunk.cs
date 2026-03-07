@@ -30,13 +30,13 @@ public class WorldCollisionObjectChunk : NamedChunk
 
     public WorldCollisionObjectChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Version = br.ReadUInt32();
     }
 
     public WorldCollisionObjectChunk(string name, uint version) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         Version = version;
     }
 

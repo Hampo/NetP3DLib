@@ -2,6 +2,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,61 +17,33 @@ public class FrameControllerChunk : NamedChunk
     
     [DefaultValue(1)]
     public uint Version { get; set; }
-    private string _type = string.Empty;
+    private readonly FourCC _type;
     [MaxLength(4)]
     public string Type
     {
-        get => _type;
-        set
-        {
-            if (_type == value)
-                return;
-
-            _type = value;
-            RecalculateSize();
-        }
+        get => _type?.Value ?? string.Empty;
+        set => _type.Value = value;
     }
-    private string _cycleMode = string.Empty;
+    private readonly FourCC _cycleMode;
     [MaxLength(4)]
     public string CycleMode
     {
-        get => _cycleMode;
-        set
-        {
-            if (_cycleMode == value)
-                return;
-
-            _cycleMode = value;
-            RecalculateSize();
-        }
+        get => _cycleMode?.Value ?? string.Empty;
+        set => _cycleMode.Value = value;
     }
     public uint NumCycles { get; set; }
     public uint InfiniteCycle { get; set; }
-    private string _hierarchyName = string.Empty;
+    private readonly P3DString _hierarchyName;
     public string HierarchyName
     {
-        get => _hierarchyName;
-        set
-        {
-            if (_hierarchyName == value)
-                return;
-
-            _hierarchyName = value;
-            RecalculateSize();
-        }
+        get => _hierarchyName?.Value ?? string.Empty;
+        set => _hierarchyName.Value = value;
     }
-    private string _animationName = string.Empty;
+    private readonly P3DString _animationName;
     public string AnimationName
     {
-        get => _animationName;
-        set
-        {
-            if (_animationName == value)
-                return;
-
-            _animationName = value;
-            RecalculateSize();
-        }
+        get => _animationName?.Value ?? string.Empty;
+        set => _animationName.Value = value;
     }
 
     public override byte[] DataBytes
@@ -96,25 +69,25 @@ public class FrameControllerChunk : NamedChunk
     public FrameControllerChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
-        Name = br.ReadP3DString();
-        Type = br.ReadFourCC();
-        CycleMode = br.ReadFourCC();
+        _name = new(this, br);
+        _type = new(this, br);
+        _cycleMode = new(this, br);
         NumCycles = br.ReadUInt32();
         InfiniteCycle = br.ReadUInt32();
-        HierarchyName = br.ReadP3DString();
-        AnimationName = br.ReadP3DString();
+        _hierarchyName = new(this, br);
+        _animationName = new(this, br);
     }
 
     public FrameControllerChunk(uint version, string name, string type, string cycleMode, uint numCycles, uint infiniteCycle, string hierarchyName, string animationName) : base(ChunkID)
     {
         Version = version;
-        Name = name;
-        Type = type;
-        CycleMode = cycleMode;
+        _name = new(this, name);
+        _type = new(this, type);
+        _cycleMode = new(this, cycleMode);
         NumCycles = numCycles;
         InfiniteCycle = infiniteCycle;
-        HierarchyName = hierarchyName;
-        AnimationName = animationName;
+        _hierarchyName = new(this, hierarchyName);
+        _animationName = new(this, animationName);
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

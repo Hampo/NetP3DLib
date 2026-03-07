@@ -49,7 +49,7 @@ public class MultiControllerChunk : NamedChunk
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
     public MultiControllerChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Version = br.ReadUInt32();
         Length = br.ReadSingle();
         Framerate = br.ReadSingle();
@@ -58,7 +58,7 @@ public class MultiControllerChunk : NamedChunk
 
     public MultiControllerChunk(string name, uint version, float length, float framerate) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         Version = version;
         Length = length;
         Framerate = framerate;

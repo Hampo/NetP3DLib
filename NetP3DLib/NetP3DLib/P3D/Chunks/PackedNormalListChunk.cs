@@ -1,4 +1,5 @@
 using NetP3DLib.P3D.Attributes;
+using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using System;
@@ -14,7 +15,7 @@ public class PackedNormalListChunk : Chunk
     
     public uint NumNormals
     {
-        get => (uint)Normals.Count;
+        get => (uint)(Normals?.Count ?? 0);
         set
         {
             if (value == NumNormals)
@@ -30,10 +31,9 @@ public class PackedNormalListChunk : Chunk
                 while (NumNormals < value)
                     Normals.Add(default);
             }
-            RecalculateSize();
         }
     }
-    public List<byte> Normals { get; } = [];
+    public SizeAwareList<byte> Normals { get; }
 
     public override byte[] DataBytes
     {
@@ -52,12 +52,13 @@ public class PackedNormalListChunk : Chunk
     public PackedNormalListChunk(BinaryReader br) : base(ChunkID)
     {
         var numNormals = br.ReadInt32();
+        Normals = CreateSizeAwareList<byte>(numNormals);
         Normals.AddRange(br.ReadBytes(numNormals));
     }
 
     public PackedNormalListChunk(IList<byte> normals) : base(ChunkID)
     {
-        Normals.AddRange(normals);
+        Normals = CreateSizeAwareList(normals);
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
@@ -72,7 +73,7 @@ public class PackedNormalListChunk : Chunk
     protected override void WriteData(BinaryWriter bw)
     {
         bw.Write(NumNormals);
-        bw.Write(Normals.ToArray());
+        bw.Write([..Normals]);
     }
 
     protected override Chunk CloneSelf() => new PackedNormalListChunk(Normals);

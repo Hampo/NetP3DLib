@@ -2,6 +2,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -39,31 +40,17 @@ public class OldFrameControllerChunk : NamedChunk
     public uint Version { get; set; }
     public AnimationType Type { get; set; }
     public float FrameOffset { get; set; }
-    private string _hierarchyName = string.Empty;
+    private readonly P3DString _hierarchyName;
     public string HierarchyName
     {
-        get => _hierarchyName;
-        set
-        {
-            if (_hierarchyName == value)
-                return;
-
-            _hierarchyName = value;
-            RecalculateSize();
-        }
+        get => _hierarchyName?.Value ?? string.Empty;
+        set => _hierarchyName.Value = value;
     }
-    private string _animationName = string.Empty;
+    private readonly P3DString _animationName;
     public string AnimationName
     {
-        get => _animationName;
-        set
-        {
-            if (_animationName == value)
-                return;
-
-            _animationName = value;
-            RecalculateSize();
-        }
+        get => _animationName?.Value ?? string.Empty;
+        set => _animationName.Value = value;
     }
 
     public override byte[] DataBytes
@@ -86,21 +73,21 @@ public class OldFrameControllerChunk : NamedChunk
     public OldFrameControllerChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Type = (AnimationType)br.ReadUInt32();
         FrameOffset = br.ReadSingle();
-        HierarchyName = br.ReadP3DString();
-        AnimationName = br.ReadP3DString();
+        _hierarchyName = new(this, br);
+        _animationName = new(this, br);
     }
 
     public OldFrameControllerChunk(uint version, string name, AnimationType type, float frameOffset, string hierarchyName, string animationName) : base(ChunkID)
     {
         Version = version;
-        Name = name;
+        _name = new(this, name);
         Type = type;
         FrameOffset = frameOffset;
-        HierarchyName = hierarchyName;
-        AnimationName = animationName;
+        _hierarchyName = new(this, hierarchyName);
+        _animationName = new(this, animationName);
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

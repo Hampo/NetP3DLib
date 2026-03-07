@@ -1,4 +1,5 @@
 using NetP3DLib.P3D.Attributes;
+using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using System;
@@ -14,7 +15,7 @@ public class MatrixListChunk : Chunk
     
     public uint NumMatrices
     {
-        get => (uint)Matrices.Count;
+        get => (uint)(Matrices?.Count ?? 0);
         set
         {
             if (value == NumMatrices)
@@ -30,10 +31,9 @@ public class MatrixListChunk : Chunk
                 while (NumMatrices < value)
                     Matrices.Add(new());
             }
-            RecalculateSize();
         }
     }
-    public List<Matrix> Matrices { get; } = [];
+    public SizeAwareList<Matrix> Matrices { get; }
 
     public override byte[] DataBytes
     {
@@ -53,14 +53,14 @@ public class MatrixListChunk : Chunk
     public MatrixListChunk(BinaryReader br) : base(ChunkID)
     {
         var numMatrices = br.ReadInt32();
-        Matrices = new(numMatrices);
+        Matrices = CreateSizeAwareList<Matrix>(numMatrices);
         for (int i = 0; i < numMatrices; i++)
             Matrices.Add(new(br));
     }
 
     public MatrixListChunk(IList<Matrix> matrices) : base(ChunkID)
     {
-        Matrices.AddRange(matrices);
+        Matrices = CreateSizeAwareList(matrices);
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

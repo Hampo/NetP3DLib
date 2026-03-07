@@ -2,6 +2,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Types;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
@@ -13,18 +14,11 @@ public class RoadSegmentChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Road_Segment;
 
-    private string _roadDataSegment = string.Empty;
+    private readonly P3DString _roadDataSegment;
     public string RoadDataSegment
     {
-        get => _roadDataSegment;
-        set
-        {
-            if (_roadDataSegment == value)
-                return;
-
-            _roadDataSegment = value;
-            RecalculateSize();
-        }
+        get => _roadDataSegment?.Value ?? string.Empty;
+        set => _roadDataSegment.Value = value;
     }
     public Matrix4x4 Transform { get; set; }
     public Matrix4x4 Scale { get; set; }
@@ -47,16 +41,16 @@ public class RoadSegmentChunk : NamedChunk
 
     public RoadSegmentChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
-        RoadDataSegment = br.ReadP3DString();
+        _name = new(this, br);
+        _roadDataSegment = new(this, br);
         Transform = br.ReadMatrix4x4();
         Scale = br.ReadMatrix4x4();
     }
 
     public RoadSegmentChunk(string name, string roadDataSegment, Matrix4x4 transform, Matrix4x4 scale) : base(ChunkID)
     {
-        Name = name;
-        RoadDataSegment = roadDataSegment;
+        _name = new(this, name);
+        _roadDataSegment = new(this, roadDataSegment);
         Transform = transform;
         Scale = scale;
     }

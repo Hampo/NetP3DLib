@@ -1,4 +1,5 @@
 using NetP3DLib.P3D.Attributes;
+using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
@@ -16,7 +17,7 @@ public class ColourListChunk : Chunk
     
     public uint NumColours
     {
-        get => (uint)Colours.Count;
+        get => (uint)(Colours?.Count ?? 0);
         set
         {
             if (value == NumColours)
@@ -32,10 +33,9 @@ public class ColourListChunk : Chunk
                 while (NumColours < value)
                     Colours.Add(default);
             }
-            RecalculateSize();
         }
     }
-    public List<Color> Colours { get; } = [];
+    public SizeAwareList<Color> Colours { get; }
 
     public override byte[] DataBytes
     {
@@ -55,14 +55,15 @@ public class ColourListChunk : Chunk
     public ColourListChunk(BinaryReader br) : base(ChunkID)
     {
         var num = br.ReadInt32();
-        Colours = new(num);
+        var colours = new List<Color>(num);
         for (int i = 0; i < num; i++)
-            Colours.Add(br.ReadColor());
+            colours.Add(br.ReadColor());
+        Colours = CreateSizeAwareList(colours);
     }
 
     public ColourListChunk(IList<Color> colours) : base(ChunkID)
     {
-        Colours.AddRange(colours);
+        Colours = CreateSizeAwareList(colours);
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

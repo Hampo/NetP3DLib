@@ -33,13 +33,13 @@ public class OldVertexAnimKeyFrameChunk : NamedChunk
     public OldVertexAnimKeyFrameChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
-        Name = br.ReadP3DString();
+        _name = new(this, br);
     }
 
     public OldVertexAnimKeyFrameChunk(uint version, string name) : base(ChunkID)
     {
         Version = version;
-        Name = name;
+        _name = new(this, name);
     }
 
     protected override void WriteData(BinaryWriter bw)

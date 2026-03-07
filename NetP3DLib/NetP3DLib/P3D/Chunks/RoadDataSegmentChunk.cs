@@ -46,7 +46,7 @@ public class RoadDataSegmentChunk : NamedChunk
 
     public RoadDataSegmentChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Type = br.ReadUInt32();
         Lanes = br.ReadUInt32();
         hasShoulder = br.ReadUInt32();
@@ -57,7 +57,7 @@ public class RoadDataSegmentChunk : NamedChunk
 
     public RoadDataSegmentChunk(string name, uint type, uint lanes, bool hasShoulder, Vector3 direction, Vector3 top, Vector3 bottom) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         Type = type;
         Lanes = lanes;
         HasShoulder = hasShoulder;

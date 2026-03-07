@@ -1,4 +1,5 @@
 using NetP3DLib.P3D.Attributes;
+using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
 using System;
@@ -15,7 +16,7 @@ public class CollisionMeshVectorListChunk : Chunk
     
     public uint NumVectors
     {
-        get => (uint)Vectors.Count;
+        get => (uint)(Vectors?.Count ?? 0);
         set
         {
             if (value == NumVectors)
@@ -31,10 +32,9 @@ public class CollisionMeshVectorListChunk : Chunk
                 while (NumVectors < value)
                     Vectors.Add(default);
             }
-            RecalculateSize();
         }
     }
-    public List<Vector3> Vectors { get; } = [];
+    public SizeAwareList<Vector3> Vectors { get; }
 
     public override byte[] DataBytes
     {
@@ -54,14 +54,15 @@ public class CollisionMeshVectorListChunk : Chunk
     public CollisionMeshVectorListChunk(BinaryReader br) : base(ChunkID)
     {
         var numVectors = br.ReadInt32();
-        Vectors = new(numVectors);
+        var vectors = new List<Vector3>(numVectors);
         for (int i = 0; i < numVectors; i++)
-            Vectors.Add(br.ReadVector3());
+            vectors.Add(br.ReadVector3());
+        Vectors = CreateSizeAwareList(vectors);
     }
 
     public CollisionMeshVectorListChunk(IList<Vector3> vectors) : base(ChunkID)
     {
-        Vectors.AddRange(vectors);
+        Vectors = CreateSizeAwareList(vectors);
     }
 
     protected override void WriteData(BinaryWriter bw)

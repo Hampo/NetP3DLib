@@ -39,7 +39,7 @@ public class ImageFontChunk : NamedChunk
     public ImageFontChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         FontSize = br.ReadSingle();
         FontWidth = br.ReadSingle();
         FontHeight = br.ReadSingle();
@@ -49,7 +49,7 @@ public class ImageFontChunk : NamedChunk
     public ImageFontChunk(uint version, string name, float fontSize, float fontWidth, float fontHeight, float fontBaseLine) : base(ChunkID)
     {
         Version = version;
-        Name = name;
+        _name = new(this, name);
         FontSize = fontSize;
         FontWidth = fontWidth;
         FontHeight = fontHeight;

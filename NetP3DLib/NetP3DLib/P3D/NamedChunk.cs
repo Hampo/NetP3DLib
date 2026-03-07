@@ -1,29 +1,28 @@
 ﻿using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Types;
 using System.Collections.Generic;
 
 namespace NetP3DLib.P3D;
 
+#pragma warning disable CS8618
 public abstract class NamedChunk : Chunk
 {
-    private string _name = string.Empty;
+    internal P3DString _name;
     public string Name
     {
-        get => _name;
-        set
-        {
-            if (_name == value)
-                return;
-
-            _name = value;
-            RecalculateSize();
-        }
+        get => _name?.Value ?? string.Empty;
+        set => _name.Value = value;
     }
 
-    public NamedChunk(uint ID) : base(ID) { }
+    protected NamedChunk(uint ID) : base(ID)
+    {
+    }
 
-    public NamedChunk(ChunkIdentifier ID) : base(ID) { }
+    protected NamedChunk(ChunkIdentifier ID) : base(ID)
+    {
+    }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
@@ -36,3 +35,4 @@ public abstract class NamedChunk : Chunk
 
     public override string ToString() => $"\"{Name}\" ({GetChunkType(this)} (0x{ID:X}))";
 }
+#pragma warning restore CS8618

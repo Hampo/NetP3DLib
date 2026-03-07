@@ -17,7 +17,7 @@ public class BinormalListChunk : Chunk
     
     public uint NumBinormals
     {
-        get => (uint)Binormals.Count;
+        get => (uint)(Binormals?.Count ?? 0);
         set
         {
             if (value == NumBinormals)
@@ -33,10 +33,9 @@ public class BinormalListChunk : Chunk
                 while (NumBinormals < value)
                     Binormals.Add(default);
             }
-            RecalculateSize();
         }
     }
-    public List<Vector3> Binormals { get; } = [];
+    public SizeAwareList<Vector3> Binormals { get; }
 
     public override byte[] DataBytes
     {
@@ -56,14 +55,15 @@ public class BinormalListChunk : Chunk
     public BinormalListChunk(BinaryReader br) : base(ChunkID)
     {
         var numNormals = br.ReadInt32();
-        Binormals = new(numNormals);
+        var binormals = new List<Vector3>(numNormals);
         for (var i = 0; i < numNormals; i++)
-            Binormals.Add(br.ReadVector3());
+            binormals.Add(br.ReadVector3());
+        Binormals = CreateSizeAwareList(binormals);
     }
 
     public BinormalListChunk(IList<Vector3> binormals) : base(ChunkID)
     {
-        Binormals.AddRange(binormals);
+        Binormals = CreateSizeAwareList(binormals);
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

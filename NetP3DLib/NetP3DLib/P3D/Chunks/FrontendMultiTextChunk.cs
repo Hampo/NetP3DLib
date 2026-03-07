@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.ComponentModel;
 using System.IO;
+using NetP3DLib.P3D.Types;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -35,18 +36,11 @@ public class FrontendMultiTextChunk : NamedChunk
     public Color Colour { get; set; }
     public uint Translucency { get; set; }
     public float RotationValue { get; set; }
-    private string _textStyleName = string.Empty;
+    private readonly P3DString _textStyleName;
     public string TextStyleName
     {
-        get => _textStyleName;
-        set
-        {
-            if (_textStyleName == value)
-                return;
-
-            _textStyleName = value;
-            RecalculateSize();
-        }
+        get => _textStyleName?.Value ?? string.Empty;
+        set => _textStyleName.Value = value;
     }
     public byte ShadowEnabled { get; set; }
     public Color ShadowColour { get; set; }
@@ -85,7 +79,7 @@ public class FrontendMultiTextChunk : NamedChunk
 
     public FrontendMultiTextChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Version = br.ReadUInt32();
         PositionX = br.ReadInt32();
         PositionY = br.ReadInt32();
@@ -96,7 +90,7 @@ public class FrontendMultiTextChunk : NamedChunk
         Colour = br.ReadColor();
         Translucency = br.ReadUInt32();
         RotationValue = br.ReadSingle();
-        TextStyleName = br.ReadP3DString();
+        _textStyleName = new(this, br);
         ShadowEnabled = br.ReadByte();
         ShadowColour = br.ReadColor();
         ShadowOffsetX = br.ReadInt32();
@@ -106,7 +100,7 @@ public class FrontendMultiTextChunk : NamedChunk
 
     public FrontendMultiTextChunk(string name, uint version, int positionX, int positionY, uint dimensionX, uint dimensionY, Justifications justificationX, Justifications justificationY, Color colour, uint translucency, float rotationValue, string textStyleName, byte shadowEnabled, Color shadowColour, int shadowOffsetX, int shadowOffsetY, uint currentText) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         Version = version;
         PositionX = positionX;
         PositionY = positionY;
@@ -117,7 +111,7 @@ public class FrontendMultiTextChunk : NamedChunk
         Colour = colour;
         Translucency = translucency;
         RotationValue = rotationValue;
-        TextStyleName = textStyleName;
+        _textStyleName = new(this, textStyleName);
         ShadowEnabled = shadowEnabled;
         ShadowColour = shadowColour;
         ShadowOffsetX = shadowOffsetX;

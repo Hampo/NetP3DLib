@@ -1,7 +1,9 @@
 using NetP3DLib.P3D.Attributes;
+using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -23,22 +25,15 @@ public class ExpressionGroupChunk : NamedChunk
     
     [DefaultValue(0)]
     public uint Version { get; set; }
-    private string _targetName = string.Empty;
+    private readonly P3DString _targetName;
     public string TargetName
     {
-        get => _targetName;
-        set
-        {
-            if (_targetName == value)
-                return;
-
-            _targetName = value;
-            RecalculateSize();
-        }
+        get => _targetName?.Value ?? string.Empty;
+        set => _targetName.Value = value;
     }
     public uint NumStages
     {
-        get => (uint)Stages.Count;
+        get => (uint)(Stages?.Count ?? 0);
         set
         {
             if (value == NumStages)
@@ -54,10 +49,9 @@ public class ExpressionGroupChunk : NamedChunk
                 while (NumStages < value)
                     Stages.Add(default);
             }
-            RecalculateSize();
         }
     }
-    public List<Stage> Stages { get; } = [];
+    public SizeAwareList<Stage> Stages { get; }
 
     public override byte[] DataBytes
     {
@@ -80,10 +74,10 @@ public class ExpressionGroupChunk : NamedChunk
     public ExpressionGroupChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
-        Name = br.ReadP3DString();
-        TargetName = br.ReadP3DString();
+        _name = new(this, br);
+        _targetName = new(this, br);
         var numStages = br.ReadInt32();
-        Stages = new(numStages);
+        Stages = CreateSizeAwareList<Stage>(numStages);
         for (int i = 0; i < numStages; i++)
             Stages.Add((Stage)br.ReadUInt32());
     }
@@ -91,9 +85,9 @@ public class ExpressionGroupChunk : NamedChunk
     public ExpressionGroupChunk(uint version, string name, string targetName, IList<Stage> stages) : base(ChunkID)
     {
         Version = version;
-        Name = name;
-        TargetName = targetName;
-        Stages.AddRange(stages);
+        _name = new(this, name);
+        _targetName = new(this, targetName);
+        Stages = CreateSizeAwareList(stages);
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

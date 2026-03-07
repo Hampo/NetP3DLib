@@ -2,6 +2,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,19 +17,12 @@ public class MultiController2Chunk : NamedChunk
     
     [DefaultValue(1)]
     public uint Version { get; set; }
-    private string _cycleMode = string.Empty;
+    private readonly FourCC _cycleMode;
     [MaxLength(4)]
     public string CycleMode
     {
-        get => _cycleMode;
-        set
-        {
-            if (_cycleMode == value)
-                return;
-
-            _cycleMode = value;
-            RecalculateSize();
-        }
+        get => _cycleMode?.Value ?? string.Empty;
+        set => _cycleMode.Value = value;
     }
     public uint NumCycles { get; set; }
     public uint InfiniteCycle { get; set; }
@@ -60,8 +54,8 @@ public class MultiController2Chunk : NamedChunk
     public MultiController2Chunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
-        Name = br.ReadP3DString();
-        CycleMode = br.ReadFourCC();
+        _name = new(this, br);
+        _cycleMode = new(this, br);
         NumCycles = br.ReadUInt32();
         InfiniteCycle = br.ReadUInt32();
         NumFrames = br.ReadSingle();
@@ -72,8 +66,8 @@ public class MultiController2Chunk : NamedChunk
     public MultiController2Chunk(uint version, string name, string cycleMode, uint numCycles, uint infiniteCycle, float numFrames, float frameRate) : base(ChunkID)
     {
         Version = version;
-        Name = name;
-        CycleMode = cycleMode;
+        _name = new(this, name);
+        _cycleMode = new(this, cycleMode);
         NumCycles = numCycles;
         InfiniteCycle = infiniteCycle;
         NumFrames = numFrames;

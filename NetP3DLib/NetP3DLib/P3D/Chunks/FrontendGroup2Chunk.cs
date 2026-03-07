@@ -33,14 +33,14 @@ public class FrontendGroup2Chunk : NamedChunk
 
     public FrontendGroup2Chunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Version = br.ReadUInt32();
         Alpha = br.ReadUInt32();
     }
 
     public FrontendGroup2Chunk(string name, uint version, uint alpha) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         Version = version;
         Alpha = alpha;
     }

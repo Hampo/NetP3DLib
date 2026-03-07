@@ -41,7 +41,7 @@ public class TriggerVolumeChunk : NamedChunk
 
     public TriggerVolumeChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Type = (Types)br.ReadUInt32();
         HalfExtents = br.ReadVector3();
         Matrix = br.ReadMatrix4x4();
@@ -49,7 +49,7 @@ public class TriggerVolumeChunk : NamedChunk
 
     public TriggerVolumeChunk(string name, Types type, Vector3 halfExtents, Matrix4x4 matrix) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         Type = type;
         HalfExtents = halfExtents;
         Matrix = matrix;

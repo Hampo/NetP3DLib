@@ -2,6 +2,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,18 +17,11 @@ public class OldBillboardQuadGroupChunk : NamedChunk
     
     [DefaultValue(0)]
     public uint Version { get; set; }
-    private string _shader = string.Empty;
+    private readonly P3DString _shader;
     public string Shader
     {
-        get => _shader;
-        set
-        {
-            if (_shader == value)
-                return;
-
-            _shader = value;
-            RecalculateSize();
-        }
+        get => _shader?.Value ?? string.Empty;
+        set => _shader.Value = value;
     }
     private uint zTest;
     public bool ZTest
@@ -67,8 +61,8 @@ public class OldBillboardQuadGroupChunk : NamedChunk
     public OldBillboardQuadGroupChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
-        Name = br.ReadP3DString();
-        Shader = br.ReadP3DString();
+        _name = new(this, br);
+        _shader = new(this, br);
         zTest = br.ReadUInt32();
         zWrite = br.ReadUInt32();
         Occlusion = br.ReadUInt32();
@@ -78,8 +72,8 @@ public class OldBillboardQuadGroupChunk : NamedChunk
     public OldBillboardQuadGroupChunk(uint version, string name, string shader, bool zTest, bool zWrite, uint occlusion) : base(ChunkID)
     {
         Version = version;
-        Name = name;
-        Shader = shader;
+        _name = new(this, name);
+        _shader = new(this, shader);
         ZTest = zTest;
         ZWrite = zWrite;
         Occlusion = occlusion;

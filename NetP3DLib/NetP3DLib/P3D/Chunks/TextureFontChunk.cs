@@ -2,6 +2,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,18 +17,11 @@ public class TextureFontChunk : NamedChunk
     
     [DefaultValue(0)]
     public uint Version { get; set; }
-    private string _shader = string.Empty;
+    private readonly P3DString _shader;
     public string Shader
     {
-        get => _shader;
-        set
-        {
-            if (_shader == value)
-                return;
-
-            _shader = value;
-            RecalculateSize();
-        }
+        get => _shader?.Value ?? string.Empty;
+        set => _shader.Value = value;
     }
     public float FontSize { get; set; }
     public float FontWidth { get; set; }
@@ -59,8 +53,8 @@ public class TextureFontChunk : NamedChunk
     public TextureFontChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
-        Name = br.ReadP3DString();
-        Shader = br.ReadP3DString();
+        _name = new(this, br);
+        _shader = new(this, br);
         FontSize = br.ReadSingle();
         FontWidth = br.ReadSingle();
         FontHeight = br.ReadSingle();
@@ -71,8 +65,8 @@ public class TextureFontChunk : NamedChunk
     public TextureFontChunk(uint version, string name, string shader, float fontSize, float fontWidth, float fontHeight, float fontBaseLine) : base(ChunkID)
     {
         Version = version;
-        Name = name;
-        Shader = shader;
+        _name = new(this, name);
+        _shader = new(this, shader);
         FontSize = fontSize;
         FontWidth = fontWidth;
         FontHeight = fontHeight;

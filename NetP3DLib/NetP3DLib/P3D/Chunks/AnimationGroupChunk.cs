@@ -38,7 +38,7 @@ public class AnimationGroupChunk : NamedChunk
     public AnimationGroupChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         GroupID = br.ReadUInt32();
         var numChannels = br.ReadUInt32();
     }
@@ -46,7 +46,7 @@ public class AnimationGroupChunk : NamedChunk
     public AnimationGroupChunk(uint version, string name, uint groupID) : base(ChunkID)
     {
         Version = version;
-        Name = name;
+        _name = new(this, name);
         GroupID = groupID;
     }
 

@@ -47,7 +47,7 @@ public class CameraChunk : NamedChunk
 
     public CameraChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Version = br.ReadUInt32();
         FOV = br.ReadSingle();
         AspectRatio = br.ReadSingle();
@@ -60,7 +60,7 @@ public class CameraChunk : NamedChunk
 
     public CameraChunk(string name, uint version, float fov, float aspectRatio, float nearClip, float farClip, Vector3 position, Vector3 look, Vector3 up) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         Version = version;
         FOV = fov;
         AspectRatio = aspectRatio;

@@ -30,13 +30,13 @@ public class GameAttributeMatrixParameterChunk : NamedChunk
 
     public GameAttributeMatrixParameterChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Value = br.ReadMatrix4x4();
     }
 
     public GameAttributeMatrixParameterChunk(string name, Matrix4x4 value) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         Value = value;
     }
 

@@ -48,14 +48,14 @@ public class StatePropEventDataChunk : NamedChunk
 
     public StatePropEventDataChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         ToState = br.ReadUInt32();
         Event = (Events)br.ReadUInt32();
     }
 
     public StatePropEventDataChunk(string name, uint toState, Events @event) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         ToState = toState;
         Event = @event;
     }

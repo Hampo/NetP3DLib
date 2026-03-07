@@ -30,13 +30,13 @@ public class ShaderIntegerParameterChunk : ParamChunk
 
     public ShaderIntegerParameterChunk(BinaryReader br) : base(ChunkID)
     {
-        Param = br.ReadFourCC();
+        _param = new(this, br);
         Value = br.ReadUInt32();
     }
 
     public ShaderIntegerParameterChunk(string param, uint value) : base(ChunkID)
     {
-        Param = param;
+        _param = new(this, param);
         Value = value;
     }
 

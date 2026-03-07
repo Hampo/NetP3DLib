@@ -2,6 +2,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,47 +17,26 @@ public class OldSpriteEmitterChunk : NamedChunk
     
     [DefaultValue(0)]
     public uint Version { get; set; }
-    private string _shaderName = string.Empty;
+    private readonly P3DString _shaderName;
     public string ShaderName
     {
-        get => _shaderName;
-        set
-        {
-            if (_shaderName == value)
-                return;
-
-            _shaderName = value;
-            RecalculateSize();
-        }
+        get => _shaderName?.Value ?? string.Empty;
+        set => _shaderName.Value = value;
     }
-    private string _angleMode = string.Empty;
+    private readonly FourCC _angleMode;
     [MaxLength(4)]
     public string AngleMode
     {
-        get => _angleMode;
-        set
-        {
-            if (_angleMode == value)
-                return;
-
-            _angleMode = value;
-            RecalculateSize();
-        }
+        get => _angleMode?.Value ?? string.Empty;
+        set => _angleMode.Value = value;
     }
     public float Angle { get; set; }
-    private string _textureAnimMode = string.Empty;
+    private readonly FourCC _textureAnimMode;
     [MaxLength(4)]
     public string TextureAnimMode
     {
-        get => _textureAnimMode;
-        set
-        {
-            if (_textureAnimMode == value)
-                return;
-
-            _textureAnimMode = value;
-            RecalculateSize();
-        }
+        get => _textureAnimMode?.Value ?? string.Empty;
+        set => _textureAnimMode.Value = value;
     }
     public uint NumTextureFrames { get; set; }
     public uint TextureFrameRate { get; set; }
@@ -84,11 +64,11 @@ public class OldSpriteEmitterChunk : NamedChunk
     public OldSpriteEmitterChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
-        Name = br.ReadP3DString();
-        ShaderName = br.ReadP3DString();
-        AngleMode = br.ReadFourCC();
+        _name = new(this, br);
+        _shaderName = new(this, br);
+        _angleMode = new(this, br);
         Angle = br.ReadSingle();
-        TextureAnimMode = br.ReadFourCC();
+        _textureAnimMode = new(this, br);
         NumTextureFrames = br.ReadUInt32();
         TextureFrameRate = br.ReadUInt32();
     }
@@ -96,11 +76,11 @@ public class OldSpriteEmitterChunk : NamedChunk
     public OldSpriteEmitterChunk(uint version, string name, string shaderName, string angleMode, float angle, string textureAnimMode, uint numTextureFrames, uint textureFrameRate) : base(ChunkID)
     {
         Version = version;
-        Name = name;
-        ShaderName = shaderName;
-        AngleMode = angleMode;
+        _name = new(this, name);
+        _shaderName = new(this, shaderName);
+        _angleMode = new(this, angleMode);
         Angle = angle;
-        TextureAnimMode = textureAnimMode;
+        _textureAnimMode = new(this, textureAnimMode);
         NumTextureFrames = numTextureFrames;
         TextureFrameRate = textureFrameRate;
     }

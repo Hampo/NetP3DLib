@@ -2,6 +2,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,31 +18,17 @@ public class RoadChunk : NamedChunk
     private const uint ShortcutMask = 0x00010000;
 
     public uint Type { get; set; }
-    private string _startIntersection = string.Empty;
+    private readonly P3DString _startIntersection;
     public string StartIntersection
     {
-        get => _startIntersection;
-        set
-        {
-            if (_startIntersection == value)
-                return;
-
-            _startIntersection = value;
-            RecalculateSize();
-        }
+        get => _startIntersection?.Value ?? string.Empty;
+        set => _startIntersection.Value = value;
     }
-    private string _endIntersection = string.Empty;
+    private readonly P3DString _endIntersection;
     public string EndIntersection
     {
-        get => _endIntersection;
-        set
-        {
-            if (_endIntersection == value)
-                return;
-
-            _endIntersection = value;
-            RecalculateSize();
-        }
+        get => _endIntersection?.Value ?? string.Empty;
+        set => _endIntersection.Value = value;
     }
     public uint MaximumCars { get; set; }
     private uint bitmask;
@@ -96,20 +83,20 @@ public class RoadChunk : NamedChunk
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
     public RoadChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Type = br.ReadUInt32();
-        StartIntersection = br.ReadP3DString();
-        EndIntersection = br.ReadP3DString();
+        _startIntersection = new(this, br);
+        _endIntersection = new(this, br);
         MaximumCars = br.ReadUInt32();
         bitmask = br.ReadUInt32();
     }
 
     public RoadChunk(string name, uint type, string startIntersection, string endIntersection, uint maximumCars, byte speed, byte intelligence, bool shortcut) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         Type = type;
-        StartIntersection = startIntersection;
-        EndIntersection = endIntersection;
+        _startIntersection = new(this, startIntersection);
+        _endIntersection = new(this, endIntersection);
         MaximumCars = maximumCars;
         bitmask = 0;
         Speed = speed;

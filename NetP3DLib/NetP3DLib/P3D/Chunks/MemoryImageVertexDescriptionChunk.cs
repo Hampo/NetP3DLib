@@ -1,4 +1,5 @@
 using NetP3DLib.P3D.Attributes;
+using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ public class MemoryImageVertexDescriptionChunk : Chunk
     public uint Param { get; set; }
     public uint DescriptionSize
     {
-        get => (uint)Description.Count;
+        get => (uint)(Description?.Count ?? 0);
         set
         {
             if (value == DescriptionSize)
@@ -31,10 +32,9 @@ public class MemoryImageVertexDescriptionChunk : Chunk
                 while (DescriptionSize < value)
                     Description.Add(default);
             }
-            RecalculateSize();
         }
     }
-    public List<byte> Description { get; } = [];
+    public SizeAwareList<byte> Description { get; }
 
     public override byte[] DataBytes
     {
@@ -57,16 +57,14 @@ public class MemoryImageVertexDescriptionChunk : Chunk
         Version = br.ReadUInt32();
         Param = br.ReadUInt32();
         int numVertices = br.ReadInt32();
-        Description = new(numVertices);
-        for (int i = 0; i < numVertices; i++)
-            Description.Add(br.ReadByte());
+        Description = CreateSizeAwareList(br.ReadBytes(numVertices));
     }
 
     public MemoryImageVertexDescriptionChunk(uint version, uint param, IList<byte> description) : base(ChunkID)
     {
         Version = version;
         Param = param;
-        Description.AddRange(description);
+        Description = CreateSizeAwareList(description);
     }
 
     protected override void WriteData(BinaryWriter bw)
@@ -74,7 +72,7 @@ public class MemoryImageVertexDescriptionChunk : Chunk
         bw.Write(Version);
         bw.Write(Param);
         bw.Write(DescriptionSize);
-        bw.Write(Description.ToArray());
+        bw.Write([..Description]);
     }
 
     protected override Chunk CloneSelf() => new MemoryImageVertexDescriptionChunk(Version, Param, Description);

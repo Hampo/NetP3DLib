@@ -1,4 +1,5 @@
 using NetP3DLib.P3D.Attributes;
+using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
 using System;
@@ -15,7 +16,7 @@ public class VisibilityAnimChannelChunk : NamedChunk
     public ushort StartState { get; set; }
     public uint NumFrames
     {
-        get => (uint)Frames.Count;
+        get => (uint)(Frames?.Count ?? 0);
         set
         {
             if (value == NumFrames)
@@ -31,10 +32,9 @@ public class VisibilityAnimChannelChunk : NamedChunk
                 while (NumFrames < value)
                     Frames.Add(default);
             }
-            RecalculateSize();
         }
     }
-    public List<uint> Frames { get; } = [];
+    public SizeAwareList<uint> Frames { get; }
 
     public override byte[] DataBytes
     {
@@ -55,19 +55,20 @@ public class VisibilityAnimChannelChunk : NamedChunk
 
     public VisibilityAnimChannelChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         StartState = br.ReadUInt16();
-        var numValues = br.ReadInt32();
-        Frames = new(numValues);
-        for (int i = 0; i < numValues; i++)
-            Frames.Add(br.ReadUInt32());
+        var numFrames = br.ReadInt32();
+        var frames = new List<uint>(numFrames);
+        for (int i = 0; i < numFrames; i++)
+            frames.Add(br.ReadUInt32());
+        Frames = CreateSizeAwareList(frames);
     }
 
     public VisibilityAnimChannelChunk(string name, ushort startState, IList<uint> frames) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         StartState = startState;
-        Frames.AddRange(frames);
+        Frames = CreateSizeAwareList(frames);
     }
 
     protected override void WriteData(BinaryWriter bw)

@@ -1,4 +1,5 @@
 using NetP3DLib.P3D.Attributes;
+using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
 using System;
@@ -14,7 +15,7 @@ public class SkeletonPartitionChunk : NamedChunk
     
     public uint NumJointValues
     {
-        get => (uint)JointBits.Count;
+        get => (uint)(JointBits?.Count ?? 0);
         set
         {
             if (value == NumJointValues)
@@ -30,10 +31,9 @@ public class SkeletonPartitionChunk : NamedChunk
                 while (NumJointValues < value)
                     JointBits.Add(0);
             }
-            RecalculateSize();
         }
     }
-    public List<uint> JointBits { get; } = [];
+    public SizeAwareList<uint> JointBits { get; }
 
     public override byte[] DataBytes
     {
@@ -53,17 +53,18 @@ public class SkeletonPartitionChunk : NamedChunk
 
     public SkeletonPartitionChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         var numJointValues = br.ReadInt32();
-        JointBits = new(numJointValues);
+        var jointBits = new List<uint>(numJointValues);
         for (var i = 0; i < numJointValues; i++)
-            JointBits.Add(br.ReadUInt32());
+            jointBits.Add(br.ReadUInt32());
+        JointBits = CreateSizeAwareList(jointBits);
     }
 
     public SkeletonPartitionChunk(string name, IList<uint> jointBits) : base(ChunkID)
     {
-        Name = name;
-        JointBits.AddRange(jointBits);
+        _name = new(this, name);
+        JointBits = CreateSizeAwareList(jointBits);
     }
 
     protected override void WriteData(BinaryWriter bw)

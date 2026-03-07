@@ -16,7 +16,7 @@ public class LightGroupChunk : NamedChunk
     
     public uint NumLights
     {
-        get => (uint)Lights.Count;
+        get => (uint)(Lights?.Count ?? 0);
         set
         {
             if (value == NumLights)
@@ -32,7 +32,6 @@ public class LightGroupChunk : NamedChunk
                 while (NumLights < value)
                     Lights.Add(string.Empty);
             }
-            RecalculateSize();
         }
     }
     public SizeAwareList<string> Lights { get; }
@@ -56,31 +55,29 @@ public class LightGroupChunk : NamedChunk
         get
         {
             uint size = BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint);
-            foreach (var light in Lights)
-                size += BinaryExtensions.GetP3DStringLength(light);
+
+            if (Lights != null)
+                foreach (var light in Lights)
+                    size += BinaryExtensions.GetP3DStringLength(light);
+
             return size;
         }
     }
 
     public LightGroupChunk(BinaryReader br) : base(ChunkID)
     {
-        Lights = CreateSizeAwareList<string>();
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         var numLights = br.ReadInt32();
-        Lights = CreateSizeAwareList<string>(numLights);
-        Lights.SuspendNotifications();
+        var lights = new List<string>(numLights);
         for (int i = 0; i < numLights; i++)
-            Lights.Add(br.ReadP3DString());
-        Lights.ResumeNotifications();
+            lights.Add(br.ReadP3DString());
+        Lights = CreateSizeAwareList(lights);
     }
 
     public LightGroupChunk(string name, IList<string> lights) : base(ChunkID)
     {
-        Lights = CreateSizeAwareList<string>(lights.Count);
-        Name = name;
-        Lights.SuspendNotifications();
-        Lights.AddRange(lights);
-        Lights.ResumeNotifications();
+        _name = new(this, name);
+        Lights = CreateSizeAwareList(lights);
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

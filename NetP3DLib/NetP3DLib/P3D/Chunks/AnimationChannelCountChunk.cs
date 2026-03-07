@@ -18,7 +18,7 @@ public class AnimationChannelCountChunk : Chunk
     public uint ChannelChunkID { get; set; }
     public uint NumNumKeys
     {
-        get => (uint)NumKeys.Count;
+        get => (uint)(NumKeys?.Count ?? 0);
         set
         {
             if (value == NumNumKeys)
@@ -34,10 +34,9 @@ public class AnimationChannelCountChunk : Chunk
                 while (NumNumKeys < value)
                     NumKeys.Add(default);
             }
-            RecalculateSize();
         }
     }
-    public List<ushort> NumKeys { get; } = [];
+    public SizeAwareList<ushort> NumKeys { get; }
 
     public override byte[] DataBytes
     {
@@ -61,16 +60,17 @@ public class AnimationChannelCountChunk : Chunk
         Version = br.ReadUInt32();
         ChannelChunkID = br.ReadUInt32();
         int numChannels = br.ReadInt32();
-        NumKeys = new(numChannels);
+        var numKeys = new List<ushort>(numChannels);
         for (int i = 0; i < numChannels; i++)
-            NumKeys.Add(br.ReadUInt16());
+            numKeys.Add(br.ReadUInt16());
+        NumKeys = CreateSizeAwareList(numKeys);
     }
 
-    public AnimationChannelCountChunk(uint version, uint channelChunkID, List<ushort> numKeys) : base(ChunkID)
+    public AnimationChannelCountChunk(uint version, uint channelChunkID, IList<ushort> numKeys) : base(ChunkID)
     {
         Version = version;
         ChannelChunkID = channelChunkID;
-        NumKeys.AddRange(numKeys);
+        NumKeys = CreateSizeAwareList(numKeys);
     }
 
     protected override void WriteData(BinaryWriter bw)

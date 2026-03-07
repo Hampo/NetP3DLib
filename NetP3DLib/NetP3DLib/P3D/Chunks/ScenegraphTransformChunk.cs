@@ -37,7 +37,7 @@ public class ScenegraphTransformChunk : NamedChunk
     public ScenegraphTransformChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         var numChildren = br.ReadUInt32();
         Transform = br.ReadMatrix4x4();
     }
@@ -45,7 +45,7 @@ public class ScenegraphTransformChunk : NamedChunk
     public ScenegraphTransformChunk(uint version, string name, Matrix4x4 transform) : base(ChunkID)
     {
         Version = version;
-        Name = name;
+        _name = new(this, name);
         Transform = transform;
     }
 

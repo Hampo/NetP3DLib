@@ -17,7 +17,7 @@ public class FrontendLanguageChunk : NamedChunk
     public char Language { get; set; }
     public uint NumEntries
     {
-        get => (uint)Entries.Count;
+        get => (uint)(Entries?.Count ?? 0);
         set
         {
             if (value == NumEntries)
@@ -62,12 +62,11 @@ public class FrontendLanguageChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + 1 + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) * (uint)Entries.Count + sizeof(uint) * (uint)Entries.Count + (uint)(BuildData().Buffer.Count * 2);//(uint)DataBytes.Length;
+    public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + 1 + sizeof(uint) + sizeof(uint) + sizeof(uint) + (Entries == null ? 0 : sizeof(uint) * (uint)Entries.Count + sizeof(uint) * (uint)Entries.Count + (uint)(BuildData().Buffer.Count * 2));//(uint)DataBytes.Length;
 
     public FrontendLanguageChunk(BinaryReader br) : base(ChunkID)
     {
-        Entries = CreateSizeAwareList<Entry>();
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Language = br.ReadChar();
         var numEntries = br.ReadInt32();
         Modulo = br.ReadUInt32();
@@ -82,41 +81,40 @@ public class FrontendLanguageChunk : NamedChunk
         string buffer = Encoding.Unicode.GetString(bufferBytes);
         Entries = CreateSizeAwareList<Entry>(numEntries);
         Entries.CollectionChanged += Entries_CollectionChanged;
-        Entries.SuspendNotifications();
+        var entries = new List<Entry>(numEntries);
         for (int i = 0; i < numEntries; i++)
         {
             uint hash = hashes[i];
             int offset = (int)offsets[i] / 2;
             int length = buffer.IndexOf('\0', offset) - offset;
-            Entries.Add(new(hash, buffer.Substring(offset, length)));
+            entries.Add(new(hash, buffer.Substring(offset, length)));
         }
-        Entries.ResumeNotifications();
+        Entries.AddRange(entries);
     }
 
     public FrontendLanguageChunk(string name, char language, uint modulo, IList<Entry> entries) : base(ChunkID)
     {
-        Entries = CreateSizeAwareList<Entry>(entries.Count);
-        Name = name;
+        _name = new(this, name);
         Language = language;
         Modulo = modulo;
+        Entries = CreateSizeAwareList<Entry>(entries.Count);
         Entries.CollectionChanged += Entries_CollectionChanged;
 
-        Entries.SuspendNotifications();
         Entries.AddRange(entries);
-        Entries.ResumeNotifications();
     }
 
     public FrontendLanguageChunk(string name, char language, uint modulo, Dictionary<string, string> entries) : base(ChunkID)
     {
-        Entries = CreateSizeAwareList<Entry>(entries.Count);
-        Name = name;
+        _name = new(this, name);
         Language = language;
         Modulo = modulo;
-        Entries.CollectionChanged += Entries_CollectionChanged;
-        Entries.SuspendNotifications();
+        var entries2 = new List<Entry>(entries.Count);
         foreach (var entry in entries)
-            Entries.Add(new(GetNameHash(entry.Key), entry.Value));
-        Entries.ResumeNotifications();
+            entries2.Add(new(GetNameHash(entry.Key), entry.Value));
+
+        Entries = CreateSizeAwareList<Entry>(entries.Count);
+        Entries.AddRange(entries2);
+        Entries.CollectionChanged += Entries_CollectionChanged;
     }
 
     private void Entries_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -128,13 +126,11 @@ public class FrontendLanguageChunk : NamedChunk
         if (e.NewItems != null)
             foreach (Entry newEntry in e.NewItems)
                 newEntry.SizeChanged += Entry_SizeChanged;
-
-        RecalculateSize();
     }
 
-    private void Entry_SizeChanged()
+    private void Entry_SizeChanged(int delta)
     {
-        RecalculateSize();
+        RecalculateSize((uint)(HeaderSize - delta));
     }
 
     protected override void WriteData(BinaryWriter bw)
@@ -226,7 +222,7 @@ public class FrontendLanguageChunk : NamedChunk
 
     public class Entry
     {
-        public event Action? SizeChanged;
+        public event Action<int>? SizeChanged;
 
         public uint Hash { get; set; }
         private string _value = string.Empty;
@@ -236,8 +232,11 @@ public class FrontendLanguageChunk : NamedChunk
             set
             {
                 if (_value == value) return;
+
+                var oldSize = Encoding.Unicode.GetByteCount(_value);
                 _value = value;
-                SizeChanged?.Invoke();
+                var newSize = Encoding.Unicode.GetByteCount(_value);
+                SizeChanged?.Invoke(newSize - oldSize);
             }
         }
 

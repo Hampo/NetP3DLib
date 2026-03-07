@@ -1,4 +1,5 @@
 using NetP3DLib.P3D.Attributes;
+using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
@@ -18,7 +19,7 @@ public class ExpressionChunk : NamedChunk
     public uint Version { get; set; }
     public uint NumKeys
     {
-        get => (uint)Keys.Count;
+        get => (uint)(Keys?.Count ?? 0);
         set
         {
             if (value == NumKeys)
@@ -35,13 +36,12 @@ public class ExpressionChunk : NamedChunk
                     Keys.Add(default);
             }
             NumIndices = value;
-            RecalculateSize();
         }
     }
-    public List<float> Keys { get; } = [];
+    public SizeAwareList<float> Keys { get; }
     public uint NumIndices
     {
-        get => (uint)Indices.Count;
+        get => (uint)(Indices?.Count ?? 0);
         set
         {
             if (value == NumIndices)
@@ -58,10 +58,9 @@ public class ExpressionChunk : NamedChunk
                     Indices.Add(default);
             }
             NumKeys = value;
-            RecalculateSize();
         }
     }
-    public List<uint> Indices { get; } = [];
+    public SizeAwareList<uint> Indices { get; }
 
     public override byte[] DataBytes
     {
@@ -85,22 +84,24 @@ public class ExpressionChunk : NamedChunk
     public ExpressionChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         var numKeys = br.ReadInt32();
-        Keys = new(numKeys);
-        Indices = new(numKeys);
+        var keys = new List<float>(numKeys);
         for (int i = 0; i < numKeys; i++)
-            Keys.Add(br.ReadSingle());
+            keys.Add(br.ReadSingle());
+        Keys = CreateSizeAwareList(keys);
+        var indices = new List<uint>(numKeys);
         for (int i = 0; i < numKeys; i++)
-            Indices.Add(br.ReadUInt32());
+            indices.Add(br.ReadUInt32());
+        Indices = CreateSizeAwareList(indices);
     }
 
     public ExpressionChunk(uint version, string name, IList<float> keys, IList<uint> indices) : base(ChunkID)
     {
         Version = version;
-        Name = name;
-        Keys.AddRange(keys);
-        Indices.AddRange(indices);
+        _name = new(this, name);
+        Keys = CreateSizeAwareList(keys);
+        Indices = CreateSizeAwareList(indices);
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

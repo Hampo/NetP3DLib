@@ -26,12 +26,12 @@ public class InstanceListChunk : NamedChunk
 
     public InstanceListChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
     }
 
     public InstanceListChunk(string name) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
     }
 
     protected override void WriteData(BinaryWriter bw)

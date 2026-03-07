@@ -78,18 +78,19 @@ public abstract class Chunk
     public uint HeaderSize => P3DFile.HEADER_SIZE + DataLength;
 
     public event Action<Chunk, int>? SizeChanged;
-    protected void OnSizeChanged(int delta) => SizeChanged?.Invoke(this, delta);
-    protected SizeAwareList<T> CreateSizeAwareList<T>(int capacity = 0) => new(RecalculateSize, capacity);
-    private uint _cachedSize = 0;
-    internal void RecalculateSize()
+    protected SizeAwareList<T> CreateSizeAwareList<T>(int capacity = 0) => new(this, RecalculateSize, capacity);
+    protected SizeAwareList<T> CreateSizeAwareList<T>(IList<T> values)
     {
-        return;
-        uint newSize = HeaderSize + Children.TotalSize;
-        if (_cachedSize == newSize)
+        var list = new SizeAwareList<T>(this, RecalculateSize, values.Count);
+        list.AddRange(values);
+        return list;
+    }
+    internal void RecalculateSize(uint oldSize)
+    {
+        int delta = (int)(HeaderSize - oldSize);
+        if (delta == 0)
             return;
 
-        int delta = checked((int)newSize - (int)_cachedSize);
-        _cachedSize = newSize;
         SizeChanged?.Invoke(this, delta);
     }
     /// <summary>
@@ -506,8 +507,9 @@ public class UnknownChunk : Chunk
             if (ReferenceEquals(_data, value))
                 return;
 
+            var oldSize = HeaderSize;
             _data = value ?? [];
-            RecalculateSize();
+            RecalculateSize(oldSize);
         }
     }
 

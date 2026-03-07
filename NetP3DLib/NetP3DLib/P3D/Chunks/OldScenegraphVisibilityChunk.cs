@@ -38,14 +38,14 @@ public class OldScenegraphVisibilityChunk : NamedChunk
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
     public OldScenegraphVisibilityChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         var numChildren = br.ReadUInt32();
         isVisible = br.ReadUInt32();
     }
 
     public OldScenegraphVisibilityChunk(string name, bool isVisible) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         IsVisible = isVisible;
     }
 

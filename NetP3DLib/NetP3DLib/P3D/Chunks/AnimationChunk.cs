@@ -46,7 +46,7 @@ public class AnimationChunk : NamedChunk
     public AnimationChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         AnimationType = (AnimationType)br.ReadUInt32();
         NumFrames = br.ReadSingle();
         FrameRate = br.ReadSingle();
@@ -56,7 +56,7 @@ public class AnimationChunk : NamedChunk
     public AnimationChunk(uint version, string name, AnimationType animationType, float numFrames, float frameRate, bool cyclic) : base(ChunkID)
     {
         Version = version;
-        Name = name;
+        _name = new(this, name);
         AnimationType = animationType;
         NumFrames = numFrames;
         FrameRate = frameRate;

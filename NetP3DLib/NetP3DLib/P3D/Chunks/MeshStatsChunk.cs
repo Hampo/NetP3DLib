@@ -34,7 +34,7 @@ public class MeshStatsChunk : NamedChunk
     public MeshStatsChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         IsRendered = br.ReadUInt32();
         IsCollision = br.ReadUInt32();
     }
@@ -42,7 +42,7 @@ public class MeshStatsChunk : NamedChunk
     public MeshStatsChunk(uint version, string name, uint isRendered, uint isCollision) : base(ChunkID)
     {
         Version = version;
-        Name = name;
+        _name = new(this, name);
         IsRendered = isRendered;
         IsCollision = isCollision;
     }

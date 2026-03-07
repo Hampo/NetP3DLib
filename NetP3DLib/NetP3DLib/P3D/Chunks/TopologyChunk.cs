@@ -1,4 +1,5 @@
 using NetP3DLib.P3D.Attributes;
+using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ public class TopologyChunk : Chunk
     
     public uint NumTopology
     {
-        get => (uint)Topologies.Count;
+        get => (uint)(Topologies?.Count ?? 0);
         set
         {
             if (value == NumTopology)
@@ -29,10 +30,9 @@ public class TopologyChunk : Chunk
                 while (NumTopology < value)
                     Topologies.Add(new());
             }
-            RecalculateSize();
         }
     }
-    public List<Topology> Topologies { get; } = [];
+    public SizeAwareList<Topology> Topologies { get; }
 
     public override byte[] DataBytes
     {
@@ -52,14 +52,14 @@ public class TopologyChunk : Chunk
     public TopologyChunk(BinaryReader br) : base(ChunkID)
     {
         var numEntries = br.ReadInt32();
-        Topologies = new(numEntries);
+        Topologies = CreateSizeAwareList<Topology>(numEntries);
         for (int i = 0; i < numEntries; i++)
             Topologies.Add(new(br));
     }
 
     public TopologyChunk(IList<Topology> topologies) : base(ChunkID)
     {
-        Topologies.AddRange(topologies);
+        Topologies = CreateSizeAwareList(topologies);
     }
 
     protected override void WriteData(BinaryWriter bw)

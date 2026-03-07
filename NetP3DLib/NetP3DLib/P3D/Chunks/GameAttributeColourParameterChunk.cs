@@ -30,13 +30,13 @@ public class GameAttributeColourParameterChunk : NamedChunk
 
     public GameAttributeColourParameterChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Value = br.ReadColor();
     }
 
     public GameAttributeColourParameterChunk(string name, Color value) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         Value = value;
     }
 

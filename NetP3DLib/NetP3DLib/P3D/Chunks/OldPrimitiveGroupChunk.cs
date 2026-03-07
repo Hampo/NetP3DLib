@@ -2,6 +2,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -71,18 +72,11 @@ public class OldPrimitiveGroupChunk : Chunk
 
     [DefaultValue(0)]
     public uint Version { get; set; }
-    private string _shaderName = string.Empty;
+    private readonly P3DString _shaderName;
     public string ShaderName
     {
-        get => _shaderName;
-        set
-        {
-            if (_shaderName == value)
-                return;
-
-            _shaderName = value;
-            RecalculateSize();
-        }
+        get => _shaderName?.Value ?? string.Empty;
+        set => _shaderName.Value = value;
     }
     public PrimitiveTypes PrimitiveType { get; set; }
     public VertexTypes VertexType
@@ -173,7 +167,7 @@ public class OldPrimitiveGroupChunk : Chunk
     public OldPrimitiveGroupChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
-        ShaderName = br.ReadP3DString();
+        _shaderName = new(this, br);
         PrimitiveType = (PrimitiveTypes)br.ReadUInt32();
         var vertexType = (VertexTypes)br.ReadUInt32();
         var numVertices = br.ReadUInt32();
@@ -184,7 +178,7 @@ public class OldPrimitiveGroupChunk : Chunk
     public OldPrimitiveGroupChunk(uint version, string shaderName, PrimitiveTypes primitiveType) : base(ChunkID)
     {
         Version = version;
-        ShaderName = shaderName;
+        _shaderName = new(this, shaderName);
         PrimitiveType = primitiveType;
     }
 

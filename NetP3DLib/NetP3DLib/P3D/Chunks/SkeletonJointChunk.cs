@@ -43,7 +43,7 @@ public class SkeletonJointChunk : NamedChunk
 
     public SkeletonJointChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Parent = br.ReadUInt32();
         DOF = br.ReadInt32();
         FreeAxis = br.ReadInt32();
@@ -55,7 +55,7 @@ public class SkeletonJointChunk : NamedChunk
 
     public SkeletonJointChunk(string name, uint parent, int dof, int freeAxis, int primaryAxis, int secondaryAxis, int twistAxis, Matrix4x4 restPose) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         Parent = parent;
         DOF = dof;
         FreeAxis = freeAxis;

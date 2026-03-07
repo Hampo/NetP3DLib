@@ -2,6 +2,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -18,57 +19,29 @@ public class FrontendProjectChunk : NamedChunk
     public uint Version { get; set; }
     public uint ResolutionX { get; set; }
     public uint ResolutionY { get; set; }
-    private string _platform = string.Empty;
+    private readonly P3DString _platform;
     public string Platform
     {
-        get => _platform;
-        set
-        {
-            if (_platform == value)
-                return;
-
-            _platform = value;
-            RecalculateSize();
-        }
+        get => _platform?.Value ?? string.Empty;
+        set => _platform.Value = value;
     }
-    private string _pagePath = string.Empty;
+    private readonly P3DString _pagePath;
     public string PagePath
     {
-        get => _pagePath;
-        set
-        {
-            if (_pagePath == value)
-                return;
-
-            _pagePath = value;
-            RecalculateSize();
-        }
+        get => _pagePath?.Value ?? string.Empty;
+        set => _pagePath.Value = value;
     }
-    private string _resourcePath = string.Empty;
+    private readonly P3DString _resourcePath;
     public string ResourcePath
     {
-        get => _resourcePath;
-        set
-        {
-            if (_resourcePath == value)
-                return;
-
-            _resourcePath = value;
-            RecalculateSize();
-        }
+        get => _resourcePath?.Value ?? string.Empty;
+        set => _resourcePath.Value = value;
     }
-    private string _screenPath = string.Empty;
+    private readonly P3DString _screenPath;
     public string ScreenPath
     {
-        get => _screenPath;
-        set
-        {
-            if (_screenPath == value)
-                return;
-
-            _screenPath = value;
-            RecalculateSize();
-        }
+        get => _screenPath?.Value ?? string.Empty;
+        set => _screenPath.Value = value;
     }
 
     public override byte[] DataBytes
@@ -93,26 +66,26 @@ public class FrontendProjectChunk : NamedChunk
 
     public FrontendProjectChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Version = br.ReadUInt32();
         ResolutionX = br.ReadUInt32();
         ResolutionY = br.ReadUInt32();
-        Platform = br.ReadP3DString();
-        PagePath = br.ReadP3DString();
-        ResourcePath = br.ReadP3DString();
-        ScreenPath = br.ReadP3DString();
+        _platform = new(this, br);
+        _pagePath = new(this, br);
+        _resourcePath = new(this, br);
+        _screenPath = new(this, br);
     }
 
     public FrontendProjectChunk(string name, uint version, uint resolutionX, uint resolutionY, string platform, string pagePath, string resourcePath, string screenPath) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         Version = version;
         ResolutionX = resolutionX;
         ResolutionY = resolutionY;
-        Platform = platform;
-        PagePath = pagePath;
-        ResourcePath = resourcePath;
-        ScreenPath = screenPath;
+        _platform = new(this, platform);
+        _pagePath = new(this, pagePath);
+        _resourcePath = new(this, resourcePath);
+        _screenPath = new(this, screenPath);
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

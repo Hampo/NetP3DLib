@@ -1,4 +1,5 @@
 using NetP3DLib.P3D.Attributes;
+using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
@@ -16,7 +17,7 @@ public class IntersectChunk : Chunk
     
     public uint NumIndices
     {
-        get => (uint)Indices.Count;
+        get => (uint)(Indices?.Count ?? 0);
         set
         {
             if (value == NumIndices)
@@ -32,13 +33,12 @@ public class IntersectChunk : Chunk
                 while (NumIndices < value)
                     Indices.Add(default);
             }
-            RecalculateSize();
         }
     }
-    public List<uint> Indices { get; } = [];
+    public SizeAwareList<uint> Indices { get; }
     public uint NumPositions
     {
-        get => (uint)Positions.Count;
+        get => (uint)(Positions?.Count ?? 0);
         set
         {
             if (value == NumPositions)
@@ -54,13 +54,12 @@ public class IntersectChunk : Chunk
                 while (NumPositions < value)
                     Positions.Add(default);
             }
-            RecalculateSize();
         }
     }
-    public List<Vector3> Positions { get; } = [];
+    public SizeAwareList<Vector3> Positions { get; }
     public uint NumNormals
     {
-        get => (uint)Normals.Count;
+        get => (uint)(Normals?.Count ?? 0);
         set
         {
             if (value == NumNormals)
@@ -76,10 +75,9 @@ public class IntersectChunk : Chunk
                 while (NumNormals < value)
                     Normals.Add(default);
             }
-            RecalculateSize();
         }
     }
-    public List<Vector3> Normals { get; } = [];
+    public SizeAwareList<Vector3> Normals { get; }
 
     public override byte[] DataBytes
     {
@@ -105,24 +103,27 @@ public class IntersectChunk : Chunk
     public IntersectChunk(BinaryReader br) : base(ChunkID)
     {
         var numIndices = br.ReadInt32();
-        Indices = new(numIndices);
+        var indices = new List<uint>(numIndices);
         for (var i = 0; i < numIndices; i++)
-            Indices.Add(br.ReadUInt32());
+            indices.Add(br.ReadUInt32());
+        Indices = CreateSizeAwareList(indices);
         var numPositions = br.ReadInt32();
-        Positions = new(numPositions);
+        var positions = new List<Vector3>(numPositions);
         for (var i = 0; i < numPositions; i++)
-            Positions.Add(br.ReadVector3());
+            positions.Add(br.ReadVector3());
+        Positions = CreateSizeAwareList(positions);
         var numNormals = br.ReadInt32();
-        Normals = new(numNormals);
+        var normals = new List<Vector3>(numNormals);
         for (var i = 0; i < numNormals; i++)
-            Normals.Add(br.ReadVector3());
+            normals.Add(br.ReadVector3());
+        Normals = CreateSizeAwareList(normals);
     }
 
     public IntersectChunk(IList<uint> indices, IList<Vector3> positions, IList<Vector3> normals) : base(ChunkID)
     {
-        Indices.AddRange(indices);
-        Positions.AddRange(positions);
-        Normals.AddRange(normals);
+        Indices = CreateSizeAwareList(indices);
+        Positions = CreateSizeAwareList(positions);
+        Normals = CreateSizeAwareList(normals);
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

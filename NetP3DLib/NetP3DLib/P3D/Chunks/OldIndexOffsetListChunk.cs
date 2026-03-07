@@ -1,4 +1,5 @@
 using NetP3DLib.P3D.Attributes;
+using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ public class OldIndexOffsetListChunk : Chunk
     public uint Version { get; set; }
     public uint NumOffsets
     {
-        get => (uint)Offsets.Count;
+        get => (uint)(Offsets?.Count ?? 0);
         set
         {
             if (value == NumOffsets)
@@ -30,10 +31,9 @@ public class OldIndexOffsetListChunk : Chunk
                 while (NumOffsets < value)
                     Offsets.Add(default);
             }
-            RecalculateSize();
         }
     }
-    public List<uint> Offsets { get; } = [];
+    public SizeAwareList<uint> Offsets { get; }
 
     public override byte[] DataBytes
     {
@@ -55,15 +55,16 @@ public class OldIndexOffsetListChunk : Chunk
     {
         Version = br.ReadUInt32();
         var numOffsets = br.ReadInt32();
-        Offsets = new(numOffsets);
+        var offsets = new List<uint>(numOffsets);
         for (int i = 0; i < numOffsets; i++)
-            Offsets.Add(br.ReadUInt32());
+            offsets.Add(br.ReadUInt32());
+        Offsets = CreateSizeAwareList(offsets);
     }
 
     public OldIndexOffsetListChunk(uint version, IList<uint> offsets) : base(ChunkID)
     {
         Version = version;
-        Offsets.AddRange(offsets);
+        Offsets = CreateSizeAwareList(offsets);
     }
 
     protected override void WriteData(BinaryWriter bw)

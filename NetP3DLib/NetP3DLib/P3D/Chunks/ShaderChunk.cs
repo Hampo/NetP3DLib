@@ -2,6 +2,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -48,18 +49,11 @@ public class ShaderChunk : NamedChunk
 
     [DefaultValue(0)]
     public uint Version { get; set; }
-    private string _pddiShaderName = string.Empty;
+    private readonly P3DString _pddiShaderName;
     public string PddiShaderName
     {
-        get => _pddiShaderName;
-        set
-        {
-            if (_pddiShaderName == value)
-                return;
-
-            _pddiShaderName = value;
-            RecalculateSize();
-        }
+        get => _pddiShaderName?.Value ?? string.Empty;
+        set => _pddiShaderName.Value = value;
     }
     private uint hasTranslucency;
     public bool HasTranslucency
@@ -93,9 +87,9 @@ public class ShaderChunk : NamedChunk
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
     public ShaderChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Version = br.ReadUInt32();
-        PddiShaderName = br.ReadP3DString();
+        _pddiShaderName = new(this, br);
         hasTranslucency = br.ReadUInt32();
         VertexNeeds = (VertexMasks)br.ReadInt32();
         VertexMask = (VertexMasks)~br.ReadInt32();
@@ -104,9 +98,9 @@ public class ShaderChunk : NamedChunk
 
     public ShaderChunk(string name, uint version, string pddiShaderName, bool hasTranslucency, VertexMasks vertexNeeds, VertexMasks vertexMask) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         Version = version;
-        PddiShaderName = pddiShaderName;
+        _pddiShaderName = new(this, pddiShaderName);
         HasTranslucency = hasTranslucency;
         VertexNeeds = vertexNeeds;
         VertexMask = vertexMask;

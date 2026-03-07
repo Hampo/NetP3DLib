@@ -82,7 +82,7 @@ public class TextureChunk : NamedChunk
 
     public TextureChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Version = br.ReadUInt32();
         Width = br.ReadUInt32();
         Height = br.ReadUInt32();
@@ -95,7 +95,7 @@ public class TextureChunk : NamedChunk
     }
     public TextureChunk(string name, uint version, uint width, uint height, uint bpp, uint alphaDepth, uint numMipMaps, TextureTypes textureType, UsageHints usageHint, uint priority) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         Version = version;
         Width = width;
         Height = height;

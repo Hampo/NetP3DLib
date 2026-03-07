@@ -1,4 +1,5 @@
 using NetP3DLib.P3D.Attributes;
+using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
@@ -16,7 +17,7 @@ public class CollisionMetaDataShortChannelChunk : NamedChunk
     public uint Version { get; set; }
     public uint NumIndices
     {
-        get => (uint)Indices.Count;
+        get => (uint)(Indices?.Count ?? 0);
         set
         {
             if (value == NumIndices)
@@ -33,13 +34,12 @@ public class CollisionMetaDataShortChannelChunk : NamedChunk
                     Indices.Add(default);
             }
             NumValues = value;
-            RecalculateSize();
         }
     }
-    public List<ushort> Indices { get; } = [];
+    public SizeAwareList<ushort> Indices { get; }
     public uint NumValues
     {
-        get => (uint)Values.Count;
+        get => (uint)(Values?.Count ?? 0);
         set
         {
             if (value == NumValues)
@@ -56,10 +56,9 @@ public class CollisionMetaDataShortChannelChunk : NamedChunk
                     Values.Add(default);
             }
             NumIndices = value;
-            RecalculateSize();
         }
     }
-    public List<ushort> Values { get; } = [];
+    public SizeAwareList<ushort> Values { get; }
 
     public override byte[] DataBytes
     {
@@ -83,22 +82,24 @@ public class CollisionMetaDataShortChannelChunk : NamedChunk
     public CollisionMetaDataShortChannelChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         var numFrames = br.ReadInt32();
-        Indices = new(numFrames);
-        Values = new(numFrames);
+        var indices = new List<ushort>(numFrames);
         for (var i = 0; i < numFrames; i++)
-            Indices.Add(br.ReadUInt16());
+            indices.Add(br.ReadUInt16());
+        Indices = CreateSizeAwareList(indices);
+        var values = new List<ushort>(numFrames);
         for (var i = 0; i < numFrames; i++)
-            Values.Add(br.ReadUInt16());
+            values.Add(br.ReadUInt16());
+        Values = CreateSizeAwareList(values);
     }
 
     public CollisionMetaDataShortChannelChunk(uint version, string name, IList<ushort> indices, IList<ushort> values) : base(ChunkID)
     {
         Version = version;
-        Name = name;
-        Indices.AddRange(indices);
-        Values.AddRange(values);
+        _name = new(this, name);
+        Indices = CreateSizeAwareList(indices);
+        Values = CreateSizeAwareList(values);
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

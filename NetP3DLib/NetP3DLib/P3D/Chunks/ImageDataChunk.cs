@@ -21,8 +21,9 @@ public class ImageDataChunk : Chunk
             if (ReferenceEquals(_imageData, value))
                 return;
 
+            var oldSize = HeaderSize;
             _imageData = value ?? [];
-            RecalculateSize();
+            RecalculateSize(oldSize);
         }
     }
 

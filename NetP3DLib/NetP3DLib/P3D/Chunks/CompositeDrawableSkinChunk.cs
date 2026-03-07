@@ -35,13 +35,13 @@ public class CompositeDrawableSkinChunk : NamedChunk
 
     public CompositeDrawableSkinChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         isTranslucent = br.ReadUInt32();
     }
 
     public CompositeDrawableSkinChunk(string name, bool isTranslucent) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         IsTranslucent = isTranslucent;
     }
 

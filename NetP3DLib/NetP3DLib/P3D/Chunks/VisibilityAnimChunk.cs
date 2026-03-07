@@ -2,6 +2,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,18 +14,11 @@ public class VisibilityAnimChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Visibility_Anim;
 
-    private string _sceneName = string.Empty;
+    private readonly P3DString _sceneName;
     public string SceneName
     {
-        get => _sceneName;
-        set
-        {
-            if (_sceneName == value)
-                return;
-
-            _sceneName = value;
-            RecalculateSize();
-        }
+        get => _sceneName?.Value ?? string.Empty;
+        set => _sceneName.Value = value;
     }
     public uint Version { get; set; }
     public uint NumFrames { get; set; }
@@ -52,8 +46,8 @@ public class VisibilityAnimChunk : NamedChunk
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
     public VisibilityAnimChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
-        SceneName = br.ReadP3DString();
+        _name = new(this, br);
+        _sceneName = new(this, br);
         Version = br.ReadUInt32();
         NumFrames = br.ReadUInt32();
         FrameRate = br.ReadSingle();
@@ -62,8 +56,8 @@ public class VisibilityAnimChunk : NamedChunk
 
     public VisibilityAnimChunk(string name, string sceneName, uint version, uint numFrames, float frameRate) : base(ChunkID)
     {
-        Name = name;
-        SceneName = sceneName;
+        _name = new(this, name);
+        _sceneName = new(this, sceneName);
         Version = version;
         NumFrames = numFrames;
         FrameRate = frameRate;

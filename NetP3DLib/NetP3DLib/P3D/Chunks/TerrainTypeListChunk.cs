@@ -1,4 +1,5 @@
 using NetP3DLib.P3D.Attributes;
+using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ public class TerrainTypeListChunk : Chunk
     public uint Version { get; set; }
     public uint NumTypes
     {
-        get => (uint)Types.Count;
+        get => (uint)(Types?.Count ?? 0);
         set
         {
             if (value == NumTypes)
@@ -32,10 +33,9 @@ public class TerrainTypeListChunk : Chunk
                 while (NumTypes < value)
                     Types.Add(new());
             }
-            RecalculateSize();
         }
     }
-    public List<TerrainType> Types { get; } = [];
+    public SizeAwareList<TerrainType> Types { get; }
 
     public override byte[] DataBytes
     {
@@ -57,7 +57,7 @@ public class TerrainTypeListChunk : Chunk
     {
         Version = br.ReadUInt32();
         var numTypes = br.ReadInt32();
-        Types = new(numTypes);
+        Types = CreateSizeAwareList<TerrainType>(numTypes);
         for (int i = 0; i < numTypes; i++)
             Types.Add(new(br));
     }
@@ -65,7 +65,7 @@ public class TerrainTypeListChunk : Chunk
     public TerrainTypeListChunk(uint version, IList<TerrainType> types) : base(ChunkID)
     {
         Version = version;
-        Types.AddRange(types);
+        Types = CreateSizeAwareList(types);
     }
 
     protected override void WriteData(BinaryWriter bw)

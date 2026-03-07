@@ -2,6 +2,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Types;
 using System.Collections.Generic;
 using System.IO;
 
@@ -12,18 +13,11 @@ public class ExportInfoNamedStringChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Export_Info_Named_String;
 
-    private string _value = string.Empty;
+    private readonly P3DString _value;
     public string Value
     {
-        get => _value;
-        set
-        {
-            if (_value == value)
-                return;
-
-            _value = value;
-            RecalculateSize();
-        }
+        get => _value?.Value ?? string.Empty;
+        set => _value.Value = value;
     }
 
     public override byte[] DataBytes
@@ -42,14 +36,14 @@ public class ExportInfoNamedStringChunk : NamedChunk
 
     public ExportInfoNamedStringChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
-        Value = br.ReadP3DString();
+        _name = new(this, br);
+        _value = new(this, br);
     }
 
     public ExportInfoNamedStringChunk(string name, string value) : base(ChunkID)
     {
-        Name = name;
-        Value = value;
+        _name = new(this, name);
+        _value = new(this, value);
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

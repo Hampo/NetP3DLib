@@ -2,6 +2,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,18 +17,11 @@ public class StatePropDataV1Chunk : NamedChunk
     
     [DefaultValue(1)]
     public uint Version { get; set; }
-    private string _objectFactoryName = string.Empty;
+    private readonly P3DString _objectFactoryName;
     public string ObjectFactoryName
     {
-        get => _objectFactoryName;
-        set
-        {
-            if (_objectFactoryName == value)
-                return;
-
-            _objectFactoryName = value;
-            RecalculateSize();
-        }
+        get => _objectFactoryName?.Value ?? string.Empty;
+        set => _objectFactoryName.Value = value;
     }
     public uint NumStates => GetChildCount(ChunkIdentifier.State_Prop_State_Data_V1);
 
@@ -51,16 +45,16 @@ public class StatePropDataV1Chunk : NamedChunk
     public StatePropDataV1Chunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
-        Name = br.ReadP3DString();
-        ObjectFactoryName = br.ReadP3DString();
+        _name = new(this, br);
+        _objectFactoryName = new(this, br);
         var numStates = br.ReadUInt32();
     }
 
     public StatePropDataV1Chunk(uint version, string name, string objectFactoryName) : base(ChunkID)
     {
         Version = version;
-        Name = name;
-        ObjectFactoryName = objectFactoryName;
+        _name = new(this, name);
+        _objectFactoryName = new(this, objectFactoryName);
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

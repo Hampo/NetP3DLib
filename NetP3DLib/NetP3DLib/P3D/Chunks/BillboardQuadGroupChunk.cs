@@ -2,6 +2,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,18 +15,11 @@ public class BillboardQuadGroupChunk : NamedChunk
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Billboard_Quad_Group;
     
     public uint Version { get; set; }
-    private string _shader = string.Empty;
+    private readonly P3DString _shader;
     public string Shader
     {
-        get => _shader;
-        set
-        {
-            if (_shader == value)
-                return;
-
-            _shader = value;
-            RecalculateSize();
-        }
+        get => _shader?.Value ?? string.Empty;
+        set => _shader.Value = value;
     }
     public uint CutOffEnabled { get; set; }
     public uint ZTest { get; set; }
@@ -57,8 +51,8 @@ public class BillboardQuadGroupChunk : NamedChunk
     public BillboardQuadGroupChunk(BinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
-        Name = br.ReadP3DString();
-        Shader = br.ReadP3DString();
+        _name = new(this, br);
+        _shader = new(this, br);
         CutOffEnabled = br.ReadUInt32();
         ZTest = br.ReadUInt32();
         ZWrite = br.ReadUInt32();
@@ -69,8 +63,8 @@ public class BillboardQuadGroupChunk : NamedChunk
     public BillboardQuadGroupChunk(uint version, string name, string shader, uint cutOffEnabled, uint zTest, uint zWrite, uint occlusionCulling) : base(ChunkID)
     {
         Version = version;
-        Name = name;
-        Shader = shader;
+        _name = new(this, name);
+        _shader = new(this, shader);
         CutOffEnabled = cutOffEnabled;
         ZTest = zTest;
         ZWrite = zWrite;

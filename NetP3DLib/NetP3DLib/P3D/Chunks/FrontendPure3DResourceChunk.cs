@@ -2,6 +2,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,57 +17,29 @@ public class FrontendPure3DResourceChunk : NamedChunk
     
     [DefaultValue(1)]
     public uint Version { get; set; }
-    private string _filename = string.Empty;
+    private readonly P3DString _filename;
     public string Filename
     {
-        get => _filename;
-        set
-        {
-            if (_filename == value)
-                return;
-
-            _filename = value;
-            RecalculateSize();
-        }
+        get => _filename?.Value ?? string.Empty;
+        set => _filename.Value = value;
     }
-    private string _inventoryName = string.Empty;
+    private readonly P3DString _inventoryName;
     public string InventoryName
     {
-        get => _inventoryName;
-        set
-        {
-            if (_inventoryName == value)
-                return;
-
-            _inventoryName = value;
-            RecalculateSize();
-        }
+        get => _inventoryName?.Value ?? string.Empty;
+        set => _inventoryName.Value = value;
     }
-    private string _cameraName = string.Empty;
+    private readonly P3DString _cameraName ;
     public string CameraName
     {
-        get => _cameraName;
-        set
-        {
-            if (_cameraName == value)
-                return;
-
-            _cameraName = value;
-            RecalculateSize();
-        }
+        get => _cameraName?.Value ?? string.Empty;
+        set => _cameraName.Value = value;
     }
-    private string _animationName = string.Empty;
+    private readonly P3DString _animationName;
     public string AnimationName
     {
-        get => _animationName;
-        set
-        {
-            if (_animationName == value)
-                return;
-
-            _animationName = value;
-            RecalculateSize();
-        }
+        get => _animationName?.Value ?? string.Empty;
+        set => _animationName.Value = value;
     }
 
     public override byte[] DataBytes
@@ -89,22 +62,22 @@ public class FrontendPure3DResourceChunk : NamedChunk
 
     public FrontendPure3DResourceChunk(BinaryReader br) : base(ChunkID)
     {
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Version = br.ReadUInt32();
-        Filename = br.ReadP3DString();
-        InventoryName = br.ReadP3DString();
-        CameraName = br.ReadP3DString();
-        AnimationName = br.ReadP3DString();
+        _filename = new(this, br);
+        _inventoryName = new(this, br);
+        _cameraName = new(this, br);
+        _animationName = new(this, br);
     }
 
     public FrontendPure3DResourceChunk(string name, uint version, string filename, string inventoryName, string cameraName, string animationName) : base(ChunkID)
     {
-        Name = name;
+        _name = new(this, name);
         Version = version;
-        Filename = filename;
-        InventoryName = inventoryName;
-        CameraName = cameraName;
-        AnimationName = animationName;
+        _filename = new(this, filename);
+        _inventoryName = new(this, inventoryName);
+        _cameraName = new(this, cameraName);
+        _animationName = new(this, animationName);
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

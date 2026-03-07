@@ -18,7 +18,7 @@ public class PhotonMapChunk : NamedChunk
     public uint Version { get; set; }
     public uint NumLights
     {
-        get => (uint)Lights.Count;
+        get => (uint)(Lights?.Count ?? 0);
         set
         {
             if (value == NumLights)
@@ -35,13 +35,12 @@ public class PhotonMapChunk : NamedChunk
                     Lights.Add(string.Empty);
             }
             NumLightScales = value;
-            RecalculateSize();
         }
     }
     public SizeAwareList<string> Lights { get; }
     public uint NumLightScales
     {
-        get => (uint)LightScales.Count;
+        get => (uint)(LightScales?.Count ?? 0);
         set
         {
             if (value == NumLightScales)
@@ -58,13 +57,12 @@ public class PhotonMapChunk : NamedChunk
                     LightScales.Add(default);
             }
             NumLights = value;
-            RecalculateSize();
         }
     }
-    public List<float> LightScales { get; } = [];
+    public SizeAwareList<float> LightScales { get; }
     public uint NumPhotons
     {
-        get => (uint)Photons.Count;
+        get => (uint)(Photons?.Count ?? 0);
         set
         {
             if (value == NumPhotons)
@@ -80,10 +78,9 @@ public class PhotonMapChunk : NamedChunk
                 while (NumPhotons < value)
                     Photons.Add(new());
             }
-            RecalculateSize();
         }
     }
-    public List<Photon> Photons { get; } = [];
+    public SizeAwareList<Photon> Photons { get; }
 
     public override byte[] DataBytes
     {
@@ -110,42 +107,42 @@ public class PhotonMapChunk : NamedChunk
         get
         {
             uint size = BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint) + sizeof(float) * NumLights + sizeof(uint) + Photon.Size * NumPhotons;
-            foreach (var light in Lights)
-                size += BinaryExtensions.GetP3DStringLength(light);
+
+            if (Lights != null)
+                foreach (var light in Lights)
+                    size += BinaryExtensions.GetP3DStringLength(light);
+
             return size;
         }
     }
 
     public PhotonMapChunk(BinaryReader br) : base(ChunkID)
     {
-        Lights = CreateSizeAwareList<string>();
-        Name = br.ReadP3DString();
+        _name = new(this, br);
         Version = br.ReadUInt32();
         var numLights = br.ReadInt32();
-        Lights = CreateSizeAwareList<string>(numLights);
-        LightScales = new(numLights);
-        Lights.SuspendNotifications();
+        var lights = new List<string>(numLights);
         for (var i = 0; i < numLights; i++)
-            Lights.Add(br.ReadP3DString());
-        Lights.ResumeNotifications();
+            lights.Add(br.ReadP3DString());
+        Lights = CreateSizeAwareList(lights);
+        var lightScales = new List<float>(numLights);
         for (var i = 0; i < numLights; i++)
-            LightScales.Add(br.ReadSingle());
+            lightScales.Add(br.ReadSingle());
+        LightScales = CreateSizeAwareList(lightScales);
         var numPhotons = br.ReadInt32();
-        Photons = new(numPhotons);
+        var photons = new List<Photon>(numPhotons);
         for (var i = 0; i < numPhotons; i++)
-            Photons.Add(new(br));
+            photons.Add(new(br));
+        Photons = CreateSizeAwareList(photons);
     }
 
     public PhotonMapChunk(string name, uint version, IList<string> lights, IList<float> lightScales, IList<Photon> photons) : base(ChunkID)
     {
-        Lights = CreateSizeAwareList<string>(lights.Count);
-        Name = name;
+        _name = new(this, name);
         Version = version;
-        Lights.SuspendNotifications();
-        Lights.AddRange(lights);
-        Lights.ResumeNotifications();
-        LightScales.AddRange(lightScales);
-        Photons.AddRange(photons);
+        Lights = CreateSizeAwareList(lights);
+        LightScales = CreateSizeAwareList(lightScales);
+        Photons = CreateSizeAwareList(photons);
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
