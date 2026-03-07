@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 
 namespace NetP3DLib.P3D.Collections;
+
 public class SizeAwareList<T> : ObservableCollection<T>
 {
     private readonly Chunk _chunk;
@@ -37,11 +39,24 @@ public class SizeAwareList<T> : ObservableCollection<T>
         if (items == null)
             throw new ArgumentNullException(nameof(items));
 
+        var itemsList = items as IList<T> ?? [.. items];
+        if (itemsList.Count == 0)
+            return;
+
+        CheckReentrancy();
+
         TrackSizeChange(() =>
         {
-            foreach (var item in items)
-                Items.Add(item);
+            if (Items is List<T> list)
+                list.AddRange(itemsList);
+            else
+                foreach (var item in itemsList)
+                    Items.Add(item);
         });
+
+        OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs(nameof(Count)));
+        OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Item[]"));
+        OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, itemsList));
     }
 
     /// <summary>
@@ -51,19 +66,29 @@ public class SizeAwareList<T> : ObservableCollection<T>
     {
         if (items == null) throw new ArgumentNullException(nameof(items));
 
+        var itemsList = items as IList<T> ?? [.. items];
+        if (itemsList.Count == 0)
+            return;
+
+        CheckReentrancy();
+
         TrackSizeChange(() =>
         {
             if (Items is List<T> list)
             {
-                list.InsertRange(index, items);
+                list.InsertRange(index, itemsList);
             }
             else
             {
                 int i = index;
-                foreach (var item in items)
-                    base.InsertItem(i++, item);
+                foreach (var item in itemsList)
+                    Items.Insert(i++, item);
             }
         });
+
+        OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs(nameof(Count)));
+        OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Item[]"));
+        OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, itemsList, index));
     }
 
     /// <summary>
@@ -75,6 +100,12 @@ public class SizeAwareList<T> : ObservableCollection<T>
         if (count < 0) throw new ArgumentOutOfRangeException(nameof(count));
         if (index + count > Count) throw new ArgumentException("Range exceeds list bounds.");
 
+        CheckReentrancy();
+
+        var removedItems = new List<T>(count);
+        for (int i = index; i < index + count; i++)
+            removedItems.Add(Items[i]);
+
         TrackSizeChange(() =>
         {
             if (Items is List<T> list)
@@ -84,9 +115,13 @@ public class SizeAwareList<T> : ObservableCollection<T>
             else
             {
                 for (int i = 0; i < count; i++)
-                    base.RemoveItem(index);
+                    Items.RemoveAt(index);
             }
         });
+
+        OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs(nameof(Count)));
+        OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Item[]"));
+        OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removedItems, index));
     }
 
     /// <summary>Finds the index of the first element matching the predicate.</summary>
