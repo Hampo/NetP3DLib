@@ -56,7 +56,7 @@ public class SizeAwareList<T> : ObservableCollection<T>
 
         OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs(nameof(Count)));
         OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Item[]"));
-        OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, itemsList));
+        OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, (System.Collections.IList)itemsList));
     }
 
     /// <summary>
@@ -88,7 +88,7 @@ public class SizeAwareList<T> : ObservableCollection<T>
 
         OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs(nameof(Count)));
         OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Item[]"));
-        OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, itemsList, index));
+        OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, (System.Collections.IList)itemsList, index));
     }
 
     /// <summary>
