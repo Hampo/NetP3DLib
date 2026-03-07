@@ -71,9 +71,9 @@ public class ImageGlyphListChunk : Chunk
 
     protected override Chunk CloneSelf()
     {
-        var glyphs = new List<Glyph>(Glyphs.Count);
-        foreach (var glyph in Glyphs)
-            glyphs.Add(glyph.Clone());
+        var glyphs = new Glyph[Glyphs.Count];
+        for (var i = 0; i < Glyphs.Count; i++)
+            glyphs[i] = Glyphs[i].Clone();
         return new ImageGlyphListChunk(glyphs);
     }
 

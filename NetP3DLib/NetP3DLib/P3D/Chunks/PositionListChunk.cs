@@ -55,9 +55,9 @@ public class PositionListChunk : Chunk
     public PositionListChunk(BinaryReader br) : base(ChunkID)
     {
         var numPositions = br.ReadInt32();
-        var positions = new List<Vector3>(numPositions);
+        var positions = new Vector3[numPositions];
         for (var i = 0; i < numPositions; i++)
-            positions.Add(br.ReadVector3());
+            positions[i] = br.ReadVector3();
         Positions = CreateSizeAwareList(positions);
     }
 

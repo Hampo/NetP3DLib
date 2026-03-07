@@ -54,9 +54,9 @@ public class CollisionMeshVectorListChunk : Chunk
     public CollisionMeshVectorListChunk(BinaryReader br) : base(ChunkID)
     {
         var numVectors = br.ReadInt32();
-        var vectors = new List<Vector3>(numVectors);
+        var vectors = new Vector3[numVectors];
         for (int i = 0; i < numVectors; i++)
-            vectors.Add(br.ReadVector3());
+            vectors[i] = br.ReadVector3();
         Vectors = CreateSizeAwareList(vectors);
     }
 

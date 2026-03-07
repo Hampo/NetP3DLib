@@ -52,9 +52,9 @@ public class MatrixPaletteChunk : Chunk
     public MatrixPaletteChunk(BinaryReader br) : base(ChunkID)
     {
         var numMatrices = br.ReadInt32();
-        var matrices = new List<uint>(numMatrices);
+        var matrices = new uint[numMatrices];
         for (int i = 0; i < numMatrices; i++)
-            matrices.Add(br.ReadUInt32());
+            matrices[i] = br.ReadUInt32();
         Matrices = CreateSizeAwareList(matrices);
     }
 

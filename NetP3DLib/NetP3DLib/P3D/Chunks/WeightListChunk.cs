@@ -55,9 +55,9 @@ public class WeightListChunk : Chunk
     public WeightListChunk(BinaryReader br) : base(ChunkID)
     {
         var numWeights = br.ReadInt32();
-        var weights = new List<Vector3>(numWeights);
+        var weights = new Vector3[numWeights];
         for (var i = 0; i < numWeights; i++)
-            weights.Add(br.ReadVector3());
+            weights[i] = br.ReadVector3();
         Weights = CreateSizeAwareList(weights);
     }
 

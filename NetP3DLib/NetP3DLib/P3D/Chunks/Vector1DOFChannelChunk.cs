@@ -93,13 +93,13 @@ public class Vector1DOFChannelChunk : ParamChunk
         DynamicIndex = (Coordinate)br.ReadUInt16();
         Constants = br.ReadVector3();
         var numFrames = br.ReadInt32();
-        var frames = new List<ushort>(numFrames);
+        var frames = new ushort[numFrames];
         for (var i = 0; i < numFrames; i++)
-            frames.Add(br.ReadUInt16());
+            frames[i] = br.ReadUInt16();
         Frames = CreateSizeAwareList(frames);
-        var values = new List<float>(numFrames);
+        var values = new float[numFrames];
         for (var i = 0; i < numFrames; i++)
-            values.Add(br.ReadSingle());
+            values[i] = br.ReadSingle();
         Values = CreateSizeAwareList(values);
     }
 
@@ -113,9 +113,9 @@ public class Vector1DOFChannelChunk : ParamChunk
         Values = CreateSizeAwareList(values);
     }
 
-    public List<Vector3> GetValues()
+    public Vector3[] GetValues()
     {
-        var values = new List<Vector3>(Values.Count);
+        var values = new Vector3[Values.Count];
 
         Func<float, Vector3> map = DynamicIndex switch
         {
@@ -125,8 +125,8 @@ public class Vector1DOFChannelChunk : ParamChunk
             _ => throw new InvalidDataException($"Invalid {nameof(DynamicIndex)} value: {DynamicIndex}"),
         };
 
-        foreach (var v in Values)
-            values.Add(map(v));
+        for (var i = 0; i < Values.Count; i++)
+            values[i] = map(Values[i]);
 
         return values;
     }

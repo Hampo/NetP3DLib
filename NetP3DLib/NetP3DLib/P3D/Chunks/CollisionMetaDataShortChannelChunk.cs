@@ -84,13 +84,13 @@ public class CollisionMetaDataShortChannelChunk : NamedChunk
         Version = br.ReadUInt32();
         _name = new(this, br);
         var numFrames = br.ReadInt32();
-        var indices = new List<ushort>(numFrames);
+        var indices = new ushort[numFrames];
         for (var i = 0; i < numFrames; i++)
-            indices.Add(br.ReadUInt16());
+            indices[i] = br.ReadUInt16();
         Indices = CreateSizeAwareList(indices);
-        var values = new List<ushort>(numFrames);
+        var values = new ushort[numFrames];
         for (var i = 0; i < numFrames; i++)
-            values.Add(br.ReadUInt16());
+            values[i] = br.ReadUInt16();
         Values = CreateSizeAwareList(values);
     }
 

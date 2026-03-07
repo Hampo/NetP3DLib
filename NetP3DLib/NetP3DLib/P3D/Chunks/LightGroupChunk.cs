@@ -68,9 +68,9 @@ public class LightGroupChunk : NamedChunk
     {
         _name = new(this, br);
         var numLights = br.ReadInt32();
-        var lights = new List<string>(numLights);
+        var lights = new string[numLights];
         for (int i = 0; i < numLights; i++)
-            lights.Add(br.ReadP3DString());
+            lights[i] = br.ReadP3DString();
         Lights = CreateSizeAwareList(lights);
     }
 

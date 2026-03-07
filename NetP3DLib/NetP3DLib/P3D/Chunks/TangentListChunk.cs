@@ -55,9 +55,9 @@ public class TangentListChunk : Chunk
     public TangentListChunk(BinaryReader br) : base(ChunkID)
     {
         var numNormals = br.ReadInt32();
-        var tangents = new List<Vector3>(numNormals);
+        var tangents = new Vector3[numNormals];
         for (var i = 0; i < numNormals; i++)
-            tangents.Add(br.ReadVector3());
+            tangents[i] = br.ReadVector3();
         Tangents = CreateSizeAwareList(tangents);
     }
 

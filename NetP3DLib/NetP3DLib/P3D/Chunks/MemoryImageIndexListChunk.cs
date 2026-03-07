@@ -58,9 +58,9 @@ public class MemoryImageIndexListChunk : Chunk
         Version = br.ReadUInt32();
         Param = br.ReadUInt32();
         int numIndices = br.ReadInt32() / sizeof(ushort);
-        var indices = new List<ushort>(numIndices);
+        var indices = new ushort[numIndices];
         for (int i = 0; i < numIndices; i++)
-            indices.Add(br.ReadUInt16());
+            indices[i] = br.ReadUInt16();
         Indices = CreateSizeAwareList(indices);
     }
 

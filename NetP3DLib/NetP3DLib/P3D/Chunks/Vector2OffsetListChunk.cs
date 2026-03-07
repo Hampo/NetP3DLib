@@ -59,9 +59,10 @@ public class Vector2OffsetListChunk : ParamChunk
         Version = br.ReadUInt32();
         _param = new(this, br);
         var numOffsets = br.ReadInt32();
-        Offsets = CreateSizeAwareList<Vector2Offset>(numOffsets);
+        var offsets = new Vector2Offset[numOffsets];
         for (int i = 0; i < numOffsets; i++)
-            Offsets.Add(new(br));
+            offsets[i] = new(br);
+        Offsets = CreateSizeAwareList(offsets);
     }
 
     public Vector2OffsetListChunk(uint version, string param, IList<Vector2Offset> offsets) : base(ChunkID)
@@ -82,9 +83,9 @@ public class Vector2OffsetListChunk : ParamChunk
 
     protected override Chunk CloneSelf()
     {
-        var offsets = new List<Vector2Offset>(Offsets.Count);
-        foreach (var offset in Offsets)
-            offsets.Add(offset.Clone());
+        var offsets = new Vector2Offset[Offsets.Count];
+        for (var i = 0; i < Offsets.Count; i++)
+            offsets[i] = Offsets[i].Clone();
         return new Vector2OffsetListChunk(Version, Param, offsets);
     }
 

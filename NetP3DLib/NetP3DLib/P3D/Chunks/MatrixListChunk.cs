@@ -53,9 +53,10 @@ public class MatrixListChunk : Chunk
     public MatrixListChunk(BinaryReader br) : base(ChunkID)
     {
         var numMatrices = br.ReadInt32();
-        Matrices = CreateSizeAwareList<Matrix>(numMatrices);
+        var matrices = new Matrix[numMatrices];
         for (int i = 0; i < numMatrices; i++)
-            Matrices.Add(new(br));
+            matrices[i] = new(br);
+        Matrices = CreateSizeAwareList(matrices);
     }
 
     public MatrixListChunk(IList<Matrix> matrices) : base(ChunkID)
@@ -81,9 +82,9 @@ public class MatrixListChunk : Chunk
 
     protected override Chunk CloneSelf()
     {
-        var matrices = new List<Matrix>(Matrices.Count);
-        foreach (var matrix in Matrices)
-            matrices.Add(matrix.Clone());
+        var matrices = new Matrix[Matrices.Count];
+        for (var i = 0; i < Matrices.Count; i++)
+            matrices[i] = Matrices[i].Clone();
         return new MatrixListChunk(matrices);
     }
 

@@ -56,9 +56,9 @@ public class OldExpressionOffsetsChunk : Chunk
     {
         var numPrimitiveGroups = br.ReadInt32();
         var numOffsetLists = br.ReadUInt32();
-        var primitiveGroupIndices = new List<uint>(numPrimitiveGroups);
+        var primitiveGroupIndices = new uint[numPrimitiveGroups];
         for (var i = 0; i < numPrimitiveGroups; i++)
-            primitiveGroupIndices.Add(br.ReadUInt32());
+            primitiveGroupIndices[i] = br.ReadUInt32();
         PrimitiveGroupIndices = CreateSizeAwareList(primitiveGroupIndices);
     }
 

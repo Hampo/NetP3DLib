@@ -93,13 +93,13 @@ public class Vector2DOFChannelChunk : ParamChunk
         StaticIndex = (Coordinate)br.ReadUInt16();
         Constants = br.ReadVector3();
         var numFrames = br.ReadInt32();
-        var frames = new List<ushort>(numFrames);
+        var frames = new ushort[numFrames];
         for (var i = 0; i < numFrames; i++)
-            frames.Add(br.ReadUInt16());
+            frames[i] = br.ReadUInt16();
         Frames = CreateSizeAwareList(frames);
-        var values = new List<Vector2>(numFrames);
+        var values = new Vector2[numFrames];
         for (var i = 0; i < numFrames; i++)
-            values.Add(br.ReadVector2());
+            values[i] = br.ReadVector2();
         Values = CreateSizeAwareList(values);
     }
 
@@ -113,9 +113,9 @@ public class Vector2DOFChannelChunk : ParamChunk
         Values = CreateSizeAwareList(values);
     }
 
-    public List<Vector3> GetValues()
+    public Vector3[] GetValues()
     {
-        var values = new List<Vector3>(Values.Count);
+        var values = new Vector3[Values.Count];
 
         Func<Vector2, Vector3> map = StaticIndex switch
         {
@@ -125,8 +125,8 @@ public class Vector2DOFChannelChunk : ParamChunk
             _ => throw new InvalidDataException($"Invalid {nameof(StaticIndex)} value: {StaticIndex}"),
         };
 
-        foreach (var v in Values)
-            values.Add(map(v));
+        for (var i = 0; i < Values.Count; i++)
+            values[i] = map(Values[i]);
 
         return values;
     }

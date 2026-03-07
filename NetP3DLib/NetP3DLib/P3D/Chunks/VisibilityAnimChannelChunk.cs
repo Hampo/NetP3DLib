@@ -58,9 +58,9 @@ public class VisibilityAnimChannelChunk : NamedChunk
         _name = new(this, br);
         StartState = br.ReadUInt16();
         var numFrames = br.ReadInt32();
-        var frames = new List<uint>(numFrames);
+        var frames = new uint[numFrames];
         for (int i = 0; i < numFrames; i++)
-            frames.Add(br.ReadUInt32());
+            frames[i] = br.ReadUInt32();
         Frames = CreateSizeAwareList(frames);
     }
 

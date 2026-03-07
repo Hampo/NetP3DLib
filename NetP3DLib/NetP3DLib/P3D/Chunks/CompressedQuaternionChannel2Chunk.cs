@@ -92,11 +92,11 @@ public class CompressedQuaternionChannel2Chunk : ParamChunk
         Version = br.ReadUInt32();
         _param = new(this, br);
         int numFrames = br.ReadInt32();
-        var frames = new List<ushort>(numFrames);
+        var frames = new ushort[numFrames];
         for (uint i = 0; i < numFrames; i++)
-            frames.Add(br.ReadUInt16());
+            frames[i] = br.ReadUInt16();
         Frames = CreateSizeAwareList(frames);
-        var values = new List<Quaternion>(numFrames);
+        var values = new Quaternion[numFrames];
         for (uint i = 0; i < numFrames; i++)
         {
             var x = br.ReadInt16() / (double)short.MaxValue;
@@ -108,7 +108,7 @@ public class CompressedQuaternionChannel2Chunk : ParamChunk
                 throw new InvalidP3DException(this, $"Invalid Compressed Quaternion Channel 2.");
             var w = Math.Sqrt(1 - sumOfSquares);
 
-            values.Add(new((float)x, (float)y, (float)z, (float)w));
+            values[i] = new((float)x, (float)y, (float)z, (float)w);
         }
         Values = CreateSizeAwareList(values);
     }

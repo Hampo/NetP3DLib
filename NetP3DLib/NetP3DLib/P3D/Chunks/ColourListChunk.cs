@@ -55,9 +55,9 @@ public class ColourListChunk : Chunk
     public ColourListChunk(BinaryReader br) : base(ChunkID)
     {
         var num = br.ReadInt32();
-        var colours = new List<Color>(num);
+        var colours = new Color[num];
         for (int i = 0; i < num; i++)
-            colours.Add(br.ReadColor());
+            colours[i] = br.ReadColor();
         Colours = CreateSizeAwareList(colours);
     }
 

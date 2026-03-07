@@ -71,23 +71,23 @@ public class FrontendLanguageChunk : NamedChunk
         var numEntries = br.ReadInt32();
         Modulo = br.ReadUInt32();
         var bufferSize = br.ReadInt32();
-        List<uint> hashes = new(numEntries);
+        var hashes = new uint[numEntries];
         for (int i = 0; i < numEntries; i++)
-            hashes.Add(br.ReadUInt32());
-        List<uint> offsets = new(numEntries);
+            hashes[i] = br.ReadUInt32();
+        var offsets = new uint[numEntries];
         for (int i = 0; i < numEntries; i++)
-            offsets.Add(br.ReadUInt32());
-        byte[] bufferBytes = br.ReadBytes(bufferSize);
-        string buffer = Encoding.Unicode.GetString(bufferBytes);
+            offsets[i] = br.ReadUInt32();
+        var bufferBytes = br.ReadBytes(bufferSize);
+        var buffer = Encoding.Unicode.GetString(bufferBytes);
         Entries = CreateSizeAwareList<Entry>(numEntries);
         Entries.CollectionChanged += Entries_CollectionChanged;
-        var entries = new List<Entry>(numEntries);
+        var entries = new Entry[numEntries];
         for (int i = 0; i < numEntries; i++)
         {
             uint hash = hashes[i];
             int offset = (int)offsets[i] / 2;
             int length = buffer.IndexOf('\0', offset) - offset;
-            entries.Add(new(hash, buffer.Substring(offset, length)));
+            entries[i] = new(hash, buffer.Substring(offset, length));
         }
         Entries.AddRange(entries);
     }
@@ -108,9 +108,10 @@ public class FrontendLanguageChunk : NamedChunk
         _name = new(this, name);
         Language = language;
         Modulo = modulo;
-        var entries2 = new List<Entry>(entries.Count);
+        var entries2 = new Entry[entries.Count];
+        var i = 0;
         foreach (var entry in entries)
-            entries2.Add(new(GetNameHash(entry.Key), entry.Value));
+            entries2[i++] = new(GetNameHash(entry.Key), entry.Value);
 
         Entries = CreateSizeAwareList<Entry>(entries.Count);
         Entries.AddRange(entries2);
@@ -153,9 +154,9 @@ public class FrontendLanguageChunk : NamedChunk
 
     protected override Chunk CloneSelf()
     {
-        var entries = new List<Entry>(Entries.Count);
-        foreach (var entry in Entries)
-            entries.Add(entry.Clone());
+        var entries = new Entry[Entries.Count];
+        for (var i = 0; i < Entries.Count; i++)
+            entries[i] = Entries[i].Clone();
         return new FrontendLanguageChunk(Name, Language, Modulo, entries);
     }
 

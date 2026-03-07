@@ -96,18 +96,18 @@ public class CompressedQuaternionChannelChunk : ParamChunk
         Version = br.ReadUInt32();
         _param = new(this, br);
         int numFrames = br.ReadInt32();
-        var frames = new List<ushort>(numFrames);
+        var frames = new ushort[numFrames];
         for (uint i = 0; i < numFrames; i++)
-            frames.Add(br.ReadUInt16());
+            frames[i] = br.ReadUInt16();
         Frames = CreateSizeAwareList(frames);
-        var values = new List<Quaternion>(numFrames);
+        var values = new Quaternion[numFrames];
         for (uint i = 0; i < numFrames; i++)
         {
             short W = br.ReadInt16();
             short X = br.ReadInt16();
             short Y = br.ReadInt16();
             short Z = br.ReadInt16();
-            values.Add(new(X / (float)short.MaxValue, Y / (float)short.MaxValue, Z / (float)short.MaxValue, W / (float)short.MaxValue));
+            values[i] = new(X / (float)short.MaxValue, Y / (float)short.MaxValue, Z / (float)short.MaxValue, W / (float)short.MaxValue);
         }
         Values = CreateSizeAwareList(values);
     }

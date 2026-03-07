@@ -74,9 +74,10 @@ public class OldOffsetListChunk : Chunk
     {
         var numOffsets = br.ReadInt32();
         KeyIndex = br.ReadUInt32();
-        Offsets = CreateSizeAwareList<OffsetEntry>(numOffsets);
+        var offsets = new OffsetEntry[numOffsets];
         for (int i = 0; i < numOffsets; i++)
-            Offsets.Add(new(br));
+            offsets[i] = new(br);
+        Offsets = CreateSizeAwareList(offsets);
         if (br.BaseStream.Position == br.BaseStream.Length)
         {
             HasPrimGroupIndex = false;
@@ -113,9 +114,9 @@ public class OldOffsetListChunk : Chunk
 
     protected override Chunk CloneSelf()
     {
-        var offsets = new List<OffsetEntry>(Offsets.Count);
-        foreach (var offset in Offsets)
-            offsets.Add(offset.Clone());
+        var offsets = new OffsetEntry[Offsets.Count];
+        for (var i = 0; i < Offsets.Count; i++)
+            offsets[i] = Offsets[i].Clone();
         return new OldOffsetListChunk(KeyIndex, offsets);
     }
 

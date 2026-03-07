@@ -55,9 +55,9 @@ public class OldIndexOffsetListChunk : Chunk
     {
         Version = br.ReadUInt32();
         var numOffsets = br.ReadInt32();
-        var offsets = new List<uint>(numOffsets);
+        var offsets = new uint[numOffsets];
         for (int i = 0; i < numOffsets; i++)
-            offsets.Add(br.ReadUInt32());
+            offsets[i] = br.ReadUInt32();
         Offsets = CreateSizeAwareList(offsets);
     }
 

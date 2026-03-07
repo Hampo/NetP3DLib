@@ -52,9 +52,9 @@ public class IndexListChunk : Chunk
     public IndexListChunk(BinaryReader br) : base(ChunkID)
     {
         var num = br.ReadInt32();
-        var indices = new List<uint>(num);
+        var indices = new uint[num];
         for (int i = 0; i < num; i++)
-            indices.Add(br.ReadUInt32());
+            indices[i] = br.ReadUInt32();
         Indices = CreateSizeAwareList(indices);
     }
 

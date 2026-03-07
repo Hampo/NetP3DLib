@@ -69,8 +69,10 @@ public class MultiControllerTracksChunk : Chunk
         var numTracks = br.ReadInt32();
         Tracks = CreateSizeAwareList<Track>(numTracks);
         Tracks.CollectionChanged += Tracks_CollectionChanged;
+        var tracks = new Track[numTracks];
         for (int i = 0; i < numTracks; i++)
-            Tracks.Add(new(br));
+            tracks[i] = new(br);
+        Tracks.AddRange(tracks);
     }
 
     public MultiControllerTracksChunk(IList<Track> tracks) : base(ChunkID)
@@ -116,9 +118,9 @@ public class MultiControllerTracksChunk : Chunk
 
     protected override Chunk CloneSelf()
     {
-        var tracks = new List<Track>(Tracks.Count);
-        foreach (var track in Tracks)
-            tracks.Add(track.Clone());
+        var tracks = new Track[Tracks.Count];
+        for (var i = 0; i < Tracks.Count; i++)
+            tracks[i] = Tracks[i].Clone();
         return new MultiControllerTracksChunk(tracks);
     }
 

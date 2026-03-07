@@ -52,9 +52,10 @@ public class CollisionMeshTriangleListChunk : Chunk
     public CollisionMeshTriangleListChunk(BinaryReader br) : base(ChunkID)
     {
         var numEntries = br.ReadInt32();
-        Triangles = CreateSizeAwareList<Triangle>(numEntries);
+        var triangles = new Triangle[numEntries];
         for (int i = 0; i < numEntries; i++)
-            Triangles.Add(new(br));
+            triangles[i] = new(br);
+        Triangles = CreateSizeAwareList(triangles);
     }
 
     public CollisionMeshTriangleListChunk(IList<Triangle> triangles) : base(ChunkID)
@@ -71,9 +72,9 @@ public class CollisionMeshTriangleListChunk : Chunk
 
     protected override Chunk CloneSelf()
     {
-        var triangles = new List<Triangle>(Triangles.Count);
-        foreach (var triangle in Triangles)
-            triangles.Add(triangle.Clone());
+        var triangles = new Triangle[Triangles.Count];
+        for (var i = 0; i < Triangles.Count; i++)
+            triangles[i] = Triangles[i].Clone();
         return new CollisionMeshTriangleListChunk(triangles);
     }
 

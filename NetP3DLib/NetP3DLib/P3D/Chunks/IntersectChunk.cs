@@ -103,19 +103,19 @@ public class IntersectChunk : Chunk
     public IntersectChunk(BinaryReader br) : base(ChunkID)
     {
         var numIndices = br.ReadInt32();
-        var indices = new List<uint>(numIndices);
+        var indices = new uint[numIndices];
         for (var i = 0; i < numIndices; i++)
-            indices.Add(br.ReadUInt32());
+            indices[i] = br.ReadUInt32();
         Indices = CreateSizeAwareList(indices);
         var numPositions = br.ReadInt32();
-        var positions = new List<Vector3>(numPositions);
+        var positions = new Vector3[numPositions];
         for (var i = 0; i < numPositions; i++)
-            positions.Add(br.ReadVector3());
+            positions[i] = br.ReadVector3();
         Positions = CreateSizeAwareList(positions);
         var numNormals = br.ReadInt32();
-        var normals = new List<Vector3>(numNormals);
+        var normals = new Vector3[numNormals];
         for (var i = 0; i < numNormals; i++)
-            normals.Add(br.ReadVector3());
+            normals[i] = br.ReadVector3();
         Normals = CreateSizeAwareList(normals);
     }
 

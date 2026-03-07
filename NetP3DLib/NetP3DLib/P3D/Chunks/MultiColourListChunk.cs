@@ -58,9 +58,9 @@ public class MultiColourListChunk : Chunk
     {
         var num = br.ReadInt32();
         Channel = br.ReadUInt32();
-        var colours = new List<Color>(num);
+        var colours = new Color[num];
         for (int i = 0; i < num; i++)
-            colours.Add(br.ReadColor());
+            colours[i] = br.ReadColor();
         Colours = CreateSizeAwareList(colours);
     }
 

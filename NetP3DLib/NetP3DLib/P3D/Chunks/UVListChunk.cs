@@ -58,9 +58,9 @@ public class UVListChunk : Chunk
     {
         var numUVs = br.ReadInt32();
         Channel = br.ReadUInt32();
-        var uvs = new List<Vector2>(numUVs);
+        var uvs = new Vector2[numUVs];
         for (int i = 0; i < numUVs; i++)
-            uvs.Add(br.ReadVector2());
+            uvs[i] = br.ReadVector2();
         UVs = CreateSizeAwareList(uvs);
     }
 

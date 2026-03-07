@@ -68,9 +68,9 @@ public class ATCChunk : Chunk
         var numEntries = br.ReadInt32();
         Entries = CreateSizeAwareList<Entry>(numEntries);
         Entries.CollectionChanged += Entries_CollectionChanged;
-        var entries = new List<Entry>(numEntries);
+        var entries = new Entry[numEntries];
         for (int i = 0; i < numEntries; i++)
-            entries.Add(new(br));
+            entries[i] = new(br);
         Entries.AddRange(entries);
     }
 
@@ -117,9 +117,9 @@ public class ATCChunk : Chunk
 
     protected override Chunk CloneSelf()
     {
-        var entries = new List<Entry>(Entries.Count);
-        foreach (var entry in Entries)
-            entries.Add(entry.Clone());
+        var entries = new Entry[Entries.Count];
+        for (var i = 0; i < Entries.Count; i++)
+            entries[i] = Entries[i].Clone();
         return new ATCChunk(entries);
     }
 

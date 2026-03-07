@@ -87,13 +87,13 @@ public class Float2ChannelChunk : ParamChunk
         Version = br.ReadUInt32();
         _param = new(this, br);
         var numFrames = br.ReadInt32();
-        var frames = new List<ushort>(numFrames);
+        var frames = new ushort[numFrames];
         for (var i = 0; i < numFrames; i++)
-            frames.Add(br.ReadUInt16());
+            frames[i] = br.ReadUInt16();
         Frames = CreateSizeAwareList(frames);
-        var values = new List<Vector2>(numFrames);
+        var values = new Vector2[numFrames];
         for (var i = 0; i < numFrames; i++)
-            values.Add(br.ReadVector2());
+            values[i] = br.ReadVector2();
         Values = CreateSizeAwareList(values);
     }
 

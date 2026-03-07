@@ -110,9 +110,9 @@ public class FrontendMultiSpriteChunk : NamedChunk
         Translucency = br.ReadUInt32();
         RotationValue = br.ReadSingle();
         var numImageNames = br.ReadInt32();
-        var imageNames = new List<string>(numImageNames);
+        var imageNames = new string[numImageNames];
         for (int i = 0; i < numImageNames; i++)
-            imageNames.Add(br.ReadP3DString());
+            imageNames[i] = br.ReadP3DString();
         ImageNames = CreateSizeAwareList(imageNames);
     }
 

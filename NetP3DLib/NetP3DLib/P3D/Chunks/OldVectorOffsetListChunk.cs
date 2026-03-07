@@ -61,9 +61,9 @@ public class OldVectorOffsetListChunk : ParamChunk
         Version = br.ReadUInt32();
         var numOffsets = br.ReadInt32();
         _param = new(this, br);
-        var offsets = new List<Vector3>(numOffsets);
+        var offsets = new Vector3[numOffsets];
         for (int i = 0; i < numOffsets; i++)
-            offsets.Add(br.ReadVector3());
+            offsets[i] = br.ReadVector3();
         Offsets = CreateSizeAwareList(offsets);
     }
 

@@ -121,18 +121,18 @@ public class PhotonMapChunk : NamedChunk
         _name = new(this, br);
         Version = br.ReadUInt32();
         var numLights = br.ReadInt32();
-        var lights = new List<string>(numLights);
+        var lights = new string[numLights];
         for (var i = 0; i < numLights; i++)
-            lights.Add(br.ReadP3DString());
+            lights[i] = br.ReadP3DString();
         Lights = CreateSizeAwareList(lights);
-        var lightScales = new List<float>(numLights);
+        var lightScales = new float[numLights];
         for (var i = 0; i < numLights; i++)
-            lightScales.Add(br.ReadSingle());
+            lightScales[i] = br.ReadSingle();
         LightScales = CreateSizeAwareList(lightScales);
         var numPhotons = br.ReadInt32();
-        var photons = new List<Photon>(numPhotons);
+        var photons = new Photon[numPhotons];
         for (var i = 0; i < numPhotons; i++)
-            photons.Add(new(br));
+            photons[i] = new(br);
         Photons = CreateSizeAwareList(photons);
     }
 
@@ -170,9 +170,9 @@ public class PhotonMapChunk : NamedChunk
 
     protected override Chunk CloneSelf()
     {
-        var photons = new List<Photon>(Photons.Count);
-        foreach (var photon in Photons)
-            photons.Add(photon.Clone());
+        var photons = new Photon[Photons.Count];
+        for (var i = 0; i < Photons.Count; i++)
+            photons[i] = Photons[i].Clone();
         return new PhotonMapChunk(Name, Version, Lights, LightScales, photons);
     }
 

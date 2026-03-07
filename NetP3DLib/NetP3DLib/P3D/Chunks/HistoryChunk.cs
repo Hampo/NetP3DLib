@@ -67,9 +67,9 @@ public class HistoryChunk : Chunk
     public HistoryChunk(BinaryReader br) : base(ChunkID)
     {
         ushort lineCount = br.ReadUInt16();
-        var history = new List<string>(lineCount);
+        var history = new string[lineCount];
         for (int i = 0; i < lineCount; i++)
-            history.Add(br.ReadP3DString());
+            history[i] = br.ReadP3DString();
         History = CreateSizeAwareList(history);
     }
 

@@ -51,10 +51,11 @@ public class TopologyChunk : Chunk
 
     public TopologyChunk(BinaryReader br) : base(ChunkID)
     {
-        var numEntries = br.ReadInt32();
-        Topologies = CreateSizeAwareList<Topology>(numEntries);
-        for (int i = 0; i < numEntries; i++)
-            Topologies.Add(new(br));
+        var numTopology = br.ReadInt32();
+        var topologies = new Topology[numTopology];
+        for (int i = 0; i < numTopology; i++)
+            topologies[i] = new(br);
+        Topologies = CreateSizeAwareList(topologies);
     }
 
     public TopologyChunk(IList<Topology> topologies) : base(ChunkID)
@@ -71,9 +72,9 @@ public class TopologyChunk : Chunk
 
     protected override Chunk CloneSelf()
     {
-        var topologies = new List<Topology>(Topologies.Count);
-        foreach (var topology in Topologies)
-            topologies.Add(topology.Clone());
+        var topologies = new Topology[Topologies.Count];
+        for (var i = 0; i < Topologies.Count; i++)
+            topologies[i] = Topologies[i].Clone();
         return new TopologyChunk(topologies);
     }
 

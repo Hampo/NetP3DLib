@@ -86,13 +86,13 @@ public class ExpressionChunk : NamedChunk
         Version = br.ReadUInt32();
         _name = new(this, br);
         var numKeys = br.ReadInt32();
-        var keys = new List<float>(numKeys);
+        var keys = new float[numKeys];
         for (int i = 0; i < numKeys; i++)
-            keys.Add(br.ReadSingle());
+            keys[i] = br.ReadSingle();
         Keys = CreateSizeAwareList(keys);
-        var indices = new List<uint>(numKeys);
+        var indices = new uint[numKeys];
         for (int i = 0; i < numKeys; i++)
-            indices.Add(br.ReadUInt32());
+            indices[i] = br.ReadUInt32();
         Indices = CreateSizeAwareList(indices);
     }
 

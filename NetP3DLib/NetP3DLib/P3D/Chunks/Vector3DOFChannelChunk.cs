@@ -87,13 +87,13 @@ public class Vector3DOFChannelChunk : ParamChunk
         Version = br.ReadUInt32();
         _param = new(this, br);
         var numFrames = br.ReadInt32();
-        var frames = new List<ushort>(numFrames);
+        var frames = new ushort[numFrames];
         for (var i = 0; i < numFrames; i++)
-            frames.Add(br.ReadUInt16());
+            frames[i] = br.ReadUInt16();
         Frames = CreateSizeAwareList(frames);
-        var values = new List<Vector3>(numFrames);
+        var values = new Vector3[numFrames];
         for (var i = 0; i < numFrames; i++)
-            values.Add(br.ReadVector3());
+            values[i] = br.ReadVector3();
         Values = CreateSizeAwareList(values);
     }
 

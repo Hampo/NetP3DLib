@@ -55,9 +55,9 @@ public class BinormalListChunk : Chunk
     public BinormalListChunk(BinaryReader br) : base(ChunkID)
     {
         var numNormals = br.ReadInt32();
-        var binormals = new List<Vector3>(numNormals);
+        var binormals = new Vector3[numNormals];
         for (var i = 0; i < numNormals; i++)
-            binormals.Add(br.ReadVector3());
+            binormals[i] = br.ReadVector3();
         Binormals = CreateSizeAwareList(binormals);
     }
 

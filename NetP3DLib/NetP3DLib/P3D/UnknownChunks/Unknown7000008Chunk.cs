@@ -49,9 +49,9 @@ public class Unknown7000008Chunk : Chunk
     public Unknown7000008Chunk(BinaryReader br) : base(0x7000008)
     {
         var numUnknown = br.ReadInt32();
-        var unknown = new List<short>(numUnknown);
+        var unknown = new short[numUnknown];
         for (var i = 0; i < numUnknown; i++)
-            unknown.Add(br.ReadInt16());
+            unknown[i] = br.ReadInt16();
         Unknown = CreateSizeAwareList(unknown);
     }
 

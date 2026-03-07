@@ -55,9 +55,9 @@ public class SkeletonPartitionChunk : NamedChunk
     {
         _name = new(this, br);
         var numJointValues = br.ReadInt32();
-        var jointBits = new List<uint>(numJointValues);
+        var jointBits = new uint[numJointValues];
         for (var i = 0; i < numJointValues; i++)
-            jointBits.Add(br.ReadUInt32());
+            jointBits[i] = br.ReadUInt32();
         JointBits = CreateSizeAwareList(jointBits);
     }
 

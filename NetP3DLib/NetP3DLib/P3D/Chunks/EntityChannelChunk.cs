@@ -98,13 +98,13 @@ public class EntityChannelChunk : ParamChunk
         Version = br.ReadUInt32();
         _param = new(this, br);
         var numFrames = br.ReadInt32();
-        var frames = new List<ushort>(numFrames);
+        var frames = new ushort[numFrames];
         for (var i = 0; i < numFrames; i++)
-            frames.Add(br.ReadUInt16());
+            frames[i] = br.ReadUInt16();
         Frames = CreateSizeAwareList(frames);
-        var values = new List<string>(numFrames);
+        var values = new string[numFrames];
         for (var i = 0; i < numFrames; i++)
-            values.Add(br.ReadP3DString());
+            values[i] = br.ReadP3DString();
         Values = CreateSizeAwareList(values);
     }
 

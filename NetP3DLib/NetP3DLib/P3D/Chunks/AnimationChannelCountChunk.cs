@@ -60,9 +60,9 @@ public class AnimationChannelCountChunk : Chunk
         Version = br.ReadUInt32();
         ChannelChunkID = br.ReadUInt32();
         int numChannels = br.ReadInt32();
-        var numKeys = new List<ushort>(numChannels);
+        var numKeys = new ushort[numChannels];
         for (int i = 0; i < numChannels; i++)
-            numKeys.Add(br.ReadUInt16());
+            numKeys[i] = br.ReadUInt16();
         NumKeys = CreateSizeAwareList(numKeys);
     }
 

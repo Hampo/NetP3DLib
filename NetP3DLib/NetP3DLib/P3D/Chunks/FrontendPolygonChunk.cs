@@ -91,13 +91,13 @@ public class FrontendPolygonChunk : NamedChunk
         Version = br.ReadUInt32();
         Translucency = br.ReadUInt32();
         var num = br.ReadInt32();
-        var points = new List<Vector3>(num);
+        var points = new Vector3[num];
         for (int i = 0; i < num; i++)
-            points.Add(br.ReadVector3());
+            points[i] = br.ReadVector3();
         Points = CreateSizeAwareList(points);
-        var colours = new List<Color>(num);
+        var colours = new Color[num];
         for (int i = 0; i < num; i++)
-            colours.Add(br.ReadColor());
+            colours[i] = br.ReadColor();
         Colours = CreateSizeAwareList(colours);
     }
 

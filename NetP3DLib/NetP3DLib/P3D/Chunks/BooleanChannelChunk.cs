@@ -63,9 +63,9 @@ public class BooleanChannelChunk : ParamChunk
         _param = new(this, br);
         StartState = br.ReadUInt16() == 1;
         var numValues = br.ReadInt32();
-        var values = new List<ushort>(numValues);
+        var values = new ushort[numValues];
         for (int i = 0; i < numValues; i++)
-            values.Add(br.ReadUInt16());
+            values[i] = br.ReadUInt16();
         Values = CreateSizeAwareList(values);
     }
 
