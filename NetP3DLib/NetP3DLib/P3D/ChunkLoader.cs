@@ -91,12 +91,12 @@ public static partial class ChunkLoader
                 throw new InvalidOperationException($"Chunk type with identifier 0x{chunkAttriutes.Identifier:X} already exists.");
 
 
-            var ctor = chunkType.GetConstructor([typeof(BinaryReader)]);
+            var ctor = chunkType.GetConstructor([typeof(EndianAwareBinaryReader)]);
             if (ctor == null)
             {
                 if (throwOnInvalid)
                     throw new InvalidOperationException(
-                        $"Type {chunkType.FullName} must have a constructor with a BinaryReader parameter.");
+                        $"Type {chunkType.FullName} must have a constructor with a EndianAwareBinaryReader parameter.");
 
 #if DEBUG
                 Console.WriteLine($"[ChunkLoader] Skipped: {chunkType.FullName} lacks expected constructor.");
