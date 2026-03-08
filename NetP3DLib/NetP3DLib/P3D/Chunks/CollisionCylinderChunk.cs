@@ -1,6 +1,7 @@
 using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
+using NetP3DLib.P3D.Exceptions;
 using System;
 using System.Collections.Generic;
 
@@ -47,6 +48,23 @@ public class CollisionCylinderChunk : Chunk
         Radius = radius;
         HalfLength = halfLength;
         FlatEnd = flatEnd;
+    }
+
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
+    {
+        foreach (var error in base.ValidateChunk())
+            yield return error;
+
+        if (Children.Count < 2)
+            yield return new InvalidP3DException(this, $"First two children must be {nameof(CollisionVectorChunk)}s.");
+        else
+        {
+            if (Children[0].ID != (uint)ChunkIdentifier.Collision_Vector)
+                yield return new InvalidP3DException(this, $"First child is not {nameof(CollisionVectorChunk)}.");
+
+            if (Children[1].ID != (uint)ChunkIdentifier.Collision_Vector)
+                yield return new InvalidP3DException(this, $"Second child is not {nameof(CollisionVectorChunk)}.");
+        }
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
