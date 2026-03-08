@@ -11,7 +11,6 @@ namespace NetP3DLib.P3D.Chunks;
 public class AnimationSizeChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Animation_Size;
-    private const uint BASE_SIZE = 52u;
 
     [DefaultValue(1)]
     public uint Version { get; set; }
