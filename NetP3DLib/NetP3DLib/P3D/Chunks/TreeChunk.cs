@@ -1,3 +1,4 @@
+using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
@@ -46,7 +47,7 @@ public class TreeChunk : Chunk
         BoundsMax = maximum;
     }
 
-    protected override void WriteData(BinaryWriter bw)
+    protected override void WriteData(EndianAwareBinaryWriter bw)
     {
         bw.Write(NumNodes);
         bw.Write(BoundsMin);
@@ -55,47 +56,63 @@ public class TreeChunk : Chunk
 
     protected override Chunk CloneSelf() => new TreeChunk(BoundsMin, BoundsMax);
 
-    private int _childHash = 0;
-    private int _childCount = 0;
-    internal void RecalculateSubTreeSizeIfNeeded()
+    private bool _needsNewNodeList = true;
+    private bool _needsRecalculate = true;
+    private IReadOnlyList<TreeNodeChunk>? _cachedNodeList = null;
+
+    internal void MarkDirty() => _needsRecalculate = true;
+
+    internal void MarkTopologyDirty()
     {
-        var children = GetChunksOfType<TreeNodeChunk>();
-        var childCount = children.Count;
-
-        unchecked
-        {
-            int hash = 17;
-            for (int i = 0; i < childCount; i++)
-                hash = hash * 31 + children[i].ParentOffset;
-
-            if (hash == _childHash && childCount == _childCount)
-                return;
-
-            _childHash = hash;
-            _childCount = childCount;
-        }
-
-        ComputeSubTreeSizeForAllNodes(children);
+        _needsNewNodeList = true;
+        _needsRecalculate = true;
     }
 
-    private void ComputeSubTreeSizeForAllNodes(IReadOnlyList<TreeNodeChunk> children)
+    internal override void OnChildAdded(Chunk child)
     {
-        foreach (var c in children)
-            if (c != null)
-                c._cachedSubTreeSize = 0;
+        if (child is TreeNodeChunk)
+            MarkTopologyDirty();
+    }
 
-        for (int i = children.Count - 1; i >= 0; i--)
+    internal override void OnChildRemoved(Chunk child)
+    {
+        if (child is TreeNodeChunk)
+            MarkTopologyDirty();
+    }
+
+    internal void RecalculateSubTreeSizeIfNeeded()
+    {
+        if (_needsNewNodeList || _cachedNodeList == null)
         {
-            var node = children[i];
-            if (node == null)
-                continue;
+            _cachedNodeList = GetChunksOfType<TreeNodeChunk>();
+            _needsNewNodeList = false;
+        }
 
+        if (_needsRecalculate)
+        {
+            ComputeSubTreeSizeForAllNodes();
+            _needsRecalculate = false;
+        }
+    }
+
+    private void ComputeSubTreeSizeForAllNodes()
+    {
+        var nodes = _cachedNodeList;
+        if (nodes == null)
+            return;
+
+        for (int i = 0; i < nodes.Count; i++)
+            nodes[i]._cachedSubTreeSize = 0;
+
+        for (int i = nodes.Count - 1; i >= 0; i--)
+        {
+            var node = nodes[i];
             if (node.ParentOffset == 0)
                 continue;
 
             int parentIndex = i + node.ParentOffset;
-            if (parentIndex >= 0 && parentIndex < children.Count && children[parentIndex] is TreeNodeChunk parent)
-                parent._cachedSubTreeSize += 1 + node._cachedSubTreeSize;
+            if (parentIndex >= 0 && parentIndex < nodes.Count)
+                nodes[parentIndex]._cachedSubTreeSize += 1 + node._cachedSubTreeSize;
         }
     }
 }

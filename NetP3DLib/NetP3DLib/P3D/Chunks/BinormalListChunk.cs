@@ -1,3 +1,4 @@
+using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
@@ -75,7 +76,7 @@ public class BinormalListChunk : Chunk
             yield return new InvalidP3DException(this, $"Num Binormals value {NumBinormals} does not match parent Num Vertices value {oldPrimitiveGroup.NumVertices}.");
     }
 
-    protected override void WriteData(BinaryWriter bw)
+    protected override void WriteData(EndianAwareBinaryWriter bw)
     {
         bw.Write(NumBinormals);
         foreach (var pos in Binormals)

@@ -1,3 +1,4 @@
+using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
@@ -63,7 +64,7 @@ public class IndexListChunk : Chunk
         Indices = CreateSizeAwareList(indices);
     }
 
-    protected override void WriteData(BinaryWriter bw)
+    protected override void WriteData(EndianAwareBinaryWriter bw)
     {
         bw.Write(NumIndices);
         foreach (var index in Indices)

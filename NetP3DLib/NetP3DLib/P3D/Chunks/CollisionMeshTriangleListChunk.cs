@@ -1,3 +1,4 @@
+using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
@@ -63,7 +64,7 @@ public class CollisionMeshTriangleListChunk : Chunk
         Triangles = CreateSizeAwareList(triangles);
     }
 
-    protected override void WriteData(BinaryWriter bw)
+    protected override void WriteData(EndianAwareBinaryWriter bw)
     {
         bw.Write(NumTriangles);
         foreach (var entry in Triangles)

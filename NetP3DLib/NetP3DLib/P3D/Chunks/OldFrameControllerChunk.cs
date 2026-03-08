@@ -1,3 +1,4 @@
+using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
@@ -108,7 +109,7 @@ public class OldFrameControllerChunk : NamedChunk
             yield return new InvalidP3DException(this, $"Could not find {hierarchyType.Name} with name \"{HierarchyName}\" in the parent hierarchy.");
     }
 
-    protected override void WriteData(BinaryWriter bw)
+    protected override void WriteData(EndianAwareBinaryWriter bw)
     {
         bw.Write(Version);
         bw.WriteP3DString(Name);

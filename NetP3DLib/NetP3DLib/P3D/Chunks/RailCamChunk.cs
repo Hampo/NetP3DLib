@@ -1,3 +1,4 @@
+using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
@@ -97,7 +98,7 @@ public class RailCamChunk : NamedChunk
         TargetLag = targetLag;
     }
 
-    protected override void WriteData(BinaryWriter bw)
+    protected override void WriteData(EndianAwareBinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write((uint)Behaviour);

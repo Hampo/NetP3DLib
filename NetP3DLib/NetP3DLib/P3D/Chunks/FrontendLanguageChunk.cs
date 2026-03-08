@@ -1,3 +1,4 @@
+using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
@@ -134,7 +135,7 @@ public class FrontendLanguageChunk : NamedChunk
         RecalculateSize((uint)(HeaderSize - delta));
     }
 
-    protected override void WriteData(BinaryWriter bw)
+    protected override void WriteData(EndianAwareBinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(Language);

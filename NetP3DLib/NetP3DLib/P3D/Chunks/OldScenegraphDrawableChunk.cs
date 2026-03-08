@@ -1,3 +1,4 @@
+using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
@@ -65,7 +66,7 @@ public class OldScenegraphDrawableChunk : NamedChunk
             yield return new InvalidP3DStringException(this, nameof(DrawableName), DrawableName);
     }
 
-    protected override void WriteData(BinaryWriter bw)
+    protected override void WriteData(EndianAwareBinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.WriteP3DString(DrawableName);

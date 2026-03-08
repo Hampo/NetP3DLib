@@ -462,7 +462,7 @@ public class P3DFile
 
     public IReadOnlyList<T> GetChunksOfType<T>() where T : Chunk
     {
-        var result = new List<T>();
+        var result = new List<T>(Chunks.Count);
         foreach (var child in Chunks)
         {
             if (child is T chunk)
@@ -473,7 +473,7 @@ public class P3DFile
 
     public IReadOnlyList<T> GetChunksOfType<T>(string name) where T : NamedChunk
     {
-        var result = new List<T>();
+        var result = new List<T>(Chunks.Count);
         foreach (var child in Chunks)
         {
             if (child is T chunk && chunk.Name == name)
@@ -484,7 +484,7 @@ public class P3DFile
 
     public IReadOnlyList<T> GetParamsOfType<T>(string param) where T : ParamChunk
     {
-        var result = new List<T>();
+        var result = new List<T>(Chunks.Count);
         foreach (var child in Chunks)
         {
             if (child is T chunk && chunk.Param == param)

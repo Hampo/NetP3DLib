@@ -1,5 +1,5 @@
-using NetP3DLib.P3D.Attributes;
 using NetP3DLib.IO;
+using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
 using System;
@@ -115,9 +115,9 @@ public class ImageChunk : NamedChunk
         Formats.DXT3,
         Formats.DXT5,
     ];
-    protected override void WriteData(BinaryWriter bw)
+    protected override void WriteData(EndianAwareBinaryWriter bw)
     {
-        if (bw is EndianAwareBinaryWriter endianAwareBinaryWriter && endianAwareBinaryWriter.Endianness != BinaryExtensions.DefaultEndian && FlippedFormats.Contains(Format))
+        if (bw.Endianness != BinaryExtensions.DefaultEndian && FlippedFormats.Contains(Format))
             throw new NotImplementedException($"Writing {Format} images with swapped endian is not supported at this time.");
 
         bw.WriteP3DString(Name);

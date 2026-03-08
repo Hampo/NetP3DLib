@@ -1,3 +1,4 @@
+using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
@@ -24,7 +25,19 @@ public class TreeNodeChunk : Chunk
             return _cachedSubTreeSize;
         }
     }
-    public int ParentOffset { get; set; }
+    private int _parentOffset;
+    public int ParentOffset
+    {
+        get => _parentOffset;
+        set
+        {
+            if (_parentOffset == value)
+                return;
+
+            _parentOffset = value;
+            (ParentChunk as TreeChunk)?.MarkDirty();
+        }
+    }
 
     public override byte[] DataBytes
     {
@@ -64,7 +77,7 @@ public class TreeNodeChunk : Chunk
                 yield return new InvalidP3DException(this, $"Child chunk {child} is invalid. Child chunks must be an instance of Spatial Node.");
     }
 
-    protected override void WriteData(BinaryWriter bw)
+    protected override void WriteData(EndianAwareBinaryWriter bw)
     {
         bw.Write(SubTreeSize);
         bw.Write(ParentOffset);

@@ -1,3 +1,4 @@
+using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using System.IO;
@@ -25,7 +26,7 @@ public class CollisionWallChunk : Chunk
     public CollisionWallChunk() : base(ChunkID)
     { }
 
-    protected override void WriteData(BinaryWriter bw)
+    protected override void WriteData(EndianAwareBinaryWriter bw)
     { }
 
     protected override Chunk CloneSelf() => new CollisionWallChunk();

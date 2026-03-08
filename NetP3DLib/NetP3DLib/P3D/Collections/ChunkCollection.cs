@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Security.Cryptography;
 
 namespace NetP3DLib.P3D.Collections;
 public class ChunkCollection : Collection<Chunk>
@@ -89,6 +90,8 @@ public class ChunkCollection : Collection<Chunk>
         item.SizeChanged += OnChildSizeChanged;
 
         UpdateChildIndices(index + 1);
+
+        _owner.OnChildAdded(item);
     }
 
     protected override void RemoveItem(int index)
@@ -103,6 +106,8 @@ public class ChunkCollection : Collection<Chunk>
         old.IndexInParent = -1;
 
         UpdateChildIndices(index);
+
+        _owner.OnChildRemoved(old);
     }
 
     protected override void SetItem(int index, Chunk item)
@@ -127,6 +132,8 @@ public class ChunkCollection : Collection<Chunk>
             old.ParentChunk = null;
             old.IndexInParent = -1;
             old.SizeChanged -= OnChildSizeChanged;
+
+            _owner.OnChildRemoved(old);
         }
 
         base.SetItem(index, item);
@@ -134,6 +141,8 @@ public class ChunkCollection : Collection<Chunk>
         item.ParentChunk = _owner;
         item.IndexInParent = index;
         item.SizeChanged += OnChildSizeChanged;
+
+        _owner.OnChildAdded(item);
     }
 
     protected override void ClearItems()
@@ -143,6 +152,8 @@ public class ChunkCollection : Collection<Chunk>
             child.ParentChunk = null;
             child.IndexInParent = -1;
             child.SizeChanged -= OnChildSizeChanged;
+
+            _owner.OnChildRemoved(child);
         }
 
         base.ClearItems();
@@ -185,6 +196,8 @@ public class ChunkCollection : Collection<Chunk>
             item.ParentChunk = _owner;
             item.IndexInParent = i++;
             item.SizeChanged += OnChildSizeChanged;
+
+            _owner.OnChildAdded(item);
         }
 
     }
@@ -219,6 +232,8 @@ public class ChunkCollection : Collection<Chunk>
         {
             item.ParentChunk = _owner;
             item.SizeChanged += OnChildSizeChanged;
+
+            _owner.OnChildAdded(item);
         }
 
         UpdateChildIndices(index);
@@ -248,6 +263,8 @@ public class ChunkCollection : Collection<Chunk>
             chunk.IndexInParent = -1;
             removedSize += chunk.Size;
             chunk.SizeChanged -= OnChildSizeChanged;
+
+            _owner.OnChildRemoved(chunk);
         }
 
         list.RemoveRange(index, count);

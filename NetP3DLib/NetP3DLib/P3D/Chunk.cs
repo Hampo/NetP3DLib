@@ -166,7 +166,7 @@ public abstract class Chunk
     /// Writes this chunk, including its <see cref="Children"/>, to <paramref name="bw"/>.
     /// </summary>
     /// <param name="bw">The <c>BinaryWriter</c> to write to.</param>
-    public void Write(System.IO.BinaryWriter bw)
+    public void Write(EndianAwareBinaryWriter bw)
     {
         bw.Write(ID);
         bw.Write(HeaderSize);
@@ -310,7 +310,7 @@ public abstract class Chunk
 
     public IReadOnlyList<T> GetChunksOfType<T>() where T : Chunk
     {
-        var result = new List<T>();
+        var result = new List<T>(Children.Count);
         foreach (var child in Children)
         {
             if (child is T chunk)
@@ -321,7 +321,7 @@ public abstract class Chunk
 
     public IReadOnlyList<T> GetChunksOfType<T>(string name) where T : NamedChunk
     {
-        var result = new List<T>();
+        var result = new List<T>(Children.Count);
         foreach (var child in Children)
         {
             if (child is T chunk && chunk.Name == name)
@@ -332,7 +332,7 @@ public abstract class Chunk
 
     public IReadOnlyList<T> GetParamsOfType<T>(string param) where T : ParamChunk
     {
-        var result = new List<T>();
+        var result = new List<T>(Children.Count);
         foreach (var child in Children)
         {
             if (child is T chunk && chunk.Param == param)
@@ -394,7 +394,10 @@ public abstract class Chunk
     /// <para>This should be overwritten for known chunks.</para>
     /// </summary>
     /// <param name="bw">The <c>BinaryWriter</c> to write to.</param>
-    protected abstract void WriteData(System.IO.BinaryWriter bw);
+    protected abstract void WriteData(EndianAwareBinaryWriter bw);
+
+    internal virtual void OnChildAdded(Chunk child) { }
+    internal virtual void OnChildRemoved(Chunk child) { }
 
     /// <summary>
     /// Creates a clone of the current chunk.
@@ -529,7 +532,7 @@ public class UnknownChunk : Chunk
         Data = (byte[])data.Clone();
     }
 
-    protected override void WriteData(System.IO.BinaryWriter bw) => bw.Write(Data);
+    protected override void WriteData(EndianAwareBinaryWriter bw) => bw.Write(Data);
 
     protected override Chunk CloneSelf() => new UnknownChunk(ID, Data);
 }

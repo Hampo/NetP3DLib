@@ -1,3 +1,4 @@
+using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
@@ -67,7 +68,7 @@ public class OldExpressionOffsetsChunk : Chunk
         PrimitiveGroupIndices = CreateSizeAwareList(primitiveGroupIndices);
     }
 
-    protected override void WriteData(BinaryWriter bw)
+    protected override void WriteData(EndianAwareBinaryWriter bw)
     {
         bw.Write(NumPrimitiveGroups);
         bw.Write(NumOffsetLists);

@@ -1,17 +1,20 @@
 ﻿using NetP3DLib.P3D.Extensions;
 using System;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace NetP3DLib.IO;
 
-public class EndianAwareBinaryReader : BinaryReader
+public sealed class EndianAwareBinaryReader : BinaryReader
 {
     public Endianness Endianness { get; } = BitConverter.IsLittleEndian ? Endianness.Little : Endianness.Big;
+    private readonly bool _swap;
 
     public EndianAwareBinaryReader(Stream input, Encoding encoding, bool leaveOpen, Endianness endianness) : base(input, encoding, leaveOpen)
     {
         Endianness = endianness;
+        _swap = endianness != (BitConverter.IsLittleEndian ? Endianness.Little : Endianness.Big);
     }
 
     public EndianAwareBinaryReader(Stream input) : this(input, Encoding.UTF8, leaveOpen: false, BinaryExtensions.DefaultEndian)
@@ -33,50 +36,104 @@ public class EndianAwareBinaryReader : BinaryReader
     {}
 
     public EndianAwareBinaryReader(Stream input, Encoding encoding, Endianness endianness) : this(input, encoding, leaveOpen: false, endianness)
-    {}
+    { }
 
-    public override short ReadInt16() => ReadInt16(Endianness);
-
-    public override int ReadInt32() => ReadInt32(Endianness);
-
-    public override long ReadInt64() => ReadInt64(Endianness);
-
-    public override ushort ReadUInt16() => ReadUInt16(Endianness);
-
-    public override uint ReadUInt32() => ReadUInt32(Endianness);
-
-    public override ulong ReadUInt64() => ReadUInt64(Endianness);
-
-    public override float ReadSingle() => ReadSingle(Endianness);
-
-    public override double ReadDouble() => ReadDouble(Endianness);
-
-    public short ReadInt16(Endianness endianness) => BitConverter.ToInt16(ReadForEndianness(sizeof(short), endianness), 0);
-
-    public int ReadInt32(Endianness endianness) => BitConverter.ToInt32(ReadForEndianness(sizeof(int), endianness), 0);
-
-    public long ReadInt64(Endianness endianness) => BitConverter.ToInt64(ReadForEndianness(sizeof(long), endianness), 0);
-
-    public ushort ReadUInt16(Endianness endianness) => BitConverter.ToUInt16(ReadForEndianness(sizeof(ushort), endianness), 0);
-
-    public uint ReadUInt32(Endianness endianness) => BitConverter.ToUInt32(ReadForEndianness(sizeof(uint), endianness), 0);
-
-    public ulong ReadUInt64(Endianness endianness) => BitConverter.ToUInt64(ReadForEndianness(sizeof(ulong), endianness), 0);
-
-    public float ReadSingle(Endianness endianness) => BitConverter.ToSingle(ReadForEndianness(sizeof(float), endianness), 0);
-
-    public double ReadDouble(Endianness endianness) => BitConverter.ToDouble(ReadForEndianness(sizeof(double), endianness), 0);
-
-    private byte[] ReadForEndianness(int bytesToRead, Endianness endianness)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public new short ReadInt16()
     {
-        var bytesRead = ReadBytes(bytesToRead);
+        short val = base.ReadInt16();
+        return _swap ? (short)((val >> 8) | (val << 8)) : val;
+    }
 
-        if (endianness == Endianness.Little && !BitConverter.IsLittleEndian
-            || endianness == Endianness.Big && BitConverter.IsLittleEndian)
-        {
-            Array.Reverse(bytesRead);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public new ushort ReadUInt16()
+    {
+        ushort val = base.ReadUInt16();
+        return _swap ? (ushort)((val >> 8) | (val << 8)) : val;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public new int ReadInt32()
+    {
+        int val = base.ReadInt32();
+        return _swap ? (int)(((uint)val >> 24) | (((uint)val >> 8) & 0x0000FF00) | (((uint)val << 8) & 0x00FF0000) | ((uint)val << 24)) : val;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public new uint ReadUInt32()
+    {
+        uint val = base.ReadUInt32();
+        return _swap ? (val >> 24) | ((val >> 8) & 0x0000FF00) | ((val << 8) & 0x00FF0000) | (val << 24) : val;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public new long ReadInt64()
+    {
+        long val = base.ReadInt64();
+        if (!_swap)
+            return val;
+
+        ulong uval = (ulong)val;
+        uval = (uval >> 56) |
+               ((uval >> 40) & 0x000000000000FF00UL) |
+               ((uval >> 24) & 0x0000000000FF0000UL) |
+               ((uval >> 8) & 0x00000000FF000000UL) |
+               ((uval << 8) & 0x000000FF00000000UL) |
+               ((uval << 24) & 0x0000FF0000000000UL) |
+               ((uval << 40) & 0x00FF000000000000UL) |
+               (uval << 56);
+        return (long)uval;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public new ulong ReadUInt64()
+    {
+        ulong val = base.ReadUInt64();
+        if (!_swap)
+            return val;
+
+        return (val >> 56) |
+               ((val >> 40) & 0x000000000000FF00UL) |
+               ((val >> 24) & 0x0000000000FF0000UL) |
+               ((val >> 8) & 0x00000000FF000000UL) |
+               ((val << 8) & 0x000000FF00000000UL) |
+               ((val << 24) & 0x0000FF0000000000UL) |
+               ((val << 40) & 0x00FF000000000000UL) |
+               (val << 56);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public new float ReadSingle()
+    {
+        if (!_swap)
+            return base.ReadSingle();
+
+        uint val = (uint)base.ReadInt32();
+        val = (val >> 24) | ((val >> 8) & 0x0000FF00) | ((val << 8) & 0x00FF0000) | (val << 24);
+
+        unsafe {
+            return *(float*)&val;
         }
+    }
 
-        return bytesRead;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public new double ReadDouble()
+    {
+        if (!_swap)
+            return base.ReadDouble();
+
+        ulong val = (ulong)base.ReadInt64();
+        val = (val >> 56) |
+              ((val >> 40) & 0x000000000000FF00UL) |
+              ((val >> 24) & 0x0000000000FF0000UL) |
+              ((val >> 8) & 0x00000000FF000000UL) |
+              ((val << 8) & 0x000000FF00000000UL) |
+              ((val << 24) & 0x0000FF0000000000UL) |
+              ((val << 40) & 0x00FF000000000000UL) |
+              (val << 56);
+
+        unsafe {
+            return *(double*)&val;
+        }
     }
 }

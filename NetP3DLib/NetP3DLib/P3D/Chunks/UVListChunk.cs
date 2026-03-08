@@ -1,3 +1,4 @@
+using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
@@ -79,7 +80,7 @@ public class UVListChunk : Chunk
             yield return new InvalidP3DException(this, $"Num UVs value {NumUVs} does not match parent Num Vertices value {oldPrimitiveGroup.NumVertices}.");
     }
 
-    protected override void WriteData(BinaryWriter bw)
+    protected override void WriteData(EndianAwareBinaryWriter bw)
     {
         bw.Write(NumUVs);
         bw.Write(Channel);

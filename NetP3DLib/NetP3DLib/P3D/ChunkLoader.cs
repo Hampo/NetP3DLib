@@ -4,7 +4,6 @@ using NetP3DLib.P3D.Attributes;
 #if DEBUG
 using NetP3DLib.P3D.Enums;
 #endif
-using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 #if DEBUG
@@ -116,7 +115,7 @@ public static class ChunkLoader
     /// </summary>
     /// <param name="br">The <see cref="BinaryReader"/> to read from. <see cref="EndianAwareBinaryReader"/> is preferred.</param>
     /// <returns>A known chunk class if one exists in <see cref="ChunkTypes"/>, or <see cref="UnknownChunk"/> otherwise.</returns>
-    public static Chunk LoadChunk(BinaryReader br, out uint bytesRead)
+    public static Chunk LoadChunk(EndianAwareBinaryReader br, out uint bytesRead)
     {
         uint chunkId = br.ReadUInt32();
         uint headerSize = br.ReadUInt32() - P3DFile.HEADER_SIZE;
@@ -129,13 +128,17 @@ public static class ChunkLoader
         {
             var (chunkType, chunkConstructor) = entry;
 
-            Endianness endianness = br is EndianAwareBinaryReader eabr ? eabr.Endianness : BinaryExtensions.DefaultEndian;
+            var startPos = br.BaseStream.Position;
+            var expectedEndPos = startPos + headerSize;
 
-            using var bs = new BoundedStream(br.BaseStream, headerSize);
-            using var br2 = new EndianAwareBinaryReader(bs, true, endianness);
+            c = chunkConstructor(br);
 
-            c = chunkConstructor(br2);
-            actualHeaderSize = (uint)bs.Position;
+            var actualEndPos = br.BaseStream.Position;
+
+            if (actualEndPos > expectedEndPos)
+                throw new InvalidDataException($"Chunk {c} read {actualEndPos - expectedEndPos} bytes past its header boundary.");
+
+            actualHeaderSize = (uint)(actualEndPos - startPos);
         }
         else
         {

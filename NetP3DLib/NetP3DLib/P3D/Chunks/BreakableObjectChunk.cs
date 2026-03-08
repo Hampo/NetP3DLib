@@ -1,3 +1,4 @@
+using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using System;
@@ -71,7 +72,7 @@ public class BreakableObjectChunk : Chunk
         MaxInstances = maxInstances;
     }
 
-    protected override void WriteData(BinaryWriter bw)
+    protected override void WriteData(EndianAwareBinaryWriter bw)
     {
         bw.Write((int)Index);
         bw.Write(MaxInstances);

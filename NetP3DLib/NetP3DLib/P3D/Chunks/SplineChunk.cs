@@ -1,3 +1,4 @@
+using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
@@ -78,7 +79,7 @@ public class SplineChunk : NamedChunk
             yield return new InvalidP3DException(this, $"Children must be one Rail Cam child chunk.");
     }
 
-    protected override void WriteData(BinaryWriter bw)
+    protected override void WriteData(EndianAwareBinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(NumPositions);

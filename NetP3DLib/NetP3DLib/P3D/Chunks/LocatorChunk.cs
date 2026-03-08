@@ -1,3 +1,4 @@
+using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
@@ -115,7 +116,7 @@ public class LocatorChunk : NamedChunk
         RecalculateSize((uint)(HeaderSize - delta));
     }
 
-    protected override void WriteData(BinaryWriter bw)
+    protected override void WriteData(EndianAwareBinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write((uint)LocatorType);
@@ -144,7 +145,7 @@ public class LocatorChunk : NamedChunk
             LocatorType = locatorType;
         }
 
-        public void WriteData(BinaryWriter bw)
+        public void WriteData(EndianAwareBinaryWriter bw)
         {
             foreach (var item in DataArray)
                 bw.Write(item);

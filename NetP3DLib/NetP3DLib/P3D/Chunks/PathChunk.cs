@@ -1,3 +1,4 @@
+using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
@@ -76,7 +77,7 @@ public class PathChunk : Chunk
             yield return new InvalidP3DException(this, $"The min number of positions is {MIN_POSITIONS}.");
     }
 
-    protected override void WriteData(BinaryWriter bw)
+    protected override void WriteData(EndianAwareBinaryWriter bw)
     {
         bw.Write(NumPositions);
         foreach (var pos in Positions)

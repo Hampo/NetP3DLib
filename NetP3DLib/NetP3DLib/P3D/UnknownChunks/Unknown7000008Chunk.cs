@@ -1,3 +1,4 @@
+using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Collections;
 using System;
@@ -60,7 +61,7 @@ public class Unknown7000008Chunk : Chunk
         Unknown = CreateSizeAwareList(unknown);
     }
 
-    protected override void WriteData(BinaryWriter bw)
+    protected override void WriteData(EndianAwareBinaryWriter bw)
     {
         bw.Write(NumUnknown);
         foreach (var unknown in Unknown)

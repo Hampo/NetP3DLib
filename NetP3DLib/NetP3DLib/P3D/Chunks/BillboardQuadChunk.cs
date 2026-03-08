@@ -1,3 +1,4 @@
+using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
@@ -86,7 +87,7 @@ public class BillboardQuadChunk : NamedChunk
             yield return new InvalidP3DFourCCException(this,nameof(AxisMode), AxisMode);
     }
 
-    protected override void WriteData(BinaryWriter bw)
+    protected override void WriteData(EndianAwareBinaryWriter bw)
     {
         bw.Write(Version);
         bw.WriteP3DString(Name);
