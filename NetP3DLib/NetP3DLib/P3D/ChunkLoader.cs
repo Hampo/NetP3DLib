@@ -20,8 +20,6 @@ public static partial class ChunkLoader
     public static readonly Dictionary<uint, (Type, Func<EndianAwareBinaryReader, Chunk>)> ChunkTypes;
 #if DEBUG
     public static HashSet<uint> UnknownChunks = [];
-#else
-    static partial void LoadInternalChunkTypes();
 #endif
 
     static ChunkLoader()
@@ -29,7 +27,7 @@ public static partial class ChunkLoader
         ChunkTypes = [];
 
 #if !DEBUG
-        LoadInternalChunkTypes();
+        LoadInternalChunks();
 #else
         LoadChunkTypes("NetP3DLib.P3D.Chunks", true, true);
         LoadChunkTypes("NetP3DLib.P3D.UnknownChunks", true, true);
