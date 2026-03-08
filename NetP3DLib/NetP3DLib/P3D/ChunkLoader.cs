@@ -15,11 +15,13 @@ using System.Reflection;
 
 namespace NetP3DLib.P3D;
 
-public static class ChunkLoader
+public static partial class ChunkLoader
 {
     public static readonly Dictionary<uint, (Type, Func<BinaryReader, Chunk>)> ChunkTypes;
 #if DEBUG
     public static HashSet<uint> UnknownChunks = [];
+#else
+    static partial void LoadInternalChunkTypes();
 #endif
 
     static ChunkLoader()
@@ -27,8 +29,7 @@ public static class ChunkLoader
         ChunkTypes = [];
 
 #if !DEBUG
-        LoadChunkTypes("NetP3DLib.P3D.Chunks", false, false);
-        LoadChunkTypes("NetP3DLib.P3D.UnknownChunks", false, false);
+        LoadInternalChunkTypes();
 #else
         LoadChunkTypes("NetP3DLib.P3D.Chunks", true, true);
         LoadChunkTypes("NetP3DLib.P3D.UnknownChunks", true, true);
