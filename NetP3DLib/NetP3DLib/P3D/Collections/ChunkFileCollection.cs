@@ -49,20 +49,25 @@ public class ChunkFileCollection : Collection<Chunk>
         item.SizeChanged += OnChildSizeChanged;
 
         UpdateChildIndices(index + 1);
+
+        _owner.OnChunkAdded(item);
     }
 
     protected override void RemoveItem(int index)
     {
         Chunk old = this[index];
+        var oldIndex = index;
+
         old.SizeChanged -= OnChildSizeChanged;
-
         base.RemoveItem(index);
-
         _totalSize -= old.Size;
+
         old.ParentFile = null;
         old.IndexInParent = -1;
 
         UpdateChildIndices(index);
+
+        _owner.OnChunkRemoved(old, oldIndex);
     }
 
     protected override void SetItem(int index, Chunk item)
@@ -74,6 +79,7 @@ public class ChunkFileCollection : Collection<Chunk>
             throw new InvalidOperationException($"Cannot set chunk \"{item}\" in \"{_owner}\" at index {index}. It already belongs to \"{item.ParentChunk}\".");
 
         Chunk old = this[index];
+        var oldIndex = index;
 
         if (old != null)
         {
@@ -95,19 +101,29 @@ public class ChunkFileCollection : Collection<Chunk>
         item.ParentFile = _owner;
         item.IndexInParent = index;
         item.SizeChanged += OnChildSizeChanged;
+
+        if (old != null)
+            _owner.OnChunkRemoved(old, oldIndex);
+        _owner.OnChunkAdded(item);
     }
 
     protected override void ClearItems()
     {
-        foreach (var child in this)
+        var oldItems = new (Chunk chunk, int oldIndex)[Count];
+        for (var i = 0; i < Count; i++)
+            oldItems[i] = (this[i], i);
+
+        base.ClearItems();
+        _totalSize = 0;
+
+        foreach (var (child, oldIndex) in oldItems)
         {
             child.ParentFile = null;
             child.IndexInParent = -1;
             child.SizeChanged -= OnChildSizeChanged;
-        }
 
-        base.ClearItems();
-        _totalSize = 0;
+            _owner.OnChunkRemoved(child, oldIndex);
+        }
     }
 
     public IReadOnlyList<Chunk> GetRange(int index, int count) => ((List<Chunk>)Items).GetRange(index, count);
@@ -147,6 +163,8 @@ public class ChunkFileCollection : Collection<Chunk>
             item.ParentFile = _owner;
             item.IndexInParent = i++;
             item.SizeChanged += OnChildSizeChanged;
+
+            _owner.OnChunkAdded(item);
         }
     }
 
@@ -157,7 +175,7 @@ public class ChunkFileCollection : Collection<Chunk>
 
         var chunkList = items as ICollection<Chunk> ?? [.. items];
 
-        uint addedSize = 0;
+        var addedSize = 0u;
         foreach (var item in chunkList)
         {
             if (item == null)
@@ -178,13 +196,17 @@ public class ChunkFileCollection : Collection<Chunk>
         ((List<Chunk>)Items).InsertRange(index, chunkList);
         _totalSize += addedSize;
 
+        var currentIndex = index;
         foreach (var item in chunkList)
         {
             item.ParentFile = _owner;
+            item.IndexInParent = currentIndex++;
             item.SizeChanged += OnChildSizeChanged;
+
+            _owner.OnChunkAdded(item);
         }
 
-        UpdateChildIndices(index);
+        UpdateChildIndices(index + chunkList.Count);
     }
 
     public void RemoveRange(int index, int count)
@@ -204,12 +226,15 @@ public class ChunkFileCollection : Collection<Chunk>
         var list = (List<Chunk>)Items;
 
         uint removedSize = 0;
-        for (int i = index; i < index + count; i++)
+        var oldItems = new (Chunk chunk, int oldIndex)[count];
+        for (var i = 0; i < count; i++)
         {
-            var chunk = list[i];
+            var chunk = list[index + i];
+            oldItems[i] = (chunk, index + i);
+
+            removedSize += chunk.Size;
             chunk.ParentFile = null;
             chunk.IndexInParent = -1;
-            removedSize += chunk.Size;
             chunk.SizeChanged -= OnChildSizeChanged;
         }
 
@@ -217,6 +242,9 @@ public class ChunkFileCollection : Collection<Chunk>
         _totalSize -= removedSize;
         if (index < Count)
             UpdateChildIndices(index);
+
+        foreach (var (chunk, oldIndex) in oldItems)
+            _owner.OnChunkRemoved(chunk, oldIndex);
     }
 
     private void UpdateChildIndices(int startIndex = 0)

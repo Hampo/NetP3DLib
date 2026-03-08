@@ -39,6 +39,9 @@ public class TreeChunk : Chunk
         var numChildren = br.ReadUInt32();
         BoundsMin = br.ReadVector3();
         BoundsMax = br.ReadVector3();
+
+        ChildAdded += Chunk_OnChildAdded;
+        ChildRemoved += Chunk_OnChildRemoved;
     }
 
     public TreeChunk(Vector3 minimum, Vector3 maximum) : base(ChunkID)
@@ -68,13 +71,13 @@ public class TreeChunk : Chunk
         _needsRecalculate = true;
     }
 
-    internal override void OnChildAdded(Chunk child)
+    internal void Chunk_OnChildAdded(Chunk child)
     {
         if (child is TreeNodeChunk)
             MarkTopologyDirty();
     }
 
-    internal override void OnChildRemoved(Chunk child)
+    internal void Chunk_OnChildRemoved(Chunk child, int oldIndex)
     {
         if (child is TreeNodeChunk)
             MarkTopologyDirty();

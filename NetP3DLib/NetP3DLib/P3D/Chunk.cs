@@ -396,8 +396,11 @@ public abstract class Chunk
     /// <param name="bw">The <c>BinaryWriter</c> to write to.</param>
     protected abstract void WriteData(EndianAwareBinaryWriter bw);
 
-    internal virtual void OnChildAdded(Chunk child) { }
-    internal virtual void OnChildRemoved(Chunk child) { }
+    public event Action<Chunk>? ChildAdded;
+    internal void OnChildAdded(Chunk child) => ChildAdded?.Invoke(child);
+
+    public event Action<Chunk, int>? ChildRemoved;
+    internal void OnChildRemoved(Chunk child, int oldIndex) => ChildRemoved?.Invoke(child, oldIndex);
 
     /// <summary>
     /// Creates a clone of the current chunk.

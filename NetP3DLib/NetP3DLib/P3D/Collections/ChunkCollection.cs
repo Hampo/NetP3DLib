@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Security.Cryptography;
 
 namespace NetP3DLib.P3D.Collections;
 public class ChunkCollection : Collection<Chunk>
@@ -97,17 +96,18 @@ public class ChunkCollection : Collection<Chunk>
     protected override void RemoveItem(int index)
     {
         Chunk old = this[index];
+        var oldIndex = index;
+
         old.SizeChanged -= OnChildSizeChanged;
-
         base.RemoveItem(index);
-
         TotalSize -= old.Size;
+
         old.ParentChunk = null;
         old.IndexInParent = -1;
 
         UpdateChildIndices(index);
 
-        _owner.OnChildRemoved(old);
+        _owner.OnChildRemoved(old, oldIndex);
     }
 
     protected override void SetItem(int index, Chunk item)
@@ -119,6 +119,7 @@ public class ChunkCollection : Collection<Chunk>
             throw new InvalidOperationException($"Cannot set chunk \"{item}\" in \"{_owner}\" at index {index}. It already belongs to \"{item.ParentChunk}\".");
 
         Chunk old = this[index];
+        var oldIndex = index;
 
         if (old != null)
         {
@@ -132,8 +133,6 @@ public class ChunkCollection : Collection<Chunk>
             old.ParentChunk = null;
             old.IndexInParent = -1;
             old.SizeChanged -= OnChildSizeChanged;
-
-            _owner.OnChildRemoved(old);
         }
 
         base.SetItem(index, item);
@@ -142,22 +141,28 @@ public class ChunkCollection : Collection<Chunk>
         item.IndexInParent = index;
         item.SizeChanged += OnChildSizeChanged;
 
+        if (old != null)
+            _owner.OnChildRemoved(old, oldIndex);
         _owner.OnChildAdded(item);
     }
 
     protected override void ClearItems()
     {
-        foreach (var child in this)
+        var oldItems = new (Chunk chunk, int oldIndex)[Count];
+        for (var i = 0; i < Count; i++)
+            oldItems[i] = (this[i], i);
+
+        base.ClearItems();
+        TotalSize = 0;
+
+        foreach (var (child, oldIndex) in oldItems)
         {
             child.ParentChunk = null;
             child.IndexInParent = -1;
             child.SizeChanged -= OnChildSizeChanged;
 
-            _owner.OnChildRemoved(child);
+            _owner.OnChildRemoved(child, oldIndex);
         }
-
-        base.ClearItems();
-        TotalSize = 0;
     }
 
     public IReadOnlyList<Chunk> GetRange(int index, int count) => ((List<Chunk>)Items).GetRange(index, count);
@@ -209,7 +214,7 @@ public class ChunkCollection : Collection<Chunk>
 
         var chunkList = items as ICollection<Chunk> ?? [.. items];
 
-        uint addedSize = 0;
+        var addedSize = 0u;
         foreach (var item in chunkList)
         {
             if (item == null)
@@ -228,15 +233,17 @@ public class ChunkCollection : Collection<Chunk>
         ((List<Chunk>)Items).InsertRange(index, chunkList);
         TotalSize += addedSize;
 
+        var currentIndex = index;
         foreach (var item in chunkList)
         {
             item.ParentChunk = _owner;
+            item.IndexInParent = currentIndex++;
             item.SizeChanged += OnChildSizeChanged;
 
             _owner.OnChildAdded(item);
         }
 
-        UpdateChildIndices(index);
+        UpdateChildIndices(index + chunkList.Count);
     }
 
     public void RemoveRange(int index, int count)
@@ -256,21 +263,26 @@ public class ChunkCollection : Collection<Chunk>
         var list = (List<Chunk>)Items;
 
         uint removedSize = 0;
-        for (int i = index; i < index + count; i++)
+        var oldItems = new (Chunk chunk, int oldIndex)[count];
+        for (var i = 0; i < count; i++)
         {
-            var chunk = list[i];
+            var chunk = list[index + i];
+            oldItems[i] = (chunk, index + i);
+
+            removedSize += chunk.Size;
             chunk.ParentChunk = null;
             chunk.IndexInParent = -1;
-            removedSize += chunk.Size;
             chunk.SizeChanged -= OnChildSizeChanged;
-
-            _owner.OnChildRemoved(chunk);
         }
 
         list.RemoveRange(index, count);
         TotalSize -= removedSize;
+
         if (index < Count)
             UpdateChildIndices(index);
+
+        foreach (var (child, oldIndex) in oldItems)
+            _owner.OnChildRemoved(child, oldIndex);
     }
 
     private void UpdateChildIndices(int startIndex = 0)
