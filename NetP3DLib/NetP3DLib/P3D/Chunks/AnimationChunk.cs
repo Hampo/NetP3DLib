@@ -1,6 +1,7 @@
 using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
+using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
@@ -68,6 +69,25 @@ public class AnimationChunk : NamedChunk
         NumFrames = numFrames;
         FrameRate = frameRate;
         Cyclic = cyclic;
+    }
+
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
+    {
+        foreach (var error in base.ValidateChunk())
+            yield return error;
+
+        var animationSizeCount = GetChildCount(ChunkIdentifier.Animation_Size);
+        if (animationSizeCount > 1)
+            yield return new InvalidP3DException(this, $"There can only be one {nameof(AnimationSizeChunk)} per {nameof(AnimationChunk)}.");
+        var animationSize = animationSizeCount == 1 ? GetFirstChunkOfType<AnimationSizeChunk>() : null;
+
+        var animationGroupListCount = GetChildCount(ChunkIdentifier.Animation_Group_List);
+        if (animationGroupListCount > 1)
+            yield return new InvalidP3DException(this, $"There can only be one {nameof(AnimationGroupListChunk)} per {nameof(AnimationChunk)}.");
+        var animationGroupList = animationGroupListCount == 1 ? GetFirstChunkOfType<AnimationGroupListChunk>() : null;
+
+        if (animationSize != null && animationGroupList != null && animationGroupList.IndexInParent < animationSize.IndexInParent)
+            yield return new InvalidP3DException(this, $"The {nameof(AnimationSizeChunk)} must be before the {nameof(AnimationGroupListChunk)}.");
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
