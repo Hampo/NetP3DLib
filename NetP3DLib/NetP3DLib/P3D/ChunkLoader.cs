@@ -106,7 +106,7 @@ public static partial class ChunkLoader
 
             var param = Expression.Parameter(typeof(EndianAwareBinaryReader), "br");
             var newExpr = Expression.New(ctor, param);
-            var lambda = Expression.Lambda<Func<BinaryReader, Chunk>>(newExpr, param);
+            var lambda = Expression.Lambda<Func<EndianAwareBinaryReader, Chunk>>(newExpr, param);
             ChunkTypes[chunkAttriutes.Identifier] = (chunkType, lambda.Compile());
         }
     }
