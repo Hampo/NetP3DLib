@@ -12,6 +12,13 @@ namespace NetP3DLib.P3D.Chunks;
 public class AnimationChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Animation;
+    public enum Platform
+    {
+        PC,
+        PS2,
+        XBOX,
+        GC,
+    }
 
     [DefaultValue(0)]
     public uint Version { get; set; }
@@ -74,4 +81,18 @@ public class AnimationChunk : NamedChunk
     }
 
     protected override Chunk CloneSelf() => new AnimationChunk(Version, Name, AnimationType, NumFrames, FrameRate, Cyclic);
+
+    // TODO: Caching
+    public uint CalculateMemorySize(Platform platform)
+    {
+        var animationGroupList = GetLastChunkOfType<AnimationGroupListChunk>();
+        if (animationGroupList == null)
+            return 0u;
+
+        var total = 0u;
+        foreach (var animationGroup in animationGroupList.GetChunksOfType<AnimationGroupChunk>())
+            total = animationGroup.CalculateMemorySize(platform, total);
+
+        return total;
+    }
 }

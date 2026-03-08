@@ -11,13 +11,14 @@ namespace NetP3DLib.P3D.Chunks;
 public class AnimationSizeChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Animation_Size;
+    private const uint BASE_SIZE = 52u;
 
     [DefaultValue(1)]
     public uint Version { get; set; }
-    public uint PC { get; set; }
-    public uint PS2 { get; set; }
-    public uint XBOX { get; set; }
-    public uint GC { get; set; }
+    public uint PC => (ParentChunk as AnimationChunk)?.CalculateMemorySize(AnimationChunk.Platform.PC) ?? 0;
+    public uint PS2 => (ParentChunk as AnimationChunk)?.CalculateMemorySize(AnimationChunk.Platform.PS2) ?? 0;
+    public uint XBOX => (ParentChunk as AnimationChunk)?.CalculateMemorySize(AnimationChunk.Platform.XBOX) ?? 0;
+    public uint GC => (ParentChunk as AnimationChunk)?.CalculateMemorySize(AnimationChunk.Platform.GC) ?? 0;
 
     public override byte[] DataBytes
     {
@@ -39,19 +40,15 @@ public class AnimationSizeChunk : Chunk
     public AnimationSizeChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
-        PC = br.ReadUInt32();
-        PS2 = br.ReadUInt32();
-        XBOX = br.ReadUInt32();
-        GC = br.ReadUInt32();
+        var pc = br.ReadUInt32();
+        var ps2 = br.ReadUInt32();
+        var xbox = br.ReadUInt32();
+        var gc = br.ReadUInt32();
     }
 
-    public AnimationSizeChunk(uint version, uint pc, uint ps2, uint xbox, uint gc) : base(ChunkID)
+    public AnimationSizeChunk(uint version) : base(ChunkID)
     {
         Version = version;
-        PC = pc;
-        PS2 = ps2;
-        XBOX = xbox;
-        GC = gc;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
@@ -63,5 +60,5 @@ public class AnimationSizeChunk : Chunk
         bw.Write(GC);
     }
 
-    protected override Chunk CloneSelf() => new AnimationSizeChunk(Version, PC, PS2, XBOX, GC);
+    protected override Chunk CloneSelf() => new AnimationSizeChunk(Version);
 }

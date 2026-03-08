@@ -126,4 +126,13 @@ public class Vector3DOFChannelChunk : ParamChunk
     }
 
     protected override Chunk CloneSelf() => new Vector3DOFChannelChunk(Version, Param, Frames, Values);
+
+    internal uint CalculateMemorySize(AnimationChunk.Platform platform, uint size)
+    {
+        size = ((size + 3u) & ~3u) + (platform == AnimationChunk.Platform.PS2 ? 36u : 32u);
+        size = ((size + 3u) & ~3u) + NumFrames * 2;
+        size = ((size + 3u) & ~3u) + NumFrames * 3 * 4;
+
+        return size;
+    }
 }

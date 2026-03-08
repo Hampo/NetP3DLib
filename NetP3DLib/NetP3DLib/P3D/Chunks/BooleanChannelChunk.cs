@@ -88,4 +88,12 @@ public class BooleanChannelChunk : ParamChunk
     }
 
     protected override Chunk CloneSelf() => new BooleanChannelChunk(Version, Param, StartState, Values);
+
+    internal uint CalculateMemorySize(AnimationChunk.Platform platform, uint size)
+    {
+        size = ((size + 3u) & ~3u) + (platform == AnimationChunk.Platform.PS2 ? 36u : 32u);
+        size = ((size + 3u) & ~3u) + NumValues * 2;
+
+        return size;
+    }
 }

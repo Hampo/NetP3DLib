@@ -125,4 +125,13 @@ public class IntegerChannelChunk : ParamChunk
     }
 
     protected override Chunk CloneSelf() => new IntegerChannelChunk(Version, Param, Frames, Values);
+
+    internal uint CalculateMemorySize(AnimationChunk.Platform platform, uint size)
+    {
+        size = ((size + 3u) & ~3u) + (platform == AnimationChunk.Platform.PS2 ? 36u : 32u);
+        size = ((size + 3u) & ~3u) + NumFrames * 2;
+        size = ((size + 3u) & ~3u) + NumFrames * 4;
+
+        return size;
+    }
 }

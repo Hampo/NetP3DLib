@@ -155,4 +155,13 @@ public class Vector2DOFChannelChunk : ParamChunk
     }
 
     protected override Chunk CloneSelf() => new Vector2DOFChannelChunk(Version, Param, StaticIndex, Constants, Frames, Values);
+
+    internal uint CalculateMemorySize(AnimationChunk.Platform platform, uint size)
+    {
+        size = ((size + 3u) & ~3u) + (platform == AnimationChunk.Platform.PS2 ? 52u : 48u);
+        size = ((size + 3u) & ~3u) + NumFrames * 2;
+        size = ((size + 3u) & ~3u) + NumFrames * 2 * 4;
+
+        return size;
+    }
 }

@@ -12,6 +12,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class AnimationGroupChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Animation_Group;
+    private const uint BaseSize = 40;
 
     [DefaultValue(0)]
     public uint Version { get; set; }
@@ -59,4 +60,48 @@ public class AnimationGroupChunk : NamedChunk
     }
 
     protected override Chunk CloneSelf() => new AnimationGroupChunk(Version, Name, GroupID);
+
+    internal uint CalculateMemorySize(AnimationChunk.Platform platform, uint size)
+    {
+        size = ((size + 7u) & ~7u) + BaseSize;
+        size = ((size + 3u) & ~3u) + NumChannels * 4;
+
+        foreach (var intChannel in GetChunksOfType<IntegerChannelChunk>())
+            size = intChannel.CalculateMemorySize(platform, size);
+
+        foreach (var float1Channel in GetChunksOfType<Float1ChannelChunk>())
+            size = float1Channel.CalculateMemorySize(platform, size);
+
+        foreach (var float2Channel in GetChunksOfType<Float2ChannelChunk>())
+            size = float2Channel.CalculateMemorySize(platform, size);
+
+        foreach (var vector1DOFChannel in GetChunksOfType<Vector1DOFChannelChunk>())
+            size = vector1DOFChannel.CalculateMemorySize(platform, size);
+
+        foreach (var vector2DOFChannel in GetChunksOfType<Vector2DOFChannelChunk>())
+            size = vector2DOFChannel.CalculateMemorySize(platform, size);
+
+        foreach (var vector3DOFChannel in GetChunksOfType<Vector3DOFChannelChunk>())
+            size = vector3DOFChannel.CalculateMemorySize(platform, size);
+
+        foreach (var compressedQuaternionChannel in GetChunksOfType<CompressedQuaternionChannelChunk>())
+            size = compressedQuaternionChannel.CalculateMemorySize(platform, size);
+
+        foreach (var quaternionChannel in GetChunksOfType<QuaternionChannelChunk>())
+            size = quaternionChannel.CalculateMemorySize(platform, size);
+
+        foreach (var entityChannel in GetChunksOfType<EntityChannelChunk>())
+            size = entityChannel.CalculateMemorySize(platform, size);
+
+        foreach (var booleanChannel in GetChunksOfType<BooleanChannelChunk>())
+            size = booleanChannel.CalculateMemorySize(platform, size);
+
+        foreach (var colourChannel in GetChunksOfType<ColourChannelChunk>())
+            size = colourChannel.CalculateMemorySize(platform, size);
+
+        /*foreach (var eventChannel in GetChunksOfType<EventChannelChunk>())
+            size = eventChannel.CalculateMemorySize(platform, size);*/
+
+        return size;
+    }
 }
