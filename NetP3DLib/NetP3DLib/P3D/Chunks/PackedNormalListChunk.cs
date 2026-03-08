@@ -50,7 +50,7 @@ public class PackedNormalListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(byte) * NumNormals;
 
-    public PackedNormalListChunk(BinaryReader br) : base(ChunkID)
+    public PackedNormalListChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         var numNormals = br.ReadInt32();
         Normals = CreateSizeAwareList<byte>(numNormals);

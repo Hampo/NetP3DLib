@@ -97,7 +97,7 @@ public class FrontendMultiSpriteChunk : NamedChunk
         }
     }
 
-    public FrontendMultiSpriteChunk(BinaryReader br) : base(ChunkID)
+    public FrontendMultiSpriteChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         _name = new(this, br);
         Version = br.ReadUInt32();

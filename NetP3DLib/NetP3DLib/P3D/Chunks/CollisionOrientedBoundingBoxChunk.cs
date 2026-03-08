@@ -28,7 +28,7 @@ public class CollisionOrientedBoundingBoxChunk : Chunk
     }
     public override uint DataLength => sizeof(float) * 3;
 
-    public CollisionOrientedBoundingBoxChunk(BinaryReader br) : base(ChunkID)
+    public CollisionOrientedBoundingBoxChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         HalfExtents = br.ReadVector3();
     }

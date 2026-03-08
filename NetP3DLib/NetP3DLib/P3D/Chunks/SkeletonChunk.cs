@@ -34,7 +34,7 @@ public class SkeletonChunk : NamedChunk
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public SkeletonChunk(BinaryReader br) : base(ChunkID)
+    public SkeletonChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         _name = new(this, br);
         Version = br.ReadUInt32();

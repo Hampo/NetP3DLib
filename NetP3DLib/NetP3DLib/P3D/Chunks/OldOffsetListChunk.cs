@@ -71,7 +71,7 @@ public class OldOffsetListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) + OffsetEntry.Size * NumOffsets + (HasPrimGroupIndex ? sizeof(uint) : 0u);
 
-    public OldOffsetListChunk(BinaryReader br) : base(ChunkID)
+    public OldOffsetListChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         var numOffsets = br.ReadInt32();
         KeyIndex = br.ReadUInt32();

@@ -83,7 +83,7 @@ public class OldBaseEmitterChunk : NamedChunk
     }
     public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + 4 + 4 + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(float) + sizeof(float);
 
-    public OldBaseEmitterChunk(BinaryReader br) : base(ChunkID)
+    public OldBaseEmitterChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         _name = new(this, br);

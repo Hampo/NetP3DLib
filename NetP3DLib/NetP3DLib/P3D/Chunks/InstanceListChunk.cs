@@ -25,7 +25,7 @@ public class InstanceListChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name);
 
-    public InstanceListChunk(BinaryReader br) : base(ChunkID)
+    public InstanceListChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         _name = new(this, br);
     }

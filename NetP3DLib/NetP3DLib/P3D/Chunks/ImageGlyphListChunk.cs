@@ -50,7 +50,7 @@ public class ImageGlyphListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + Glyph.Size * NumGlyphs;
 
-    public ImageGlyphListChunk(BinaryReader br) : base(ChunkID)
+    public ImageGlyphListChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         var numGlyphs = br.ReadInt32();
         Glyphs = CreateSizeAwareList<Glyph>(numGlyphs);

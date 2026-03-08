@@ -40,7 +40,7 @@ public class IntersectionChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(float) * 3 + sizeof(float) + sizeof(uint);
 
-    public IntersectionChunk(BinaryReader br) : base(ChunkID)
+    public IntersectionChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         _name = new(this, br);
         Position = br.ReadVector3();

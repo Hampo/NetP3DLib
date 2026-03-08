@@ -32,7 +32,7 @@ public class SkeletonJoint2Chunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(float) * 16;
 
-    public SkeletonJoint2Chunk(BinaryReader br) : base(ChunkID)
+    public SkeletonJoint2Chunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         _name = new(this, br);
         Parent = br.ReadUInt32();

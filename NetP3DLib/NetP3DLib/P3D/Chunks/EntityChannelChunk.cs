@@ -94,7 +94,7 @@ public class EntityChannelChunk : ParamChunk
         }
     }
 
-    public EntityChannelChunk(BinaryReader br) : base(ChunkID)
+    public EntityChannelChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         _param = new(this, br);

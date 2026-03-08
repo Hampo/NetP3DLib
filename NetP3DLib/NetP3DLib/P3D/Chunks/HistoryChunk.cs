@@ -65,7 +65,7 @@ public class HistoryChunk : Chunk
         }
     }
 
-    public HistoryChunk(BinaryReader br) : base(ChunkID)
+    public HistoryChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         ushort lineCount = br.ReadUInt16();
         var history = new string[lineCount];

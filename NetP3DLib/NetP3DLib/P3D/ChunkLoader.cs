@@ -17,7 +17,7 @@ namespace NetP3DLib.P3D;
 
 public static partial class ChunkLoader
 {
-    public static readonly Dictionary<uint, (Type, Func<BinaryReader, Chunk>)> ChunkTypes;
+    public static readonly Dictionary<uint, (Type, Func<EndianAwareBinaryReader, Chunk>)> ChunkTypes;
 #if DEBUG
     public static HashSet<uint> UnknownChunks = [];
 #else
@@ -104,7 +104,7 @@ public static partial class ChunkLoader
                 continue;
             }
 
-            var param = Expression.Parameter(typeof(BinaryReader), "br");
+            var param = Expression.Parameter(typeof(EndianAwareBinaryReader), "br");
             var newExpr = Expression.New(ctor, param);
             var lambda = Expression.Lambda<Func<BinaryReader, Chunk>>(newExpr, param);
             ChunkTypes[chunkAttriutes.Identifier] = (chunkType, lambda.Compile());

@@ -54,7 +54,7 @@ public class CollisionEffectChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) + BinaryExtensions.GetP3DStringLength(SoundResourceDataName);
 
-    public CollisionEffectChunk(BinaryReader br) : base(ChunkID)
+    public CollisionEffectChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         ClassType = (ClassTypes)br.ReadUInt32();
         PhysPropID = br.ReadUInt32();

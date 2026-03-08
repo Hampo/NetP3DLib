@@ -43,7 +43,7 @@ public class ShadowSkinChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + BinaryExtensions.GetP3DStringLength(SkeletonName) + sizeof(uint) + sizeof(uint);
 
-    public ShadowSkinChunk(BinaryReader br) : base(ChunkID)
+    public ShadowSkinChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         _name = new(this, br);
         Version = br.ReadUInt32();

@@ -43,7 +43,7 @@ public class OldScenegraphDrawableChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + BinaryExtensions.GetP3DStringLength(DrawableName) + sizeof(uint);
 
-    public OldScenegraphDrawableChunk(BinaryReader br) : base(ChunkID)
+    public OldScenegraphDrawableChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         _name = new(this, br);
         _drawableName = new(this, br);

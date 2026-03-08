@@ -57,7 +57,7 @@ public class InstParticleSystemChunk : Chunk
     }
     public override uint DataLength => sizeof(int) + sizeof(uint);
 
-    public InstParticleSystemChunk(BinaryReader br) : base(ChunkID)
+    public InstParticleSystemChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         ParticleType = (ParticleTypes)br.ReadInt32();
         MaxInstances = br.ReadUInt32();

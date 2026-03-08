@@ -54,7 +54,7 @@ public class SplineChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(float) * 3 * NumPositions;
 
-    public SplineChunk(BinaryReader br) : base(ChunkID)
+    public SplineChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         _name = new(this, br);
         var numPositions = br.ReadInt32();

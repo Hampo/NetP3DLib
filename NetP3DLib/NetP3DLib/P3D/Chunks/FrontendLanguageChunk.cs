@@ -65,7 +65,7 @@ public class FrontendLanguageChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + 1 + sizeof(uint) + sizeof(uint) + sizeof(uint) + (Entries == null ? 0 : sizeof(uint) * (uint)Entries.Count + sizeof(uint) * (uint)Entries.Count + (uint)(BuildData().Buffer.Count * 2));//(uint)DataBytes.Length;
 
-    public FrontendLanguageChunk(BinaryReader br) : base(ChunkID)
+    public FrontendLanguageChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         _name = new(this, br);
         Language = br.ReadChar();

@@ -51,7 +51,7 @@ public class MatrixListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) * NumMatrices;
 
-    public MatrixListChunk(BinaryReader br) : base(ChunkID)
+    public MatrixListChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         var numMatrices = br.ReadInt32();
         var matrices = new Matrix[numMatrices];

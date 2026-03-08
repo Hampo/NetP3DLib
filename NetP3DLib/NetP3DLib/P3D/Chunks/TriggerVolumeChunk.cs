@@ -40,7 +40,7 @@ public class TriggerVolumeChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(float) * 3 + sizeof(float) * 16;
 
-    public TriggerVolumeChunk(BinaryReader br) : base(ChunkID)
+    public TriggerVolumeChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         _name = new(this, br);
         Type = (Types)br.ReadUInt32();

@@ -38,7 +38,7 @@ public class AnimDynaPhysWrapperChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint);
 
-    public AnimDynaPhysWrapperChunk(BinaryReader br) : base(ChunkID)
+    public AnimDynaPhysWrapperChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         _name = new(this, br);
         Version = br.ReadUInt32();

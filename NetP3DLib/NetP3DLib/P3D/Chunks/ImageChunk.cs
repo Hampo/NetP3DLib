@@ -80,7 +80,7 @@ public class ImageChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint);
 
-    public ImageChunk(BinaryReader br) : base(ChunkID)
+    public ImageChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         _name = new(this, br);
         Version = br.ReadUInt32();

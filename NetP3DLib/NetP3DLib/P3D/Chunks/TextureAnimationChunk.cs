@@ -49,7 +49,7 @@ public class TextureAnimationChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + BinaryExtensions.GetP3DStringLength(MaterialName) + sizeof(uint) + sizeof(float) + sizeof(uint);
 
-    public TextureAnimationChunk(BinaryReader br) : base(ChunkID)
+    public TextureAnimationChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         _name = new(this, br);
         Version = br.ReadUInt32();

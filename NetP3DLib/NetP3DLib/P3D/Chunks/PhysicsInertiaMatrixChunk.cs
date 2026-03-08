@@ -28,7 +28,7 @@ public class PhysicsInertiaMatrixChunk : Chunk
     }
     public override uint DataLength => SymmetricMatrix3x3.SizeInBytes;
 
-    public PhysicsInertiaMatrixChunk(BinaryReader br) : base(ChunkID)
+    public PhysicsInertiaMatrixChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         Matrix = br.ReadSymmetricMatrix3x3();
     }

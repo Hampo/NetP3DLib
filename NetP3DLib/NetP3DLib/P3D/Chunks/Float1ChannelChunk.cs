@@ -82,7 +82,7 @@ public class Float1ChannelChunk : ParamChunk
     }
     public override uint DataLength => sizeof(uint) + 4 + sizeof(uint) + sizeof(ushort) * NumFrames + sizeof(float) * NumValues;
 
-    public Float1ChannelChunk(BinaryReader br) : base(ChunkID)
+    public Float1ChannelChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         _param = new(this, br);

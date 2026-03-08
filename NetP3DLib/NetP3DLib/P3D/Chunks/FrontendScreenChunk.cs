@@ -69,7 +69,7 @@ public class FrontendScreenChunk : NamedChunk
         }
     }
 
-    public FrontendScreenChunk(BinaryReader br) : base(ChunkID)
+    public FrontendScreenChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         _name = new(this, br);
         Version = br.ReadUInt32();

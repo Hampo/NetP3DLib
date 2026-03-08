@@ -29,7 +29,7 @@ public class ShaderFloatParameterChunk : ParamChunk
     }
     public override uint DataLength => 4 + sizeof(float);
 
-    public ShaderFloatParameterChunk(BinaryReader br) : base(ChunkID)
+    public ShaderFloatParameterChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         _param = new(this, br);
         Value = br.ReadSingle();

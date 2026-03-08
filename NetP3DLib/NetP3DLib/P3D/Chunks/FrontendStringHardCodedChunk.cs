@@ -34,7 +34,7 @@ public class FrontendStringHardCodedChunk : Chunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(String);
 
-    public FrontendStringHardCodedChunk(BinaryReader br) : base(ChunkID)
+    public FrontendStringHardCodedChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         _string = new(this, br);
     }

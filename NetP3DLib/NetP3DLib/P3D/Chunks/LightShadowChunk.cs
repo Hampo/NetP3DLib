@@ -32,7 +32,7 @@ public class LightShadowChunk : Chunk
     }
     public override uint DataLength => sizeof(uint);
 
-    public LightShadowChunk(BinaryReader br) : base(ChunkID)
+    public LightShadowChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         shadow = br.ReadUInt32();
     }

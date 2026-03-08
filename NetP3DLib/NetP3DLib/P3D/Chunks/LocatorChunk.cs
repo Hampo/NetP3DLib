@@ -73,7 +73,7 @@ public class LocatorChunk : NamedChunk
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint) + sizeof(uint) * DataLen + sizeof(float) * 3 + sizeof(uint);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public LocatorChunk(BinaryReader br) : base(ChunkID)
+    public LocatorChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         _name = new(this, br);
         var type = (LocatorTypes)br.ReadUInt32();

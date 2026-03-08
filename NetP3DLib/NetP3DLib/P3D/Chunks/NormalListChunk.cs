@@ -53,7 +53,7 @@ public class NormalListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(float) * 3 * NumNormals;
 
-    public NormalListChunk(BinaryReader br) : base(ChunkID)
+    public NormalListChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         var numNormals = br.ReadInt32();
         var normals = new Vector3[numNormals];

@@ -22,7 +22,7 @@ public class ScenegraphRootChunk : Chunk
     }
     public override uint DataLength => sizeof(uint);
 
-    public ScenegraphRootChunk(BinaryReader br) : base(ChunkID)
+    public ScenegraphRootChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
     }

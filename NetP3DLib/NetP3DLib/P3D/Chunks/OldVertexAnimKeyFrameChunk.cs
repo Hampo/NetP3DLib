@@ -31,7 +31,7 @@ public class OldVertexAnimKeyFrameChunk : NamedChunk
     }
     public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name);
 
-    public OldVertexAnimKeyFrameChunk(BinaryReader br) : base(ChunkID)
+    public OldVertexAnimKeyFrameChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         _name = new(this, br);

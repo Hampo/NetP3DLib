@@ -55,7 +55,7 @@ public class Vector2OffsetListChunk : ParamChunk
     }
     public override uint DataLength => sizeof(uint) + 4 + sizeof(uint) + Vector2Offset.Size * NumOffsets;
 
-    public Vector2OffsetListChunk(BinaryReader br) : base(ChunkID)
+    public Vector2OffsetListChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         _param = new(this, br);

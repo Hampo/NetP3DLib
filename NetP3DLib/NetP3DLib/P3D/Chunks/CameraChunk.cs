@@ -46,7 +46,7 @@ public class CameraChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(float) * 3 + sizeof(float) * 3 + sizeof(float) * 3;
 
-    public CameraChunk(BinaryReader br) : base(ChunkID)
+    public CameraChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         _name = new(this, br);
         Version = br.ReadUInt32();

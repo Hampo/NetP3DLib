@@ -34,7 +34,7 @@ public class StatePropVisibilitiesDataChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint);
 
-    public StatePropVisibilitiesDataChunk(BinaryReader br) : base(ChunkID)
+    public StatePropVisibilitiesDataChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         _name = new(this, br);
         isVisible = br.ReadUInt32();

@@ -49,7 +49,7 @@ public class OldBillboardDisplayInfoChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(float) * 4 + 4 + sizeof(float) * 2 + sizeof(float) + sizeof(float);
 
-    public OldBillboardDisplayInfoChunk(BinaryReader br) : base(ChunkID)
+    public OldBillboardDisplayInfoChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         Rotation = br.ReadQuaternion();

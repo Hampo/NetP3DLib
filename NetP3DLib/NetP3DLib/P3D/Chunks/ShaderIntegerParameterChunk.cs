@@ -29,7 +29,7 @@ public class ShaderIntegerParameterChunk : ParamChunk
     }
     public override uint DataLength => 4 + sizeof(uint);
 
-    public ShaderIntegerParameterChunk(BinaryReader br) : base(ChunkID)
+    public ShaderIntegerParameterChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         _param = new(this, br);
         Value = br.ReadUInt32();

@@ -42,7 +42,7 @@ public class AnimatedObjectFactoryChunk : NamedChunk
     }
     public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + BinaryExtensions.GetP3DStringLength(BaseAnimation) + sizeof(uint);
 
-    public AnimatedObjectFactoryChunk(BinaryReader br) : base(ChunkID)
+    public AnimatedObjectFactoryChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         _name = new(this, br);

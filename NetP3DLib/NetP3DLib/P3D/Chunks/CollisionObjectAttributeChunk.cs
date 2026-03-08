@@ -68,7 +68,7 @@ public class CollisionObjectAttributeChunk : Chunk
     }
     public override uint DataLength => sizeof(ushort) + sizeof(uint) + sizeof(ushort) + sizeof(ushort) + sizeof(ushort) + sizeof(ushort) + sizeof(uint) + sizeof(uint) + sizeof(uint);
 
-    public CollisionObjectAttributeChunk(BinaryReader br) : base(ChunkID)
+    public CollisionObjectAttributeChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         isStatic = br.ReadUInt16();
         DefaultArea = br.ReadUInt32();

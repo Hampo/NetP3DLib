@@ -45,7 +45,7 @@ public class RoadDataSegmentChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(float) * 3 + sizeof(float) * 3 + sizeof(float) * 3;
 
-    public RoadDataSegmentChunk(BinaryReader br) : base(ChunkID)
+    public RoadDataSegmentChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         _name = new(this, br);
         Type = br.ReadUInt32();

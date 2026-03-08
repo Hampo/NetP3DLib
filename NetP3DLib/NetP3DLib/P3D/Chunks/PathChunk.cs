@@ -54,7 +54,7 @@ public class PathChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(float) * 3 * NumPositions;
 
-    public PathChunk(BinaryReader br) : base(ChunkID)
+    public PathChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         var numPositions = br.ReadInt32();
         var positions = new Vector3[numPositions];

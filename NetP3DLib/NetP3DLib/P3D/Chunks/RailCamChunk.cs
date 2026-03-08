@@ -66,7 +66,7 @@ public class RailCamChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(float) + sizeof(float) + sizeof(uint) + sizeof(float) + sizeof(uint) + sizeof(float) + sizeof(float) * 3 + sizeof(float) * 3 + sizeof(float) + sizeof(float);
 
-    public RailCamChunk(BinaryReader br) : base(ChunkID)
+    public RailCamChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         _name = new(this, br);
         Behaviour = (Behaviours)br.ReadUInt32();

@@ -29,7 +29,7 @@ public class GameAttributeColourParameterChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint);
 
-    public GameAttributeColourParameterChunk(BinaryReader br) : base(ChunkID)
+    public GameAttributeColourParameterChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         _name = new(this, br);
         Value = br.ReadColor();

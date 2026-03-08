@@ -47,7 +47,7 @@ public class FrontendTextStyleResourceChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + BinaryExtensions.GetP3DStringLength(Filename) + BinaryExtensions.GetP3DStringLength(InventoryName);
 
-    public FrontendTextStyleResourceChunk(BinaryReader br) : base(ChunkID)
+    public FrontendTextStyleResourceChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         _name = new(this, br);
         Version = br.ReadUInt32();

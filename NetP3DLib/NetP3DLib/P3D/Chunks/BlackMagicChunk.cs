@@ -20,7 +20,7 @@ public class BlackMagicChunk : Chunk
     public override uint DataLength => 0;
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Required for ChunkLoader.")]
-    public BlackMagicChunk(BinaryReader br) : base(ChunkID)
+    public BlackMagicChunk(EndianAwareBinaryReader br) : base(ChunkID)
     { }
 
     public BlackMagicChunk() : base(ChunkID)

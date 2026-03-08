@@ -50,7 +50,7 @@ public class CollisionMeshTriangleListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + Triangle.Size * NumTriangles;
 
-    public CollisionMeshTriangleListChunk(BinaryReader br) : base(ChunkID)
+    public CollisionMeshTriangleListChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         var numEntries = br.ReadInt32();
         var triangles = new Triangle[numEntries];

@@ -35,7 +35,7 @@ public class OldScenegraphLightGroupChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + BinaryExtensions.GetP3DStringLength(LightGroupName);
 
-    public OldScenegraphLightGroupChunk(BinaryReader br) : base(ChunkID)
+    public OldScenegraphLightGroupChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         _name = new(this, br);
         _lightGroupName = new(this, br);

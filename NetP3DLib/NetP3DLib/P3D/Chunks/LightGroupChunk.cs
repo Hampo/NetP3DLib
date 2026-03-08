@@ -65,7 +65,7 @@ public class LightGroupChunk : NamedChunk
         }
     }
 
-    public LightGroupChunk(BinaryReader br) : base(ChunkID)
+    public LightGroupChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         _name = new(this, br);
         var numLights = br.ReadInt32();

@@ -82,7 +82,7 @@ public class RoadChunk : NamedChunk
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + BinaryExtensions.GetP3DStringLength(StartIntersection) + BinaryExtensions.GetP3DStringLength(EndIntersection) + sizeof(uint) + sizeof(byte) + sizeof(byte) + sizeof(byte) + sizeof(byte);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public RoadChunk(BinaryReader br) : base(ChunkID)
+    public RoadChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         _name = new(this, br);
         Type = br.ReadUInt32();

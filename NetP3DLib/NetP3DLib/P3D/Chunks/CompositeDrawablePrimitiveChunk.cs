@@ -36,7 +36,7 @@ public class CompositeDrawablePrimitiveChunk : NamedChunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint);
 
-    public CompositeDrawablePrimitiveChunk(BinaryReader br) : base(ChunkID)
+    public CompositeDrawablePrimitiveChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         CreateInstance = br.ReadUInt32();

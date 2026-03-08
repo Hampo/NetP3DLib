@@ -37,7 +37,7 @@ public class AnimObjWrapperChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(byte) + sizeof(byte);
 
-    public AnimObjWrapperChunk(BinaryReader br) : base(ChunkID)
+    public AnimObjWrapperChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         _name = new(this, br);
         Version = br.ReadByte();

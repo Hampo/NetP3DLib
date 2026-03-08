@@ -31,7 +31,7 @@ public class OldParticleInstancingInfoChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint);
 
-    public OldParticleInstancingInfoChunk(BinaryReader br) : base(ChunkID)
+    public OldParticleInstancingInfoChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         MaxInstances = br.ReadUInt32();

@@ -32,7 +32,7 @@ public class FrontendGroup2Chunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint);
 
-    public FrontendGroup2Chunk(BinaryReader br) : base(ChunkID)
+    public FrontendGroup2Chunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         _name = new(this, br);
         Version = br.ReadUInt32();

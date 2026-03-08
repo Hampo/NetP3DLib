@@ -29,7 +29,7 @@ public class OldGeneratorAnimationChunk : Chunk
     }
     public override uint DataLength => sizeof(uint);
 
-    public OldGeneratorAnimationChunk(BinaryReader br) : base(ChunkID)
+    public OldGeneratorAnimationChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
     }

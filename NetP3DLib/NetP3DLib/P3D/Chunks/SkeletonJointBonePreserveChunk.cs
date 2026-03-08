@@ -32,7 +32,7 @@ public class SkeletonJointBonePreserveChunk : Chunk
     }
     public override uint DataLength => sizeof(uint);
 
-    public SkeletonJointBonePreserveChunk(BinaryReader br) : base(ChunkID)
+    public SkeletonJointBonePreserveChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         preserveBoneLengths = br.ReadUInt32();
     }

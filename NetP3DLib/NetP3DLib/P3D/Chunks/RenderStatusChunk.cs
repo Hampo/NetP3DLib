@@ -32,7 +32,7 @@ public class RenderStatusChunk : Chunk
     }
     public override uint DataLength => sizeof(uint);
 
-    public RenderStatusChunk(BinaryReader br) : base(ChunkID)
+    public RenderStatusChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         castShadow = br.ReadUInt32();
     }

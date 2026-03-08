@@ -54,7 +54,7 @@ public class MemoryImageIndexListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(ushort) * NumIndices;
 
-    public MemoryImageIndexListChunk(BinaryReader br) : base(ChunkID)
+    public MemoryImageIndexListChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         Param = br.ReadUInt32();

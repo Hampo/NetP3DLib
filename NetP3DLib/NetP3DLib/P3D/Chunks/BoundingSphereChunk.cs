@@ -31,7 +31,7 @@ public class BoundingSphereChunk : Chunk
     }
     public override uint DataLength => sizeof(float) * 3 + sizeof(float);
 
-    public BoundingSphereChunk(BinaryReader br) : base(ChunkID)
+    public BoundingSphereChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         Centre = br.ReadVector3();
         Radius = br.ReadSingle();

@@ -72,7 +72,7 @@ public class ExpressionGroupChunk : NamedChunk
     }
     public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + BinaryExtensions.GetP3DStringLength(TargetName) + sizeof(uint) + sizeof(uint) * NumStages;
 
-    public ExpressionGroupChunk(BinaryReader br) : base(ChunkID)
+    public ExpressionGroupChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         _name = new(this, br);

@@ -55,7 +55,7 @@ public class MultiColourListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) + sizeof(uint) * NumColours;
 
-    public MultiColourListChunk(BinaryReader br) : base(ChunkID)
+    public MultiColourListChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         var num = br.ReadInt32();
         Channel = br.ReadUInt32();

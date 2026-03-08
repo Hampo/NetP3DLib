@@ -33,7 +33,7 @@ public class BillboardTransformChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(float) * 4 + sizeof(float) * 3;
 
-    public BillboardTransformChunk(BinaryReader br) : base(ChunkID)
+    public BillboardTransformChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         Rotation = br.ReadQuaternion();

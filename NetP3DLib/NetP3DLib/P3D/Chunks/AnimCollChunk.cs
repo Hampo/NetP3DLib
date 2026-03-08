@@ -38,7 +38,7 @@ public class AnimCollChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint);
 
-    public AnimCollChunk(BinaryReader br) : base(ChunkID)
+    public AnimCollChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         _name = new(this, br);
         Version = br.ReadUInt32();

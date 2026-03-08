@@ -28,7 +28,7 @@ public class PhysicsVectorChunk : Chunk
     }
     public override uint DataLength => sizeof(float) * 3;
 
-    public PhysicsVectorChunk(BinaryReader br) : base(ChunkID)
+    public PhysicsVectorChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         Vector = br.ReadVector3();
     }

@@ -54,7 +54,7 @@ public class TreeNodeChunk : Chunk
     public override uint DataLength => sizeof(uint) + sizeof(int);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public TreeNodeChunk(BinaryReader br) : base(ChunkID)
+    public TreeNodeChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         var numChildren = br.ReadUInt32();
         ParentOffset = br.ReadInt32();

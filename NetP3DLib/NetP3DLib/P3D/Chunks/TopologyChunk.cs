@@ -50,7 +50,7 @@ public class TopologyChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + Topology.Size * NumTopology;
 
-    public TopologyChunk(BinaryReader br) : base(ChunkID)
+    public TopologyChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         var numTopology = br.ReadInt32();
         var topologies = new Topology[numTopology];

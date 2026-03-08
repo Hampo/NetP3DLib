@@ -50,7 +50,7 @@ public class IndexListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) * NumIndices;
 
-    public IndexListChunk(BinaryReader br) : base(ChunkID)
+    public IndexListChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         var num = br.ReadInt32();
         var indices = new uint[num];

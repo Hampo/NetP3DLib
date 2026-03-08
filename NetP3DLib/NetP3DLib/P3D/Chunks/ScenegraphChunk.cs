@@ -31,7 +31,7 @@ public class ScenegraphChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint);
 
-    public ScenegraphChunk(BinaryReader br) : base(ChunkID)
+    public ScenegraphChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         _name = new(this, br);
         Version = br.ReadUInt32();

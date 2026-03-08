@@ -54,7 +54,7 @@ public class TerrainTypeListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) + sizeof(byte) * NumTypes;
 
-    public TerrainTypeListChunk(BinaryReader br) : base(ChunkID)
+    public TerrainTypeListChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         var numTypes = br.ReadInt32();

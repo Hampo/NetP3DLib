@@ -101,7 +101,7 @@ public class IntersectChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) * NumIndices + sizeof(uint) + sizeof(float) * 3 * NumPositions + sizeof(uint) + sizeof(float) * 3 * NumNormals;
 
-    public IntersectChunk(BinaryReader br) : base(ChunkID)
+    public IntersectChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         var numIndices = br.ReadInt32();
         var indices = new uint[numIndices];

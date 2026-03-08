@@ -32,7 +32,7 @@ public class MeshStatsChunk : NamedChunk
     }
     public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint);
 
-    public MeshStatsChunk(BinaryReader br) : base(ChunkID)
+    public MeshStatsChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         _name = new(this, br);

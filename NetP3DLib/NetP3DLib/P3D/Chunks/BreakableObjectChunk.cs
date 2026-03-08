@@ -60,7 +60,7 @@ public class BreakableObjectChunk : Chunk
     }
     public override uint DataLength => sizeof(int) + sizeof(uint);
 
-    public BreakableObjectChunk(BinaryReader br) : base(ChunkID)
+    public BreakableObjectChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         Index = (Indexes)br.ReadInt32();
         MaxInstances = br.ReadUInt32();

@@ -36,7 +36,7 @@ public class CompositeDrawablePropChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint);
 
-    public CompositeDrawablePropChunk(BinaryReader br) : base(ChunkID)
+    public CompositeDrawablePropChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         _name = new(this, br);
         isTranslucent = br.ReadUInt32();

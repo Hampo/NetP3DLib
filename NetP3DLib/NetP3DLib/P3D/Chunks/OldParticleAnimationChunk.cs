@@ -29,7 +29,7 @@ public class OldParticleAnimationChunk : Chunk
     }
     public override uint DataLength => sizeof(uint);
 
-    public OldParticleAnimationChunk(BinaryReader br) : base(ChunkID)
+    public OldParticleAnimationChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
     }

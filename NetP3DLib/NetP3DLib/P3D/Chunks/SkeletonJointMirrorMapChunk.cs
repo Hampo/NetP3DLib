@@ -33,7 +33,7 @@ public class SkeletonJointMirrorMapChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(float) + sizeof(float) + sizeof(float);
 
-    public SkeletonJointMirrorMapChunk(BinaryReader br) : base(ChunkID)
+    public SkeletonJointMirrorMapChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         MappedJointIndex = br.ReadUInt32();
         XAxisMap = br.ReadSingle();

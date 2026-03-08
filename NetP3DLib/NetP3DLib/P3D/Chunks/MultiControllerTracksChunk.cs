@@ -65,7 +65,7 @@ public class MultiControllerTracksChunk : Chunk
         }
     }
 
-    public MultiControllerTracksChunk(BinaryReader br) : base(ChunkID)
+    public MultiControllerTracksChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         var numTracks = br.ReadInt32();
         Tracks = CreateSizeAwareList<Track>(numTracks);

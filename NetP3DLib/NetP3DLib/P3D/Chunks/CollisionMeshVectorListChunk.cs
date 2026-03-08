@@ -52,7 +52,7 @@ public class CollisionMeshVectorListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(float) * 3 * NumVectors;
 
-    public CollisionMeshVectorListChunk(BinaryReader br) : base(ChunkID)
+    public CollisionMeshVectorListChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         var numVectors = br.ReadInt32();
         var vectors = new Vector3[numVectors];

@@ -36,7 +36,7 @@ public class ChannelInterpolationModeChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint);
 
-    public ChannelInterpolationModeChunk(BinaryReader br) : base(ChunkID)
+    public ChannelInterpolationModeChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         interpolate = br.ReadUInt32();

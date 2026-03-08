@@ -44,7 +44,7 @@ public class PhysicsJointChunk : Chunk
     }
     public override uint DataLength => sizeof(int) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(int);
 
-    public PhysicsJointChunk(BinaryReader br) : base(ChunkID)
+    public PhysicsJointChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         Index = br.ReadInt32();
         Volume = br.ReadSingle();

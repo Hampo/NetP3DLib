@@ -25,7 +25,7 @@ public class ExportInfoChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name);
 
-    public ExportInfoChunk(BinaryReader br) : base(ChunkID)
+    public ExportInfoChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         _name = new(this, br);
     }

@@ -47,7 +47,7 @@ public class FrontendTextBibleResourceChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + BinaryExtensions.GetP3DStringLength(Filename) + BinaryExtensions.GetP3DStringLength(InventoryName);
 
-    public FrontendTextBibleResourceChunk(BinaryReader br) : base(ChunkID)
+    public FrontendTextBibleResourceChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         _name = new(this, br);
         Version = br.ReadUInt32();

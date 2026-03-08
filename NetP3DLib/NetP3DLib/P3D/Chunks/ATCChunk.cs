@@ -64,7 +64,7 @@ public class ATCChunk : Chunk
         }
     }
 
-    public ATCChunk(BinaryReader br) : base(ChunkID)
+    public ATCChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         var numEntries = br.ReadInt32();
         Entries = CreateSizeAwareList<Entry>(numEntries);

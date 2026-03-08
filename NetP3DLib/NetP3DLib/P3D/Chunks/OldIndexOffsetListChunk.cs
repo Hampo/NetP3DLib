@@ -52,7 +52,7 @@ public class OldIndexOffsetListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) + sizeof(uint) * NumOffsets;
 
-    public OldIndexOffsetListChunk(BinaryReader br) : base(ChunkID)
+    public OldIndexOffsetListChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         var numOffsets = br.ReadInt32();

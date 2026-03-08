@@ -53,7 +53,7 @@ public class TangentListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(float) * 3 * NumTangents;
 
-    public TangentListChunk(BinaryReader br) : base(ChunkID)
+    public TangentListChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         var numNormals = br.ReadInt32();
         var tangents = new Vector3[numNormals];

@@ -87,7 +87,7 @@ public class Vector1DOFChannelChunk : ParamChunk
     }
     public override uint DataLength => sizeof(uint) + 4 + sizeof(ushort) + sizeof(float) * 3 + sizeof(uint) + sizeof(ushort) * NumFrames + sizeof(float) * NumValues;
 
-    public Vector1DOFChannelChunk(BinaryReader br) : base(ChunkID)
+    public Vector1DOFChannelChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         _param = new(this, br);

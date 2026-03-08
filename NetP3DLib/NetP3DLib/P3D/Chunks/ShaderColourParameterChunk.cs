@@ -29,7 +29,7 @@ public class ShaderColourParameterChunk : ParamChunk
     }
     public override uint DataLength => 4 + sizeof(uint);
 
-    public ShaderColourParameterChunk(BinaryReader br) : base(ChunkID)
+    public ShaderColourParameterChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         _param = new(this, br);
         Value = br.ReadColor();

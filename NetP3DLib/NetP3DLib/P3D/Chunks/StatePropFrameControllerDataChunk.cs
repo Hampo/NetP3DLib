@@ -49,7 +49,7 @@ public class StatePropFrameControllerDataChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(float) + sizeof(float) + sizeof(float);
 
-    public StatePropFrameControllerDataChunk(BinaryReader br) : base(ChunkID)
+    public StatePropFrameControllerDataChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         _name = new(this, br);
         cyclic = br.ReadUInt32();

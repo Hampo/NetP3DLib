@@ -54,7 +54,7 @@ public class VisibilityAnimChannelChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(ushort) + sizeof(uint) + sizeof(uint) * NumFrames;
 
-    public VisibilityAnimChannelChunk(BinaryReader br) : base(ChunkID)
+    public VisibilityAnimChannelChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         _name = new(this, br);
         StartState = br.ReadUInt16();

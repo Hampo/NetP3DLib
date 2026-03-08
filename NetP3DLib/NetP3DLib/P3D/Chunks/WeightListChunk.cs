@@ -53,7 +53,7 @@ public class WeightListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(float) * 3 * NumWeights;
 
-    public WeightListChunk(BinaryReader br) : base(ChunkID)
+    public WeightListChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         var numWeights = br.ReadInt32();
         var weights = new Vector3[numWeights];

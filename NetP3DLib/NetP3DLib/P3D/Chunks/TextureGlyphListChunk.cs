@@ -52,7 +52,7 @@ public class TextureGlyphListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + Glyph.Size * NumGlyphs;
 
-    public TextureGlyphListChunk(BinaryReader br) : base(ChunkID)
+    public TextureGlyphListChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         var numGlyphs = br.ReadInt32();
         var glyphs = new Glyph[numGlyphs];

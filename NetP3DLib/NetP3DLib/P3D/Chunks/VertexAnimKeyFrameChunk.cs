@@ -31,7 +31,7 @@ public class VertexAnimKeyFrameChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) + sizeof(uint);
 
-    public VertexAnimKeyFrameChunk(BinaryReader br) : base(ChunkID)
+    public VertexAnimKeyFrameChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         KeyFrameId = br.ReadUInt32();

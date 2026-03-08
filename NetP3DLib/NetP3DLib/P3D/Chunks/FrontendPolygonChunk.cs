@@ -86,7 +86,7 @@ public class FrontendPolygonChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) * 3 * NumPoints + sizeof(uint) * NumColours;
 
-    public FrontendPolygonChunk(BinaryReader br) : base(ChunkID)
+    public FrontendPolygonChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         _name = new(this, br);
         Version = br.ReadUInt32();

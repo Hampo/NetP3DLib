@@ -28,7 +28,7 @@ public class LightPositionChunk : Chunk
     }
     public override uint DataLength => sizeof(float) * 3;
 
-    public LightPositionChunk(BinaryReader br) : base(ChunkID)
+    public LightPositionChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         Position = br.ReadVector3();
     }

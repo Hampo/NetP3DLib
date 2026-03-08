@@ -37,7 +37,7 @@ public class BillboardTextureUVChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(float) * 2 + sizeof(float) * 2 + sizeof(float) * 2 + sizeof(float) * 2 + sizeof(float) * 2;
 
-    public BillboardTextureUVChunk(BinaryReader br) : base(ChunkID)
+    public BillboardTextureUVChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         RandomU = br.ReadUInt32();

@@ -53,7 +53,7 @@ public class MemoryImageVertexListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) + sizeof(uint) + VertexSize;
 
-    public MemoryImageVertexListChunk(BinaryReader br) : base(ChunkID)
+    public MemoryImageVertexListChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         Param = br.ReadUInt32();

@@ -53,7 +53,7 @@ public class ColourListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) * NumColours;
 
-    public ColourListChunk(BinaryReader br) : base(ChunkID)
+    public ColourListChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         var num = br.ReadInt32();
         var colours = new Color[num];

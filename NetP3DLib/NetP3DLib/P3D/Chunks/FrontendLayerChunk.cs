@@ -48,7 +48,7 @@ public class FrontendLayerChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint);
 
-    public FrontendLayerChunk(BinaryReader br) : base(ChunkID)
+    public FrontendLayerChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         _name = new(this, br);
         Version = br.ReadUInt32();

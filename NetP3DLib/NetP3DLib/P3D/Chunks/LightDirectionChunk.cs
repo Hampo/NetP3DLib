@@ -28,7 +28,7 @@ public class LightDirectionChunk : Chunk
     }
     public override uint DataLength => sizeof(float) * 3;
 
-    public LightDirectionChunk(BinaryReader br) : base(ChunkID)
+    public LightDirectionChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         Direction = br.ReadVector3();
     }

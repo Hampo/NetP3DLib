@@ -56,7 +56,7 @@ public class AnimationChannelCountChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(ushort) * NumNumKeys;
 
-    public AnimationChannelCountChunk(BinaryReader br) : base(ChunkID)
+    public AnimationChannelCountChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         ChannelChunkID = br.ReadUInt32();

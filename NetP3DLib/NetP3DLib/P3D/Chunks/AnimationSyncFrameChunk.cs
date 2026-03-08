@@ -29,7 +29,7 @@ public class AnimationSyncFrameChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(float);
 
-    public AnimationSyncFrameChunk(BinaryReader br) : base(ChunkID)
+    public AnimationSyncFrameChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         SyncFrame = br.ReadSingle();

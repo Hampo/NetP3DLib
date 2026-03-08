@@ -27,7 +27,7 @@ public class CollisionAxisAlignedBoundingBoxChunk : Chunk
     }
     public override uint DataLength => sizeof(uint);
 
-    public CollisionAxisAlignedBoundingBoxChunk(BinaryReader br) : base(ChunkID)
+    public CollisionAxisAlignedBoundingBoxChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         Nothing = br.ReadUInt32();
     }

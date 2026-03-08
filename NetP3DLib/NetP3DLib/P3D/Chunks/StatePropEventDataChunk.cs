@@ -47,7 +47,7 @@ public class StatePropEventDataChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint);
 
-    public StatePropEventDataChunk(BinaryReader br) : base(ChunkID)
+    public StatePropEventDataChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         _name = new(this, br);
         ToState = br.ReadUInt32();

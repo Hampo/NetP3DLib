@@ -38,7 +38,7 @@ public class InstStatPhysChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint);
 
-    public InstStatPhysChunk(BinaryReader br) : base(ChunkID)
+    public InstStatPhysChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         _name = new(this, br);
         Version = br.ReadUInt32();

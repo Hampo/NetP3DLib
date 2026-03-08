@@ -36,7 +36,7 @@ public class OldBillboardPerspectiveInfoChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint);
 
-    public OldBillboardPerspectiveInfoChunk(BinaryReader br) : base(ChunkID)
+    public OldBillboardPerspectiveInfoChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         perspectiveScale = br.ReadUInt32();

@@ -61,7 +61,7 @@ public class FrontendPure3DResourceChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + BinaryExtensions.GetP3DStringLength(Filename) + BinaryExtensions.GetP3DStringLength(InventoryName) + BinaryExtensions.GetP3DStringLength(CameraName) + BinaryExtensions.GetP3DStringLength(AnimationName);
 
-    public FrontendPure3DResourceChunk(BinaryReader br) : base(ChunkID)
+    public FrontendPure3DResourceChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         _name = new(this, br);
         Version = br.ReadUInt32();

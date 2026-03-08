@@ -50,7 +50,7 @@ public class MatrixPaletteChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) * NumMatrices;
 
-    public MatrixPaletteChunk(BinaryReader br) : base(ChunkID)
+    public MatrixPaletteChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         var numMatrices = br.ReadInt32();
         var matrices = new uint[numMatrices];

@@ -37,7 +37,7 @@ public class AnimationSizeChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint);
 
-    public AnimationSizeChunk(BinaryReader br) : base(ChunkID)
+    public AnimationSizeChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         PC = br.ReadUInt32();

@@ -41,7 +41,7 @@ public class MultiControllerTrackChunk : NamedChunk
     }
     public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + 4;
 
-    public MultiControllerTrackChunk(BinaryReader br) : base(ChunkID)
+    public MultiControllerTrackChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         _name = new(this, br);

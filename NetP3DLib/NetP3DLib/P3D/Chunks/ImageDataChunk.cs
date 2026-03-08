@@ -42,7 +42,7 @@ public class ImageDataChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + (uint)ImageData.Length;
 
-    public ImageDataChunk(BinaryReader br) : base(ChunkID)
+    public ImageDataChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         int length = br.ReadInt32();
         ImageData = br.ReadBytes(length);

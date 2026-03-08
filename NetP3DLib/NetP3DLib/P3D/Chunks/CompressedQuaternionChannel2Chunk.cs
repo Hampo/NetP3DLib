@@ -88,7 +88,7 @@ public class CompressedQuaternionChannel2Chunk : ParamChunk
     }
     public override uint DataLength => sizeof(uint) + 4 + sizeof(uint) + sizeof(ushort) * NumFrames + sizeof(short) * 3 * NumValues;
 
-    public CompressedQuaternionChannel2Chunk(BinaryReader br) : base(ChunkID)
+    public CompressedQuaternionChannel2Chunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         _param = new(this, br);

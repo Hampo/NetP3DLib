@@ -53,7 +53,7 @@ public class SpatialNodeChunk : Chunk
     }
     public override uint DataLength => sizeof(sbyte) + sizeof(float) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint);
 
-    public SpatialNodeChunk(BinaryReader br) : base(ChunkID)
+    public SpatialNodeChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         SplitAxis = (Axis)br.ReadSByte();
         SplitPosition = br.ReadSingle();

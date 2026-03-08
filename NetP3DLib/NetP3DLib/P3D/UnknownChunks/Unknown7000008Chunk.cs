@@ -47,7 +47,7 @@ public class Unknown7000008Chunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(short) * NumUnknown;
 
-    public Unknown7000008Chunk(BinaryReader br) : base(0x7000008)
+    public Unknown7000008Chunk(EndianAwareBinaryReader br) : base(0x7000008)
     {
         var numUnknown = br.ReadInt32();
         var unknown = new short[numUnknown];

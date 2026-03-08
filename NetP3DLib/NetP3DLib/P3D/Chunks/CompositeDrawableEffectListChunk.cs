@@ -28,7 +28,7 @@ public class CompositeDrawableEffectListChunk : Chunk
     public override uint DataLength => sizeof(uint);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public CompositeDrawableEffectListChunk(BinaryReader br) : base(ChunkID)
+    public CompositeDrawableEffectListChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         var numElements = br.ReadUInt32();
     }

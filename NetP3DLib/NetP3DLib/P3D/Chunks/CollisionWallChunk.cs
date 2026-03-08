@@ -20,7 +20,7 @@ public class CollisionWallChunk : Chunk
     public override uint DataLength => 0;
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Required for ChunkLoader.")]
-    public CollisionWallChunk(BinaryReader br) : base(ChunkID)
+    public CollisionWallChunk(EndianAwareBinaryReader br) : base(ChunkID)
     { }
 
     public CollisionWallChunk() : base(ChunkID)

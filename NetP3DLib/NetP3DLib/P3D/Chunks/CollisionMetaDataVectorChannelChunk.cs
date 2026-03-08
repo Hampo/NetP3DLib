@@ -81,7 +81,7 @@ public class CollisionMetaDataVectorChannelChunk : NamedChunk
     }
     public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(ushort) * NumIndices + sizeof(float) * 3 * NumValues;
 
-    public CollisionMetaDataVectorChannelChunk(BinaryReader br) : base(ChunkID)
+    public CollisionMetaDataVectorChannelChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         _name = new(this, br);

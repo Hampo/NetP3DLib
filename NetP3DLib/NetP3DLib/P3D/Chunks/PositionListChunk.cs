@@ -53,7 +53,7 @@ public class PositionListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(float) * 3 * NumPositions;
 
-    public PositionListChunk(BinaryReader br) : base(ChunkID)
+    public PositionListChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         var numPositions = br.ReadInt32();
         var positions = new Vector3[numPositions];

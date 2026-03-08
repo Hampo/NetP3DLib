@@ -36,7 +36,7 @@ public class CollisionCylinderChunk : Chunk
     }
     public override uint DataLength => sizeof(float) + sizeof(float) + sizeof(ushort);
 
-    public CollisionCylinderChunk(BinaryReader br) : base(ChunkID)
+    public CollisionCylinderChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         Radius = br.ReadSingle();
         HalfLength = br.ReadSingle();

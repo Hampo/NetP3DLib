@@ -62,7 +62,7 @@ public class OldSpriteEmitterChunk : NamedChunk
     }
     public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + BinaryExtensions.GetP3DStringLength(ShaderName) + 4 + sizeof(float) + 4 + sizeof(uint) + sizeof(uint);
 
-    public OldSpriteEmitterChunk(BinaryReader br) : base(ChunkID)
+    public OldSpriteEmitterChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         Version = br.ReadUInt32();
         _name = new(this, br);

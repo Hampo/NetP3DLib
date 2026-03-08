@@ -52,7 +52,7 @@ public class SkeletonPartitionChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint) * NumJointValues;
 
-    public SkeletonPartitionChunk(BinaryReader br) : base(ChunkID)
+    public SkeletonPartitionChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         _name = new(this, br);
         var numJointValues = br.ReadInt32();

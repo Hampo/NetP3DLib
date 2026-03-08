@@ -55,7 +55,7 @@ public class UVListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) + sizeof(float) * 2 * NumUVs;
 
-    public UVListChunk(BinaryReader br) : base(ChunkID)
+    public UVListChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         var numUVs = br.ReadInt32();
         Channel = br.ReadUInt32();

@@ -117,7 +117,7 @@ public class PhotonMapChunk : NamedChunk
         }
     }
 
-    public PhotonMapChunk(BinaryReader br) : base(ChunkID)
+    public PhotonMapChunk(EndianAwareBinaryReader br) : base(ChunkID)
     {
         _name = new(this, br);
         Version = br.ReadUInt32();
