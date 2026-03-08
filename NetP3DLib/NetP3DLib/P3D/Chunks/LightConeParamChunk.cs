@@ -3,7 +3,6 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -11,7 +10,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class LightConeParamChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Light_Cone_Param;
-    
+
     public float Phi { get; set; }
     public float Theta { get; set; }
     public float Falloff { get; set; }

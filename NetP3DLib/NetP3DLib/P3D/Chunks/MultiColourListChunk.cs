@@ -7,7 +7,6 @@ using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -15,7 +14,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class MultiColourListChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Multi_Colour_List;
-    
+
     public uint NumColours
     {
         get => (uint)(Colours?.Count ?? 0);

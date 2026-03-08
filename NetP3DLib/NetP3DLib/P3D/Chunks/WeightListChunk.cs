@@ -6,7 +6,6 @@ using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
@@ -15,7 +14,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class WeightListChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Weight_List;
-    
+
     public uint NumWeights
     {
         get => (uint)(Weights?.Count ?? 0);

@@ -5,7 +5,6 @@ using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -13,7 +12,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class StaticPhysChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Static_Phys;
-    
+
     [DefaultValue(1)]
     public uint Version { get; set; }
 

@@ -5,7 +5,6 @@ using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -13,7 +12,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class VertexAnimKeyFrameListChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Vertex_Anim_Key_Frame_List;
-    
+
     public uint Version { get; set; }
     public uint NumKeyFrameIds
     {

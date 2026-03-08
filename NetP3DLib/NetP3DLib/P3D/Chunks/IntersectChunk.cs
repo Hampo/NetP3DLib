@@ -6,7 +6,6 @@ using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
@@ -15,7 +14,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class IntersectChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Intersect;
-    
+
     public uint NumIndices
     {
         get => (uint)(Indices?.Count ?? 0);
@@ -134,7 +133,7 @@ public class IntersectChunk : Chunk
 
         if (Indices.Count % 3 != 0)
             yield return new InvalidP3DException(this, $"The number of {nameof(Indices)} must be divisible by 3.");
-        
+
         for (var i = 0; i < Indices.Count; i++)
             if (Indices[i] >= Positions.Count)
                 yield return new InvalidP3DException(this, $"The {nameof(Indices)} at index {i} is out of bound of the {nameof(Positions)} list.");

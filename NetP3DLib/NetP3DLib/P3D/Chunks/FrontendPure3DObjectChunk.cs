@@ -3,12 +3,11 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.ComponentModel;
-using System.IO;
-using NetP3DLib.P3D.Types;
+using System.Drawing;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -16,7 +15,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class FrontendPure3DObjectChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Frontend_Pure3D_Object;
-    
+
     public enum Justifications : uint
     {
         Left,

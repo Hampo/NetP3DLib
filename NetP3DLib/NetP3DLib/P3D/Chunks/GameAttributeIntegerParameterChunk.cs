@@ -4,7 +4,6 @@ using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -12,7 +11,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class GameAttributeIntegerParameterChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Game_Attribute_Integer_Parameter;
-    
+
     public uint Value { get; set; }
 
     public override byte[] DataBytes

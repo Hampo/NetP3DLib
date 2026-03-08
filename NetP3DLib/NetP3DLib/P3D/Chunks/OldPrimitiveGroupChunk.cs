@@ -7,7 +7,6 @@ using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -15,7 +14,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class OldPrimitiveGroupChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Primitive_Group;
-    
+
     public enum PrimitiveTypes : uint
     {
         TriangleList,

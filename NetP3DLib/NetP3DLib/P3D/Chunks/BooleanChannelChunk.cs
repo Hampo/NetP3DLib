@@ -6,7 +6,6 @@ using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -14,7 +13,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class BooleanChannelChunk : ParamChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Boolean_Channel;
-    
+
     [DefaultValue(0)]
     public uint Version { get; set; }
     public bool StartState { get; set; }

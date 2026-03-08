@@ -14,7 +14,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class OldOffsetListChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Offset_List;
-    
+
     public uint NumOffsets
     {
         get => (uint)(Offsets?.Count ?? 0);

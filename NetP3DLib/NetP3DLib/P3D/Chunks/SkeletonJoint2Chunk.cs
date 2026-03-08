@@ -4,7 +4,6 @@ using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
@@ -13,7 +12,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class SkeletonJoint2Chunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Skeleton_Joint_2;
-    
+
     public uint Parent { get; set; }
     public Matrix4x4 RestPose { get; set; }
 

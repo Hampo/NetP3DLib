@@ -5,7 +5,6 @@ using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -13,7 +12,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class InstStatPhysChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Inst_Stat_Phys;
-    
+
     [DefaultValue(0)]
     public uint Version { get; set; }
     private uint hasAlpha;

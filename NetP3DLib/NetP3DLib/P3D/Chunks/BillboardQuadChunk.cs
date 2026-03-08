@@ -7,7 +7,6 @@ using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -15,7 +14,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class BillboardQuadChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Billboard_Quad;
-    
+
     public uint Version { get; set; }
     public uint CutOffEnabled { get; set; }
     public uint Perspective { get; set; }
@@ -84,7 +83,7 @@ public class BillboardQuadChunk : NamedChunk
             yield return error;
 
         if (!AxisMode.IsValidFourCC())
-            yield return new InvalidP3DFourCCException(this,nameof(AxisMode), AxisMode);
+            yield return new InvalidP3DFourCCException(this, nameof(AxisMode), AxisMode);
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

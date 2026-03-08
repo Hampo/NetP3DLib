@@ -14,7 +14,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class TextureGlyphListChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Texture_Glyph_List;
-    
+
     public uint NumGlyphs
     {
         get => (uint)(Glyphs?.Count ?? 0);

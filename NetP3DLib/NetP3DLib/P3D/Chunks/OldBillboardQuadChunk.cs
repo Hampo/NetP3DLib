@@ -3,13 +3,12 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.ComponentModel;
-using System.IO;
+using System.Drawing;
 using System.Numerics;
-using NetP3DLib.P3D.Types;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -17,7 +16,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class OldBillboardQuadChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Billboard_Quad;
-    
+
     [DefaultValue(2)]
     public uint Version { get; set; }
     private readonly FourCC _billboardMode;
@@ -103,7 +102,7 @@ public class OldBillboardQuadChunk : NamedChunk
             yield return error;
 
         if (!BillboardMode.IsValidFourCC())
-            yield return new InvalidP3DFourCCException(this,nameof(BillboardMode), BillboardMode);
+            yield return new InvalidP3DFourCCException(this, nameof(BillboardMode), BillboardMode);
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

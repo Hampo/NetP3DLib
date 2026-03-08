@@ -6,7 +6,6 @@ using NetP3DLib.P3D.Extensions;
 using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -14,7 +13,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class OldFrameController2Chunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Frame_Controller_2;
-    
+
     public enum Types
     {
         Undefined,

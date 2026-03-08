@@ -32,7 +32,7 @@ public abstract class ParamChunk : Chunk
             yield return error;
 
         if (!Param.IsValidFourCC())
-            yield return new InvalidP3DFourCCException(this,nameof(Param), Param);
+            yield return new InvalidP3DFourCCException(this, nameof(Param), Param);
     }
 
     public override string ToString() => $"\"{Param}\" ({GetChunkType(this)} (0x{ID:X}))";

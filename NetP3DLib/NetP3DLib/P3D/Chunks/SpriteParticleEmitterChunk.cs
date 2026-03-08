@@ -6,7 +6,6 @@ using NetP3DLib.P3D.Extensions;
 using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -14,7 +13,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class SpriteParticleEmitterChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Sprite_Particle_Emitter;
-    
+
     public uint Version { get; set; }
     private readonly P3DString _shaderName;
     public string ShaderName

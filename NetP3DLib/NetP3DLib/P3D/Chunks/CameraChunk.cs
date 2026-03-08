@@ -5,7 +5,6 @@ using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
@@ -14,7 +13,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class CameraChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Camera;
-    
+
     [DefaultValue(2)]
     public uint Version { get; set; }
     public float FOV { get; set; }

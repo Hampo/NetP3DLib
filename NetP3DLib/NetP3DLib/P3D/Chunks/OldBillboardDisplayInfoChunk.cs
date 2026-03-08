@@ -7,7 +7,6 @@ using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
@@ -16,7 +15,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class OldBillboardDisplayInfoChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Billboard_Display_Info;
-    
+
     [DefaultValue(1)]
     public uint Version { get; set; }
     public Quaternion Rotation { get; set; }
@@ -75,7 +74,7 @@ public class OldBillboardDisplayInfoChunk : Chunk
             yield return error;
 
         if (!CutOffMode.IsValidFourCC())
-            yield return new InvalidP3DFourCCException(this,nameof(CutOffMode), CutOffMode);
+            yield return new InvalidP3DFourCCException(this, nameof(CutOffMode), CutOffMode);
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

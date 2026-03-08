@@ -135,7 +135,7 @@ public class P3DFile
         Chunks = new(this);
     }
 
-    public P3DFile (string filePath)
+    public P3DFile(string filePath)
     {
         if (!File.Exists(filePath))
             throw new FileNotFoundException($"Could not find the specified file.", filePath);

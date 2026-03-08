@@ -4,7 +4,6 @@ using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -12,7 +11,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class MemoryImageVertexDescriptionChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Memory_Image_Vertex_Description;
-    
+
     public uint Version { get; set; }
     public uint Param { get; set; }
     public uint DescriptionSize
@@ -73,7 +72,7 @@ public class MemoryImageVertexDescriptionChunk : Chunk
         bw.Write(Version);
         bw.Write(Param);
         bw.Write(DescriptionSize);
-        bw.Write([..Description]);
+        bw.Write([.. Description]);
     }
 
     protected override Chunk CloneSelf() => new MemoryImageVertexDescriptionChunk(Version, Param, Description);

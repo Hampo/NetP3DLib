@@ -6,7 +6,6 @@ using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -15,7 +14,7 @@ public class HistoryChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.History;
     public const int MAX_HISTORY_LINES = 256;
-    
+
     public ushort NumHistory
     {
         get => (ushort)History.Count;
@@ -43,7 +42,7 @@ public class HistoryChunk : Chunk
         get
         {
             List<byte> data = [];
-            
+
             data.AddRange(BitConverter.GetBytes(NumHistory));
             foreach (string item in History)
                 data.AddRange(BinaryExtensions.GetP3DStringBytes(item));

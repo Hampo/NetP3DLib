@@ -7,7 +7,6 @@ using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -15,7 +14,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class FrameControllerChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Frame_Controller;
-    
+
     [DefaultValue(1)]
     public uint Version { get; set; }
     private readonly FourCC _type;
@@ -97,10 +96,10 @@ public class FrameControllerChunk : NamedChunk
             yield return error;
 
         if (!Type.IsValidFourCC())
-            yield return new InvalidP3DFourCCException(this,nameof(Type), Type);
+            yield return new InvalidP3DFourCCException(this, nameof(Type), Type);
 
         if (!CycleMode.IsValidFourCC())
-            yield return new InvalidP3DFourCCException(this,nameof(CycleMode), CycleMode);
+            yield return new InvalidP3DFourCCException(this, nameof(CycleMode), CycleMode);
 
         if (!HierarchyName.IsValidP3DString())
             yield return new InvalidP3DStringException(this, nameof(HierarchyName), HierarchyName);

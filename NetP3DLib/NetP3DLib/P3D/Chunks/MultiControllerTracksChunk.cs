@@ -7,7 +7,6 @@ using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -15,7 +14,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class MultiControllerTracksChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Multi_Controller_Tracks;
-    
+
     public uint NumTracks
     {
         get => (uint)(Tracks?.Count ?? 0);

@@ -4,9 +4,8 @@ using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.ComponentModel;
-using System.IO;
+using System.Drawing;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -14,7 +13,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class LightChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Light;
-    
+
     public enum Types : uint
     {
         Ambient = 0,

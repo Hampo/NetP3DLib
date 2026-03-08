@@ -4,7 +4,6 @@ using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
@@ -13,7 +12,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class WalkerCameraDataChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Walker_Camera_Data;
-    
+
     public uint Index { get; set; }
     public float MinMagnitude { get; set; }
     public float MaxMagnitude { get; set; }

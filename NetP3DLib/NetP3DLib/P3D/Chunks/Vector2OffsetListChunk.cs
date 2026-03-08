@@ -14,7 +14,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class Vector2OffsetListChunk : ParamChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Vector2_Offset_List;
-    
+
     public uint Version { get; set; }
     public uint NumOffsets
     {

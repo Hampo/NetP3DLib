@@ -2,7 +2,6 @@ using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using System;
-using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -10,7 +9,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class ScenegraphRootChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Scenegraph_Root;
-    
+
     public uint Version { get; set; }
 
     public override byte[] DataBytes

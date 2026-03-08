@@ -3,7 +3,6 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
 using System.Collections.Generic;
-using System.IO;
 using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
@@ -12,7 +11,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class LocatorMatrixChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Locator_Matrix;
-    
+
     public Matrix4x4 Matrix { get; set; }
 
     public override byte[] DataBytes

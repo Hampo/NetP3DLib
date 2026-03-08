@@ -6,7 +6,6 @@ using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
@@ -15,7 +14,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class CompressedQuaternionChannel2Chunk : ParamChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Compressed_Quaternion_Channel_2;
-    
+
     public uint Version { get; set; }
     public uint NumFrames
     {

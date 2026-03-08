@@ -15,7 +15,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class PhotonMapChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Photon_Map;
-    
+
     public uint Version { get; set; }
     public uint NumLights
     {

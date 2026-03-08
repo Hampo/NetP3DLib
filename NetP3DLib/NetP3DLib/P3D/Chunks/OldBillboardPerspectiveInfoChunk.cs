@@ -4,7 +4,6 @@ using NetP3DLib.P3D.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -12,7 +11,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class OldBillboardPerspectiveInfoChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Billboard_Perspective_Info;
-    
+
     [DefaultValue(0)]
     public uint Version { get; set; }
     private uint perspectiveScale;

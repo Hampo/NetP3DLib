@@ -5,7 +5,6 @@ using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -13,7 +12,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class PackedNormalListChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Packed_Normal_List;
-    
+
     public uint NumNormals
     {
         get => (uint)(Normals?.Count ?? 0);
@@ -74,7 +73,7 @@ public class PackedNormalListChunk : Chunk
     protected override void WriteData(EndianAwareBinaryWriter bw)
     {
         bw.Write(NumNormals);
-        bw.Write([..Normals]);
+        bw.Write([.. Normals]);
     }
 
     protected override Chunk CloneSelf() => new PackedNormalListChunk(Normals);

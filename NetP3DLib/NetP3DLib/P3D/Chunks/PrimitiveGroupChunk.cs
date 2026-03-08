@@ -6,7 +6,6 @@ using NetP3DLib.P3D.Extensions;
 using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -14,7 +13,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class PrimitiveGroupChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Primitive_Group;
-    
+
     public enum PrimitiveTypes : uint
     {
         TriangleList,
@@ -173,7 +172,7 @@ public class PrimitiveGroupChunk : Chunk
             yield return error;
 
         if (!ShaderName.IsValidP3DString())
-			yield return new InvalidP3DStringException(this, nameof(ShaderName), ShaderName);
+            yield return new InvalidP3DStringException(this, nameof(ShaderName), ShaderName);
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

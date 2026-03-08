@@ -6,7 +6,6 @@ using NetP3DLib.P3D.Extensions;
 using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -14,7 +13,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class CollisionEffectChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Collision_Effect;
-    
+
     public enum ClassTypes
     {
         WTF,
@@ -76,7 +75,7 @@ public class CollisionEffectChunk : Chunk
         if (!SoundResourceDataName.IsValidP3DString())
             yield return new InvalidP3DStringException(this, nameof(SoundResourceDataName), SoundResourceDataName);
     }
-    
+
     protected override void WriteData(EndianAwareBinaryWriter bw)
     {
         bw.Write((uint)ClassType);

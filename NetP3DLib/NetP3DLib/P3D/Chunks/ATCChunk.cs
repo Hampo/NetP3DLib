@@ -14,7 +14,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class ATCChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.ATC;
-    
+
     public uint NumEntries
     {
         get => (uint)(Entries?.Count ?? 0);

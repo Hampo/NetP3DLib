@@ -6,7 +6,6 @@ using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -14,7 +13,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class CollisionMetaDataShortChannelChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Collision_Meta_Data_Short_Channel;
-    
+
     public uint Version { get; set; }
     public uint NumIndices
     {

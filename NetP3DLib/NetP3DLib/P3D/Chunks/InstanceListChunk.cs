@@ -3,7 +3,6 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
 using System.Collections.Generic;
-using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -11,7 +10,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class InstanceListChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Instance_List;
-    
+
     public override byte[] DataBytes
     {
         get

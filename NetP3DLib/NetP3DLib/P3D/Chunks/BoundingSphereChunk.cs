@@ -4,7 +4,6 @@ using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
@@ -13,7 +12,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class BoundingSphereChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Bounding_Sphere;
-    
+
     public Vector3 Centre { get; set; }
     public float Radius { get; set; }
 

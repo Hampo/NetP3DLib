@@ -4,7 +4,6 @@ using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -12,7 +11,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class StatePropEventDataChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.State_Prop_Event_Data;
-    
+
     public enum Events : uint
     {
         Idle,
@@ -28,7 +27,7 @@ public class StatePropEventDataChunk : NamedChunk
         Stomp,
         VehicleHit,
     }
-    
+
     public uint ToState { get; set; }
     public Events Event { get; set; }
 

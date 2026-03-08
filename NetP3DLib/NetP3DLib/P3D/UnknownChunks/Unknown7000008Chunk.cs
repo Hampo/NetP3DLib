@@ -3,13 +3,12 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Collections;
 using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace NetP3DLib.P3D.UnknownChunks;
 
 [ChunkAttributes(0x7000008)]
 public class Unknown7000008Chunk : Chunk
-{    
+{
     public uint NumUnknown
     {
         get => (uint)(Unknown?.Count ?? 0);

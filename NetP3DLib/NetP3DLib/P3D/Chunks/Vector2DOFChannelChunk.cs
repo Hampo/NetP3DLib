@@ -16,7 +16,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class Vector2DOFChannelChunk : ParamChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Vector_2D_OF_Channel;
-    
+
     [DefaultValue(0)]
     public uint Version { get; set; }
     public Coordinate StaticIndex { get; set; }

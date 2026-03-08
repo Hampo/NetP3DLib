@@ -3,7 +3,6 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -11,7 +10,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class VertexAnimKeyFrameChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Vertex_Anim_Key_Frame;
-    
+
     public uint Version { get; set; }
     public uint KeyFrameId { get; set; }
     public uint PrimGroupIndex { get; set; }

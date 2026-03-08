@@ -6,7 +6,6 @@ using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
@@ -15,7 +14,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class SplineChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Spline;
-    
+
     public uint NumPositions
     {
         get => (uint)(Positions?.Count ?? 0);

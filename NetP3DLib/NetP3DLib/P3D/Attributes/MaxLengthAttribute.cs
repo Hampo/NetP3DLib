@@ -5,7 +5,7 @@ namespace NetP3DLib.P3D.Attributes;
 public class MaxLengthAttribute : Attribute
 {
     public int MaxLength { get; }
-    
+
     public MaxLengthAttribute(int maxLength)
     {
         MaxLength = maxLength;

@@ -5,7 +5,6 @@ using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -13,7 +12,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class VisibilityAnimChannelChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Visibility_Anim_Channel;
-    
+
     public ushort StartState { get; set; }
     public uint NumFrames
     {

@@ -12,7 +12,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class TopologyChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Topology;
-    
+
     public uint NumTopology
     {
         get => (uint)(Topologies?.Count ?? 0);

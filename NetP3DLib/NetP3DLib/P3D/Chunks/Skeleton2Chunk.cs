@@ -4,7 +4,6 @@ using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -12,7 +11,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class Skeleton2Chunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Skeleton_2;
-    
+
     public uint Version { get; set; }
     public uint NumJoints => GetChildCount(ChunkIdentifier.Skeleton_Joint_2);
     public uint NumPartitions => GetChildCount(ChunkIdentifier.Skeleton_Partition);

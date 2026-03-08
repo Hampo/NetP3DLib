@@ -13,7 +13,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class MatrixListChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Matrix_List;
-    
+
     public uint NumMatrices
     {
         get => (uint)(Matrices?.Count ?? 0);

@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.IO;
 using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
@@ -17,7 +16,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class FrontendPolygonChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Frontend_Polygon;
-    
+
     [DefaultValue(1)]
     public uint Version { get; set; }
     public uint Translucency { get; set; }

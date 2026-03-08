@@ -1,7 +1,6 @@
 using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
-using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -9,7 +8,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class FenceChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Fence;
-    
+
     public override byte[] DataBytes
     {
         get

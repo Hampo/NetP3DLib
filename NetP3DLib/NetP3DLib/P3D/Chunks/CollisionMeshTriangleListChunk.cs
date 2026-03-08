@@ -12,7 +12,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class CollisionMeshTriangleListChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Collision_Mesh_Triangle_list;
-    
+
     public uint NumTriangles
     {
         get => (uint)(Triangles?.Count ?? 0);

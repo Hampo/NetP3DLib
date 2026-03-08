@@ -18,22 +18,22 @@ public sealed class EndianAwareBinaryReader : BinaryReader
     }
 
     public EndianAwareBinaryReader(Stream input) : this(input, Encoding.UTF8, leaveOpen: false, BinaryExtensions.DefaultEndian)
-    {}
+    { }
 
     public EndianAwareBinaryReader(Stream input, bool leaveOpen) : this(input, Encoding.UTF8, leaveOpen, BinaryExtensions.DefaultEndian)
-    {}
+    { }
 
     public EndianAwareBinaryReader(Stream input, Encoding encoding) : this(input, encoding, leaveOpen: false, BinaryExtensions.DefaultEndian)
-    {}
+    { }
 
     public EndianAwareBinaryReader(Stream input, Encoding encoding, bool leaveOpen) : this(input, encoding, leaveOpen, BinaryExtensions.DefaultEndian)
-    {}
+    { }
 
     public EndianAwareBinaryReader(Stream input, Endianness endianness) : this(input, Encoding.UTF8, leaveOpen: false, endianness)
-    {}
+    { }
 
     public EndianAwareBinaryReader(Stream input, bool leaveOpen, Endianness endianness) : this(input, Encoding.UTF8, leaveOpen, endianness)
-    {}
+    { }
 
     public EndianAwareBinaryReader(Stream input, Encoding encoding, Endianness endianness) : this(input, encoding, leaveOpen: false, endianness)
     { }
@@ -111,7 +111,8 @@ public sealed class EndianAwareBinaryReader : BinaryReader
         uint val = base.ReadUInt32();
         val = (val >> 24) | ((val >> 8) & 0x0000FF00) | ((val << 8) & 0x00FF0000) | (val << 24);
 
-        unsafe {
+        unsafe
+        {
             return *(float*)&val;
         }
     }
@@ -132,7 +133,8 @@ public sealed class EndianAwareBinaryReader : BinaryReader
               ((val << 40) & 0x00FF000000000000UL) |
               (val << 56);
 
-        unsafe {
+        unsafe
+        {
             return *(double*)&val;
         }
     }

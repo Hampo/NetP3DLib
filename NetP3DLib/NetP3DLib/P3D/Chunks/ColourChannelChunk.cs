@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -16,7 +15,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class ColourChannelChunk : ParamChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Colour_Channel;
-    
+
     [DefaultValue(0)]
     public uint Version { get; set; }
     public uint NumFrames

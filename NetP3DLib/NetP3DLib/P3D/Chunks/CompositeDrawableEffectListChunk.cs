@@ -3,7 +3,6 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -11,7 +10,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class CompositeDrawableEffectListChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Composite_Drawable_Effect_List;
-    
+
     public uint NumElements => GetChildCount(ChunkIdentifier.Composite_Drawable_Effect);
 
     public override byte[] DataBytes

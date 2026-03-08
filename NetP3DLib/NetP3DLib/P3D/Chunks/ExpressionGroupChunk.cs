@@ -8,7 +8,6 @@ using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -23,7 +22,7 @@ public class ExpressionGroupChunk : NamedChunk
         Stage2,
         Stage3,
     }
-    
+
     [DefaultValue(0)]
     public uint Version { get; set; }
     private readonly P3DString _targetName;

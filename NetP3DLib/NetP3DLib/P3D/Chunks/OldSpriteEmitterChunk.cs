@@ -7,7 +7,6 @@ using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -15,7 +14,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class OldSpriteEmitterChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Sprite_Emitter;
-    
+
     [DefaultValue(0)]
     public uint Version { get; set; }
     private readonly P3DString _shaderName;
@@ -95,10 +94,10 @@ public class OldSpriteEmitterChunk : NamedChunk
             yield return new InvalidP3DStringException(this, nameof(ShaderName), ShaderName);
 
         if (!AngleMode.IsValidFourCC())
-            yield return new InvalidP3DFourCCException(this,nameof(AngleMode), AngleMode);
+            yield return new InvalidP3DFourCCException(this, nameof(AngleMode), AngleMode);
 
         if (!TextureAnimMode.IsValidFourCC())
-            yield return new InvalidP3DFourCCException(this,nameof(TextureAnimMode), TextureAnimMode);
+            yield return new InvalidP3DFourCCException(this, nameof(TextureAnimMode), TextureAnimMode);
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

@@ -4,7 +4,6 @@ using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -12,7 +11,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class OldIndexOffsetListChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Index_Offset_List;
-    
+
     public uint Version { get; set; }
     public uint NumOffsets
     {

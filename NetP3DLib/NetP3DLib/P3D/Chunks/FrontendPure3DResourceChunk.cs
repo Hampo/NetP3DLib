@@ -7,7 +7,6 @@ using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -15,7 +14,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class FrontendPure3DResourceChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Frontend_Pure3D_Resource;
-    
+
     [DefaultValue(1)]
     public uint Version { get; set; }
     private readonly P3DString _filename;
@@ -30,7 +29,7 @@ public class FrontendPure3DResourceChunk : NamedChunk
         get => _inventoryName?.Value ?? string.Empty;
         set => _inventoryName.Value = value;
     }
-    private readonly P3DString _cameraName ;
+    private readonly P3DString _cameraName;
     public string CameraName
     {
         get => _cameraName?.Value ?? string.Empty;

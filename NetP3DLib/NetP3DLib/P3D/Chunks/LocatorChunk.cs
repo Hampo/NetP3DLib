@@ -1,14 +1,10 @@
 using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
-using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
-using System.IO;
 using System.Numerics;
-using System.Runtime.InteropServices;
 using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
@@ -36,7 +32,7 @@ public class LocatorChunk : NamedChunk
         PedGroup,
         Coin,
     }
-    
+
     public LocatorTypes LocatorType => TypeData.LocatorType;
     public uint DataLen => TypeData.DataLen;
     private LocatorData _typeData = new UnknownLocatorData(15, []);
@@ -221,21 +217,21 @@ public class LocatorChunk : NamedChunk
                 OnSizeChanged((newSize - oldSize) * sizeof(uint));
             }
         }
-        public override List<uint> DataArray => [..Data];
+        public override List<uint> DataArray => [.. Data];
 
         public UnknownLocatorData(LocatorTypes locatorType, IList<uint> data) : base(locatorType)
         {
-            _data = [..data];
+            _data = [.. data];
         }
 
         public UnknownLocatorData(uint locatorType, IList<uint> data) : this((LocatorTypes)locatorType, data)
-        {}
+        { }
 
         internal override LocatorData Clone() => new UnknownLocatorData(LocatorType, Data);
 
         public override string ToString() => $"[{string.Join(", ", Data)}]";
     }
-    
+
     /// <summary>
     /// Event locator data.
     /// </summary>

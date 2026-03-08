@@ -82,5 +82,5 @@ public class TreeNodeChunk : Chunk
         bw.Write(ParentOffset);
     }
 
-    protected override Chunk CloneSelf() => new TreeNodeChunk( ParentOffset);
+    protected override Chunk CloneSelf() => new TreeNodeChunk(ParentOffset);
 }

@@ -5,7 +5,6 @@ using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
@@ -14,7 +13,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class CollisionMeshVectorListChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Collision_Mesh_Vector_list;
-    
+
     public uint NumVectors
     {
         get => (uint)(Vectors?.Count ?? 0);

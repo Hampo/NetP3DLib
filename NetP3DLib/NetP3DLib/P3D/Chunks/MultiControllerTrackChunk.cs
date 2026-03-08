@@ -7,7 +7,6 @@ using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -15,7 +14,7 @@ namespace NetP3DLib.P3D.Chunks;
 public class MultiControllerTrackChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Multi_Controller_Track;
-    
+
     [DefaultValue(0)]
     public uint Version { get; set; }
     private readonly FourCC _type;
@@ -61,7 +60,7 @@ public class MultiControllerTrackChunk : NamedChunk
             yield return error;
 
         if (!Type.IsValidFourCC())
-            yield return new InvalidP3DFourCCException(this,nameof(Type), Type);
+            yield return new InvalidP3DFourCCException(this, nameof(Type), Type);
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
