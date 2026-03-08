@@ -108,7 +108,7 @@ public sealed class EndianAwareBinaryReader : BinaryReader
         if (!_swap)
             return base.ReadSingle();
 
-        uint val = (uint)base.ReadInt32();
+        uint val = base.ReadUInt32();
         val = (val >> 24) | ((val >> 8) & 0x0000FF00) | ((val << 8) & 0x00FF0000) | (val << 24);
 
         unsafe {
@@ -122,7 +122,7 @@ public sealed class EndianAwareBinaryReader : BinaryReader
         if (!_swap)
             return base.ReadDouble();
 
-        ulong val = (ulong)base.ReadInt64();
+        ulong val = base.ReadUInt64();
         val = (val >> 56) |
               ((val >> 40) & 0x000000000000FF00UL) |
               ((val >> 24) & 0x0000000000FF0000UL) |
