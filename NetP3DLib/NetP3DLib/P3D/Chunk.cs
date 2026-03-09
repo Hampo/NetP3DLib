@@ -408,6 +408,9 @@ public abstract class Chunk
     public event Action<IReadOnlyList<(Chunk child, int oldIndex)>>? ChildrenRemoved;
     internal void OnChildrenRemoved(IReadOnlyList<(Chunk child, int oldIndex)> children) => ChildrenRemoved?.Invoke(children);
 
+    public event Action? ChildrenCleared;
+    internal void OnChildrenCleared() => ChildrenCleared?.Invoke();
+
     /// <summary>
     /// Creates a clone of the current chunk.
     /// </summary>

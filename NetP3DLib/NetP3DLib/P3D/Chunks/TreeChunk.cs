@@ -39,10 +39,11 @@ public class TreeChunk : Chunk
         BoundsMin = br.ReadVector3();
         BoundsMax = br.ReadVector3();
 
-        ChildAdded += Chunk_OnChildAdded;
-        ChildRemoved += Chunk_OnChildRemoved;
+        ChildAdded += Chunk_ChildAdded;
+        ChildRemoved += Chunk_ChildRemoved;
         ChildrenAdded += Chunk_ChildrenAdded;
         ChildrenRemoved += Chunk_ChildrenRemoved;
+        ChildrenCleared += Chunk_ChildrenCleared;
     }
 
     public TreeChunk(Vector3 minimum, Vector3 maximum) : base(ChunkID)
@@ -72,13 +73,13 @@ public class TreeChunk : Chunk
         _needsRecalculate = true;
     }
 
-    internal void Chunk_OnChildAdded(Chunk child)
+    private void Chunk_ChildAdded(Chunk child)
     {
         if (child is TreeNodeChunk)
             MarkTopologyDirty();
     }
 
-    internal void Chunk_OnChildRemoved(Chunk child, int oldIndex)
+    private void Chunk_ChildRemoved(Chunk child, int oldIndex)
     {
         if (child is TreeNodeChunk)
             MarkTopologyDirty();
@@ -95,6 +96,7 @@ public class TreeChunk : Chunk
             }
         }
     }
+
     private void Chunk_ChildrenRemoved(IReadOnlyList<(Chunk child, int oldIndex)> children)
     {
         foreach (var (child, _) in children)
@@ -106,6 +108,8 @@ public class TreeChunk : Chunk
             }
         }
     }
+
+    private void Chunk_ChildrenCleared() => MarkTopologyDirty();
 
     internal void RecalculateSubTreeSizeIfNeeded()
     {
