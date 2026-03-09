@@ -1231,6 +1231,7 @@ public class LocatorChunk : NamedChunk
             TransitionTargetRate = transitionTargetRate;
             OneShot = oneShot;
             DisableFOV = disableFOV;
+            CutInOut = cutInOut;
             CarOnly = carOnly;
             OnFootOnly = onFootOnly;
         }
