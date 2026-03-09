@@ -70,7 +70,7 @@ public class CollisionVectorChunk : Chunk
             CollisionWallChunk => IndexInParent switch
             {
                 0 => $"Position ({GetChunkType(this)} (0x{ID:X}))",
-                1 => $"Normal ({GetChunkType(this)} (0x{ID:X}))",
+                1 => $"Normal Ref ({GetChunkType(this)} (0x{ID:X}))",
                 _ => base.ToString()
             },
             _ => base.ToString(),
