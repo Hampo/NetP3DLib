@@ -4,7 +4,6 @@ using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
 using System.Collections.Generic;
 using System.Numerics;
-using static NetP3DLib.P3D.Chunks.InstParticleSystemChunk;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -66,6 +65,12 @@ public class CollisionVectorChunk : Chunk
                 1 => $"Rotation Matrix X ({GetChunkType(this)} (0x{ID:X}))",
                 2 => $"Rotation Matrix Y ({GetChunkType(this)} (0x{ID:X}))",
                 3 => $"Rotation Matrix Z ({GetChunkType(this)} (0x{ID:X}))",
+                _ => base.ToString()
+            },
+            CollisionWallChunk => IndexInParent switch
+            {
+                0 => $"Position ({GetChunkType(this)} (0x{ID:X}))",
+                1 => $"Normal ({GetChunkType(this)} (0x{ID:X}))",
                 _ => base.ToString()
             },
             _ => base.ToString(),
