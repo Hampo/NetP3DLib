@@ -246,6 +246,56 @@ public class ChunkFileCollection : Collection<Chunk>
         _owner.OnChunksRemoved(oldItems);
     }
 
+    public void RemoveAtIndices(IList<int> indices)
+    {
+        if (indices == null)
+            throw new ArgumentNullException(nameof(indices));
+        if (indices.Count == 0)
+            return;
+
+        var sortedIndices = new int[indices.Count];
+        indices.CopyTo(sortedIndices, 0);
+        Array.Sort(sortedIndices);
+
+        var list = (List<Chunk>)Items;
+
+        var removedSize = 0u;
+        var oldItems = new (Chunk chunk, int oldIndex)[sortedIndices.Length];
+
+        int removePointer = 0;
+        int writeIndex = 0;
+        for (int readIndex = 0; readIndex < list.Count; readIndex++)
+        {
+            if (removePointer < sortedIndices.Length && readIndex == sortedIndices[removePointer])
+            {
+                var chunk = list[readIndex];
+                oldItems[removePointer] = (chunk, readIndex);
+                removedSize += chunk.Size;
+                chunk.ParentChunk = null;
+                chunk.IndexInParent = -1;
+                chunk.SizeChanged -= OnChildSizeChanged;
+                removePointer++;
+            }
+            else
+            {
+                if (writeIndex != readIndex)
+                    list[writeIndex] = list[readIndex];
+                writeIndex++;
+            }
+        }
+
+        if (writeIndex < list.Count)
+            list.RemoveRange(writeIndex, list.Count - writeIndex);
+
+        TotalSize -= removedSize;
+
+        var minIndex = sortedIndices[0];
+        if (minIndex < Count)
+            UpdateChildIndices(minIndex);
+
+        _owner.OnChunksRemoved(oldItems);
+    }
+
     private void UpdateChildIndices(int startIndex = 0)
     {
         for (int i = startIndex; i < Count; i++)
