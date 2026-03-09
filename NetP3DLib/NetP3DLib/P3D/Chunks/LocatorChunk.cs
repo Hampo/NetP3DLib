@@ -176,8 +176,6 @@ public class LocatorChunk : NamedChunk
             return (result.ToString(), index + 1);
         }
 
-        internal static float ParseDataFloat(uint data) => BitConverter.ToSingle(BitConverter.GetBytes(data), 0);
-
         internal static List<uint> CreateStringData(string input)
         {
             int diff = input.Length % 4;
@@ -197,7 +195,9 @@ public class LocatorChunk : NamedChunk
             return result;
         }
 
-        internal static uint CreateFloatData(float input) => BitConverter.ToUInt32(BitConverter.GetBytes(input), 0);
+        internal static unsafe float ParseDataFloat(uint data) => *(float*)&data;
+
+        internal static unsafe uint CreateFloatData(float input) => *(uint*)&input;
     }
 
     public class UnknownLocatorData : LocatorData
