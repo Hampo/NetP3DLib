@@ -443,7 +443,7 @@ public class LocatorChunk : NamedChunk
 
         internal override LocatorData Clone() => new GenericLocatorData();
 
-        public override string ToString() => string.Empty;
+        public override string ToString() => "No data";
     }
 
     /// <summary>
@@ -556,7 +556,7 @@ public class LocatorChunk : NamedChunk
 
         internal override LocatorData Clone() => new SplineLocatorData();
 
-        public override string ToString() => string.Empty;
+        public override string ToString() => "No data";
     }
 
     /// <summary>
@@ -925,7 +925,7 @@ public class LocatorChunk : NamedChunk
 
         internal override LocatorData Clone() => new BreakableCameraLocatorData();
 
-        public override string ToString() => string.Empty;
+        public override string ToString() => "No data";
     }
 
     /// <summary>
@@ -1292,6 +1292,6 @@ public class LocatorChunk : NamedChunk
 
         internal override LocatorData Clone() => new CoinLocatorData();
 
-        public override string ToString() => string.Empty;
+        public override string ToString() => "No data";
     }
 }
