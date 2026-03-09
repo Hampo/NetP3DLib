@@ -1,6 +1,7 @@
 using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
+using NetP3DLib.P3D.Exceptions;
 using System;
 using System.Collections.Generic;
 
@@ -10,6 +11,14 @@ namespace NetP3DLib.P3D.Chunks;
 public class CollisionVolumeChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Collision_Volume;
+    private static readonly HashSet<ChunkIdentifier> AllowedCollisionTypes =
+    [
+        ChunkIdentifier.Collision_Sphere,
+        ChunkIdentifier.Collision_Cylinder,
+        ChunkIdentifier.Collision_Oriented_Bounding_Box,
+        ChunkIdentifier.Collision_Wall,
+        ChunkIdentifier.Collision_Axis_Aligned_Bounding_Box,
+    ];
 
     public uint ObjectReferenceIndex { get; set; }
     public int OwnerIndex { get; set; }
@@ -42,6 +51,18 @@ public class CollisionVolumeChunk : Chunk
     {
         ObjectReferenceIndex = objectReferenceIndex;
         OwnerIndex = ownerIndex;
+    }
+
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
+    {
+        foreach (var error in base.ValidateChunk())
+            yield return error;
+
+        if (Children.Count == 0 || !AllowedCollisionTypes.Contains((ChunkIdentifier)Children[0].ID))
+            yield return new InvalidP3DException(this, $"First child must be one of: {string.Join(", ", AllowedCollisionTypes)}.");
+
+        if (Children.Count - 1 != NumSubVolumes)
+            yield return new InvalidP3DException(this, $"Remaining children must be {nameof(CollisionVolumeChunk)}");
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

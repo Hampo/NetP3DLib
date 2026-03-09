@@ -1,6 +1,7 @@
 using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
+using NetP3DLib.P3D.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -40,6 +41,15 @@ public class AnimationGroupListChunk : Chunk
     public AnimationGroupListChunk(uint version) : base(ChunkID)
     {
         Version = version;
+    }
+
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
+    {
+        foreach (var error in base.ValidateChunk())
+            yield return error;
+
+        if (NumGroups != Children.Count)
+            yield return new InvalidP3DException(this, $"Invalid children. Must be only {nameof(AnimationGroupChunk)}.");
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

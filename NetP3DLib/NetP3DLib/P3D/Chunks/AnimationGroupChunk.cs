@@ -1,6 +1,7 @@
 using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
+using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
@@ -13,11 +14,38 @@ public class AnimationGroupChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Animation_Group;
     private const uint BaseSize = 40;
+    private static readonly HashSet<ChunkIdentifier> ChannelChunkIDs = [
+        ChunkIdentifier.Integer_Channel,
+        ChunkIdentifier.Float_1_Channel,
+        ChunkIdentifier.Float_2_Channel,
+        ChunkIdentifier.Vector_1D_OF_Channel,
+        ChunkIdentifier.Vector_2D_OF_Channel,
+        ChunkIdentifier.Vector_3D_OF_Channel,
+        ChunkIdentifier.Quaternion_Channel,
+        ChunkIdentifier.Compressed_Quaternion_Channel,
+        //ChunkIdentifier.String_Channel,
+        ChunkIdentifier.Entity_Channel,
+        ChunkIdentifier.Boolean_Channel,
+        ChunkIdentifier.Colour_Channel,
+        //ChunkIdentifier.Event_Channel,
+    ];
 
     [DefaultValue(0)]
     public uint Version { get; set; }
     public uint GroupID { get; set; }
-    public uint NumChannels => (uint)Children.Count;
+    public uint NumChannels
+    {
+        get
+        {
+            var channelCount = 0u;
+
+            foreach (var child in Children)
+                if (ChannelChunkIDs.Contains((ChunkIdentifier)child.ID))
+                    channelCount++;
+
+            return channelCount;
+        }
+    }
 
     public override byte[] DataBytes
     {
@@ -49,6 +77,15 @@ public class AnimationGroupChunk : NamedChunk
         Version = version;
         _name = new(this, name);
         GroupID = groupID;
+    }
+
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
+    {
+        foreach (var error in base.ValidateChunk())
+            yield return error;
+
+        if (NumChannels != Children.Count)
+            yield return new InvalidP3DException(this, $"Invalid children. Must only contain channels.");
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

@@ -2,6 +2,7 @@ using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
+using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
@@ -101,6 +102,15 @@ public class OldOffsetListChunk : Chunk
         KeyIndex = keyIndex;
         Offsets = CreateSizeAwareList(offsets);
         HasPrimGroupIndex = false;
+    }
+
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
+    {
+        foreach (var error in base.ValidateChunk())
+            yield return error;
+
+        if (Children.Count != GetChildCount(ChunkIdentifier.Old_Index_Offset_List))
+            yield return new InvalidP3DException(this, $"Invalid children. Must be only {nameof(OldIndexOffsetListChunk)}.");
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
