@@ -499,6 +499,12 @@ public class P3DFile
     public event Action<Chunk, int>? ChunkRemoved;
     internal void OnChunkRemoved(Chunk chunk, int oldIndex) => ChunkRemoved?.Invoke(chunk, oldIndex);
 
+    public event Action<IReadOnlyList<Chunk>>? ChunksAdded;
+    internal void OnChunksAdded(IReadOnlyList<Chunk> chunks) => ChunksAdded?.Invoke(chunks);
+
+    public event Action<IReadOnlyList<(Chunk chunk, int oldIndex)>>? ChunksRemoved;
+    internal void OnChunksRemoved(IReadOnlyList<(Chunk chunk, int oldIndex)> chunks) => ChunksRemoved?.Invoke(chunks);
+
     public P3DFile Clone()
     {
         var clone = new P3DFile();

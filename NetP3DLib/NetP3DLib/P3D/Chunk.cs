@@ -402,6 +402,12 @@ public abstract class Chunk
     public event Action<Chunk, int>? ChildRemoved;
     internal void OnChildRemoved(Chunk child, int oldIndex) => ChildRemoved?.Invoke(child, oldIndex);
 
+    public event Action<IReadOnlyList<Chunk>>? ChildrenAdded;
+    internal void OnChildrenAdded(IReadOnlyList<Chunk> children) => ChildrenAdded?.Invoke(children);
+
+    public event Action<IReadOnlyList<(Chunk child, int oldIndex)>>? ChildrenRemoved;
+    internal void OnChildrenRemoved(IReadOnlyList<(Chunk child, int oldIndex)> children) => ChildrenRemoved?.Invoke(children);
+
     /// <summary>
     /// Creates a clone of the current chunk.
     /// </summary>

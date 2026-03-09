@@ -41,6 +41,8 @@ public class TreeChunk : Chunk
 
         ChildAdded += Chunk_OnChildAdded;
         ChildRemoved += Chunk_OnChildRemoved;
+        ChildrenAdded += Chunk_ChildrenAdded;
+        ChildrenRemoved += Chunk_ChildrenRemoved;
     }
 
     public TreeChunk(Vector3 minimum, Vector3 maximum) : base(ChunkID)
@@ -80,6 +82,29 @@ public class TreeChunk : Chunk
     {
         if (child is TreeNodeChunk)
             MarkTopologyDirty();
+    }
+
+    private void Chunk_ChildrenAdded(IReadOnlyList<Chunk> children)
+    {
+        foreach (var child in children)
+        {
+            if (child is TreeNodeChunk)
+            {
+                MarkTopologyDirty();
+                return;
+            }
+        }
+    }
+    private void Chunk_ChildrenRemoved(IReadOnlyList<(Chunk child, int oldIndex)> children)
+    {
+        foreach (var (child, _) in children)
+        {
+            if (child is TreeNodeChunk)
+            {
+                MarkTopologyDirty();
+                return;
+            }
+        }
     }
 
     internal void RecalculateSubTreeSizeIfNeeded()

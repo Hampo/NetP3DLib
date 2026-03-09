@@ -160,9 +160,9 @@ public class ChunkCollection : Collection<Chunk>
             child.ParentChunk = null;
             child.IndexInParent = -1;
             child.SizeChanged -= OnChildSizeChanged;
-
-            _owner.OnChildRemoved(child, oldIndex);
         }
+
+        _owner.OnChildrenRemoved(oldItems);
     }
 
     public IReadOnlyList<Chunk> GetRange(int index, int count) => ((List<Chunk>)Items).GetRange(index, count);
@@ -201,10 +201,9 @@ public class ChunkCollection : Collection<Chunk>
             item.ParentChunk = _owner;
             item.IndexInParent = i++;
             item.SizeChanged += OnChildSizeChanged;
-
-            _owner.OnChildAdded(item);
         }
 
+        _owner.OnChildrenAdded(items as IReadOnlyList<Chunk> ?? [.. items]);
     }
 
     public void InsertRange(int index, IEnumerable<Chunk> items)
@@ -239,11 +238,11 @@ public class ChunkCollection : Collection<Chunk>
             item.ParentChunk = _owner;
             item.IndexInParent = currentIndex++;
             item.SizeChanged += OnChildSizeChanged;
-
-            _owner.OnChildAdded(item);
         }
 
         UpdateChildIndices(index + chunkList.Count);
+
+        _owner.OnChildrenAdded(items as IReadOnlyList<Chunk> ?? [.. items]);
     }
 
     public void RemoveRange(int index, int count)
@@ -281,8 +280,7 @@ public class ChunkCollection : Collection<Chunk>
         if (index < Count)
             UpdateChildIndices(index);
 
-        foreach (var (child, oldIndex) in oldItems)
-            _owner.OnChildRemoved(child, oldIndex);
+        _owner.OnChildrenRemoved(oldItems);
     }
 
     private void UpdateChildIndices(int startIndex = 0)
