@@ -519,7 +519,7 @@ public class P3DFile
         }
     }
 
-    private void ProcessRemovedChunk(Chunk chunk, int oldIndex)
+    private void ProcessRemovedChunk(Chunk chunk)
     {
         if (_chunkCounts[chunk.ID] == 1)
             _chunkCounts.Remove(chunk.ID);
@@ -576,7 +576,7 @@ public class P3DFile
     public event Action<Chunk, int>? ChunkRemoved;
     internal void OnChunkRemoved(Chunk chunk, int oldIndex)
     {
-        ProcessRemovedChunk(chunk, oldIndex);
+        ProcessRemovedChunk(chunk);
 
         ChunkRemoved?.Invoke(chunk, oldIndex);
     }
@@ -593,8 +593,8 @@ public class P3DFile
     public event Action<IReadOnlyList<(Chunk chunk, int oldIndex)>>? ChunksRemoved;
     internal void OnChunksRemoved(IReadOnlyList<(Chunk chunk, int oldIndex)> chunks)
     {
-        foreach (var (chunk, oldIndex) in chunks)
-            ProcessRemovedChunk(chunk, oldIndex);
+        foreach (var (chunk, _) in chunks)
+            ProcessRemovedChunk(chunk);
 
         ChunksRemoved?.Invoke(chunks);
     }

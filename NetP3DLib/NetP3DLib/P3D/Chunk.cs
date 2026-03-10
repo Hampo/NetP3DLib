@@ -411,7 +411,7 @@ public abstract class Chunk
         }
     }
 
-    private void ProcessRemovedChild(Chunk child, int oldIndex)
+    private void ProcessRemovedChild(Chunk child)
     {
         if (_childCounts[child.ID] == 1)
             _childCounts.Remove(child.ID);
@@ -468,7 +468,7 @@ public abstract class Chunk
     public event Action<Chunk, int>? ChildRemoved;
     internal void OnChildRemoved(Chunk child, int oldIndex)
     {
-        ProcessRemovedChild(child, oldIndex);
+        ProcessRemovedChild(child);
 
         ChildRemoved?.Invoke(child, oldIndex);
     }
@@ -485,8 +485,8 @@ public abstract class Chunk
     public event Action<IReadOnlyList<(Chunk child, int oldIndex)>>? ChildrenRemoved;
     internal void OnChildrenRemoved(IReadOnlyList<(Chunk child, int oldIndex)> children)
     {
-        foreach (var (child, oldIndex) in children)
-            ProcessRemovedChild(child, oldIndex);
+        foreach (var (child, _) in children)
+            ProcessRemovedChild(child);
 
         ChildrenRemoved?.Invoke(children);
     }
