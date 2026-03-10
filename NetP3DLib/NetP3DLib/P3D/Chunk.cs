@@ -5,7 +5,9 @@ using NetP3DLib.P3D.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+#if DEBUG
 using System.Diagnostics;
+#endif
 
 namespace NetP3DLib.P3D;
 
@@ -411,6 +413,9 @@ public abstract class Chunk
     public event Action? ChildrenCleared;
     internal void OnChildrenCleared() => ChildrenCleared?.Invoke();
 
+    public event Action<string>? PropertyUpdated;
+    internal void OnPropertyUpdated(string propertyName) => PropertyUpdated?.Invoke(propertyName);
+
     /// <summary>
     /// Creates a clone of the current chunk.
     /// </summary>
@@ -510,11 +515,12 @@ public abstract class Chunk
 
 public class UnknownChunk : Chunk
 {
-    private byte[] _data = [];
+    private readonly Action _dataChanged;
+    private ObservableByteArray _data;
     /// <summary>
     /// Property <c>Data</c> is the chunk's header data.
     /// </summary>
-    public byte[] Data
+    public ObservableByteArray Data
     {
         get => _data;
         set
@@ -523,12 +529,13 @@ public class UnknownChunk : Chunk
                 return;
 
             var oldSize = HeaderSize;
-            _data = value ?? [];
+            _data = new(value?.ToArray() ?? [], _dataChanged);
             RecalculateSize(oldSize);
+            _dataChanged();
         }
     }
 
-    public override byte[] DataBytes => Data;
+    public override byte[] DataBytes => Data.ToArray();
 
     public override uint DataLength => (uint)Data.Length;
 
@@ -541,10 +548,11 @@ public class UnknownChunk : Chunk
     {
         ID = chunkId;
 
-        Data = (byte[])data.Clone();
+        _dataChanged = () => OnPropertyUpdated(nameof(Data));
+        _data = new((byte[])data.Clone(), _dataChanged);
     }
 
-    protected override void WriteData(EndianAwareBinaryWriter bw) => bw.Write(Data);
+    protected override void WriteData(EndianAwareBinaryWriter bw) => bw.Write(DataBytes);
 
-    protected override Chunk CloneSelf() => new UnknownChunk(ID, Data);
+    protected override Chunk CloneSelf() => new UnknownChunk(ID, DataBytes);
 }
