@@ -260,7 +260,7 @@ public abstract class Chunk
 
         if (!_chunksByType.TryGetValue(chunkType, out var chunks))
             return null;
-        
+
         if (!typeof(Chunk).IsAssignableFrom(chunkType))
             throw new ArgumentException($"{chunkType.Name} must inherit from {nameof(Chunk)}", nameof(chunkType));
 
@@ -276,7 +276,7 @@ public abstract class Chunk
 
         if (!_namedChunks.TryGetValue((chunkType, name), out var namedChunks))
             return null;
-        
+
         if (!typeof(NamedChunk).IsAssignableFrom(chunkType))
             throw new ArgumentException($"{chunkType.Name} must inherit from {nameof(NamedChunk)}", nameof(chunkType));
 
@@ -292,7 +292,7 @@ public abstract class Chunk
 
         if (!_paramChunks.TryGetValue((chunkType, param), out var paramChunks))
             return null;
-        
+
         if (!typeof(ParamChunk).IsAssignableFrom(chunkType))
             throw new ArgumentException($"{chunkType.Name} must inherit from {nameof(ParamChunk)}", nameof(chunkType));
 

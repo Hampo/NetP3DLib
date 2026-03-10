@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using static NetP3DLib.P3D.Chunks.BreakableObjectChunk;
 
 namespace NetP3DLib.P3D.Collections;
 public class ChunkCollection : Collection<Chunk>
@@ -263,7 +262,7 @@ public class ChunkCollection : Collection<Chunk>
         var list = (List<Chunk>)Items;
 
         var removedSize = 0u;
-        var oldItems = new(Chunk chunk, int oldIndex)[count];
+        var oldItems = new (Chunk chunk, int oldIndex)[count];
         for (var i = 0; i < count; i++)
         {
             var chunk = list[index + i];
