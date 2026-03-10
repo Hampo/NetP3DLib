@@ -1,46 +1,81 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
+﻿using System.Collections.Generic;
 
 namespace NetP3DLib.Comparer;
+
 class NaturalComparer : IComparer<string>
 {
-    private readonly StringComparison _comparison;
-    private static readonly Regex _regex = new(@"\d+", RegexOptions.Compiled);
+    private readonly bool _ignoreCase;
 
     public NaturalComparer(bool caseInsensitive)
     {
-        _comparison = caseInsensitive
-            ? StringComparison.OrdinalIgnoreCase
-            : StringComparison.Ordinal;
+        _ignoreCase = caseInsensitive;
     }
 
-    public int Compare(string x, string y)
+    public int Compare(string left, string right)
     {
-        if (x == null) return y == null ? 0 : -1;
-        if (y == null) return 1;
+        if (left == null)
+            return right == null ? 0 : -1;
 
-        var xParts = _regex.Split(x);
-        var yParts = _regex.Split(y);
-        var xNums = _regex.Matches(x);
-        var yNums = _regex.Matches(y);
+        if (right == null)
+            return 1;
 
-        int i = 0;
-        for (; i < Math.Min(xParts.Length, yParts.Length); i++)
+        var leftIndex = 0;
+        var rightIndex = 0;
+
+        var leftLength = left.Length;
+        var rightLength = right.Length;
+
+        while (leftIndex < leftLength && rightIndex < rightLength)
         {
-            int cmp = string.Compare(xParts[i], yParts[i], _comparison);
-            if (cmp != 0)
-                return cmp;
+            var leftChar = left[leftIndex];
+            var rightChar = right[rightIndex];
 
-            if (i < xNums.Count && i < yNums.Count)
+            bool leftIsDigit = leftChar >= '0' && leftChar <= '9';
+            bool rightIsDigit = rightChar >= '0' && rightChar <= '9';
+
+            if (leftIsDigit && rightIsDigit)
             {
-                int xNum = int.Parse(xNums[i].Value);
-                int yNum = int.Parse(yNums[i].Value);
-                if (xNum != yNum)
-                    return xNum.CompareTo(yNum);
+                var leftNumber = 0L;
+                while (leftIndex < leftLength)
+                {
+                    var current = left[leftIndex];
+                    if (current < '0' || current > '9')
+                        break;
+
+                    leftNumber = leftNumber * 10 + (current - '0');
+                    leftIndex++;
+                }
+
+                var rightNumber = 0L;
+                while (rightIndex < rightLength)
+                {
+                    var current = right[rightIndex];
+                    if (current < '0' || current > '9')
+                        break;
+
+                    rightNumber = rightNumber * 10 + (current - '0');
+                    rightIndex++;
+                }
+
+                if (leftNumber != rightNumber)
+                    return leftNumber < rightNumber ? -1 : 1;
+            }
+            else
+            {
+                if (_ignoreCase)
+                {
+                    leftChar = char.ToUpperInvariant(leftChar);
+                    rightChar = char.ToUpperInvariant(rightChar);
+                }
+
+                if (leftChar != rightChar)
+                    return leftChar < rightChar ? -1 : 1;
+
+                leftIndex++;
+                rightIndex++;
             }
         }
 
-        return x.Length.CompareTo(y.Length);
+        return leftLength - rightLength;
     }
 }
