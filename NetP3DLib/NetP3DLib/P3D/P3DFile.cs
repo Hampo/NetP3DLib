@@ -144,13 +144,28 @@ public class P3DFile
 
         using var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
 
-        if (fs.Length < HEADER_SIZE)
+        Chunks = new(this);
+        LoadFromStream(fs, false);
+    }
+
+    public P3DFile(Stream stream)
+    {
+        if (!stream.CanRead)
+            throw new InvalidDataException("Could not read from stream.");
+
+        Chunks = new(this);
+        LoadFromStream(stream, false);
+    }
+
+    private void LoadFromStream(Stream stream, bool leaveOpen)
+    {
+        if (stream.Length < HEADER_SIZE)
             throw new InvalidDataException($"Specified file too short. Must be at least {HEADER_SIZE} bytes.");
-        if (fs.Length > int.MaxValue)
+        if (stream.Length > int.MaxValue)
             throw new InvalidDataException($"Specified file too long. Must be fewer than {int.MaxValue} bytes.");
 
         byte[] signatureBuffer = new byte[4];
-        if (fs.Read(signatureBuffer, 0, 4) != 4)
+        if (stream.Read(signatureBuffer, 0, 4) != 4)
             throw new InvalidDataException("Failed to read file signature.");
         uint signature = BitConverter.ToUInt32(signatureBuffer, 0);
 
@@ -165,16 +180,16 @@ public class P3DFile
             {
                 case SIGNATURE:
                 case SIGNATURE_SWAP:
-                    br = new(fs, endianness);
+                    br = new(stream, true, endianness);
                     break;
                 case COMPRESSED_SIGNATURE:
                 case COMPRESSED_SIGNATURE_SWAP:
-                    fs.Position = 0;
-                    using (EndianAwareBinaryReader br2 = new(fs, endianness))
+                    stream.Position = 0;
+                    using (EndianAwareBinaryReader br2 = new(stream, true, endianness))
                     {
                         byte[] decryptedBytes = LZR_Compression.DecompressFile(br2);
                         ms = new(decryptedBytes, true);
-                        br = new(ms, endianness);
+                        br = new(ms, true, endianness);
 
                         if (br.ReadUInt32() != SIGNATURE)
                             throw new InvalidDataException($"Decompressed file signature 0x{signature:X} is invalid.");
@@ -205,14 +220,12 @@ public class P3DFile
                     Chunks.Add(c);
                 }
             }
-            else
-            {
-                Chunks = new(this);
-            }
         }
         finally
         {
             br?.Dispose();
+            if (!leaveOpen)
+                stream.Dispose();
             ms?.Dispose();
         }
     }
