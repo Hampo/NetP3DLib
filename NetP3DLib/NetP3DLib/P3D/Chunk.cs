@@ -1,10 +1,12 @@
 ﻿using NetP3DLib.IO;
 using NetP3DLib.P3D.Collections;
+using NetP3DLib.P3D.Comparers;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Xml.Linq;
 #if DEBUG
 using System.Diagnostics;
 #endif
@@ -200,115 +202,111 @@ public abstract class Chunk
     }
 
     private readonly Dictionary<Type, List<Chunk>> _chunksByType = [];
-    private readonly Dictionary<(Type, string name), List<NamedChunk>> _namedChunks = [];
-    private readonly Dictionary<(Type, string name), List<ParamChunk>> _paramChunks = [];
+    private readonly Dictionary<(Type, string name), List<NamedChunk>> _namedChunks = new(ChunkKeyComparer.Instance);
+    private readonly Dictionary<(Type, string name), List<ParamChunk>> _paramChunks = new(ChunkKeyComparer.Instance);
 
     public Chunk? GetFirstChunkOfType(Type chunkType)
     {
         if (chunkType == null)
             throw new ArgumentNullException(nameof(chunkType));
 
-        if (!typeof(Chunk).IsAssignableFrom(chunkType))
-            throw new ArgumentException($"{chunkType.Name} must inherit from {nameof(Chunk)}", nameof(chunkType));
-
         if (!_chunksByType.TryGetValue(chunkType, out var chunks))
             return null;
+
+        if (!typeof(Chunk).IsAssignableFrom(chunkType))
+            throw new ArgumentException($"{chunkType.Name} must inherit from {nameof(Chunk)}", nameof(chunkType));
 
         return chunks[0];
     }
 
-    public T? GetFirstChunkOfType<T>() where T : Chunk => (T?)GetFirstChunkOfType(typeof(T));
+    public T? GetFirstChunkOfType<T>() where T : Chunk => _chunksByType.TryGetValue(typeof(T), out var chunks) ? (T)chunks[0] : null;
 
     public NamedChunk? GetFirstChunkOfType(Type chunkType, string name)
     {
         if (chunkType == null)
             throw new ArgumentNullException(nameof(chunkType));
 
-        if (!typeof(NamedChunk).IsAssignableFrom(chunkType))
-            throw new ArgumentException($"{chunkType.Name} must inherit from {nameof(NamedChunk)}", nameof(chunkType));
-
         if (!_namedChunks.TryGetValue((chunkType, name), out var namedChunks))
             return null;
+
+        if (!typeof(NamedChunk).IsAssignableFrom(chunkType))
+            throw new ArgumentException($"{chunkType.Name} must inherit from {nameof(NamedChunk)}", nameof(chunkType));
 
         return namedChunks[0];
     }
 
-    public T? GetFirstChunkOfType<T>(string name) where T : NamedChunk => (T?)GetFirstChunkOfType(typeof(T), name);
+    public T? GetFirstChunkOfType<T>(string name) where T : NamedChunk => _namedChunks.TryGetValue((typeof(T), name), out var namedChunks) ? (T)namedChunks[0] : null;
 
     public ParamChunk? GetFirstParamOfType(Type chunkType, string param)
     {
         if (chunkType == null)
             throw new ArgumentNullException(nameof(chunkType));
 
-        if (!typeof(ParamChunk).IsAssignableFrom(chunkType))
-            throw new ArgumentException($"{chunkType.Name} must inherit from {nameof(ParamChunk)}", nameof(chunkType));
-
         if (!_paramChunks.TryGetValue((chunkType, param), out var paramChunks))
             return null;
+
+        if (!typeof(ParamChunk).IsAssignableFrom(chunkType))
+            throw new ArgumentException($"{chunkType.Name} must inherit from {nameof(ParamChunk)}", nameof(chunkType));
 
         return paramChunks[0];
     }
 
-    public T? GetFirstParamOfType<T>(string param) where T : ParamChunk => (T?)GetFirstParamOfType(typeof(T), param);
+    public T? GetFirstParamOfType<T>(string param) where T : ParamChunk => _paramChunks.TryGetValue((typeof(T), param), out var paramChunks) ? (T)paramChunks[0] : null;
 
     public Chunk? GetLastChunkOfType(Type chunkType)
     {
         if (chunkType == null)
             throw new ArgumentNullException(nameof(chunkType));
 
-        if (!typeof(Chunk).IsAssignableFrom(chunkType))
-            throw new ArgumentException($"{chunkType.Name} must inherit from {nameof(Chunk)}", nameof(chunkType));
-
         if (!_chunksByType.TryGetValue(chunkType, out var chunks))
             return null;
         
+        if (!typeof(Chunk).IsAssignableFrom(chunkType))
+            throw new ArgumentException($"{chunkType.Name} must inherit from {nameof(Chunk)}", nameof(chunkType));
+
         return chunks[chunks.Count - 1];
     }
 
-    public T? GetLastChunkOfType<T>() where T : Chunk => (T?)GetLastChunkOfType(typeof(T));
+    public T? GetLastChunkOfType<T>() where T : Chunk => _chunksByType.TryGetValue(typeof(T), out var chunks) ? (T)chunks[chunks.Count - 1] : null;
 
     public NamedChunk? GetLastChunkOfType(Type chunkType, string name)
     {
         if (chunkType == null)
             throw new ArgumentNullException(nameof(chunkType));
 
-        if (!typeof(NamedChunk).IsAssignableFrom(chunkType))
-            throw new ArgumentException($"{chunkType.Name} must inherit from {nameof(NamedChunk)}", nameof(chunkType));
-
         if (!_namedChunks.TryGetValue((chunkType, name), out var namedChunks))
             return null;
         
+        if (!typeof(NamedChunk).IsAssignableFrom(chunkType))
+            throw new ArgumentException($"{chunkType.Name} must inherit from {nameof(NamedChunk)}", nameof(chunkType));
+
         return namedChunks[namedChunks.Count - 1];
     }
 
-    public T? GetLastChunkOfType<T>(string name) where T : NamedChunk => (T?)GetLastChunkOfType(typeof(T), name);
+    public T? GetLastChunkOfType<T>(string name) where T : NamedChunk => _namedChunks.TryGetValue((typeof(T), name), out var namedChunks) ? (T)namedChunks[namedChunks.Count - 1] : null;
 
     public ParamChunk? GetLastParamOfType(Type chunkType, string param)
     {
         if (chunkType == null)
             throw new ArgumentNullException(nameof(chunkType));
 
-        if (!typeof(ParamChunk).IsAssignableFrom(chunkType))
-            throw new ArgumentException($"{chunkType.Name} must inherit from {nameof(ParamChunk)}", nameof(chunkType));
-
         if (!_paramChunks.TryGetValue((chunkType, param), out var paramChunks))
             return null;
         
+        if (!typeof(ParamChunk).IsAssignableFrom(chunkType))
+            throw new ArgumentException($"{chunkType.Name} must inherit from {nameof(ParamChunk)}", nameof(chunkType));
+
         return paramChunks[paramChunks.Count - 1];
     }
 
-    public T? GetLastParamOfType<T>(string param) where T : ParamChunk => (T?)GetLastParamOfType(typeof(T), param);
+    public T? GetLastParamOfType<T>(string param) where T : ParamChunk => _paramChunks.TryGetValue((typeof(T), param), out var paramChunks) ? (T)paramChunks[paramChunks.Count - 1] : null;
 
     public IReadOnlyList<T> GetChunksOfType<T>() where T : Chunk
     {
         if (!_chunksByType.TryGetValue(typeof(T), out var chunks))
             return [];
 
-        var result = new List<T>(chunks.Count);
-        foreach (var chunk in chunks)
-            result.Add((T)chunk);
-
-        return result;
+        return new CastedReadOnlyList<Chunk, T>(chunks);
     }
 
     public IReadOnlyList<T> GetChunksOfType<T>(string name) where T : NamedChunk
@@ -316,11 +314,7 @@ public abstract class Chunk
         if (!_namedChunks.TryGetValue((typeof(T), name), out var namedChunks))
             return [];
 
-        var result = new List<T>(namedChunks.Count);
-        foreach (var chunk in namedChunks)
-            result.Add((T)chunk);
-
-        return result;
+        return new CastedReadOnlyList<NamedChunk, T>(namedChunks);
     }
 
     public IReadOnlyList<T> GetParamsOfType<T>(string param) where T : ParamChunk
@@ -328,11 +322,7 @@ public abstract class Chunk
         if (!_paramChunks.TryGetValue((typeof(T), param), out var paramChunks))
             return [];
 
-        var result = new List<T>(paramChunks.Count);
-        foreach (var chunk in paramChunks)
-            result.Add((T)chunk);
-
-        return result;
+        return new CastedReadOnlyList<ParamChunk, T>(paramChunks);
     }
 
     public NamedChunk? FindNamedChunkInParentHierarchy(Type chunkType, string name)

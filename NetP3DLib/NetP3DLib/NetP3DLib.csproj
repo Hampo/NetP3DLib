@@ -29,9 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NetP3DLib.Generators\NetP3DLib.Generators.csproj"
-					  OutputItemType="Analyzer"
-					  ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\NetP3DLib.Generators\NetP3DLib.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
 </Project>
