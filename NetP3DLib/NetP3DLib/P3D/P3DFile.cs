@@ -137,23 +137,21 @@ public class P3DFile
         Chunks = new(this);
     }
 
-    public P3DFile(string filePath)
+    public P3DFile(string filePath) : this()
     {
         if (!File.Exists(filePath))
             throw new FileNotFoundException($"Could not find the specified file.", filePath);
 
         using var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
 
-        Chunks = new(this);
         LoadFromStream(fs, false);
     }
 
-    public P3DFile(Stream stream)
+    public P3DFile(Stream stream) : this()
     {
         if (!stream.CanRead)
             throw new InvalidDataException("Could not read from stream.");
 
-        Chunks = new(this);
         LoadFromStream(stream, false);
     }
 
