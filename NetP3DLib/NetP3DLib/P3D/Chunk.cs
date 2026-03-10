@@ -3,10 +3,10 @@ using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Comparers;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
+using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Xml.Linq;
 #if DEBUG
 using System.Diagnostics;
 #endif
@@ -387,7 +387,7 @@ public abstract class Chunk
             list = [];
             _chunksByType[childType] = list;
         }
-        list.Add(child);
+        ListHelper.InsertSorted(list, child);
 
         if (child is NamedChunk namedChunk)
         {
@@ -397,7 +397,7 @@ public abstract class Chunk
                 namedList = [];
                 _namedChunks[key] = namedList;
             }
-            namedList.Add(namedChunk);
+            ListHelper.InsertSorted(namedList, namedChunk);
         }
         else if (child is ParamChunk paramChunk)
         {
@@ -407,7 +407,7 @@ public abstract class Chunk
                 paramList = [];
                 _paramChunks[key] = paramList;
             }
-            paramList.Add(paramChunk);
+            ListHelper.InsertSorted(paramList, paramChunk);
         }
     }
 

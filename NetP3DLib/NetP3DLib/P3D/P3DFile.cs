@@ -5,6 +5,7 @@ using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Comparers;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -494,7 +495,7 @@ public class P3DFile
             list = [];
             _chunksByType[childType] = list;
         }
-        list.Add(chunk);
+        ListHelper.InsertSorted(list, chunk);
 
         if (chunk is NamedChunk namedChunk)
         {
@@ -504,7 +505,7 @@ public class P3DFile
                 namedList = [];
                 _namedChunks[key] = namedList;
             }
-            namedList.Add(namedChunk);
+            ListHelper.InsertSorted(namedList, namedChunk);
         }
         else if (chunk is ParamChunk paramChunk)
         {
@@ -514,7 +515,7 @@ public class P3DFile
                 paramList = [];
                 _paramChunks[key] = paramList;
             }
-            paramList.Add(paramChunk);
+            ListHelper.InsertSorted(paramList, paramChunk);
         }
     }
 
