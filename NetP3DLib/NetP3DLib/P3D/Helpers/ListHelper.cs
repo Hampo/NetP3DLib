@@ -3,30 +3,25 @@
 namespace NetP3DLib.P3D.Helpers;
 public static class ListHelper
 {
-    public static void InsertSorted(List<Chunk> list, Chunk chunk)
+    private static int FindInsertIndex<T>(List<T> list, int indexInParent) where T : Chunk
     {
-        int index = 0;
-        while (index < list.Count && list[index].IndexInParent < chunk.IndexInParent)
-            index++;
+        int low = 0;
+        int high = list.Count;
 
-        list.Insert(index, chunk);
+        while (low < high)
+        {
+            int mid = low + (high - low) / 2;
+            if (list[mid].IndexInParent < indexInParent)
+                low = mid + 1;
+            else
+                high = mid;
+        }
+        return low;
     }
 
-    public static void InsertSorted(List<NamedChunk> list, NamedChunk chunk)
+    public static void InsertSorted<T>(List<T> list, T chunk) where T : Chunk
     {
-        int index = 0;
-        while (index < list.Count && list[index].IndexInParent < chunk.IndexInParent)
-            index++;
-
-        list.Insert(index, chunk);
-    }
-
-    public static void InsertSorted(List<ParamChunk> list, ParamChunk chunk)
-    {
-        int index = 0;
-        while (index < list.Count && list[index].IndexInParent < chunk.IndexInParent)
-            index++;
-
+        int index = FindInsertIndex(list, chunk.IndexInParent);
         list.Insert(index, chunk);
     }
 }
