@@ -349,6 +349,10 @@ public class P3DFile
         Chunks.AddRange(newChunks);
     }
 
+    private readonly Dictionary<Type, List<Chunk>> _chunksByType = [];
+    private readonly Dictionary<(Type, string name), List<NamedChunk>> _namedChunks = [];
+    private readonly Dictionary<(Type, string name), List<ParamChunk>> _paramChunks = [];
+
     public Chunk? GetFirstChunkOfType(Type chunkType)
     {
         if (chunkType == null)
@@ -357,11 +361,10 @@ public class P3DFile
         if (!typeof(Chunk).IsAssignableFrom(chunkType))
             throw new ArgumentException($"{chunkType.Name} must inherit from {nameof(Chunk)}", nameof(chunkType));
 
-        foreach (var child in Chunks)
-            if (chunkType.IsAssignableFrom(child.GetType()))
-                return child;
+        if (!_chunksByType.TryGetValue(chunkType, out var chunks))
+            return null;
 
-        return null;
+        return chunks[0];
     }
 
     public T? GetFirstChunkOfType<T>() where T : Chunk => (T?)GetFirstChunkOfType(typeof(T));
@@ -374,11 +377,10 @@ public class P3DFile
         if (!typeof(NamedChunk).IsAssignableFrom(chunkType))
             throw new ArgumentException($"{chunkType.Name} must inherit from {nameof(NamedChunk)}", nameof(chunkType));
 
-        foreach (var child in Chunks)
-            if (chunkType.IsAssignableFrom(child.GetType()) && child is NamedChunk chunk && chunk.Name == name)
-                return chunk;
+        if (!_namedChunks.TryGetValue((chunkType, name), out var namedChunks))
+            return null;
 
-        return null;
+        return namedChunks[0];
     }
 
     public T? GetFirstChunkOfType<T>(string name) where T : NamedChunk => (T?)GetFirstChunkOfType(typeof(T), name);
@@ -391,11 +393,10 @@ public class P3DFile
         if (!typeof(ParamChunk).IsAssignableFrom(chunkType))
             throw new ArgumentException($"{chunkType.Name} must inherit from {nameof(ParamChunk)}", nameof(chunkType));
 
-        foreach (var child in Chunks)
-            if (chunkType.IsAssignableFrom(child.GetType()) && child is ParamChunk chunk && chunk.Param == param)
-                return chunk;
+        if (!_paramChunks.TryGetValue((chunkType, param), out var paramChunks))
+            return null;
 
-        return null;
+        return paramChunks[0];
     }
 
     public T? GetFirstParamOfType<T>(string param) where T : ParamChunk => (T?)GetFirstParamOfType(typeof(T), param);
@@ -408,14 +409,10 @@ public class P3DFile
         if (!typeof(Chunk).IsAssignableFrom(chunkType))
             throw new ArgumentException($"{chunkType.Name} must inherit from {nameof(Chunk)}", nameof(chunkType));
 
-        for (int i = Chunks.Count - 1; i >= 0; i--)
-        {
-            var child = Chunks[i];
-            if (chunkType.IsAssignableFrom(child.GetType()))
-                return child;
-        }
+        if (!_chunksByType.TryGetValue(chunkType, out var chunks))
+            return null;
 
-        return null;
+        return chunks[chunks.Count - 1];
     }
 
     public T? GetLastChunkOfType<T>() where T : Chunk => (T?)GetLastChunkOfType(typeof(T));
@@ -428,14 +425,10 @@ public class P3DFile
         if (!typeof(NamedChunk).IsAssignableFrom(chunkType))
             throw new ArgumentException($"{chunkType.Name} must inherit from {nameof(NamedChunk)}", nameof(chunkType));
 
-        for (int i = Chunks.Count - 1; i >= 0; i--)
-        {
-            var child = Chunks[i];
-            if (chunkType.IsAssignableFrom(child.GetType()) && child is NamedChunk chunk && chunk.Name == name)
-                return chunk;
-        }
+        if (!_namedChunks.TryGetValue((chunkType, name), out var namedChunks))
+            return null;
 
-        return null;
+        return namedChunks[namedChunks.Count - 1];
     }
 
     public T? GetLastChunkOfType<T>(string name) where T : NamedChunk => (T?)GetLastChunkOfType(typeof(T), name);
@@ -448,65 +441,183 @@ public class P3DFile
         if (!typeof(ParamChunk).IsAssignableFrom(chunkType))
             throw new ArgumentException($"{chunkType.Name} must inherit from {nameof(ParamChunk)}", nameof(chunkType));
 
-        for (int i = Chunks.Count - 1; i >= 0; i--)
-        {
-            var child = Chunks[i];
-            if (chunkType.IsAssignableFrom(child.GetType()) && child is ParamChunk chunk && chunk.Param == param)
-                return chunk;
-        }
+        if (!_paramChunks.TryGetValue((chunkType, param), out var paramChunks))
+            return null;
 
-        return null;
+        return paramChunks[paramChunks.Count - 1];
     }
 
     public T? GetLastParamOfType<T>(string param) where T : ParamChunk => (T?)GetLastParamOfType(typeof(T), param);
 
     public IReadOnlyList<T> GetChunksOfType<T>() where T : Chunk
     {
-        var result = new List<T>(Chunks.Count);
-        foreach (var child in Chunks)
-        {
-            if (child is T chunk)
-                result.Add(chunk);
-        }
+        if (!_chunksByType.TryGetValue(typeof(T), out var chunks))
+            return [];
+
+        var result = new List<T>(chunks.Count);
+        foreach (var chunk in chunks)
+            result.Add((T)chunk);
+
         return result;
     }
 
     public IReadOnlyList<T> GetChunksOfType<T>(string name) where T : NamedChunk
     {
-        var result = new List<T>(Chunks.Count);
-        foreach (var child in Chunks)
-        {
-            if (child is T chunk && chunk.Name == name)
-                result.Add(chunk);
-        }
+        if (!_namedChunks.TryGetValue((typeof(T), name), out var namedChunks))
+            return [];
+
+        var result = new List<T>(namedChunks.Count);
+        foreach (var chunk in namedChunks)
+            result.Add((T)chunk);
+
         return result;
     }
 
     public IReadOnlyList<T> GetParamsOfType<T>(string param) where T : ParamChunk
     {
-        var result = new List<T>(Chunks.Count);
-        foreach (var child in Chunks)
-        {
-            if (child is T chunk && chunk.Param == param)
-                result.Add(chunk);
-        }
+        if (!_paramChunks.TryGetValue((typeof(T), param), out var paramChunks))
+            return [];
+
+        var result = new List<T>(paramChunks.Count);
+        foreach (var chunk in paramChunks)
+            result.Add((T)chunk);
+
         return result;
     }
 
+    private readonly Dictionary<uint, uint> _chunkCounts = [];
+    public uint GetChunkCount() => (uint)Chunks.Count;
+
+    public uint GetChunkCount(ChunkIdentifier chunkIdentifier) => GetChunkCount((uint)chunkIdentifier);
+
+    public uint GetChunkCount(uint chunkID) => _chunkCounts.TryGetValue(chunkID, out var count) ? count : 0;
+
+    private void ProcessAddedChunk(Chunk chunk)
+    {
+        if (_chunkCounts.ContainsKey(chunk.ID))
+            _chunkCounts[chunk.ID]++;
+        else
+            _chunkCounts[chunk.ID] = 1;
+
+        var childType = chunk.GetType();
+        if (!_chunksByType.TryGetValue(childType, out var list))
+        {
+            list = [];
+            _chunksByType[childType] = list;
+        }
+        list.Add(chunk);
+
+        if (chunk is NamedChunk namedChunk)
+        {
+            var key = (childType, namedChunk.Name);
+            if (!_namedChunks.TryGetValue(key, out var namedList))
+            {
+                namedList = [];
+                _namedChunks[key] = namedList;
+            }
+            namedList.Add(namedChunk);
+        }
+        else if (chunk is ParamChunk paramChunk)
+        {
+            var key = (childType, paramChunk.Param);
+            if (!_paramChunks.TryGetValue(key, out var paramList))
+            {
+                paramList = [];
+                _paramChunks[key] = paramList;
+            }
+            paramList.Add(paramChunk);
+        }
+    }
+
+    private void ProcessRemovedChunk(Chunk chunk, int oldIndex)
+    {
+        if (_chunkCounts[chunk.ID] == 1)
+            _chunkCounts.Remove(chunk.ID);
+        else
+            _chunkCounts[chunk.ID]--;
+
+        var childType = chunk.GetType();
+        if (_chunksByType.TryGetValue(childType, out var list))
+        {
+            for (var i = list.Count - 1; i >= 0; i--)
+                if (list[i].IndexInParent == -1)
+                    list.RemoveAt(i);
+
+            if (list.Count == 0)
+                _chunksByType.Remove(childType);
+        }
+
+        if (chunk is NamedChunk namedChunk)
+        {
+            var key = (childType, namedChunk.Name);
+            if (_namedChunks.TryGetValue(key, out var namedList))
+            {
+                for (var i = namedList.Count - 1; i >= 0; i--)
+                    if (namedList[i].IndexInParent == -1)
+                        namedList.RemoveAt(i);
+
+                if (namedList.Count == 0)
+                    _namedChunks.Remove(key);
+            }
+        }
+        else if (chunk is ParamChunk paramChunk)
+        {
+            var key = (childType, paramChunk.Param);
+            if (_paramChunks.TryGetValue(key, out var paramList))
+            {
+                for (var i = paramList.Count - 1; i >= 0; i--)
+                    if (paramList[i].IndexInParent == -1)
+                        paramList.RemoveAt(i);
+
+                if (paramList.Count == 0)
+                    _paramChunks.Remove(key);
+            }
+        }
+    }
+
     public event Action<Chunk>? ChunkAdded;
-    internal void OnChunkAdded(Chunk chunk) => ChunkAdded?.Invoke(chunk);
+    internal void OnChunkAdded(Chunk chunk)
+    {
+        ProcessAddedChunk(chunk);
+
+        ChunkAdded?.Invoke(chunk);
+    }
 
     public event Action<Chunk, int>? ChunkRemoved;
-    internal void OnChunkRemoved(Chunk chunk, int oldIndex) => ChunkRemoved?.Invoke(chunk, oldIndex);
+    internal void OnChunkRemoved(Chunk chunk, int oldIndex)
+    {
+        ProcessRemovedChunk(chunk, oldIndex);
+
+        ChunkRemoved?.Invoke(chunk, oldIndex);
+    }
 
     public event Action<IReadOnlyList<Chunk>>? ChunksAdded;
-    internal void OnChunksAdded(IReadOnlyList<Chunk> chunks) => ChunksAdded?.Invoke(chunks);
+    internal void OnChunksAdded(IReadOnlyList<Chunk> chunks)
+    {
+        foreach (var chunk in chunks)
+            ProcessAddedChunk(chunk);
+
+        ChunksAdded?.Invoke(chunks);
+    }
 
     public event Action<IReadOnlyList<(Chunk chunk, int oldIndex)>>? ChunksRemoved;
-    internal void OnChunksRemoved(IReadOnlyList<(Chunk chunk, int oldIndex)> chunks) => ChunksRemoved?.Invoke(chunks);
+    internal void OnChunksRemoved(IReadOnlyList<(Chunk chunk, int oldIndex)> chunks)
+    {
+        foreach (var (chunk, oldIndex) in chunks)
+            ProcessRemovedChunk(chunk, oldIndex);
+
+        ChunksRemoved?.Invoke(chunks);
+    }
 
     public event Action? ChunksCleared;
-    internal void OnChunksCleared() => ChunksCleared?.Invoke();
+    internal void OnChunksCleared()
+    {
+        _chunkCounts.Clear();
+        _chunksByType.Clear();
+        _namedChunks.Clear();
+        _paramChunks.Clear();
+        ChunksCleared?.Invoke();
+    }
 
     public P3DFile Clone()
     {
