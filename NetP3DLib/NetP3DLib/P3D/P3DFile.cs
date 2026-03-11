@@ -238,6 +238,16 @@ public class P3DFile
         _chunkNameCache[id] = name;
         return name;
     }
+    private readonly struct ChunkGroup
+    {
+        public readonly uint Id;
+        public readonly List<Chunk> Chunks;
+        public ChunkGroup(uint id, List<Chunk> chunks)
+        {
+            Id = id;
+            Chunks = chunks;
+        }
+    }
     /// <summary>
     /// Sort <see cref="Chunks"/> in the order specified in <see cref="ChunkSortPriority"/>.
     /// <para>Chunk IDs without a sort priority will remain in their original order at the end of the file.</para>
@@ -249,7 +259,7 @@ public class P3DFile
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0220:Add explicit cast", Justification = "As the list is all chunks of the same type, if the first is a LocatorChunk, the rest will be.")]
     public void SortChunks(bool includeSectionHeaders = false, bool alphabetical = false, bool includeHistory = true, bool caseInsensitive = false)
     {
-        List<Chunk> newChunks = new(Chunks.Count + (includeSectionHeaders ? _chunksByType.Count : 0));
+        List<Chunk> newChunks = new(Chunks.Count + (includeSectionHeaders ? _chunksByType.Count + 20 : 0));
 
         if (includeHistory)
             Chunks.Add(new HistoryChunk(["Sorted with NetP3DLib", $"Run at {DateTime.Now:R}"]));
@@ -260,15 +270,41 @@ public class P3DFile
         for (var i = 0; i < ChunkSortPriority.Count; i++)
             priorityMap[ChunkSortPriority[i]] = i;
 
-        List<Type> chunkTypes = [.. _chunksByType.Keys];
-
-        chunkTypes.Sort((a, b) =>
+        List<ChunkGroup> groups = new(_chunksByType.Count);
+        foreach (var entry in _chunksByType)
         {
-            var idA = ChunkLoader.ChunkTypeMap[a];
-            var idB = ChunkLoader.ChunkTypeMap[b];
+            var type = entry.Key;
+            var list = entry.Value;
 
-            var aInList = priorityMap.TryGetValue(idA, out int indexA);
-            var bInList = priorityMap.TryGetValue(idB, out int indexB);
+            if (list.Count == 0)
+                continue;
+
+            if (ChunkLoader.ChunkTypeMap.TryGetValue(type, out var id))
+            {
+                groups.Add(new(id, list));
+            }
+            else
+            {
+                Dictionary<uint, List<Chunk>> subGroups = [];
+                foreach (var chunk in list)
+                {
+                    if (!subGroups.TryGetValue(chunk.ID, out var subList))
+                    {
+                        subList = [];
+                        subGroups[chunk.ID] = subList;
+                    }
+                    subList.Add(chunk);
+                }
+
+                foreach (var subGroup in subGroups)
+                    groups.Add(new(subGroup.Key, subGroup.Value));
+            }
+        }
+
+        groups.Sort((a, b) =>
+        {
+            var aInList = priorityMap.TryGetValue(a.Id, out int indexA);
+            var bInList = priorityMap.TryGetValue(b.Id, out int indexB);
 
             if (aInList && bInList)
                 return indexA.CompareTo(indexB);
@@ -277,13 +313,13 @@ public class P3DFile
             if (bInList)
                 return 1;
 
-            return idA.CompareTo(idB);
+            return a.Id.CompareTo(b.Id);
         });
 
-        foreach (var type in chunkTypes)
+        foreach (var group in groups)
         {
-            var chunks = _chunksByType[type];
-            var id = ChunkLoader.ChunkTypeMap[type];
+            var chunks = group.Chunks;
+            var id = group.Id;
 
             if (chunks.Count == 0)
                 continue;
