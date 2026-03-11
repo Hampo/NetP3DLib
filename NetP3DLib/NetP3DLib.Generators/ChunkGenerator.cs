@@ -57,6 +57,7 @@ public class ChunkGenerator : IIncrementalGenerator
         {
             // Instead of using Reflection and Expressions, we just write the exact code needed!
             sb.AppendLine($"            ChunkTypes[{chunk!.Identifier}] = (typeof({chunk.FullyQualifiedName}), br => new {chunk.FullyQualifiedName}(br));");
+            sb.AppendLine($"            ChunkTypeMap[typeof({chunk.FullyQualifiedName})] = {chunk!.Identifier};");
         }
 
         sb.AppendLine("        }");

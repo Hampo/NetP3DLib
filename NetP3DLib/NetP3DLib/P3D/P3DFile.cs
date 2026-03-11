@@ -7,10 +7,10 @@ using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
 using NetP3DLib.P3D.Helpers;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Text.RegularExpressions;
 
 namespace NetP3DLib.P3D;
 
@@ -228,7 +228,16 @@ public class P3DFile
         }
     }
 
-    private static readonly Regex SectionRegex = new(@"^(.*?) \(0x([A-F0-9]+)\)$");
+    private static readonly ConcurrentDictionary<uint, string> _chunkNameCache = new();
+    private static string GetCachedChunkName(uint id)
+    {
+        if (_chunkNameCache.TryGetValue(id, out var name))
+            return name;
+
+        name = ((ChunkIdentifier)id).ToString().Replace("_", " ");
+        _chunkNameCache[id] = name;
+        return name;
+    }
     /// <summary>
     /// Sort <see cref="Chunks"/> in the order specified in <see cref="ChunkSortPriority"/>.
     /// <para>Chunk IDs without a sort priority will remain in their original order at the end of the file.</para>
@@ -240,76 +249,80 @@ public class P3DFile
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0220:Add explicit cast", Justification = "As the list is all chunks of the same type, if the first is a LocatorChunk, the rest will be.")]
     public void SortChunks(bool includeSectionHeaders = false, bool alphabetical = false, bool includeHistory = true, bool caseInsensitive = false)
     {
-        List<Chunk> newChunks = new(Chunks.Count);
+        List<Chunk> newChunks = new(Chunks.Count + (includeSectionHeaders ? _chunksByType.Count : 0));
 
         if (includeHistory)
             Chunks.Add(new HistoryChunk(["Sorted with NetP3DLib", $"Run at {DateTime.Now:R}"]));
 
-        var comparer = new NaturalComparer(caseInsensitive);//caseInsensitive ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal;
+        var comparer = new NaturalComparer(caseInsensitive);
 
-        Dictionary<uint, List<Chunk>> chunksById = [];
-        foreach (var chunk in Chunks)
+        Dictionary<uint, int> priorityMap = new(ChunkSortPriority.Count);
+        for (var i = 0; i < ChunkSortPriority.Count; i++)
+            priorityMap[ChunkSortPriority[i]] = i;
+
+        List<Type> chunkTypes = [.. _chunksByType.Keys];
+
+        chunkTypes.Sort((a, b) =>
         {
-            if (!chunksById.TryGetValue(chunk.ID, out var list))
-            {
-                list = [];
-                chunksById[chunk.ID] = list;
-            }
-            list.Add(chunk);
-        }
+            var idA = ChunkLoader.ChunkTypeMap[a];
+            var idB = ChunkLoader.ChunkTypeMap[b];
 
-        List<uint> chunkIDs = [.. chunksById.Keys];
-        chunkIDs.Sort((a, b) =>
-        {
-            int indexA = ChunkSortPriority.IndexOf(a);
-            int indexB = ChunkSortPriority.IndexOf(b);
-
-            bool aInList = indexA >= 0;
-            bool bInList = indexB >= 0;
+            var aInList = priorityMap.TryGetValue(idA, out int indexA);
+            var bInList = priorityMap.TryGetValue(idB, out int indexB);
 
             if (aInList && bInList)
                 return indexA.CompareTo(indexB);
-
             if (aInList)
                 return -1;
-
             if (bInList)
                 return 1;
 
-            return a.CompareTo(b);
+            return idA.CompareTo(idB);
         });
 
-        foreach (var id in chunkIDs)
+        foreach (var type in chunkTypes)
         {
-            var chunks = chunksById[id];
+            var chunks = _chunksByType[type];
+            var id = ChunkLoader.ChunkTypeMap[type];
+
+            if (chunks.Count == 0)
+                continue;
 
             if (chunks[0] is HistoryChunk)
             {
                 for (int i = chunks.Count - 1; i >= 0; i--)
                 {
                     var historyChunk = (HistoryChunk)chunks[i];
-
                     if (historyChunk.NumHistory != 1)
                         continue;
 
-                    var sectionMatch = SectionRegex.Match(historyChunk.History[0]);
-                    if (!sectionMatch.Success)
+                    var text = historyChunk.History[0];
+                    var hexStart = text.LastIndexOf(" (0x", StringComparison.Ordinal);
+                    if (hexStart < 0 || !text.EndsWith(")", StringComparison.Ordinal))
                         continue;
 
-                    var typeName = sectionMatch.Groups[1].Value;
-                    var typeID = int.Parse(sectionMatch.Groups[2].Value, System.Globalization.NumberStyles.HexNumber);
-                    var typeIdentifier = (ChunkIdentifier)typeID;
+                    var typeName = text.Substring(0, hexStart);
+                    var hexPart = text.Substring(hexStart + 4, text.Length - hexStart - 5);
 
-                    if ((typeIdentifier == ChunkIdentifier.Locator && typeName.Contains("Locator")) || typeIdentifier.ToString().Replace("_", " ") == typeName)
-                        chunks.RemoveAt(i);
+                    if (uint.TryParse(hexPart, System.Globalization.NumberStyles.HexNumber, null, out uint typeID))
+                    {
+                        var expectedName = GetCachedChunkName(typeID);
+                        if (((ChunkIdentifier)typeID == ChunkIdentifier.Locator && typeName.IndexOf("Locator", StringComparison.Ordinal) >= 0) || expectedName == typeName)
+                            chunks.RemoveAt(i);
+                    }
                 }
+
+                if (chunks.Count == 0)
+                    continue;
             }
-
-            if (chunks.Count == 0)
-                continue;
-
-            if (chunks[0] is LocatorChunk)
+            else if (chunks[0] is LocatorChunk)
             {
+                if (!includeSectionHeaders && !alphabetical)
+                {
+                    newChunks.AddRange(chunks);
+                    continue;
+                }
+
                 Dictionary<uint, List<LocatorChunk>> locatorChunksByType = [];
                 foreach (LocatorChunk locatorChunk in chunks)
                 {
@@ -324,12 +337,12 @@ public class P3DFile
                 List<uint> locatorTypes = [.. locatorChunksByType.Keys];
                 locatorTypes.Sort();
 
-                foreach (uint type in locatorTypes)
+                foreach (uint locatorType in locatorTypes)
                 {
-                    var typeChunks = locatorChunksByType[type];
+                    var typeChunks = locatorChunksByType[locatorType];
 
                     if (includeSectionHeaders)
-                        newChunks.Add(new HistoryChunk([$"{typeChunks[0].LocatorType} Locator (Type {type}) (0x{id:X})"]));
+                        newChunks.Add(new HistoryChunk([$"{typeChunks[0].LocatorType} Locator (Type {locatorType}) (0x{id:X})"]));
 
                     if (alphabetical)
                         typeChunks.Sort((x, y) => comparer.Compare(x.Name, y.Name));
@@ -341,21 +354,12 @@ public class P3DFile
             }
 
             if (includeSectionHeaders)
-                newChunks.Add(new HistoryChunk([$"{((ChunkIdentifier)id).ToString().Replace("_", " ")} (0x{id:X})"]));
+                newChunks.Add(new HistoryChunk([$"{GetCachedChunkName(id)} (0x{id:X})"]));
 
             if (alphabetical && chunks[0] is NamedChunk)
-            {
-                List<NamedChunk> namedChunks = new(chunks.Count);
-                foreach (var chunk in chunks)
-                    namedChunks.Add((NamedChunk)chunk);
+                chunks.Sort((x, y) => comparer.Compare(((NamedChunk)x).Name, ((NamedChunk)y).Name));
 
-                namedChunks.Sort((x, y) => comparer.Compare(x.Name, y.Name));
-                newChunks.AddRange(namedChunks);
-            }
-            else
-            {
-                newChunks.AddRange(chunks);
-            }
+            newChunks.AddRange(chunks);
         }
 
         Chunks.Clear();
