@@ -28,10 +28,8 @@ public class SortOrderChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint);
 
-    public SortOrderChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public SortOrderChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadSingle())
     {
-        Version = br.ReadUInt32();
-        SortOrder = br.ReadSingle();
     }
 
     public SortOrderChunk(uint version, float sortOrder) : base(ChunkID)

@@ -13,11 +13,11 @@ public class OldScenegraphVisibilityChunk : NamedChunk
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Scenegraph_Visibility;
 
     public uint NumChildren => (uint)Children.Count;
-    private uint isVisible;
+    private uint _isVisible;
     public bool IsVisible
     {
-        get => isVisible != 0;
-        set => isVisible = value ? 1u : 0u;
+        get => _isVisible != 0;
+        set => _isVisible = value ? 1u : 0u;
     }
 
     public override byte[] DataBytes
@@ -28,32 +28,31 @@ public class OldScenegraphVisibilityChunk : NamedChunk
 
             data.AddRange(BinaryExtensions.GetP3DStringBytes(Name));
             data.AddRange(BitConverter.GetBytes(NumChildren));
-            data.AddRange(BitConverter.GetBytes(isVisible));
+            data.AddRange(BitConverter.GetBytes(_isVisible));
 
             return [.. data];
         }
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint);
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public OldScenegraphVisibilityChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public OldScenegraphVisibilityChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.SkipAndRead(sizeof(uint), br.ReadUInt32))
     {
-        _name = new(this, br);
-        var numChildren = br.ReadUInt32();
-        isVisible = br.ReadUInt32();
     }
 
-    public OldScenegraphVisibilityChunk(string name, bool isVisible) : base(ChunkID)
+    public OldScenegraphVisibilityChunk(string name, bool isVisible) : this(name, isVisible ? 1u : 0u)
     {
-        _name = new(this, name);
-        IsVisible = isVisible;
+    }
+
+    public OldScenegraphVisibilityChunk(string name, uint isVisible) : base(ChunkID, name)
+    {
+        _isVisible = isVisible;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(NumChildren);
-        bw.Write(isVisible);
+        bw.Write(_isVisible);
     }
 
     protected override Chunk CloneSelf() => new OldScenegraphVisibilityChunk(Name, IsVisible);

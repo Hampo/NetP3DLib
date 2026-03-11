@@ -31,17 +31,12 @@ public class OldScenegraphTransformChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(float) * 16;
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public OldScenegraphTransformChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public OldScenegraphTransformChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.SkipAndRead(sizeof(uint), br.ReadMatrix4x4))
     {
-        _name = new(this, br);
-        var numChildren = br.ReadUInt32();
-        Transform = br.ReadMatrix4x4();
     }
 
-    public OldScenegraphTransformChunk(string name, Matrix4x4 transform) : base(ChunkID)
+    public OldScenegraphTransformChunk(string name, Matrix4x4 transform) : base(ChunkID, name)
     {
-        _name = new(this, name);
         Transform = transform;
     }
 

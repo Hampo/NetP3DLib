@@ -42,7 +42,12 @@ public class FrontendMultiTextChunk : NamedChunk
         get => _textStyleName?.Value ?? string.Empty;
         set => _textStyleName.Value = value;
     }
-    public byte ShadowEnabled { get; set; }
+    private byte _shadowEnabled;
+    public bool ShadowEnabled
+    {
+        get => _shadowEnabled != 0;
+        set => _shadowEnabled = (byte)(value ? 1 : 0);
+    }
     public Color ShadowColour { get; set; }
     public int ShadowOffsetX { get; set; }
     public int ShadowOffsetY { get; set; }
@@ -66,7 +71,7 @@ public class FrontendMultiTextChunk : NamedChunk
             data.AddRange(BitConverter.GetBytes(Translucency));
             data.AddRange(BitConverter.GetBytes(RotationValue));
             data.AddRange(BinaryExtensions.GetP3DStringBytes(TextStyleName));
-            data.Add(ShadowEnabled);
+            data.Add(_shadowEnabled);
             data.AddRange(BinaryExtensions.GetBytes(ShadowColour));
             data.AddRange(BitConverter.GetBytes(ShadowOffsetX));
             data.AddRange(BitConverter.GetBytes(ShadowOffsetY));
@@ -77,30 +82,16 @@ public class FrontendMultiTextChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(int) + sizeof(int) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(float) + BinaryExtensions.GetP3DStringLength(TextStyleName) + sizeof(byte) + sizeof(uint) + sizeof(int) + sizeof(int) + sizeof(uint);
 
-    public FrontendMultiTextChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public FrontendMultiTextChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadUInt32(), br.ReadInt32(), br.ReadInt32(), br.ReadUInt32(), br.ReadUInt32(), (Justifications)br.ReadUInt32(), (Justifications)br.ReadUInt32(), br.ReadColor(), br.ReadUInt32(), br.ReadSingle(), br.ReadP3DString(), br.ReadByte(), br.ReadColor(), br.ReadInt32(), br.ReadInt32(), br.ReadUInt32())
     {
-        _name = new(this, br);
-        Version = br.ReadUInt32();
-        PositionX = br.ReadInt32();
-        PositionY = br.ReadInt32();
-        DimensionX = br.ReadUInt32();
-        DimensionY = br.ReadUInt32();
-        JustificationX = (Justifications)br.ReadUInt32();
-        JustificationY = (Justifications)br.ReadUInt32();
-        Colour = br.ReadColor();
-        Translucency = br.ReadUInt32();
-        RotationValue = br.ReadSingle();
-        _textStyleName = new(this, br);
-        ShadowEnabled = br.ReadByte();
-        ShadowColour = br.ReadColor();
-        ShadowOffsetX = br.ReadInt32();
-        ShadowOffsetY = br.ReadInt32();
-        CurrentText = br.ReadUInt32();
     }
 
-    public FrontendMultiTextChunk(string name, uint version, int positionX, int positionY, uint dimensionX, uint dimensionY, Justifications justificationX, Justifications justificationY, Color colour, uint translucency, float rotationValue, string textStyleName, byte shadowEnabled, Color shadowColour, int shadowOffsetX, int shadowOffsetY, uint currentText) : base(ChunkID)
+    public FrontendMultiTextChunk(string name, uint version, int positionX, int positionY, uint dimensionX, uint dimensionY, Justifications justificationX, Justifications justificationY, Color colour, uint translucency, float rotationValue, string textStyleName, bool shadowEnabled, Color shadowColour, int shadowOffsetX, int shadowOffsetY, uint currentText) : this(name, version, positionX, positionY, dimensionX, dimensionY, justificationX, justificationY, colour, translucency, rotationValue, textStyleName, (byte)(shadowEnabled ? 1 : 0), shadowColour, shadowOffsetX, shadowOffsetY, currentText)
     {
-        _name = new(this, name);
+    }
+
+    public FrontendMultiTextChunk(string name, uint version, int positionX, int positionY, uint dimensionX, uint dimensionY, Justifications justificationX, Justifications justificationY, Color colour, uint translucency, float rotationValue, string textStyleName, byte shadowEnabled, Color shadowColour, int shadowOffsetX, int shadowOffsetY, uint currentText) : base(ChunkID, name)
+    {
         Version = version;
         PositionX = positionX;
         PositionY = positionY;
@@ -112,7 +103,7 @@ public class FrontendMultiTextChunk : NamedChunk
         Translucency = translucency;
         RotationValue = rotationValue;
         _textStyleName = new(this, textStyleName);
-        ShadowEnabled = shadowEnabled;
+        _shadowEnabled = shadowEnabled;
         ShadowColour = shadowColour;
         ShadowOffsetX = shadowOffsetX;
         ShadowOffsetY = shadowOffsetY;
@@ -142,7 +133,7 @@ public class FrontendMultiTextChunk : NamedChunk
         bw.Write(Translucency);
         bw.Write(RotationValue);
         bw.WriteP3DString(TextStyleName);
-        bw.Write(ShadowEnabled);
+        bw.Write(_shadowEnabled);
         bw.Write(ShadowColour);
         bw.Write(ShadowOffsetX);
         bw.Write(ShadowOffsetY);

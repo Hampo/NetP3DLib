@@ -42,18 +42,18 @@ public class OldScenegraphDrawableChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + BinaryExtensions.GetP3DStringLength(DrawableName) + sizeof(uint);
 
-    public OldScenegraphDrawableChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public OldScenegraphDrawableChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadP3DString(), br.ReadUInt32())
     {
-        _name = new(this, br);
-        _drawableName = new(this, br);
-        _isTranslucent = br.ReadUInt32();
     }
 
-    public OldScenegraphDrawableChunk(string name, string drawableName, bool isTranslucent) : base(ChunkID)
+    public OldScenegraphDrawableChunk(string name, string drawableName, bool isTranslucent) : this(name, drawableName, isTranslucent ? 1u : 0u)
     {
-        _name = new(this, name);
+    }
+
+    public OldScenegraphDrawableChunk(string name, string drawableName, uint isTranslucent) : base(ChunkID, name)
+    {
         _drawableName = new(this, drawableName);
-        IsTranslucent = isTranslucent;
+        _isTranslucent = isTranslucent;
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

@@ -39,17 +39,12 @@ public class RoadSegmentChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + BinaryExtensions.GetP3DStringLength(RoadDataSegment) + sizeof(float) * 16 + sizeof(float) * 16;
 
-    public RoadSegmentChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public RoadSegmentChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadP3DString(), br.ReadMatrix4x4(), br.ReadMatrix4x4())
     {
-        _name = new(this, br);
-        _roadDataSegment = new(this, br);
-        Transform = br.ReadMatrix4x4();
-        Scale = br.ReadMatrix4x4();
     }
 
-    public RoadSegmentChunk(string name, string roadDataSegment, Matrix4x4 transform, Matrix4x4 scale) : base(ChunkID)
+    public RoadSegmentChunk(string name, string roadDataSegment, Matrix4x4 transform, Matrix4x4 scale) : base(ChunkID, name)
     {
-        _name = new(this, name);
         _roadDataSegment = new(this, roadDataSegment);
         Transform = transform;
         Scale = scale;

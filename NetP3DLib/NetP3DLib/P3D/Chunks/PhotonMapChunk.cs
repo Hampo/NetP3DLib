@@ -4,6 +4,7 @@ using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -117,29 +118,12 @@ public class PhotonMapChunk : NamedChunk
         }
     }
 
-    public PhotonMapChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public PhotonMapChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadUInt32(), ListHelper.ReadArray(br.ReadInt32, br.ReadP3DString, out var numLights), ListHelper.ReadArray(numLights, br.ReadSingle), ListHelper.ReadArray(br.ReadInt32(), () => new Photon(br)))
     {
-        _name = new(this, br);
-        Version = br.ReadUInt32();
-        var numLights = br.ReadInt32();
-        var lights = new string[numLights];
-        for (var i = 0; i < numLights; i++)
-            lights[i] = br.ReadP3DString();
-        Lights = CreateSizeAwareList(lights);
-        var lightScales = new float[numLights];
-        for (var i = 0; i < numLights; i++)
-            lightScales[i] = br.ReadSingle();
-        LightScales = CreateSizeAwareList(lightScales);
-        var numPhotons = br.ReadInt32();
-        var photons = new Photon[numPhotons];
-        for (var i = 0; i < numPhotons; i++)
-            photons[i] = new(br);
-        Photons = CreateSizeAwareList(photons);
     }
 
-    public PhotonMapChunk(string name, uint version, IList<string> lights, IList<float> lightScales, IList<Photon> photons) : base(ChunkID)
+    public PhotonMapChunk(string name, uint version, IList<string> lights, IList<float> lightScales, IList<Photon> photons) : base(ChunkID, name)
     {
-        _name = new(this, name);
         Version = version;
         Lights = CreateSizeAwareList(lights);
         LightScales = CreateSizeAwareList(lightScales);

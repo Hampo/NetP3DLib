@@ -11,11 +11,11 @@ public class RenderStatusChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Render_Status;
 
-    private uint castShadow;
+    private uint _castShadow;
     public bool CastShadow
     {
-        get => castShadow == 0;
-        set => castShadow = value ? 0u : 1u;
+        get => _castShadow == 0;
+        set => _castShadow = value ? 0u : 1u;
     }
 
     public override byte[] DataBytes
@@ -24,26 +24,29 @@ public class RenderStatusChunk : Chunk
         {
             List<byte> data = [];
 
-            data.AddRange(BitConverter.GetBytes(castShadow));
+            data.AddRange(BitConverter.GetBytes(_castShadow));
 
             return [.. data];
         }
     }
     public override uint DataLength => sizeof(uint);
 
-    public RenderStatusChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public RenderStatusChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32())
     {
-        castShadow = br.ReadUInt32();
     }
 
-    public RenderStatusChunk(bool castShadow) : base(ChunkID)
+    public RenderStatusChunk(bool castShadow) : this(castShadow ? 0u : 1u)
     {
-        CastShadow = castShadow;
+    }
+
+    public RenderStatusChunk(uint castShadow) : base(ChunkID)
+    {
+        _castShadow = castShadow;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
     {
-        bw.Write(castShadow);
+        bw.Write(_castShadow);
     }
 
     protected override Chunk CloneSelf() => new RenderStatusChunk(CastShadow);

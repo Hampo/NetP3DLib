@@ -3,6 +3,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,7 +17,12 @@ public class BooleanChannelChunk : ParamChunk
 
     [DefaultValue(0)]
     public uint Version { get; set; }
-    public bool StartState { get; set; }
+    private ushort _startState;
+    public bool StartState
+    {
+        get => _startState == 1;
+        set => _startState = (ushort)(value ? 1u : 0u);
+    }
     public uint NumValues
     {
         get => (uint)(Values?.Count ?? 0);
@@ -57,23 +63,18 @@ public class BooleanChannelChunk : ParamChunk
     }
     public override uint DataLength => sizeof(uint) + 4 + sizeof(ushort) + sizeof(uint) + sizeof(ushort) * NumValues;
 
-    public BooleanChannelChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public BooleanChannelChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadFourCC(), br.ReadUInt16(), ListHelper.ReadArray(br.ReadInt32(), br.ReadUInt16))
     {
-        Version = br.ReadUInt32();
-        _param = new(this, br);
-        StartState = br.ReadUInt16() == 1;
-        var numValues = br.ReadInt32();
-        var values = new ushort[numValues];
-        for (int i = 0; i < numValues; i++)
-            values[i] = br.ReadUInt16();
-        Values = CreateSizeAwareList(values);
     }
 
-    public BooleanChannelChunk(uint version, string param, bool startState, IList<ushort> values) : base(ChunkID)
+    public BooleanChannelChunk(uint version, string param, bool startState, IList<ushort> values) : this(version, param, (ushort)(startState ? 1u : 0u), values)
+    {
+    }
+
+    public BooleanChannelChunk(uint version, string param, ushort startState, IList<ushort> values) : base(ChunkID, param)
     {
         Version = version;
-        _param = new(this, param);
-        StartState = startState;
+        _startState = startState;
         Values = CreateSizeAwareList(values);
     }
 

@@ -11,11 +11,11 @@ public class SkeletonJointBonePreserveChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Skeleton_Joint_Bone_Preserve;
 
-    private uint preserveBoneLengths;
+    private uint _preserveBoneLengths;
     public bool PreserveBoneLengths
     {
-        get => preserveBoneLengths != 0;
-        set => preserveBoneLengths = value ? 1u : 0u;
+        get => _preserveBoneLengths != 0;
+        set => _preserveBoneLengths = value ? 1u : 0u;
     }
 
     public override byte[] DataBytes
@@ -24,26 +24,29 @@ public class SkeletonJointBonePreserveChunk : Chunk
         {
             List<byte> data = [];
 
-            data.AddRange(BitConverter.GetBytes(preserveBoneLengths));
+            data.AddRange(BitConverter.GetBytes(_preserveBoneLengths));
 
             return [.. data];
         }
     }
     public override uint DataLength => sizeof(uint);
 
-    public SkeletonJointBonePreserveChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public SkeletonJointBonePreserveChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32())
     {
-        preserveBoneLengths = br.ReadUInt32();
     }
 
-    public SkeletonJointBonePreserveChunk(bool preserveBoneLengths) : base(ChunkID)
+    public SkeletonJointBonePreserveChunk(bool preserveBoneLengths) : this(preserveBoneLengths ? 1u : 0u)
     {
-        PreserveBoneLengths = preserveBoneLengths;
+    }
+
+    public SkeletonJointBonePreserveChunk(uint preserveBoneLengths) : base(ChunkID)
+    {
+        _preserveBoneLengths = preserveBoneLengths;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
     {
-        bw.Write(preserveBoneLengths);
+        bw.Write(_preserveBoneLengths);
     }
 
     protected override Chunk CloneSelf() => new SkeletonJointBonePreserveChunk(PreserveBoneLengths);

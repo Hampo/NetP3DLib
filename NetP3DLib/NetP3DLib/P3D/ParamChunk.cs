@@ -10,7 +10,7 @@ namespace NetP3DLib.P3D;
 #pragma warning disable CS8618
 public abstract class ParamChunk : Chunk
 {
-    internal FourCC _param;
+    internal readonly FourCC _param;
     [MaxLength(4)]
     public string Param
     {
@@ -18,11 +18,12 @@ public abstract class ParamChunk : Chunk
         set => _param.Value = value;
     }
 
-    public ParamChunk(uint ID) : base(ID)
+    public ParamChunk(uint ID, string param) : base(ID)
     {
+        _param = new(this, param);
     }
 
-    public ParamChunk(ChunkIdentifier ID) : base(ID)
+    public ParamChunk(ChunkIdentifier ID, string param) : this((uint)ID, param)
     {
     }
 

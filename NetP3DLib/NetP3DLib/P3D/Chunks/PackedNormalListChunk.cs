@@ -3,6 +3,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
+using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 
@@ -49,11 +50,8 @@ public class PackedNormalListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(byte) * NumNormals;
 
-    public PackedNormalListChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public PackedNormalListChunk(EndianAwareBinaryReader br) : this(ListHelper.ReadArray(br.ReadInt32(), br.ReadByte))
     {
-        var numNormals = br.ReadInt32();
-        Normals = CreateSizeAwareList<byte>(numNormals);
-        Normals.AddRange(br.ReadBytes(numNormals));
     }
 
     public PackedNormalListChunk(IList<byte> normals) : base(ChunkID)

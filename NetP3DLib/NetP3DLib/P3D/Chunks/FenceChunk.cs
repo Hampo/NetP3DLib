@@ -19,7 +19,7 @@ public class FenceChunk : Chunk
     public override uint DataLength => 0;
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Required for ChunkLoader.")]
-    public FenceChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public FenceChunk(EndianAwareBinaryReader br) : this()
     { }
 
     public FenceChunk() : base(ChunkID)

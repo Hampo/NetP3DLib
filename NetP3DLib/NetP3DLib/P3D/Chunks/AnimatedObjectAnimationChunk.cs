@@ -35,18 +35,14 @@ public class AnimatedObjectAnimationChunk : NamedChunk
     public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + sizeof(float) + sizeof(uint);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public AnimatedObjectAnimationChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public AnimatedObjectAnimationChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadP3DString(), br.ReadSingle())
     {
-        Version = br.ReadUInt32();
-        _name = new(this, br);
-        FrameRate = br.ReadSingle();
         var numOldFrameControllers = br.ReadUInt32();
     }
 
-    public AnimatedObjectAnimationChunk(uint version, string name, float frameRate) : base(ChunkID)
+    public AnimatedObjectAnimationChunk(uint version, string name, float frameRate) : base(ChunkID, name)
     {
         Version = version;
-        _name = new(this, name);
         FrameRate = frameRate;
     }
 

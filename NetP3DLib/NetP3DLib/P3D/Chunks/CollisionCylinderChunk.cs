@@ -14,11 +14,11 @@ public class CollisionCylinderChunk : Chunk
 
     public float Radius { get; set; }
     public float HalfLength { get; set; }
-    private ushort flatEnd;
+    private ushort _flatEnd;
     public bool FlatEnd
     {
-        get => flatEnd != 0;
-        set => flatEnd = (ushort)(value ? 1 : 0);
+        get => _flatEnd != 0;
+        set => _flatEnd = (ushort)(value ? 1 : 0);
     }
 
     public override byte[] DataBytes
@@ -29,25 +29,26 @@ public class CollisionCylinderChunk : Chunk
 
             data.AddRange(BitConverter.GetBytes(Radius));
             data.AddRange(BitConverter.GetBytes(HalfLength));
-            data.AddRange(BitConverter.GetBytes(flatEnd));
+            data.AddRange(BitConverter.GetBytes(_flatEnd));
 
             return [.. data];
         }
     }
     public override uint DataLength => sizeof(float) + sizeof(float) + sizeof(ushort);
 
-    public CollisionCylinderChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public CollisionCylinderChunk(EndianAwareBinaryReader br) : this(br.ReadSingle(), br.ReadSingle(), br.ReadUInt16())
     {
-        Radius = br.ReadSingle();
-        HalfLength = br.ReadSingle();
-        flatEnd = br.ReadUInt16();
     }
 
-    public CollisionCylinderChunk(float radius, float halfLength, bool flatEnd) : base(ChunkID)
+    public CollisionCylinderChunk(float radius, float halfLength, bool flatEnd) : this(radius, halfLength, (ushort)(flatEnd ? 1u : 0u))
+    {
+    }
+
+    public CollisionCylinderChunk(float radius, float halfLength, ushort flatEnd) : base(ChunkID)
     {
         Radius = radius;
         HalfLength = halfLength;
-        FlatEnd = flatEnd;
+        _flatEnd = flatEnd;
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
@@ -71,7 +72,7 @@ public class CollisionCylinderChunk : Chunk
     {
         bw.Write(Radius);
         bw.Write(HalfLength);
-        bw.Write(flatEnd);
+        bw.Write(_flatEnd);
     }
 
     protected override Chunk CloneSelf() => new CollisionCylinderChunk(Radius, HalfLength, FlatEnd);

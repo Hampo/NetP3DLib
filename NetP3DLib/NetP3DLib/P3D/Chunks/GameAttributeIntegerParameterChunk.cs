@@ -28,15 +28,12 @@ public class GameAttributeIntegerParameterChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint);
 
-    public GameAttributeIntegerParameterChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public GameAttributeIntegerParameterChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadUInt32())
     {
-        _name = new(this, br);
-        Value = br.ReadUInt32();
     }
 
-    public GameAttributeIntegerParameterChunk(string name, uint value) : base(ChunkID)
+    public GameAttributeIntegerParameterChunk(string name, uint value) : base(ChunkID, name)
     {
-        _name = new(this, name);
         Value = value;
     }
 

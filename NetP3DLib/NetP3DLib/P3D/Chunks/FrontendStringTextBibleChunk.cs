@@ -40,10 +40,8 @@ public class FrontendStringTextBibleChunk : Chunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(BibleName) + BinaryExtensions.GetP3DStringLength(StringID);
 
-    public FrontendStringTextBibleChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public FrontendStringTextBibleChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadP3DString())
     {
-        _bibleName = new(this, br);
-        _stringID = new(this, br);
     }
 
     public FrontendStringTextBibleChunk(string bibleName, string stringID) : base(ChunkID)

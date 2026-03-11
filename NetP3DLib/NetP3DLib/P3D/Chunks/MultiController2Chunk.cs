@@ -51,22 +51,14 @@ public class MultiController2Chunk : NamedChunk
     public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + 4 + sizeof(uint) + sizeof(uint) + sizeof(float) + sizeof(float) + sizeof(uint);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public MultiController2Chunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public MultiController2Chunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadP3DString(), br.ReadFourCC(), br.ReadUInt32(), br.ReadUInt32(), br.ReadSingle(), br.ReadSingle())
     {
-        Version = br.ReadUInt32();
-        _name = new(this, br);
-        _cycleMode = new(this, br);
-        NumCycles = br.ReadUInt32();
-        InfiniteCycle = br.ReadUInt32();
-        NumFrames = br.ReadSingle();
-        FrameRate = br.ReadSingle();
         var numTracks = br.ReadUInt32();
     }
 
-    public MultiController2Chunk(uint version, string name, string cycleMode, uint numCycles, uint infiniteCycle, float numFrames, float frameRate) : base(ChunkID)
+    public MultiController2Chunk(uint version, string name, string cycleMode, uint numCycles, uint infiniteCycle, float numFrames, float frameRate) : base(ChunkID, name)
     {
         Version = version;
-        _name = new(this, name);
         _cycleMode = new(this, cycleMode);
         NumCycles = numCycles;
         InfiniteCycle = infiniteCycle;

@@ -43,22 +43,14 @@ public class ParticleSystemFactoryChunk : NamedChunk
     public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + sizeof(float) + sizeof(uint) + sizeof(uint) + sizeof(ushort) + sizeof(ushort) + sizeof(uint);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public ParticleSystemFactoryChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public ParticleSystemFactoryChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadP3DString(), br.ReadSingle(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt16(), br.ReadUInt16())
     {
-        Version = br.ReadUInt32();
-        _name = new(this, br);
-        FrameRate = br.ReadSingle();
-        NumAnimFrames = br.ReadUInt32();
-        NumOLFrames = br.ReadUInt32();
-        CycleAnim = br.ReadUInt16();
-        EnableSorting = br.ReadUInt16();
         var numEmitters = br.ReadUInt32();
     }
 
-    public ParticleSystemFactoryChunk(uint version, string name, float frameRate, uint numAnimFrames, uint numOLFrames, ushort cycleAnim, ushort enableSorting) : base(ChunkID)
+    public ParticleSystemFactoryChunk(uint version, string name, float frameRate, uint numAnimFrames, uint numOLFrames, ushort cycleAnim, ushort enableSorting) : base(ChunkID, name)
     {
         Version = version;
-        _name = new(this, name);
         FrameRate = frameRate;
         NumAnimFrames = numAnimFrames;
         NumOLFrames = numOLFrames;

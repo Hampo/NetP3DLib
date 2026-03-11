@@ -4,6 +4,7 @@ using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -54,14 +55,14 @@ public class UVListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) + sizeof(float) * 2 * NumUVs;
 
-    public UVListChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public UVListChunk(EndianAwareBinaryReader br) : this(ReadChannel(br, out var numUVs), ListHelper.ReadArray(numUVs, br.ReadVector2))
     {
-        var numUVs = br.ReadInt32();
-        Channel = br.ReadUInt32();
-        var uvs = new Vector2[numUVs];
-        for (int i = 0; i < numUVs; i++)
-            uvs[i] = br.ReadVector2();
-        UVs = CreateSizeAwareList(uvs);
+    }
+
+    private static uint ReadChannel(EndianAwareBinaryReader br, out int numUVs)
+    {
+        numUVs = br.ReadInt32();
+        return br.ReadUInt32();
     }
 
     public UVListChunk(uint channel, IList<Vector2> uvs) : base(ChunkID)

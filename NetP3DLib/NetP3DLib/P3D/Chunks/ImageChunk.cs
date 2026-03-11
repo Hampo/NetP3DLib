@@ -45,17 +45,17 @@ public class ImageChunk : NamedChunk
     public uint Width { get; set; }
     public uint Height { get; set; }
     public uint Bpp { get; set; }
-    private uint palettized;
+    private uint _palettized;
     public bool Palettized
     {
-        get => palettized == 1;
-        set => palettized = value ? 1u : 0u;
+        get => _palettized == 1;
+        set => _palettized = value ? 1u : 0u;
     }
-    private uint hasAlpha;
+    private uint _hasAlpha;
     public bool HasAlpha
     {
-        get => hasAlpha == 1;
-        set => hasAlpha = value ? 1u : 0u;
+        get => _hasAlpha == 1;
+        set => _hasAlpha = value ? 1u : 0u;
     }
     public Formats Format { get; set; }
 
@@ -70,8 +70,8 @@ public class ImageChunk : NamedChunk
             data.AddRange(BitConverter.GetBytes(Width));
             data.AddRange(BitConverter.GetBytes(Height));
             data.AddRange(BitConverter.GetBytes(Bpp));
-            data.AddRange(BitConverter.GetBytes(palettized));
-            data.AddRange(BitConverter.GetBytes(hasAlpha));
+            data.AddRange(BitConverter.GetBytes(_palettized));
+            data.AddRange(BitConverter.GetBytes(_hasAlpha));
             data.AddRange(BitConverter.GetBytes((uint)Format));
 
             return [.. data];
@@ -79,27 +79,22 @@ public class ImageChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint);
 
-    public ImageChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public ImageChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32(), (Formats)br.ReadUInt32())
     {
-        _name = new(this, br);
-        Version = br.ReadUInt32();
-        Width = br.ReadUInt32();
-        Height = br.ReadUInt32();
-        Bpp = br.ReadUInt32();
-        palettized = br.ReadUInt32();
-        hasAlpha = br.ReadUInt32();
-        Format = (Formats)br.ReadUInt32();
     }
 
-    public ImageChunk(string name, uint version, uint width, uint height, uint bpp, bool palettized, bool hasAlpha, Formats format) : base(ChunkID)
+    public ImageChunk(string name, uint version, uint width, uint height, uint bpp, bool palettized, bool hasAlpha, Formats format) : this(name, version, width, height, bpp, palettized ? 1u : 0u, hasAlpha ? 1u : 0u, format)
     {
-        _name = new(this, name);
+    }
+
+    public ImageChunk(string name, uint version, uint width, uint height, uint bpp, uint palettized, uint hasAlpha, Formats format) : base(ChunkID, name)
+    {
         Version = version;
         Width = width;
         Height = height;
         Bpp = bpp;
-        Palettized = palettized;
-        HasAlpha = hasAlpha;
+        _palettized = palettized;
+        _hasAlpha = hasAlpha;
         Format = format;
     }
 
@@ -124,8 +119,8 @@ public class ImageChunk : NamedChunk
         bw.Write(Width);
         bw.Write(Height);
         bw.Write(Bpp);
-        bw.Write(palettized);
-        bw.Write(hasAlpha);
+        bw.Write(_palettized);
+        bw.Write(_hasAlpha);
         bw.Write((uint)Format);
     }
 

@@ -37,9 +37,8 @@ public class AnimationSizeChunk : Chunk
     public override uint DataLength => sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public AnimationSizeChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public AnimationSizeChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32())
     {
-        Version = br.ReadUInt32();
         var pc = br.ReadUInt32();
         var ps2 = br.ReadUInt32();
         var xbox = br.ReadUInt32();

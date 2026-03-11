@@ -9,18 +9,19 @@ namespace NetP3DLib.P3D;
 #pragma warning disable CS8618
 public abstract class NamedChunk : Chunk
 {
-    internal P3DString _name;
+    internal readonly P3DString _name;
     public string Name
     {
         get => _name?.Value ?? string.Empty;
         set => _name.Value = value;
     }
 
-    protected NamedChunk(uint ID) : base(ID)
+    protected NamedChunk(uint ID, string name) : base(ID)
     {
+        _name = new(this, name);
     }
 
-    protected NamedChunk(ChunkIdentifier ID) : base(ID)
+    protected NamedChunk(ChunkIdentifier ID, string name) : this((uint)ID, name)
     {
     }
 

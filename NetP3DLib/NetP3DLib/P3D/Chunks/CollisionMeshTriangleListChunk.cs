@@ -2,6 +2,7 @@ using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
+using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -50,13 +51,8 @@ public class CollisionMeshTriangleListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + Triangle.Size * NumTriangles;
 
-    public CollisionMeshTriangleListChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public CollisionMeshTriangleListChunk(EndianAwareBinaryReader br) : this(ListHelper.ReadArray(br.ReadInt32(), () => new Triangle(br)))
     {
-        var numEntries = br.ReadInt32();
-        var triangles = new Triangle[numEntries];
-        for (int i = 0; i < numEntries; i++)
-            triangles[i] = new(br);
-        Triangles = CreateSizeAwareList(triangles);
     }
 
     public CollisionMeshTriangleListChunk(IList<Triangle> triangles) : base(ChunkID)

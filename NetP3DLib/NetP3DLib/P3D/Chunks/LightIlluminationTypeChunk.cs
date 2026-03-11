@@ -33,9 +33,8 @@ public class LightIlluminationTypeChunk : Chunk
     }
     public override uint DataLength => sizeof(uint);
 
-    public LightIlluminationTypeChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public LightIlluminationTypeChunk(EndianAwareBinaryReader br) : this((IlluminationTypes)br.ReadUInt32())
     {
-        IlluminationType = (IlluminationTypes)br.ReadUInt32();
     }
 
     public LightIlluminationTypeChunk(IlluminationTypes illuminationType) : base(ChunkID)

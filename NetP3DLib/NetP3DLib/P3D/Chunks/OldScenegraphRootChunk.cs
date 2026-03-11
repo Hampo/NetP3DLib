@@ -19,7 +19,7 @@ public class OldScenegraphRootChunk : Chunk
     public override uint DataLength => 0;
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Required for ChunkLoader.")]
-    public OldScenegraphRootChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public OldScenegraphRootChunk(EndianAwareBinaryReader br) : this()
     { }
 
     public OldScenegraphRootChunk() : base(ChunkID)

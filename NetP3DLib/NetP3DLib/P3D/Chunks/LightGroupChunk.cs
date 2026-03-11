@@ -4,6 +4,7 @@ using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 
@@ -64,19 +65,12 @@ public class LightGroupChunk : NamedChunk
         }
     }
 
-    public LightGroupChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public LightGroupChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), ListHelper.ReadArray(br.ReadInt32(), br.ReadP3DString))
     {
-        _name = new(this, br);
-        var numLights = br.ReadInt32();
-        var lights = new string[numLights];
-        for (int i = 0; i < numLights; i++)
-            lights[i] = br.ReadP3DString();
-        Lights = CreateSizeAwareList(lights);
     }
 
-    public LightGroupChunk(string name, IList<string> lights) : base(ChunkID)
+    public LightGroupChunk(string name, IList<string> lights) : base(ChunkID, name)
     {
-        _name = new(this, name);
         Lights = CreateSizeAwareList(lights);
     }
 

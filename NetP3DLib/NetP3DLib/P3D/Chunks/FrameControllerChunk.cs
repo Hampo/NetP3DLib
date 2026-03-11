@@ -66,22 +66,13 @@ public class FrameControllerChunk : NamedChunk
     }
     public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + 4 + 4 + sizeof(uint) + sizeof(uint) + BinaryExtensions.GetP3DStringLength(HierarchyName) + BinaryExtensions.GetP3DStringLength(AnimationName);
 
-    public FrameControllerChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public FrameControllerChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadP3DString(), br.ReadFourCC(), br.ReadFourCC(), br.ReadUInt32(), br.ReadUInt32(), br.ReadP3DString(), br.ReadP3DString())
     {
-        Version = br.ReadUInt32();
-        _name = new(this, br);
-        _type = new(this, br);
-        _cycleMode = new(this, br);
-        NumCycles = br.ReadUInt32();
-        InfiniteCycle = br.ReadUInt32();
-        _hierarchyName = new(this, br);
-        _animationName = new(this, br);
     }
 
-    public FrameControllerChunk(uint version, string name, string type, string cycleMode, uint numCycles, uint infiniteCycle, string hierarchyName, string animationName) : base(ChunkID)
+    public FrameControllerChunk(uint version, string name, string type, string cycleMode, uint numCycles, uint infiniteCycle, string hierarchyName, string animationName) : base(ChunkID, name)
     {
         Version = version;
-        _name = new(this, name);
         _type = new(this, type);
         _cycleMode = new(this, cycleMode);
         NumCycles = numCycles;

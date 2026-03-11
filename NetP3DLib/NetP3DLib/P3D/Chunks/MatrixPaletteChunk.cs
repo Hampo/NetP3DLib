@@ -2,6 +2,7 @@ using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
+using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 
@@ -49,13 +50,8 @@ public class MatrixPaletteChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) * NumMatrices;
 
-    public MatrixPaletteChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public MatrixPaletteChunk(EndianAwareBinaryReader br) : this(ListHelper.ReadArray(br.ReadInt32(), br.ReadUInt32))
     {
-        var numMatrices = br.ReadInt32();
-        var matrices = new uint[numMatrices];
-        for (int i = 0; i < numMatrices; i++)
-            matrices[i] = br.ReadUInt32();
-        Matrices = CreateSizeAwareList(matrices);
     }
 
     public MatrixPaletteChunk(IList<uint> matrices) : base(ChunkID)

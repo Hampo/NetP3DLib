@@ -31,18 +31,13 @@ public class MeshStatsChunk : NamedChunk
     }
     public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint);
 
-    public MeshStatsChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public MeshStatsChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadP3DString(), br.ReadUInt32(), br.ReadUInt32())
     {
-        Version = br.ReadUInt32();
-        _name = new(this, br);
-        IsRendered = br.ReadUInt32();
-        IsCollision = br.ReadUInt32();
     }
 
-    public MeshStatsChunk(uint version, string name, uint isRendered, uint isCollision) : base(ChunkID)
+    public MeshStatsChunk(uint version, string name, uint isRendered, uint isCollision) : base(ChunkID, name)
     {
         Version = version;
-        _name = new(this, name);
         IsRendered = isRendered;
         IsCollision = isCollision;
     }

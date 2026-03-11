@@ -4,6 +4,7 @@ using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -96,29 +97,12 @@ public class FrontendMultiSpriteChunk : NamedChunk
         }
     }
 
-    public FrontendMultiSpriteChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public FrontendMultiSpriteChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadUInt32(), br.ReadInt32(), br.ReadInt32(), br.ReadUInt32(), br.ReadUInt32(), (Justifications)br.ReadUInt32(), (Justifications)br.ReadUInt32(), br.ReadColor(), br.ReadUInt32(), br.ReadSingle(), ListHelper.ReadArray(br.ReadInt32(), br.ReadP3DString))
     {
-        _name = new(this, br);
-        Version = br.ReadUInt32();
-        PositionX = br.ReadInt32();
-        PositionY = br.ReadInt32();
-        DimensionX = br.ReadUInt32();
-        DimensionY = br.ReadUInt32();
-        JustificationX = (Justifications)br.ReadUInt32();
-        JustificationY = (Justifications)br.ReadUInt32();
-        Colour = br.ReadColor();
-        Translucency = br.ReadUInt32();
-        RotationValue = br.ReadSingle();
-        var numImageNames = br.ReadInt32();
-        var imageNames = new string[numImageNames];
-        for (int i = 0; i < numImageNames; i++)
-            imageNames[i] = br.ReadP3DString();
-        ImageNames = CreateSizeAwareList(imageNames);
     }
 
-    public FrontendMultiSpriteChunk(string name, uint version, int positionX, int positionY, uint dimensionX, uint dimensionY, Justifications justificationX, Justifications justificationY, Color colour, uint translucency, float rotationValue, IList<string> imageNames) : base(ChunkID)
+    public FrontendMultiSpriteChunk(string name, uint version, int positionX, int positionY, uint dimensionX, uint dimensionY, Justifications justificationX, Justifications justificationY, Color colour, uint translucency, float rotationValue, IList<string> imageNames) : base(ChunkID, name)
     {
-        _name = new(this, name);
         Version = version;
         PositionX = positionX;
         PositionY = positionY;

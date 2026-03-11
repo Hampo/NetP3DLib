@@ -40,10 +40,8 @@ public class CollisionVolumeChunk : Chunk
     public override uint DataLength => sizeof(uint) + sizeof(int) + sizeof(uint);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public CollisionVolumeChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public CollisionVolumeChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadInt32())
     {
-        ObjectReferenceIndex = br.ReadUInt32();
-        OwnerIndex = br.ReadInt32();
         var numSubVolumes = br.ReadUInt32();
     }
 

@@ -64,21 +64,12 @@ public class FrontendProjectChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint) + sizeof(uint) + BinaryExtensions.GetP3DStringLength(Platform) + BinaryExtensions.GetP3DStringLength(PagePath) + BinaryExtensions.GetP3DStringLength(ResourcePath) + BinaryExtensions.GetP3DStringLength(ScreenPath);
 
-    public FrontendProjectChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public FrontendProjectChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32(), br.ReadP3DString(), br.ReadP3DString(), br.ReadP3DString(), br.ReadP3DString())
     {
-        _name = new(this, br);
-        Version = br.ReadUInt32();
-        ResolutionX = br.ReadUInt32();
-        ResolutionY = br.ReadUInt32();
-        _platform = new(this, br);
-        _pagePath = new(this, br);
-        _resourcePath = new(this, br);
-        _screenPath = new(this, br);
     }
 
-    public FrontendProjectChunk(string name, uint version, uint resolutionX, uint resolutionY, string platform, string pagePath, string resourcePath, string screenPath) : base(ChunkID)
+    public FrontendProjectChunk(string name, uint version, uint resolutionX, uint resolutionY, string platform, string pagePath, string resourcePath, string screenPath) : base(ChunkID, name)
     {
-        _name = new(this, name);
         Version = version;
         ResolutionX = resolutionX;
         ResolutionY = resolutionY;

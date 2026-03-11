@@ -70,20 +70,13 @@ public class OldFrameControllerChunk : NamedChunk
     }
     public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(float) + BinaryExtensions.GetP3DStringLength(HierarchyName) + BinaryExtensions.GetP3DStringLength(AnimationName);
 
-    public OldFrameControllerChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public OldFrameControllerChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadP3DString(), (AnimationType)br.ReadUInt32(), br.ReadSingle(), br.ReadP3DString(), br.ReadP3DString())
     {
-        Version = br.ReadUInt32();
-        _name = new(this, br);
-        Type = (AnimationType)br.ReadUInt32();
-        FrameOffset = br.ReadSingle();
-        _hierarchyName = new(this, br);
-        _animationName = new(this, br);
     }
 
-    public OldFrameControllerChunk(uint version, string name, AnimationType type, float frameOffset, string hierarchyName, string animationName) : base(ChunkID)
+    public OldFrameControllerChunk(uint version, string name, AnimationType type, float frameOffset, string hierarchyName, string animationName) : base(ChunkID, name)
     {
         Version = version;
-        _name = new(this, name);
         Type = type;
         FrameOffset = frameOffset;
         _hierarchyName = new(this, hierarchyName);

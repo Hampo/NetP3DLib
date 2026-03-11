@@ -47,18 +47,13 @@ public class MultiControllerChunk : NamedChunk
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(float) + sizeof(float) + sizeof(uint);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public MultiControllerChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public MultiControllerChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadUInt32(), br.ReadSingle(), br.ReadSingle())
     {
-        _name = new(this, br);
-        Version = br.ReadUInt32();
-        Length = br.ReadSingle();
-        Framerate = br.ReadSingle();
         var numTracks = br.ReadUInt32();
     }
 
-    public MultiControllerChunk(string name, uint version, float length, float framerate) : base(ChunkID)
+    public MultiControllerChunk(string name, uint version, float length, float framerate) : base(ChunkID, name)
     {
-        _name = new(this, name);
         Version = version;
         Length = length;
         Framerate = framerate;

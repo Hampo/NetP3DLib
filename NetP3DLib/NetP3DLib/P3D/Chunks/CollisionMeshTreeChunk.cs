@@ -36,13 +36,8 @@ public class CollisionMeshTreeChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(float) * 3 + sizeof(float) * 3;
 
-    public CollisionMeshTreeChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public CollisionMeshTreeChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32(), br.ReadVector3(), br.ReadVector3())
     {
-        Version = br.ReadUInt32();
-        FirstNode = br.ReadUInt32();
-        HierarchyIndex = br.ReadUInt32();
-        Low = br.ReadVector3();
-        High = br.ReadVector3();
     }
 
     public CollisionMeshTreeChunk(uint version, uint firstNode, uint hierarchyIndex, Vector3 low, Vector3 high) : base(ChunkID)

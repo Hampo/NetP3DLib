@@ -26,9 +26,8 @@ public class IntersectMesh2Chunk : Chunk
     }
     public override uint DataLength => sizeof(uint);
 
-    public IntersectMesh2Chunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public IntersectMesh2Chunk(EndianAwareBinaryReader br) : this(br.ReadUInt32())
     {
-        SurfaceType = br.ReadUInt32();
     }
 
     public IntersectMesh2Chunk(uint surfaceType) : base(ChunkID)

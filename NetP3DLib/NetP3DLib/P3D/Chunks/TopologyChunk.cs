@@ -2,6 +2,7 @@ using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
+using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -50,13 +51,8 @@ public class TopologyChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + Topology.Size * NumTopology;
 
-    public TopologyChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public TopologyChunk(EndianAwareBinaryReader br) : this(ListHelper.ReadArray(br.ReadInt32(), () => new Topology(br)))
     {
-        var numTopology = br.ReadInt32();
-        var topologies = new Topology[numTopology];
-        for (int i = 0; i < numTopology; i++)
-            topologies[i] = new(br);
-        Topologies = CreateSizeAwareList(topologies);
     }
 
     public TopologyChunk(IList<Topology> topologies) : base(ChunkID)

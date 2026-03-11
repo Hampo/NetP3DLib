@@ -42,22 +42,14 @@ public class ParticleSystemChunk : NamedChunk
     public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + sizeof(float) + sizeof(uint) + sizeof(uint) + sizeof(float) * 4 + sizeof(float) * 3 + sizeof(uint);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public ParticleSystemChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public ParticleSystemChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadP3DString(), br.ReadSingle(), br.ReadUInt32(), br.ReadUInt32(), br.ReadQuaternion(), br.ReadVector3())
     {
-        Version = br.ReadUInt32();
-        _name = new(this, br);
-        FrameRate = br.ReadSingle();
-        NumFrames = br.ReadUInt32();
-        IsCyclic = br.ReadUInt32();
-        Rotation = br.ReadQuaternion();
-        Translation = br.ReadVector3();
         var numEmitters = br.ReadUInt32();
     }
 
-    public ParticleSystemChunk(uint version, string name, float frameRate, uint numFrames, uint isCyclic, Quaternion rotation, Vector3 translation) : base(ChunkID)
+    public ParticleSystemChunk(uint version, string name, float frameRate, uint numFrames, uint isCyclic, Quaternion rotation, Vector3 translation) : base(ChunkID, name)
     {
         Version = version;
-        _name = new(this, name);
         FrameRate = frameRate;
         NumFrames = numFrames;
         IsCyclic = isCyclic;

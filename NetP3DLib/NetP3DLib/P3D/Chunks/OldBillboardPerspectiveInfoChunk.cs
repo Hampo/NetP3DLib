@@ -14,11 +14,11 @@ public class OldBillboardPerspectiveInfoChunk : Chunk
 
     [DefaultValue(0)]
     public uint Version { get; set; }
-    private uint perspectiveScale;
+    private uint _perspectiveScale;
     public bool PerspectiveScale
     {
-        get => perspectiveScale != 0;
-        set => perspectiveScale = value ? 1u : 0u;
+        get => _perspectiveScale != 0;
+        set => _perspectiveScale = value ? 1u : 0u;
     }
 
     public override byte[] DataBytes
@@ -28,29 +28,31 @@ public class OldBillboardPerspectiveInfoChunk : Chunk
             List<byte> data = [];
 
             data.AddRange(BitConverter.GetBytes(Version));
-            data.AddRange(BitConverter.GetBytes(perspectiveScale));
+            data.AddRange(BitConverter.GetBytes(_perspectiveScale));
 
             return [.. data];
         }
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint);
 
-    public OldBillboardPerspectiveInfoChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public OldBillboardPerspectiveInfoChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadUInt32())
     {
-        Version = br.ReadUInt32();
-        perspectiveScale = br.ReadUInt32();
     }
 
-    public OldBillboardPerspectiveInfoChunk(uint version, bool perspectiveScale) : base(ChunkID)
+    public OldBillboardPerspectiveInfoChunk(uint version, bool perspectiveScale) : this(version, perspectiveScale ? 1u : 0u)
+    {
+    }
+
+    public OldBillboardPerspectiveInfoChunk(uint version, uint perspectiveScale) : base(ChunkID)
     {
         Version = version;
-        PerspectiveScale = perspectiveScale;
+        _perspectiveScale = perspectiveScale;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
     {
         bw.Write(Version);
-        bw.Write(perspectiveScale);
+        bw.Write(_perspectiveScale);
     }
 
     protected override Chunk CloneSelf() => new OldBillboardPerspectiveInfoChunk(Version, PerspectiveScale);

@@ -24,14 +24,12 @@ public class VertexShaderChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name);
 
-    public VertexShaderChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public VertexShaderChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString())
     {
-        _name = new(this, br);
     }
 
-    public VertexShaderChunk(string name) : base(ChunkID)
+    public VertexShaderChunk(string name) : base(ChunkID, name)
     {
-        _name = new(this, name);
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

@@ -4,8 +4,10 @@ using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Numerics;
 
 namespace NetP3DLib.P3D.Chunks;
@@ -87,17 +89,7 @@ public class CompressedQuaternionChannel2Chunk : ParamChunk
     }
     public override uint DataLength => sizeof(uint) + 4 + sizeof(uint) + sizeof(ushort) * NumFrames + sizeof(short) * 3 * NumValues;
 
-    public CompressedQuaternionChannel2Chunk(EndianAwareBinaryReader br) : base(ChunkID)
-    {
-        Version = br.ReadUInt32();
-        _param = new(this, br);
-        int numFrames = br.ReadInt32();
-        var frames = new ushort[numFrames];
-        for (uint i = 0; i < numFrames; i++)
-            frames[i] = br.ReadUInt16();
-        Frames = CreateSizeAwareList(frames);
-        var values = new Quaternion[numFrames];
-        for (uint i = 0; i < numFrames; i++)
+    public CompressedQuaternionChannel2Chunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadFourCC(), ListHelper.ReadArray(br.ReadInt32, br.ReadUInt16, out var numFrames), ListHelper.ReadArray(numFrames, () =>
         {
             var x = br.ReadInt16() / (double)short.MaxValue;
             var y = br.ReadInt16() / (double)short.MaxValue;
@@ -105,18 +97,17 @@ public class CompressedQuaternionChannel2Chunk : ParamChunk
 
             var sumOfSquares = x * x + y * y + z * z;
             if (sumOfSquares > 1.0f)
-                throw new InvalidP3DException(this, $"Invalid Compressed Quaternion Channel 2.");
+                throw new InvalidDataException("Invalid Compressed Quaternion Channel 2.");
             var w = Math.Sqrt(1 - sumOfSquares);
 
-            values[i] = new((float)x, (float)y, (float)z, (float)w);
-        }
-        Values = CreateSizeAwareList(values);
+            return new Quaternion((float)x, (float)y, (float)z, (float)w);
+        }))
+    {
     }
 
-    public CompressedQuaternionChannel2Chunk(uint version, string param, IList<ushort> frames, IList<Quaternion> values) : base(ChunkID)
+    public CompressedQuaternionChannel2Chunk(uint version, string param, IList<ushort> frames, IList<Quaternion> values) : base(ChunkID, param)
     {
         Version = version;
-        _param = new(this, param);
         Frames = CreateSizeAwareList(frames);
         Values = CreateSizeAwareList(values);
     }

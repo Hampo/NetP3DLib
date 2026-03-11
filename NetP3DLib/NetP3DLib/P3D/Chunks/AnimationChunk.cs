@@ -26,11 +26,11 @@ public class AnimationChunk : NamedChunk
     public AnimationType AnimationType { get; set; }
     public float NumFrames { get; set; }
     public float FrameRate { get; set; }
-    private uint cyclic;
+    private uint _cyclic;
     public bool Cyclic
     {
-        get => cyclic == 1;
-        set => cyclic = value ? 1u : 0u;
+        get => _cyclic == 1;
+        set => _cyclic = value ? 1u : 0u;
     }
 
     public override byte[] DataBytes
@@ -44,31 +44,28 @@ public class AnimationChunk : NamedChunk
             data.AddRange(BitConverter.GetBytes((uint)AnimationType));
             data.AddRange(BitConverter.GetBytes(NumFrames));
             data.AddRange(BitConverter.GetBytes(FrameRate));
-            data.AddRange(BitConverter.GetBytes(cyclic));
+            data.AddRange(BitConverter.GetBytes(_cyclic));
 
             return [.. data];
         }
     }
     public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + 4 + sizeof(float) + sizeof(float) + sizeof(uint);
 
-    public AnimationChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public AnimationChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadP3DString(), (AnimationType)br.ReadUInt32(), br.ReadSingle(), br.ReadSingle(), br.ReadUInt32())
     {
-        Version = br.ReadUInt32();
-        _name = new(this, br);
-        AnimationType = (AnimationType)br.ReadUInt32();
-        NumFrames = br.ReadSingle();
-        FrameRate = br.ReadSingle();
-        cyclic = br.ReadUInt32();
     }
 
-    public AnimationChunk(uint version, string name, AnimationType animationType, float numFrames, float frameRate, bool cyclic) : base(ChunkID)
+    public AnimationChunk(uint version, string name, AnimationType animationType, float numFrames, float frameRate, bool cyclic) : this(version, name, animationType, numFrames, frameRate, cyclic ? 1u : 0u)
+    {
+    }
+
+    public AnimationChunk(uint version, string name, AnimationType animationType, float numFrames, float frameRate, uint cyclic) : base(ChunkID, name)
     {
         Version = version;
-        _name = new(this, name);
         AnimationType = animationType;
         NumFrames = numFrames;
         FrameRate = frameRate;
-        Cyclic = cyclic;
+        _cyclic = cyclic;
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
@@ -97,7 +94,7 @@ public class AnimationChunk : NamedChunk
         bw.Write((uint)AnimationType);
         bw.Write(NumFrames);
         bw.Write(FrameRate);
-        bw.Write(cyclic);
+        bw.Write(_cyclic);
     }
 
     protected override Chunk CloneSelf() => new AnimationChunk(Version, Name, AnimationType, NumFrames, FrameRate, Cyclic);

@@ -31,34 +31,34 @@ public class RoadChunk : NamedChunk
         set => _endIntersection.Value = value;
     }
     public uint MaximumCars { get; set; }
-    private uint bitmask;
+    private uint _bitmask;
     public byte Speed
     {
-        get => (byte)(bitmask & SpeedMask);
+        get => (byte)(_bitmask & SpeedMask);
         set
         {
-            bitmask &= ~SpeedMask;
-            bitmask |= value;
+            _bitmask &= ~SpeedMask;
+            _bitmask |= value;
         }
     }
     public byte Intelligence
     {
-        get => (byte)((bitmask & IntelligenceMask) >> 8);
+        get => (byte)((_bitmask & IntelligenceMask) >> 8);
         set
         {
-            bitmask &= ~IntelligenceMask;
-            bitmask |= (uint)(value << 8);
+            _bitmask &= ~IntelligenceMask;
+            _bitmask |= (uint)(value << 8);
         }
     }
     public bool Shortcut
     {
-        get => (bitmask & ShortcutMask) != 0;
+        get => (_bitmask & ShortcutMask) != 0;
         set
         {
             if (value)
-                bitmask |= ShortcutMask;
+                _bitmask |= ShortcutMask;
             else
-                bitmask &= ~ShortcutMask;
+                _bitmask &= ~ShortcutMask;
         }
     }
 
@@ -73,7 +73,7 @@ public class RoadChunk : NamedChunk
             data.AddRange(BinaryExtensions.GetP3DStringBytes(StartIntersection));
             data.AddRange(BinaryExtensions.GetP3DStringBytes(EndIntersection));
             data.AddRange(BitConverter.GetBytes(MaximumCars));
-            data.AddRange(BitConverter.GetBytes(bitmask));
+            data.AddRange(BitConverter.GetBytes(_bitmask));
 
             return [.. data];
         }
@@ -81,27 +81,24 @@ public class RoadChunk : NamedChunk
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + BinaryExtensions.GetP3DStringLength(StartIntersection) + BinaryExtensions.GetP3DStringLength(EndIntersection) + sizeof(uint) + sizeof(byte) + sizeof(byte) + sizeof(byte) + sizeof(byte);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public RoadChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public RoadChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadUInt32(), br.ReadP3DString(), br.ReadP3DString(), br.ReadUInt32(), br.ReadUInt32())
     {
-        _name = new(this, br);
-        Type = br.ReadUInt32();
-        _startIntersection = new(this, br);
-        _endIntersection = new(this, br);
-        MaximumCars = br.ReadUInt32();
-        bitmask = br.ReadUInt32();
     }
 
-    public RoadChunk(string name, uint type, string startIntersection, string endIntersection, uint maximumCars, byte speed, byte intelligence, bool shortcut) : base(ChunkID)
+    public RoadChunk(string name, uint type, string startIntersection, string endIntersection, uint maximumCars, byte speed, byte intelligence, bool shortcut) : this(name, type, startIntersection, endIntersection, maximumCars, 0u)
     {
-        _name = new(this, name);
+        Speed = speed;
+        Intelligence = intelligence;
+        Shortcut = shortcut;
+    }
+
+    public RoadChunk(string name, uint type, string startIntersection, string endIntersection, uint maximumCars, uint bitmask) : base(ChunkID, name)
+    {
         Type = type;
         _startIntersection = new(this, startIntersection);
         _endIntersection = new(this, endIntersection);
         MaximumCars = maximumCars;
-        bitmask = 0;
-        Speed = speed;
-        Intelligence = intelligence;
-        Shortcut = shortcut;
+        _bitmask = bitmask;
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
@@ -129,7 +126,7 @@ public class RoadChunk : NamedChunk
         bw.WriteP3DString(StartIntersection);
         bw.WriteP3DString(EndIntersection);
         bw.Write(MaximumCars);
-        bw.Write(bitmask);
+        bw.Write(_bitmask);
     }
 
     protected override Chunk CloneSelf() => new RoadChunk(Name, Type, StartIntersection, EndIntersection, MaximumCars, Speed, Intelligence, Shortcut);

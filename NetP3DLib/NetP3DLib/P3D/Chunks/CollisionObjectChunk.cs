@@ -44,18 +44,13 @@ public class CollisionObjectChunk : NamedChunk
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + BinaryExtensions.GetP3DStringLength(MaterialName) + sizeof(uint) + sizeof(uint);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public CollisionObjectChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public CollisionObjectChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadUInt32(), br.ReadP3DString(), br.ReadUInt32())
     {
-        _name = new(this, br);
-        Version = br.ReadUInt32();
-        _materialName = new(this, br);
-        NumSubObjects = br.ReadUInt32();
         var numOwners = br.ReadUInt32();
     }
 
-    public CollisionObjectChunk(string name, uint version, string materialName, uint numSubObjects) : base(ChunkID)
+    public CollisionObjectChunk(string name, uint version, string materialName, uint numSubObjects) : base(ChunkID, name)
     {
-        _name = new(this, name);
         Version = version;
         _materialName = new(this, materialName);
         NumSubObjects = numSubObjects;

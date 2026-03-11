@@ -11,7 +11,7 @@ public class CollisionAxisAlignedBoundingBoxChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Collision_Axis_Aligned_Bounding_Box;
 
-    public uint Nothing { get; set; }
+    public uint Dummy { get; set; }
 
     public override byte[] DataBytes
     {
@@ -19,26 +19,29 @@ public class CollisionAxisAlignedBoundingBoxChunk : Chunk
         {
             List<byte> data = [];
 
-            data.AddRange(BitConverter.GetBytes(Nothing));
+            data.AddRange(BitConverter.GetBytes(Dummy));
 
             return [.. data];
         }
     }
     public override uint DataLength => sizeof(uint);
 
-    public CollisionAxisAlignedBoundingBoxChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public CollisionAxisAlignedBoundingBoxChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32())
     {
-        Nothing = br.ReadUInt32();
     }
 
-    public CollisionAxisAlignedBoundingBoxChunk() : base(ChunkID)
+    public CollisionAxisAlignedBoundingBoxChunk() : this(0)
     {
-        Nothing = 0;
+    }
+
+    public CollisionAxisAlignedBoundingBoxChunk(uint dummy) : base(ChunkID)
+    {
+        Dummy = dummy;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
     {
-        bw.Write(Nothing);
+        bw.Write(Dummy);
     }
 
     protected override Chunk CloneSelf() => new CollisionAxisAlignedBoundingBoxChunk();

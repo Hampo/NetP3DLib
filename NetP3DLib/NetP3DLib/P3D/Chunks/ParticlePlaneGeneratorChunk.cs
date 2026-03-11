@@ -36,14 +36,8 @@ public class ParticlePlaneGeneratorChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(float);
 
-    public ParticlePlaneGeneratorChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public ParticlePlaneGeneratorChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadSingle(), br.ReadSingle(), br.ReadSingle(), br.ReadSingle(), br.ReadSingle())
     {
-        Version = br.ReadUInt32();
-        Width = br.ReadSingle();
-        Height = br.ReadSingle();
-        HorizontalSpread = br.ReadSingle();
-        VerticalSpread = br.ReadSingle();
-        RadialVar = br.ReadSingle();
     }
 
     public ParticlePlaneGeneratorChunk(uint version, float width, float height, float horizontalSpread, float verticalSpread, float radialVar) : base(ChunkID)

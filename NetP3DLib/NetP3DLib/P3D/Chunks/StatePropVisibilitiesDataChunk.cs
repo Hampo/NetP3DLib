@@ -12,11 +12,11 @@ public class StatePropVisibilitiesDataChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.State_Prop_Visibilities_Data;
 
-    private uint isVisible;
+    private uint _isVisible;
     public bool IsVisible
     {
-        get => isVisible != 0;
-        set => isVisible = value ? 1u : 0u;
+        get => _isVisible != 0;
+        set => _isVisible = value ? 1u : 0u;
     }
 
     public override byte[] DataBytes
@@ -26,29 +26,30 @@ public class StatePropVisibilitiesDataChunk : NamedChunk
             List<byte> data = [];
 
             data.AddRange(BinaryExtensions.GetP3DStringBytes(Name));
-            data.AddRange(BitConverter.GetBytes(isVisible));
+            data.AddRange(BitConverter.GetBytes(_isVisible));
 
             return [.. data];
         }
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint);
 
-    public StatePropVisibilitiesDataChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public StatePropVisibilitiesDataChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadUInt32())
     {
-        _name = new(this, br);
-        isVisible = br.ReadUInt32();
     }
 
-    public StatePropVisibilitiesDataChunk(string name, bool isVisible) : base(ChunkID)
+    public StatePropVisibilitiesDataChunk(string name, bool isVisible) : this(name, isVisible ? 1u : 0u)
     {
-        _name = new(this, name);
-        IsVisible = isVisible;
+    }
+
+    public StatePropVisibilitiesDataChunk(string name, uint isVisible) : base(ChunkID, name)
+    {
+        _isVisible = isVisible;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
     {
         bw.WriteP3DString(Name);
-        bw.Write(isVisible);
+        bw.Write(_isVisible);
     }
 
     protected override Chunk CloneSelf() => new StatePropVisibilitiesDataChunk(Name, IsVisible);

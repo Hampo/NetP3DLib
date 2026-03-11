@@ -23,17 +23,17 @@ public class OldBillboardQuadGroupChunk : NamedChunk
         get => _shader?.Value ?? string.Empty;
         set => _shader.Value = value;
     }
-    private uint zTest;
+    private uint _zTest;
     public bool ZTest
     {
-        get => zTest != 0;
-        set => zTest = value ? 1u : 0u;
+        get => _zTest != 0;
+        set => _zTest = value ? 1u : 0u;
     }
-    private uint zWrite;
+    private uint _zWrite;
     public bool ZWrite
     {
-        get => zWrite != 0;
-        set => zWrite = value ? 1u : 0u;
+        get => _zWrite != 0;
+        set => _zWrite = value ? 1u : 0u;
     }
     public uint Occlusion { get; set; }
     public uint NumQuads => GetChildCount(ChunkIdentifier.Old_Billboard_Quad);
@@ -47,8 +47,8 @@ public class OldBillboardQuadGroupChunk : NamedChunk
             data.AddRange(BitConverter.GetBytes(Version));
             data.AddRange(BinaryExtensions.GetP3DStringBytes(Name));
             data.AddRange(BinaryExtensions.GetP3DStringBytes(Shader));
-            data.AddRange(BitConverter.GetBytes(zTest));
-            data.AddRange(BitConverter.GetBytes(zWrite));
+            data.AddRange(BitConverter.GetBytes(_zTest));
+            data.AddRange(BitConverter.GetBytes(_zWrite));
             data.AddRange(BitConverter.GetBytes(Occlusion));
             data.AddRange(BitConverter.GetBytes(NumQuads));
 
@@ -58,24 +58,21 @@ public class OldBillboardQuadGroupChunk : NamedChunk
     public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + BinaryExtensions.GetP3DStringLength(Shader) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public OldBillboardQuadGroupChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public OldBillboardQuadGroupChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadP3DString(), br.ReadP3DString(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32())
     {
-        Version = br.ReadUInt32();
-        _name = new(this, br);
-        _shader = new(this, br);
-        zTest = br.ReadUInt32();
-        zWrite = br.ReadUInt32();
-        Occlusion = br.ReadUInt32();
         var numQuads = br.ReadUInt32();
     }
 
-    public OldBillboardQuadGroupChunk(uint version, string name, string shader, bool zTest, bool zWrite, uint occlusion) : base(ChunkID)
+    public OldBillboardQuadGroupChunk(uint version, string name, string shader, bool zTest, bool zWrite, uint occlusion) : this(version, name, shader, zTest ? 1u : 0u, zWrite ? 1u : 0u, occlusion)
+    {
+    }
+
+    public OldBillboardQuadGroupChunk(uint version, string name, string shader, uint zTest, uint zWrite, uint occlusion) : base(ChunkID, name)
     {
         Version = version;
-        _name = new(this, name);
         _shader = new(this, shader);
-        ZTest = zTest;
-        ZWrite = zWrite;
+        _zTest = zTest;
+        _zWrite = zWrite;
         Occlusion = occlusion;
     }
 
@@ -96,8 +93,8 @@ public class OldBillboardQuadGroupChunk : NamedChunk
         bw.Write(Version);
         bw.WriteP3DString(Name);
         bw.WriteP3DString(Shader);
-        bw.Write(zTest);
-        bw.Write(zWrite);
+        bw.Write(_zTest);
+        bw.Write(_zWrite);
         bw.Write(Occlusion);
         bw.Write(NumQuads);
     }

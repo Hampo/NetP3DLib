@@ -27,9 +27,8 @@ public class CollisionVectorChunk : Chunk
     }
     public override uint DataLength => sizeof(float) * 3;
 
-    public CollisionVectorChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public CollisionVectorChunk(EndianAwareBinaryReader br) : this(br.ReadVector3())
     {
-        Vector = br.ReadVector3();
     }
 
     public CollisionVectorChunk(Vector3 vector) : base(ChunkID)

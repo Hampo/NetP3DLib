@@ -14,17 +14,17 @@ public class FrontendLayer2Chunk : NamedChunk
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Frontend_Layer_2;
 
     public uint Version { get; set; }
-    private uint visible;
+    private uint _visible;
     public bool Visible
     {
-        get => visible != 0;
-        set => visible = value ? 1u : 0u;
+        get => _visible != 0;
+        set => _visible = value ? 1u : 0u;
     }
-    private uint editable;
+    private uint _editable;
     public bool Editable
     {
-        get => editable != 0;
-        set => editable = value ? 1u : 0u;
+        get => _editable != 0;
+        set => _editable = value ? 1u : 0u;
     }
     public uint Alpha { get; set; }
 
@@ -36,8 +36,8 @@ public class FrontendLayer2Chunk : NamedChunk
 
             data.AddRange(BinaryExtensions.GetP3DStringBytes(Name));
             data.AddRange(BitConverter.GetBytes(Version));
-            data.AddRange(BitConverter.GetBytes(visible));
-            data.AddRange(BitConverter.GetBytes(editable));
+            data.AddRange(BitConverter.GetBytes(_visible));
+            data.AddRange(BitConverter.GetBytes(_editable));
             data.AddRange(BitConverter.GetBytes(Alpha));
 
             return [.. data];
@@ -45,21 +45,19 @@ public class FrontendLayer2Chunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint);
 
-    public FrontendLayer2Chunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public FrontendLayer2Chunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32())
     {
-        _name = new(this, br);
-        Version = br.ReadUInt32();
-        visible = br.ReadUInt32();
-        editable = br.ReadUInt32();
-        Alpha = br.ReadUInt32();
     }
 
-    public FrontendLayer2Chunk(string name, uint version, bool visible, bool editable, uint alpha) : base(ChunkID)
+    public FrontendLayer2Chunk(string name, uint version, bool visible, bool editable, uint alpha) : this(name, version, visible ? 1u : 0u, editable ? 1u : 0u, alpha)
     {
-        _name = new(this, name);
+    }
+
+    public FrontendLayer2Chunk(string name, uint version, uint visible, uint editable, uint alpha) : base(ChunkID, name)
+    {
         Version = version;
-        Visible = visible;
-        Editable = editable;
+        _visible = visible;
+        _editable = editable;
         Alpha = alpha;
     }
 
@@ -76,8 +74,8 @@ public class FrontendLayer2Chunk : NamedChunk
     {
         bw.WriteP3DString(Name);
         bw.Write(Version);
-        bw.Write(visible);
-        bw.Write(editable);
+        bw.Write(_visible);
+        bw.Write(_editable);
         bw.Write(Alpha);
     }
 

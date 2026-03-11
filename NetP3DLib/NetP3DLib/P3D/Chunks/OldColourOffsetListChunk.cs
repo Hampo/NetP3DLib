@@ -3,6 +3,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -53,14 +54,8 @@ public class OldColourOffsetListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) + sizeof(uint) * NumOffsets;
 
-    public OldColourOffsetListChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public OldColourOffsetListChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), ListHelper.ReadArray(br.ReadInt32(), br.ReadColor))
     {
-        Version = br.ReadUInt32();
-        var numOffsets = br.ReadInt32();
-        var offsets = new Color[numOffsets];
-        for (int i = 0; i < numOffsets; i++)
-            offsets[i] = br.ReadColor();
-        Offsets = CreateSizeAwareList(offsets);
     }
 
     public OldColourOffsetListChunk(uint version, IList<Color> offsets) : base(ChunkID)

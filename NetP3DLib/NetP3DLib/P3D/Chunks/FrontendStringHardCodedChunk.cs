@@ -4,6 +4,7 @@ using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
 using NetP3DLib.P3D.Types;
+using System;
 using System.Collections.Generic;
 
 namespace NetP3DLib.P3D.Chunks;
@@ -33,9 +34,8 @@ public class FrontendStringHardCodedChunk : Chunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(String);
 
-    public FrontendStringHardCodedChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public FrontendStringHardCodedChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString())
     {
-        _string = new(this, br);
     }
 
     public FrontendStringHardCodedChunk(string @string) : base(ChunkID)
@@ -58,4 +58,6 @@ public class FrontendStringHardCodedChunk : Chunk
     }
 
     protected override Chunk CloneSelf() => new FrontendStringHardCodedChunk(String);
+
+    public override string ToString() => $"\"{String}\" ({GetChunkType(this)} (0x{ID:X}))";
 }

@@ -32,12 +32,8 @@ public class LightConeParamChunk : Chunk
     }
     public override uint DataLength => sizeof(float) + sizeof(float) + sizeof(float) + sizeof(float);
 
-    public LightConeParamChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public LightConeParamChunk(EndianAwareBinaryReader br) : this(br.ReadSingle(), br.ReadSingle(), br.ReadSingle(), br.ReadSingle())
     {
-        Phi = br.ReadSingle();
-        Theta = br.ReadSingle();
-        Falloff = br.ReadSingle();
-        Range = br.ReadSingle();
     }
 
     public LightConeParamChunk(float phi, float theta, float falloff, float range) : base(ChunkID)

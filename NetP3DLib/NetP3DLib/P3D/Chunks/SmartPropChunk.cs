@@ -54,23 +54,13 @@ public class SmartPropChunk : NamedChunk
     }
     public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + BinaryExtensions.GetP3DStringLength(ObjectFactoryName) + BinaryExtensions.GetP3DStringLength(Material) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint);
 
-    public SmartPropChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public SmartPropChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadP3DString(), br.ReadP3DString(), br.ReadP3DString(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32())
     {
-        Version = br.ReadUInt32();
-        _name = new(this, br);
-        _objectFactoryName = new(this, br);
-        _material = new(this, br);
-        MaterialEnum = br.ReadUInt32();
-        NumBreakables = br.ReadUInt32();
-        RenderingCost = br.ReadUInt32();
-        SimulationCost = br.ReadUInt32();
-        NumStates = br.ReadUInt32();
     }
 
-    public SmartPropChunk(uint version, string name, string objectFactoryName, string material, uint materialEnum, uint numBreakables, uint renderingCost, uint simulationCost, uint numStates) : base(ChunkID)
+    public SmartPropChunk(uint version, string name, string objectFactoryName, string material, uint materialEnum, uint numBreakables, uint renderingCost, uint simulationCost, uint numStates) : base(ChunkID, name)
     {
         Version = version;
-        _name = new(this, name);
         _objectFactoryName = new(this, objectFactoryName);
         _material = new(this, material);
         MaterialEnum = materialEnum;

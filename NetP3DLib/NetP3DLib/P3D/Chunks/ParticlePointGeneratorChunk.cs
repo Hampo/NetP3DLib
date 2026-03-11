@@ -32,12 +32,8 @@ public class ParticlePointGeneratorChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(float) + sizeof(float) + sizeof(float);
 
-    public ParticlePointGeneratorChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public ParticlePointGeneratorChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadSingle(), br.ReadSingle(), br.ReadSingle())
     {
-        Version = br.ReadUInt32();
-        HorizontalSpread = br.ReadSingle();
-        VerticalSpread = br.ReadSingle();
-        RadialVar = br.ReadSingle();
     }
 
     public ParticlePointGeneratorChunk(uint version, float horizontalSpread, float verticalSpread, float radialVar) : base(ChunkID)

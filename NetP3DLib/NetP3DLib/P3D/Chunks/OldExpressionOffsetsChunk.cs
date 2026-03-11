@@ -2,6 +2,8 @@ using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
+using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 
@@ -51,15 +53,16 @@ public class OldExpressionOffsetsChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) + sizeof(uint) * NumPrimitiveGroups;
 
+    public OldExpressionOffsetsChunk(EndianAwareBinaryReader br) : this(ReadPrimitiveGroupIndices(br))
+    {
+    }
+
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public OldExpressionOffsetsChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    private static uint[] ReadPrimitiveGroupIndices(EndianAwareBinaryReader br)
     {
         var numPrimitiveGroups = br.ReadInt32();
         var numOffsetLists = br.ReadUInt32();
-        var primitiveGroupIndices = new uint[numPrimitiveGroups];
-        for (var i = 0; i < numPrimitiveGroups; i++)
-            primitiveGroupIndices[i] = br.ReadUInt32();
-        PrimitiveGroupIndices = CreateSizeAwareList(primitiveGroupIndices);
+        return ListHelper.ReadArray(numPrimitiveGroups, br.ReadUInt32);
     }
 
     public OldExpressionOffsetsChunk(IList<uint> primitiveGroupIndices) : base(ChunkID)

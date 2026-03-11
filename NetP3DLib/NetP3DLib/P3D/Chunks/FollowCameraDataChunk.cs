@@ -36,13 +36,8 @@ public class FollowCameraDataChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(float) * 3;
 
-    public FollowCameraDataChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public FollowCameraDataChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadSingle(), br.ReadSingle(), br.ReadSingle(), br.ReadVector3())
     {
-        Index = br.ReadUInt32();
-        Rotation = br.ReadSingle();
-        Elevation = br.ReadSingle();
-        Magnitude = br.ReadSingle();
-        TargetOffset = br.ReadVector3();
     }
 
     public FollowCameraDataChunk(uint index, float rotation, float elevation, float magnitude, Vector3 targetOffset) : base(ChunkID)

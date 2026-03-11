@@ -34,15 +34,12 @@ public class CompositeDrawableChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + BinaryExtensions.GetP3DStringLength(SkeletonName);
 
-    public CompositeDrawableChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public CompositeDrawableChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadP3DString())
     {
-        _name = new(this, br);
-        _skeletonName = new(this, br);
     }
 
-    public CompositeDrawableChunk(string name, string skeletonName) : base(ChunkID)
+    public CompositeDrawableChunk(string name, string skeletonName) : base(ChunkID, name)
     {
-        _name = new(this, name);
         _skeletonName = new(this, skeletonName);
     }
 

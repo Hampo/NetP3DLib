@@ -28,15 +28,12 @@ public class GameAttributeMatrixParameterChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(float) * 16;
 
-    public GameAttributeMatrixParameterChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public GameAttributeMatrixParameterChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadMatrix4x4())
     {
-        _name = new(this, br);
-        Value = br.ReadMatrix4x4();
     }
 
-    public GameAttributeMatrixParameterChunk(string name, Matrix4x4 value) : base(ChunkID)
+    public GameAttributeMatrixParameterChunk(string name, Matrix4x4 value) : base(ChunkID, name)
     {
-        _name = new(this, name);
         Value = value;
     }
 

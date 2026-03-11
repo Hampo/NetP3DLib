@@ -3,6 +3,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -51,13 +52,8 @@ public class CollisionMeshVectorListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(float) * 3 * NumVectors;
 
-    public CollisionMeshVectorListChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public CollisionMeshVectorListChunk(EndianAwareBinaryReader br) : this(ListHelper.ReadArray(br.ReadInt32(), br.ReadVector3))
     {
-        var numVectors = br.ReadInt32();
-        var vectors = new Vector3[numVectors];
-        for (int i = 0; i < numVectors; i++)
-            vectors[i] = br.ReadVector3();
-        Vectors = CreateSizeAwareList(vectors);
     }
 
     public CollisionMeshVectorListChunk(IList<Vector3> vectors) : base(ChunkID)

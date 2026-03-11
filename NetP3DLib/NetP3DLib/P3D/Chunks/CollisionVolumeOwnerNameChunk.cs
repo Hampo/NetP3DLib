@@ -24,14 +24,12 @@ public class CollisionVolumeOwnerNameChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name);
 
-    public CollisionVolumeOwnerNameChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public CollisionVolumeOwnerNameChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString())
     {
-        _name = new(this, br);
     }
 
-    public CollisionVolumeOwnerNameChunk(string name) : base(ChunkID)
+    public CollisionVolumeOwnerNameChunk(string name) : base(ChunkID, name)
     {
-        _name = new(this, name);
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

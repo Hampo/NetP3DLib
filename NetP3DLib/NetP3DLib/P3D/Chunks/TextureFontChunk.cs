@@ -50,22 +50,14 @@ public class TextureFontChunk : NamedChunk
     public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + BinaryExtensions.GetP3DStringLength(Shader) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(uint);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public TextureFontChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public TextureFontChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadP3DString(), br.ReadP3DString(), br.ReadSingle(), br.ReadSingle(), br.ReadSingle(), br.ReadSingle())
     {
-        Version = br.ReadUInt32();
-        _name = new(this, br);
-        _shader = new(this, br);
-        FontSize = br.ReadSingle();
-        FontWidth = br.ReadSingle();
-        FontHeight = br.ReadSingle();
-        FontBaseLine = br.ReadSingle();
         var numTexture = br.ReadUInt32();
     }
 
-    public TextureFontChunk(uint version, string name, string shader, float fontSize, float fontWidth, float fontHeight, float fontBaseLine) : base(ChunkID)
+    public TextureFontChunk(uint version, string name, string shader, float fontSize, float fontWidth, float fontHeight, float fontBaseLine) : base(ChunkID, name)
     {
         Version = version;
-        _name = new(this, name);
         _shader = new(this, shader);
         FontSize = fontSize;
         FontWidth = fontWidth;

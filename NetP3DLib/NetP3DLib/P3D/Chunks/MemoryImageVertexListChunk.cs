@@ -2,6 +2,7 @@ using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
+using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 
@@ -52,12 +53,8 @@ public class MemoryImageVertexListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) + sizeof(uint) + VertexSize;
 
-    public MemoryImageVertexListChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public MemoryImageVertexListChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadUInt32(), ListHelper.ReadArray(br.ReadInt32(), br.ReadByte))
     {
-        Version = br.ReadUInt32();
-        Param = br.ReadUInt32();
-        int numVertices = br.ReadInt32();
-        Vertex = CreateSizeAwareList(br.ReadBytes(numVertices));
     }
 
     public MemoryImageVertexListChunk(uint version, uint param, IList<byte> vertex) : base(ChunkID)

@@ -136,20 +136,8 @@ public class PrimitiveGroupChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(ShaderName) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint);
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public PrimitiveGroupChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public PrimitiveGroupChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadP3DString(), (PrimitiveTypes)br.ReadUInt32(), br.SkipAndRead(sizeof(uint), br.ReadUInt32), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32())
     {
-        Version = br.ReadUInt32();
-        _shaderName = new(this, br);
-        PrimitiveType = (PrimitiveTypes)br.ReadUInt32();
-        var vertexType = (VertexTypes)br.ReadUInt32();
-        NumVertices = br.ReadUInt32();
-        NumIndices = br.ReadUInt32();
-        NumMatrices = br.ReadUInt32();
-        MemoryImaged = br.ReadUInt32();
-        Optimized = br.ReadUInt32();
-        VertexAnimated = br.ReadUInt32();
-        VertexAnimationMask = br.ReadUInt32();
     }
 
     public PrimitiveGroupChunk(uint version, string shaderName, PrimitiveTypes primitiveType, uint numVertices, uint numIndices, uint numMatrices, uint memoryImaged, uint optimized, uint vertexAnimated, uint vertexAnimationMask) : base(ChunkID)

@@ -34,15 +34,12 @@ public class ShaderTextureParameterChunk : ParamChunk
     }
     public override uint DataLength => 4 + BinaryExtensions.GetP3DStringLength(Value);
 
-    public ShaderTextureParameterChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public ShaderTextureParameterChunk(EndianAwareBinaryReader br) : this(br.ReadFourCC(), br.ReadP3DString())
     {
-        _param = new(this, br);
-        _value = new(this, br);
     }
 
-    public ShaderTextureParameterChunk(string param, string value) : base(ChunkID)
+    public ShaderTextureParameterChunk(string param, string value) : base(ChunkID, param)
     {
-        _param = new(this, param);
         _value = new(this, value);
     }
 

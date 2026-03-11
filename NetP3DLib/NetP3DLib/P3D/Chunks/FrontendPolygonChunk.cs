@@ -4,6 +4,7 @@ using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -85,25 +86,12 @@ public class FrontendPolygonChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) * 3 * NumPoints + sizeof(uint) * NumColours;
 
-    public FrontendPolygonChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public FrontendPolygonChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadUInt32(), br.ReadUInt32(), ListHelper.ReadArray(br.ReadInt32, br.ReadVector3, out var num), ListHelper.ReadArray(num, br.ReadColor))
     {
-        _name = new(this, br);
-        Version = br.ReadUInt32();
-        Translucency = br.ReadUInt32();
-        var num = br.ReadInt32();
-        var points = new Vector3[num];
-        for (int i = 0; i < num; i++)
-            points[i] = br.ReadVector3();
-        Points = CreateSizeAwareList(points);
-        var colours = new Color[num];
-        for (int i = 0; i < num; i++)
-            colours[i] = br.ReadColor();
-        Colours = CreateSizeAwareList(colours);
     }
 
-    public FrontendPolygonChunk(string name, uint version, uint translucency, IList<Vector3> points, IList<Color> colours) : base(ChunkID)
+    public FrontendPolygonChunk(string name, uint version, uint translucency, IList<Vector3> points, IList<Color> colours) : base(ChunkID, name)
     {
-        _name = new(this, name);
         Version = version;
         Translucency = translucency;
         Points = CreateSizeAwareList(points);

@@ -26,9 +26,8 @@ public class CompositeDrawableSortOrderChunk : Chunk
     }
     public override uint DataLength => sizeof(float);
 
-    public CompositeDrawableSortOrderChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public CompositeDrawableSortOrderChunk(EndianAwareBinaryReader br) : this(br.ReadSingle())
     {
-        SortOrder = br.ReadSingle();
     }
 
     public CompositeDrawableSortOrderChunk(float sortOrder) : base(ChunkID)

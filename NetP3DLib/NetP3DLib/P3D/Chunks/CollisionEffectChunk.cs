@@ -6,6 +6,7 @@ using NetP3DLib.P3D.Extensions;
 using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
+using static NetP3DLib.P3D.Chunks.InstParticleSystemChunk;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -53,11 +54,8 @@ public class CollisionEffectChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) + BinaryExtensions.GetP3DStringLength(SoundResourceDataName);
 
-    public CollisionEffectChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public CollisionEffectChunk(EndianAwareBinaryReader br) : this((ClassTypes)br.ReadUInt32(), br.ReadUInt32(), br.ReadP3DString())
     {
-        ClassType = (ClassTypes)br.ReadUInt32();
-        PhysPropID = br.ReadUInt32();
-        _soundResourceDataName = new(this, br);
     }
 
     public CollisionEffectChunk(ClassTypes classType, uint phyPropID, string soundResourceDataName) : base(ChunkID)
@@ -84,4 +82,6 @@ public class CollisionEffectChunk : Chunk
     }
 
     protected override Chunk CloneSelf() => new CollisionEffectChunk(ClassType, PhysPropID, SoundResourceDataName);
+
+    public override string ToString() => $"{ClassType} ({GetChunkType(this)} (0x{ID:X}))";
 }

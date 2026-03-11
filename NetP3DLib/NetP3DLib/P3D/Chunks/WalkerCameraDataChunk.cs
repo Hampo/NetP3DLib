@@ -36,13 +36,8 @@ public class WalkerCameraDataChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(float) * 3;
 
-    public WalkerCameraDataChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public WalkerCameraDataChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadSingle(), br.ReadSingle(), br.ReadSingle(), br.ReadVector3())
     {
-        Index = br.ReadUInt32();
-        MinMagnitude = br.ReadSingle();
-        MaxMagnitude = br.ReadSingle();
-        Elevation = br.ReadSingle();
-        TargetOffset = br.ReadVector3();
     }
 
     public WalkerCameraDataChunk(uint index, float minMagnitude, float maxMagnitude, float elevation, Vector3 targetOffset) : base(ChunkID)

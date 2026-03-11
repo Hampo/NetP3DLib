@@ -14,11 +14,11 @@ public class ChannelInterpolationModeChunk : Chunk
 
     [DefaultValue(0)]
     public uint Version { get; set; }
-    private uint interpolate;
+    private uint _interpolate;
     public bool Interpolate
     {
-        get => interpolate != 0;
-        set => interpolate = value ? 1u : 0u;
+        get => _interpolate != 0;
+        set => _interpolate = value ? 1u : 0u;
     }
 
     public override byte[] DataBytes
@@ -28,29 +28,31 @@ public class ChannelInterpolationModeChunk : Chunk
             List<byte> data = [];
 
             data.AddRange(BitConverter.GetBytes(Version));
-            data.AddRange(BitConverter.GetBytes(interpolate));
+            data.AddRange(BitConverter.GetBytes(_interpolate));
 
             return [.. data];
         }
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint);
 
-    public ChannelInterpolationModeChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public ChannelInterpolationModeChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadUInt32())
     {
-        Version = br.ReadUInt32();
-        interpolate = br.ReadUInt32();
     }
 
-    public ChannelInterpolationModeChunk(uint version, bool interpolate) : base(ChunkID)
+    public ChannelInterpolationModeChunk(uint version, bool interpolate) : this(version, interpolate ? 1u : 0u)
+    {
+    }
+
+    public ChannelInterpolationModeChunk(uint version, uint interpolate) : base(ChunkID)
     {
         Version = version;
-        Interpolate = interpolate;
+        _interpolate = interpolate;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
     {
         bw.Write(Version);
-        bw.Write(interpolate);
+        bw.Write(_interpolate);
     }
 
     protected override Chunk CloneSelf() => new ChannelInterpolationModeChunk(Version, Interpolate);

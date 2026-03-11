@@ -42,18 +42,14 @@ public class StatePropDataV1Chunk : NamedChunk
     public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + BinaryExtensions.GetP3DStringLength(ObjectFactoryName) + sizeof(uint);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public StatePropDataV1Chunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public StatePropDataV1Chunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadP3DString(), br.ReadP3DString())
     {
-        Version = br.ReadUInt32();
-        _name = new(this, br);
-        _objectFactoryName = new(this, br);
         var numStates = br.ReadUInt32();
     }
 
-    public StatePropDataV1Chunk(uint version, string name, string objectFactoryName) : base(ChunkID)
+    public StatePropDataV1Chunk(uint version, string name, string objectFactoryName) : base(ChunkID, name)
     {
         Version = version;
-        _name = new(this, name);
         _objectFactoryName = new(this, objectFactoryName);
     }
 

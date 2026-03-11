@@ -56,19 +56,13 @@ public class ExpressionMixerChunk : NamedChunk
     }
     public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + BinaryExtensions.GetP3DStringLength(TargetName) + BinaryExtensions.GetP3DStringLength(ExpressionGroupName);
 
-    public ExpressionMixerChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public ExpressionMixerChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadP3DString(), (MixerType)br.ReadUInt32(), br.ReadP3DString(), br.ReadP3DString())
     {
-        Version = br.ReadUInt32();
-        _name = new(this, br);
-        Type = (MixerType)br.ReadUInt32();
-        _targetName = new(this, br);
-        _expressionGroupName = new(this, br);
     }
 
-    public ExpressionMixerChunk(uint version, string name, MixerType type, string targetName, string expressionGroupName) : base(ChunkID)
+    public ExpressionMixerChunk(uint version, string name, MixerType type, string targetName, string expressionGroupName) : base(ChunkID, name)
     {
         Version = version;
-        _name = new(this, name);
         Type = type;
         _targetName = new(this, targetName);
         _expressionGroupName = new(this, expressionGroupName);

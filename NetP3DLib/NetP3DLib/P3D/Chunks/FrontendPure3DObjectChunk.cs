@@ -67,25 +67,12 @@ public class FrontendPure3DObjectChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(int) + sizeof(int) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(float) + BinaryExtensions.GetP3DStringLength(Pure3DFilename);
 
-    public FrontendPure3DObjectChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public FrontendPure3DObjectChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadUInt32(), br.ReadInt32(), br.ReadInt32(), br.ReadUInt32(), br.ReadUInt32(), (Justifications)br.ReadUInt32(), (Justifications)br.ReadUInt32(), br.ReadColor(), br.ReadUInt32(), br.ReadSingle(), br.ReadP3DString())
     {
-        _name = new(this, br);
-        Version = br.ReadUInt32();
-        PositionX = br.ReadInt32();
-        PositionY = br.ReadInt32();
-        DimensionX = br.ReadUInt32();
-        DimensionY = br.ReadUInt32();
-        JustificationX = (Justifications)br.ReadUInt32();
-        JustificationY = (Justifications)br.ReadUInt32();
-        Colour = br.ReadColor();
-        Translucency = br.ReadUInt32();
-        RotationValue = br.ReadSingle();
-        _pure3DFilename = new(this, br);
     }
 
-    public FrontendPure3DObjectChunk(string name, uint version, int positionX, int positionY, uint dimensionX, uint dimensionY, Justifications justificationX, Justifications justificationY, Color colour, uint translucency, float rotationValue, string pure3DFilename) : base(ChunkID)
+    public FrontendPure3DObjectChunk(string name, uint version, int positionX, int positionY, uint dimensionX, uint dimensionY, Justifications justificationX, Justifications justificationY, Color colour, uint translucency, float rotationValue, string pure3DFilename) : base(ChunkID, name)
     {
-        _name = new(this, name);
         Version = version;
         PositionX = positionX;
         PositionY = positionY;

@@ -1,5 +1,6 @@
 using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
+using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using System;
@@ -12,8 +13,12 @@ public class ImageDataChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Image_Data;
 
-    private byte[] _imageData = [];
-    public byte[] ImageData
+    private readonly Action _imageDataChanged;
+    private ObservableByteArray _imageData;
+    /// <summary>
+    /// Property <c>Data</c> is the chunk's header data.
+    /// </summary>
+    public ObservableByteArray ImageData
     {
         get => _imageData;
         set
@@ -22,8 +27,9 @@ public class ImageDataChunk : Chunk
                 return;
 
             var oldSize = HeaderSize;
-            _imageData = value ?? [];
+            _imageData = new(value?.ToArray() ?? [], _imageDataChanged);
             RecalculateSize(oldSize);
+            _imageDataChanged();
         }
     }
 
@@ -34,22 +40,21 @@ public class ImageDataChunk : Chunk
             List<byte> data = [];
 
             data.AddRange(BitConverter.GetBytes(ImageData.Length));
-            data.AddRange(ImageData);
+            data.AddRange(ImageData.ToArray());
 
             return [.. data];
         }
     }
     public override uint DataLength => sizeof(uint) + (uint)ImageData.Length;
 
-    public ImageDataChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public ImageDataChunk(EndianAwareBinaryReader br) : this(br.ReadBytes(br.ReadInt32()))
     {
-        int length = br.ReadInt32();
-        ImageData = br.ReadBytes(length);
     }
 
     public ImageDataChunk(byte[] imageData) : base(ChunkID)
     {
-        ImageData = (byte[])imageData.Clone();
+        _imageDataChanged = () => OnPropertyUpdated(nameof(ImageData));
+        _imageData = new((byte[])imageData.Clone(), _imageDataChanged);
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
@@ -57,15 +62,15 @@ public class ImageDataChunk : Chunk
         foreach (var error in base.ValidateChunk())
             yield return error;
 
-        if (ImageData.LongLength > int.MaxValue)
+        if (ImageData.Length > int.MaxValue)
             yield return new InvalidP3DException(this, $"The max length of {nameof(ImageData)} is {int.MaxValue} bytes.");
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
     {
         bw.Write(ImageData.Length);
-        bw.Write(ImageData);
+        bw.Write(ImageData.ToArray());
     }
 
-    protected override Chunk CloneSelf() => new ImageDataChunk(ImageData);
+    protected override Chunk CloneSelf() => new ImageDataChunk(ImageData.ToArray());
 }

@@ -43,17 +43,13 @@ public class SkinChunk : NamedChunk
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + BinaryExtensions.GetP3DStringLength(SkeletonName) + sizeof(uint);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public SkinChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public SkinChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadUInt32(), br.ReadP3DString())
     {
-        _name = new(this, br);
-        Version = br.ReadUInt32();
-        _skeletonName = new(this, br);
         var numPrimitiveGroups = br.ReadUInt32();
     }
 
-    public SkinChunk(string name, uint version, string skeletonName) : base(ChunkID)
+    public SkinChunk(string name, uint version, string skeletonName) : base(ChunkID, name)
     {
-        _name = new(this, name);
         Version = version;
         _skeletonName = new(this, skeletonName);
     }

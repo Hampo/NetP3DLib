@@ -43,14 +43,8 @@ public class PhysicsJointChunk : Chunk
     }
     public override uint DataLength => sizeof(int) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(int);
 
-    public PhysicsJointChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public PhysicsJointChunk(EndianAwareBinaryReader br) : this(br.ReadInt32(), br.ReadSingle(), br.ReadSingle(), br.ReadSingle(), br.ReadSingle(), (DegreeOfFreedom)br.ReadInt32())
     {
-        Index = br.ReadInt32();
-        Volume = br.ReadSingle();
-        Stiffness = br.ReadSingle();
-        MaxAngle = br.ReadSingle();
-        MinAngle = br.ReadSingle();
-        DegreesOfFreedom = (DegreeOfFreedom)br.ReadInt32();
     }
 
     public PhysicsJointChunk(int index, float volume, float stiffness, float maxAngle, float minAngle, DegreeOfFreedom degreesOfFreedom) : base(ChunkID)

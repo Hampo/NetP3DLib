@@ -31,16 +31,12 @@ public class SkeletonJoint2Chunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(float) * 16;
 
-    public SkeletonJoint2Chunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public SkeletonJoint2Chunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadUInt32(), br.ReadMatrix4x4())
     {
-        _name = new(this, br);
-        Parent = br.ReadUInt32();
-        RestPose = br.ReadMatrix4x4();
     }
 
-    public SkeletonJoint2Chunk(string name, uint parent, Matrix4x4 restPose) : base(ChunkID)
+    public SkeletonJoint2Chunk(string name, uint parent, Matrix4x4 restPose) : base(ChunkID, name)
     {
-        _name = new(this, name);
         Parent = parent;
         RestPose = restPose;
     }

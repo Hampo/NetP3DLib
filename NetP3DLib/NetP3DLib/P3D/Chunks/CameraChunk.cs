@@ -45,22 +45,12 @@ public class CameraChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(float) * 3 + sizeof(float) * 3 + sizeof(float) * 3;
 
-    public CameraChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public CameraChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadUInt32(), br.ReadSingle(), br.ReadSingle(), br.ReadSingle(), br.ReadSingle(), br.ReadVector3(), br.ReadVector3(), br.ReadVector3())
     {
-        _name = new(this, br);
-        Version = br.ReadUInt32();
-        FOV = br.ReadSingle();
-        AspectRatio = br.ReadSingle();
-        NearClip = br.ReadSingle();
-        FarClip = br.ReadSingle();
-        Position = br.ReadVector3();
-        Look = br.ReadVector3();
-        Up = br.ReadVector3();
     }
 
-    public CameraChunk(string name, uint version, float fov, float aspectRatio, float nearClip, float farClip, Vector3 position, Vector3 look, Vector3 up) : base(ChunkID)
+    public CameraChunk(string name, uint version, float fov, float aspectRatio, float nearClip, float farClip, Vector3 position, Vector3 look, Vector3 up) : base(ChunkID, name)
     {
-        _name = new(this, name);
         Version = version;
         FOV = fov;
         AspectRatio = aspectRatio;

@@ -1,4 +1,5 @@
 ﻿using NetP3DLib.IO;
+using NetP3DLib.P3D.Chunks;
 using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Comparers;
 using NetP3DLib.P3D.Enums;
@@ -344,13 +345,46 @@ public abstract class Chunk
             if (found != null)
                 return found;
 
+            if (current.ParentFile != null)
+            {
+                var sets = current.ParentFile.GetChunksOfType<SetChunk>(name);
+                foreach (var set in sets)
+                    if (set.GetSetType() == chunkType)
+                        return (NamedChunk)set.Children[0];
+            }
+
             current = current.ParentChunk;
         }
 
         return null;
     }
 
-    public T? FindNamedChunkInParentHierarchy<T>(string name) where T : NamedChunk => (T?)FindNamedChunkInParentHierarchy(typeof(T), name);
+    public T? FindNamedChunkInParentHierarchy<T>(string name) where T : NamedChunk
+    {
+        if (ParentFile != null)
+            return ParentFile.GetFirstChunkOfType<T>(name);
+
+        var current = ParentChunk;
+        while (current != null)
+        {
+            var found = current.GetFirstChunkOfType<T>(name) ?? current.ParentFile?.GetFirstChunkOfType<T>(name);
+
+            if (found != null)
+                return found;
+
+            if (current.ParentFile != null)
+            {
+                var sets = current.ParentFile.GetChunksOfType<SetChunk>(name);
+                foreach (var set in sets)
+                    if (set.GetSetType() == typeof(T))
+                        return (T)set.Children[0];
+            }
+
+            current = current.ParentChunk;
+        }
+
+        return null;
+    }
 
     private readonly Dictionary<uint, uint> _childCounts = [];
     public uint GetChildCount() => (uint)Children.Count;

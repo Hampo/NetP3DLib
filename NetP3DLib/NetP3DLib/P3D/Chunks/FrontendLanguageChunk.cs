@@ -62,26 +62,30 @@ public class FrontendLanguageChunk : NamedChunk
             return [.. data];
         }
     }
-    public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + 1 + sizeof(uint) + sizeof(uint) + sizeof(uint) + (Entries == null ? 0 : sizeof(uint) * (uint)Entries.Count + sizeof(uint) * (uint)Entries.Count + (uint)(BuildData().Buffer.Count * 2));//(uint)DataBytes.Length;
+    public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + 1 + sizeof(uint) + sizeof(uint) + sizeof(uint) + (Entries == null ? 0 : sizeof(uint) * (uint)Entries.Count + sizeof(uint) * (uint)Entries.Count + (uint)(BuildData().Buffer.Count * 2));
 
-    public FrontendLanguageChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public FrontendLanguageChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadChar(), ReadModuloAndEntries(br, out var entries), entries)
     {
-        _name = new(this, br);
-        Language = br.ReadChar();
+    }
+
+    private static uint ReadModuloAndEntries(EndianAwareBinaryReader br, out Entry[] entries)
+    {
         var numEntries = br.ReadInt32();
-        Modulo = br.ReadUInt32();
+        var modulo = br.ReadUInt32();
         var bufferSize = br.ReadInt32();
+
         var hashes = new uint[numEntries];
         for (int i = 0; i < numEntries; i++)
             hashes[i] = br.ReadUInt32();
+
         var offsets = new uint[numEntries];
         for (int i = 0; i < numEntries; i++)
             offsets[i] = br.ReadUInt32();
+
         var bufferBytes = br.ReadBytes(bufferSize);
         var buffer = Encoding.Unicode.GetString(bufferBytes);
-        Entries = CreateSizeAwareList<Entry>(numEntries);
-        Entries.CollectionChanged += Entries_CollectionChanged;
-        var entries = new Entry[numEntries];
+
+        entries = new Entry[numEntries];
         for (int i = 0; i < numEntries; i++)
         {
             uint hash = hashes[i];
@@ -89,12 +93,12 @@ public class FrontendLanguageChunk : NamedChunk
             int length = buffer.IndexOf('\0', offset) - offset;
             entries[i] = new(hash, buffer.Substring(offset, length));
         }
-        Entries.AddRange(entries);
+
+        return modulo;
     }
 
-    public FrontendLanguageChunk(string name, char language, uint modulo, IList<Entry> entries) : base(ChunkID)
+    public FrontendLanguageChunk(string name, char language, uint modulo, IList<Entry> entries) : base(ChunkID, name)
     {
-        _name = new(this, name);
         Language = language;
         Modulo = modulo;
         Entries = CreateSizeAwareList<Entry>(entries.Count);
@@ -103,9 +107,8 @@ public class FrontendLanguageChunk : NamedChunk
         Entries.AddRange(entries);
     }
 
-    public FrontendLanguageChunk(string name, char language, uint modulo, Dictionary<string, string> entries) : base(ChunkID)
+    public FrontendLanguageChunk(string name, char language, uint modulo, Dictionary<string, string> entries) : base(ChunkID, name)
     {
-        _name = new(this, name);
         Language = language;
         Modulo = modulo;
         var entries2 = new Entry[entries.Count];

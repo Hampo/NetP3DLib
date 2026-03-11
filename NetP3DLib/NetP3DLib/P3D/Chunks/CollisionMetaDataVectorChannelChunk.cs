@@ -4,6 +4,7 @@ using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -80,25 +81,13 @@ public class CollisionMetaDataVectorChannelChunk : NamedChunk
     }
     public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(ushort) * NumIndices + sizeof(float) * 3 * NumValues;
 
-    public CollisionMetaDataVectorChannelChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public CollisionMetaDataVectorChannelChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadP3DString(), ListHelper.ReadArray(br.ReadInt32, br.ReadUInt16, out var numIndices), ListHelper.ReadArray(numIndices, br.ReadVector3))
     {
-        Version = br.ReadUInt32();
-        _name = new(this, br);
-        var numFrames = br.ReadInt32();
-        var indices = new ushort[numFrames];
-        for (var i = 0; i < numFrames; i++)
-            indices[i] = br.ReadUInt16();
-        Indices = CreateSizeAwareList(indices);
-        var values = new Vector3[numFrames];
-        for (var i = 0; i < numFrames; i++)
-            values[i] = br.ReadVector3();
-        Values = CreateSizeAwareList(values);
     }
 
-    public CollisionMetaDataVectorChannelChunk(uint version, string name, IList<ushort> indices, IList<Vector3> values) : base(ChunkID)
+    public CollisionMetaDataVectorChannelChunk(uint version, string name, IList<ushort> indices, IList<Vector3> values) : base(ChunkID, name)
     {
         Version = version;
-        _name = new(this, name);
         Indices = CreateSizeAwareList(indices);
         Values = CreateSizeAwareList(values);
     }

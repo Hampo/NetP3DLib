@@ -3,6 +3,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 
@@ -53,20 +54,12 @@ public class VisibilityAnimChannelChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(ushort) + sizeof(uint) + sizeof(uint) * NumFrames;
 
-    public VisibilityAnimChannelChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public VisibilityAnimChannelChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadUInt16(), ListHelper.ReadArray(br.ReadInt32(), br.ReadUInt32))
     {
-        _name = new(this, br);
-        StartState = br.ReadUInt16();
-        var numFrames = br.ReadInt32();
-        var frames = new uint[numFrames];
-        for (int i = 0; i < numFrames; i++)
-            frames[i] = br.ReadUInt32();
-        Frames = CreateSizeAwareList(frames);
     }
 
-    public VisibilityAnimChannelChunk(string name, ushort startState, IList<uint> frames) : base(ChunkID)
+    public VisibilityAnimChannelChunk(string name, ushort startState, IList<uint> frames) : base(ChunkID, name)
     {
-        _name = new(this, name);
         StartState = startState;
         Frames = CreateSizeAwareList(frames);
     }

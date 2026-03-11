@@ -12,11 +12,11 @@ public class CompositeDrawableEffectChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Composite_Drawable_Effect;
 
-    private uint isTranslucent;
+    private uint _isTranslucent;
     public bool IsTranslucent
     {
-        get => isTranslucent != 0;
-        set => isTranslucent = value ? 1u : 0u;
+        get => _isTranslucent != 0;
+        set => _isTranslucent = value ? 1u : 0u;
     }
     public uint SkeletonJointId { get; set; }
 
@@ -27,7 +27,7 @@ public class CompositeDrawableEffectChunk : NamedChunk
             List<byte> data = [];
 
             data.AddRange(BinaryExtensions.GetP3DStringBytes(Name));
-            data.AddRange(BitConverter.GetBytes(isTranslucent));
+            data.AddRange(BitConverter.GetBytes(_isTranslucent));
             data.AddRange(BitConverter.GetBytes(SkeletonJointId));
 
             return [.. data];
@@ -35,24 +35,24 @@ public class CompositeDrawableEffectChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint);
 
-    public CompositeDrawableEffectChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public CompositeDrawableEffectChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadUInt32(), br.ReadUInt32())
     {
-        _name = new(this, br);
-        isTranslucent = br.ReadUInt32();
-        SkeletonJointId = br.ReadUInt32();
     }
 
-    public CompositeDrawableEffectChunk(string name, bool isTranslucent, uint skeletonJointId) : base(ChunkID)
+    public CompositeDrawableEffectChunk(string name, bool isTranslucent, uint skeletonJointId) : this(name, isTranslucent ? 1u : 0u, skeletonJointId)
     {
-        _name = new(this, name);
-        IsTranslucent = isTranslucent;
+    }
+
+    public CompositeDrawableEffectChunk(string name, uint isTranslucent, uint skeletonJointId) : base(ChunkID, name)
+    {
+        _isTranslucent = isTranslucent;
         SkeletonJointId = skeletonJointId;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
     {
         bw.WriteP3DString(Name);
-        bw.Write(isTranslucent);
+        bw.Write(_isTranslucent);
         bw.Write(SkeletonJointId);
     }
 

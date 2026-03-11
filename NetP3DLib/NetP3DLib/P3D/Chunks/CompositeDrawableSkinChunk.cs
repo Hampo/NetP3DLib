@@ -12,11 +12,11 @@ public class CompositeDrawableSkinChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Composite_Drawable_Skin;
 
-    private uint isTranslucent;
+    private uint _isTranslucent;
     public bool IsTranslucent
     {
-        get => isTranslucent != 0;
-        set => isTranslucent = value ? 1u : 0u;
+        get => _isTranslucent != 0;
+        set => _isTranslucent = value ? 1u : 0u;
     }
 
     public override byte[] DataBytes
@@ -26,29 +26,30 @@ public class CompositeDrawableSkinChunk : NamedChunk
             List<byte> data = [];
 
             data.AddRange(BinaryExtensions.GetP3DStringBytes(Name));
-            data.AddRange(BitConverter.GetBytes(isTranslucent));
+            data.AddRange(BitConverter.GetBytes(_isTranslucent));
 
             return [.. data];
         }
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint);
 
-    public CompositeDrawableSkinChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public CompositeDrawableSkinChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadUInt32())
     {
-        _name = new(this, br);
-        isTranslucent = br.ReadUInt32();
     }
 
-    public CompositeDrawableSkinChunk(string name, bool isTranslucent) : base(ChunkID)
+    public CompositeDrawableSkinChunk(string name, bool isTranslucent) : this(name, isTranslucent ? 1u : 0u)
     {
-        _name = new(this, name);
-        IsTranslucent = isTranslucent;
+    }
+
+    public CompositeDrawableSkinChunk(string name, uint isTranslucent) : base(ChunkID, name)
+    {
+        _isTranslucent = isTranslucent;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
     {
         bw.WriteP3DString(Name);
-        bw.Write(isTranslucent);
+        bw.Write(_isTranslucent);
     }
 
     protected override Chunk CloneSelf() => new CompositeDrawableSkinChunk(Name, IsTranslucent);

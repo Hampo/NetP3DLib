@@ -29,10 +29,8 @@ public class BoundingBoxChunk : Chunk
     }
     public override uint DataLength => sizeof(float) * 3 + sizeof(float) * 3;
 
-    public BoundingBoxChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public BoundingBoxChunk(EndianAwareBinaryReader br) : this(br.ReadVector3(), br.ReadVector3())
     {
-        Low = br.ReadVector3();
-        High = br.ReadVector3();
     }
 
     public BoundingBoxChunk(Vector3 low, Vector3 high) : base(ChunkID)

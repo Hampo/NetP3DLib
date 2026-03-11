@@ -4,6 +4,7 @@ using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -53,19 +54,12 @@ public class SplineChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(float) * 3 * NumPositions;
 
-    public SplineChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public SplineChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), ListHelper.ReadArray(br.ReadInt32(), br.ReadVector3))
     {
-        _name = new(this, br);
-        var numPositions = br.ReadInt32();
-        var positions = new Vector3[numPositions];
-        for (var i = 0; i < numPositions; i++)
-            positions[i] = br.ReadVector3();
-        Positions = CreateSizeAwareList(positions);
     }
 
-    public SplineChunk(string name, IList<Vector3> positions) : base(ChunkID)
+    public SplineChunk(string name, IList<Vector3> positions) : base(ChunkID, name)
     {
-        _name = new(this, name);
         Positions = CreateSizeAwareList(positions);
     }
 

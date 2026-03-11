@@ -11,11 +11,11 @@ public class LightShadowChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Light_Shadow;
 
-    private uint shadow;
+    private uint _shadow;
     public bool Shadow
     {
-        get => shadow == 1;
-        set => shadow = value ? 1u : 0u;
+        get => _shadow == 1;
+        set => _shadow = value ? 1u : 0u;
     }
 
     public override byte[] DataBytes
@@ -24,26 +24,29 @@ public class LightShadowChunk : Chunk
         {
             List<byte> data = [];
 
-            data.AddRange(BitConverter.GetBytes(shadow));
+            data.AddRange(BitConverter.GetBytes(_shadow));
 
             return [.. data];
         }
     }
     public override uint DataLength => sizeof(uint);
 
-    public LightShadowChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public LightShadowChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32())
     {
-        shadow = br.ReadUInt32();
     }
 
-    public LightShadowChunk(bool shadow) : base(ChunkID)
+    public LightShadowChunk(bool shadow) : this(shadow ? 1u : 0u)
     {
-        Shadow = shadow;
+    }
+
+    public LightShadowChunk(uint shadow) : base(ChunkID)
+    {
+        _shadow = shadow;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
     {
-        bw.Write(shadow);
+        bw.Write(_shadow);
     }
 
     protected override Chunk CloneSelf() => new LightShadowChunk(Shadow);

@@ -51,23 +51,13 @@ public class BillboardQuadChunk : NamedChunk
     }
     public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint) + 4 + sizeof(uint) + sizeof(float) + sizeof(float) + sizeof(float);
 
-    public BillboardQuadChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public BillboardQuadChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadP3DString(), br.ReadUInt32(),br.ReadUInt32(), br.ReadFourCC(), br.ReadColor(), br.ReadSingle(), br.ReadSingle(), br.ReadSingle())
     {
-        Version = br.ReadUInt32();
-        _name = new(this, br);
-        CutOffEnabled = br.ReadUInt32();
-        Perspective = br.ReadUInt32();
-        _axisMode = new(this, br);
-        Colour = br.ReadColor();
-        Width = br.ReadSingle();
-        Height = br.ReadSingle();
-        Distance = br.ReadSingle();
     }
 
-    public BillboardQuadChunk(uint version, string name, uint cutOffEnabled, uint perspective, string axisMode, Color colour, float width, float height, float distance) : base(ChunkID)
+    public BillboardQuadChunk(uint version, string name, uint cutOffEnabled, uint perspective, string axisMode, Color colour, float width, float height, float distance) : base(ChunkID, name)
     {
         Version = version;
-        _name = new(this, name);
         CutOffEnabled = cutOffEnabled;
         Perspective = perspective;
         _axisMode = new(this, axisMode);

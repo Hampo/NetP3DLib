@@ -39,17 +39,13 @@ public class ParticleSystem2Chunk : NamedChunk
     }
     public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + BinaryExtensions.GetP3DStringLength(FactoryName);
 
-    public ParticleSystem2Chunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public ParticleSystem2Chunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadP3DString(), br.ReadP3DString())
     {
-        Version = br.ReadUInt32();
-        _name = new(this, br);
-        _factoryName = new(this, br);
     }
 
-    public ParticleSystem2Chunk(uint version, string name, string factoryName) : base(ChunkID)
+    public ParticleSystem2Chunk(uint version, string name, string factoryName) : base(ChunkID, name)
     {
         Version = version;
-        _name = new(this, name);
         _factoryName = new(this, factoryName);
     }
 

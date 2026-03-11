@@ -61,22 +61,13 @@ public class OldSpriteEmitterChunk : NamedChunk
     }
     public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + BinaryExtensions.GetP3DStringLength(ShaderName) + 4 + sizeof(float) + 4 + sizeof(uint) + sizeof(uint);
 
-    public OldSpriteEmitterChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public OldSpriteEmitterChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadP3DString(), br.ReadP3DString(), br.ReadFourCC(), br.ReadSingle(), br.ReadFourCC(), br.ReadUInt32(), br.ReadUInt32())
     {
-        Version = br.ReadUInt32();
-        _name = new(this, br);
-        _shaderName = new(this, br);
-        _angleMode = new(this, br);
-        Angle = br.ReadSingle();
-        _textureAnimMode = new(this, br);
-        NumTextureFrames = br.ReadUInt32();
-        TextureFrameRate = br.ReadUInt32();
     }
 
-    public OldSpriteEmitterChunk(uint version, string name, string shaderName, string angleMode, float angle, string textureAnimMode, uint numTextureFrames, uint textureFrameRate) : base(ChunkID)
+    public OldSpriteEmitterChunk(uint version, string name, string shaderName, string angleMode, float angle, string textureAnimMode, uint numTextureFrames, uint textureFrameRate) : base(ChunkID, name)
     {
         Version = version;
-        _name = new(this, name);
         _shaderName = new(this, shaderName);
         _angleMode = new(this, angleMode);
         Angle = angle;

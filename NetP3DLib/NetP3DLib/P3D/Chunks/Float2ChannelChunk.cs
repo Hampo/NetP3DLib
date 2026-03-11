@@ -4,6 +4,7 @@ using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -82,25 +83,13 @@ public class Float2ChannelChunk : ParamChunk
     }
     public override uint DataLength => sizeof(uint) + 4 + sizeof(uint) + sizeof(ushort) * NumFrames + sizeof(float) * 2 * NumValues;
 
-    public Float2ChannelChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public Float2ChannelChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadFourCC(), ListHelper.ReadArray(br.ReadInt32, br.ReadUInt16, out var numFrames), ListHelper.ReadArray(numFrames, br.ReadVector2))
     {
-        Version = br.ReadUInt32();
-        _param = new(this, br);
-        var numFrames = br.ReadInt32();
-        var frames = new ushort[numFrames];
-        for (var i = 0; i < numFrames; i++)
-            frames[i] = br.ReadUInt16();
-        Frames = CreateSizeAwareList(frames);
-        var values = new Vector2[numFrames];
-        for (var i = 0; i < numFrames; i++)
-            values[i] = br.ReadVector2();
-        Values = CreateSizeAwareList(values);
     }
 
-    public Float2ChannelChunk(uint version, string param, IList<ushort> frames, IList<Vector2> values) : base(ChunkID)
+    public Float2ChannelChunk(uint version, string param, IList<ushort> frames, IList<Vector2> values) : base(ChunkID, param)
     {
         Version = version;
-        _param = new(this, param);
         Frames = CreateSizeAwareList(frames);
         Values = CreateSizeAwareList(values);
     }

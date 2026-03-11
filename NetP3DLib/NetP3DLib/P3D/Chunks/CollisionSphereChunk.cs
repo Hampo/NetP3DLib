@@ -27,9 +27,8 @@ public class CollisionSphereChunk : Chunk
     }
     public override uint DataLength => sizeof(float);
 
-    public CollisionSphereChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public CollisionSphereChunk(EndianAwareBinaryReader br) : this(br.ReadSingle())
     {
-        Radius = br.ReadSingle();
     }
 
     public CollisionSphereChunk(float radius) : base(ChunkID)

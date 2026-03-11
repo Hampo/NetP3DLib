@@ -62,27 +62,13 @@ public class OldBillboardQuadChunk : NamedChunk
     }
     public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + 4 + sizeof(float) * 3 + sizeof(uint) + sizeof(float) * 2 + sizeof(float) * 2 + sizeof(float) * 2 + sizeof(float) * 2 + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(float) * 2;
 
-    public OldBillboardQuadChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public OldBillboardQuadChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadP3DString(), br.ReadFourCC(), br.ReadVector3(), br.ReadColor(), br.ReadVector2(), br.ReadVector2(), br.ReadVector2(), br.ReadVector2(), br.ReadSingle(), br.ReadSingle(), br.ReadSingle(), br.ReadVector2())
     {
-        Version = br.ReadUInt32();
-        _name = new(this, br);
-        _billboardMode = new(this, br);
-        Translation = br.ReadVector3();
-        Colour = br.ReadColor();
-        UV0 = br.ReadVector2();
-        UV1 = br.ReadVector2();
-        UV2 = br.ReadVector2();
-        UV3 = br.ReadVector2();
-        Width = br.ReadSingle();
-        Height = br.ReadSingle();
-        Distance = br.ReadSingle();
-        UVOffset = br.ReadVector2();
     }
 
-    public OldBillboardQuadChunk(uint version, string name, string billboardMode, Vector3 translation, Color colour, Vector2 uv0, Vector2 uv1, Vector2 uv2, Vector2 uv3, float width, float height, float distance, Vector2 uvOffset) : base(ChunkID)
+    public OldBillboardQuadChunk(uint version, string name, string billboardMode, Vector3 translation, Color colour, Vector2 uv0, Vector2 uv1, Vector2 uv2, Vector2 uv3, float width, float height, float distance, Vector2 uvOffset) : base(ChunkID, name)
     {
         Version = version;
-        _name = new(this, name);
         _billboardMode = new(this, billboardMode);
         Translation = translation;
         Colour = colour;

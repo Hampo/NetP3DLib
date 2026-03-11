@@ -15,11 +15,11 @@ public class InstStatEntityChunk : NamedChunk
 
     [DefaultValue(0)]
     public uint Version { get; set; }
-    private uint hasAlpha;
+    private uint _hasAlpha;
     public bool HasAlpha
     {
-        get => hasAlpha != 0;
-        set => hasAlpha = value ? 1u : 0u;
+        get => _hasAlpha != 0;
+        set => _hasAlpha = value ? 1u : 0u;
     }
 
     public override byte[] DataBytes
@@ -30,32 +30,32 @@ public class InstStatEntityChunk : NamedChunk
 
             data.AddRange(BinaryExtensions.GetP3DStringBytes(Name));
             data.AddRange(BitConverter.GetBytes(Version));
-            data.AddRange(BitConverter.GetBytes(hasAlpha));
+            data.AddRange(BitConverter.GetBytes(_hasAlpha));
 
             return [.. data];
         }
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint);
 
-    public InstStatEntityChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public InstStatEntityChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadUInt32(), br.ReadUInt32())
     {
-        _name = new(this, br);
-        Version = br.ReadUInt32();
-        hasAlpha = br.ReadUInt32();
     }
 
-    public InstStatEntityChunk(string name, uint version, bool hasAlpha) : base(ChunkID)
+    public InstStatEntityChunk(string name, uint version, bool hasAlpha) : this(name, version, hasAlpha ? 1u : 0u)
     {
-        _name = new(this, name);
+    }
+
+    public InstStatEntityChunk(string name, uint version, uint hasAlpha) : base(ChunkID, name)
+    {
         Version = version;
-        HasAlpha = hasAlpha;
+        _hasAlpha = hasAlpha;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(Version);
-        bw.Write(hasAlpha);
+        bw.Write(_hasAlpha);
     }
 
     protected override Chunk CloneSelf() => new InstStatEntityChunk(Name, Version, HasAlpha);

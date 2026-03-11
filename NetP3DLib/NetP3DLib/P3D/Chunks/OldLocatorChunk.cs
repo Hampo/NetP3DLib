@@ -33,16 +33,12 @@ public class OldLocatorChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(float) * 3;
 
-    public OldLocatorChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public OldLocatorChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadUInt32(), br.ReadVector3())
     {
-        _name = new(this, br);
-        Version = br.ReadUInt32();
-        Position = br.ReadVector3();
     }
 
-    public OldLocatorChunk(string name, uint version, Vector3 position) : base(ChunkID)
+    public OldLocatorChunk(string name, uint version, Vector3 position) : base(ChunkID, name)
     {
-        _name = new(this, name);
         Version = version;
         Position = position;
     }

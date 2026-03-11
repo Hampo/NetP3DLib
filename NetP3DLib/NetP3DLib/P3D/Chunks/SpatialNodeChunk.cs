@@ -52,18 +52,8 @@ public class SpatialNodeChunk : Chunk
     }
     public override uint DataLength => sizeof(sbyte) + sizeof(float) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint);
 
-    public SpatialNodeChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public SpatialNodeChunk(EndianAwareBinaryReader br) : this((Axis)br.ReadSByte(), br.ReadSingle(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32())
     {
-        SplitAxis = (Axis)br.ReadSByte();
-        SplitPosition = br.ReadSingle();
-        StaticEntityLimit = br.ReadUInt32();
-        StaticPhysEntityLimit = br.ReadUInt32();
-        IntersectEntityLimit = br.ReadUInt32();
-        DynaPhysEntityLimit = br.ReadUInt32();
-        FenceEntityLimit = br.ReadUInt32();
-        RoadSegmentEntityLimit = br.ReadUInt32();
-        PathSegmentEntityLimit = br.ReadUInt32();
-        AnimEntityLimit = br.ReadUInt32();
     }
 
     public SpatialNodeChunk(Axis splitAxis, float splitPosition, uint staticEntityLimit, uint staticPhysEntityLimit, uint intersectEntityLimit, uint dynaPhysEntityLimit, uint fencyEntityLimit, uint roadSegmentEntityLimit, uint pathSegmentEntityLimit, uint animEntityLimit) : base(ChunkID)

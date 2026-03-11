@@ -531,4 +531,10 @@ public static class BinaryExtensions
         bw.Write(value.M43);
         bw.Write(value.M44);
     }
+
+    public static TNext SkipAndRead<TNext>(this BinaryReader br, long skip, Func<TNext> read)
+    {
+        br.BaseStream.Seek(skip, SeekOrigin.Current);
+        return read();
+    }
 }

@@ -40,18 +40,14 @@ public class CompositeDrawable2Chunk : NamedChunk
     public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + BinaryExtensions.GetP3DStringLength(SkeletonName) + sizeof(uint);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public CompositeDrawable2Chunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public CompositeDrawable2Chunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadP3DString(), br.ReadP3DString())
     {
-        Version = br.ReadUInt32();
-        _name = new(this, br);
-        _skeletonName = new(this, br);
         var numPrimitives = br.ReadUInt32();
     }
 
-    public CompositeDrawable2Chunk(uint version, string name, string skeletonName) : base(ChunkID)
+    public CompositeDrawable2Chunk(uint version, string name, string skeletonName) : base(ChunkID, name)
     {
         Version = version;
-        _name = new(this, name);
         _skeletonName = new(this, skeletonName);
     }
 

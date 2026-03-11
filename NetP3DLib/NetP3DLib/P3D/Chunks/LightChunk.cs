@@ -27,11 +27,11 @@ public class LightChunk : NamedChunk
     public float Constant { get; set; }
     public float Linear { get; set; }
     public float Squared { get; set; }
-    private uint enabled;
+    private uint _enabled;
     public bool Enabled
     {
-        get => enabled != 0;
-        set => enabled = value ? 1u : 0u;
+        get => _enabled != 0;
+        set => _enabled = value ? 1u : 0u;
     }
 
     public override byte[] DataBytes
@@ -47,35 +47,30 @@ public class LightChunk : NamedChunk
             data.AddRange(BitConverter.GetBytes(Constant));
             data.AddRange(BitConverter.GetBytes(Linear));
             data.AddRange(BitConverter.GetBytes(Squared));
-            data.AddRange(BitConverter.GetBytes(enabled));
+            data.AddRange(BitConverter.GetBytes(_enabled));
 
             return [.. data];
         }
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(uint);
 
-    public LightChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public LightChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadUInt32(), (Types)br.ReadUInt32(), br.ReadColor(), br.ReadSingle(), br.ReadSingle(), br.ReadSingle(), br.ReadUInt32())
     {
-        _name = new(this, br);
-        Version = br.ReadUInt32();
-        Type = (Types)br.ReadUInt32();
-        Colour = br.ReadColor();
-        Constant = br.ReadSingle();
-        Linear = br.ReadSingle();
-        Squared = br.ReadSingle();
-        enabled = br.ReadUInt32();
     }
 
-    public LightChunk(string name, uint version, Types type, Color colour, float constant, float linear, float squared, bool enabled) : base(ChunkID)
+    public LightChunk(string name, uint version, Types type, Color colour, float constant, float linear, float squared, bool enabled) : this(name, version, type, colour, constant, linear, squared, enabled ? 1u : 0u)
     {
-        _name = new(this, name);
+    }
+
+    public LightChunk(string name, uint version, Types type, Color colour, float constant, float linear, float squared, uint enabled) : base(ChunkID, name)
+    {
         Version = version;
         Type = type;
         Colour = colour;
         Constant = constant;
         Linear = linear;
         Squared = squared;
-        Enabled = enabled;
+        _enabled = enabled;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
@@ -87,7 +82,7 @@ public class LightChunk : NamedChunk
         bw.Write(Constant);
         bw.Write(Linear);
         bw.Write(Squared);
-        bw.Write(enabled);
+        bw.Write(_enabled);
     }
 
     protected override Chunk CloneSelf() => new LightChunk(Name, Version, Type, Colour, Constant, Linear, Squared, Enabled);

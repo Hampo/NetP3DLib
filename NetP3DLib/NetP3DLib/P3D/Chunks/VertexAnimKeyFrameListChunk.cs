@@ -3,6 +3,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
+using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 
@@ -77,18 +78,8 @@ public class VertexAnimKeyFrameListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) + sizeof(uint) * NumKeyFrameIds + sizeof(uint) * NumKeyFrameCounts;
 
-    public VertexAnimKeyFrameListChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public VertexAnimKeyFrameListChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), ListHelper.ReadArray(br.ReadInt32, br.ReadUInt32, out var numKeyFrameIds), ListHelper.ReadArray(numKeyFrameIds, br.ReadUInt32))
     {
-        Version = br.ReadUInt32();
-        var numKeyFrameIds = br.ReadInt32();
-        var keyFrameIds = new uint[numKeyFrameIds];
-        for (int i = 0; i < numKeyFrameIds; i++)
-            keyFrameIds[i] = br.ReadUInt32();
-        KeyFrameIds = CreateSizeAwareList(keyFrameIds);
-        var keyFrameCounts = new uint[numKeyFrameIds];
-        for (int i = 0; i < numKeyFrameIds; i++)
-            keyFrameCounts[i] = br.ReadUInt32();
-        KeyFrameCounts = CreateSizeAwareList(keyFrameCounts);
     }
 
     public VertexAnimKeyFrameListChunk(uint version, IList<uint> keyFrameIds, IList<uint> keyFrameCounts) : base(ChunkID)

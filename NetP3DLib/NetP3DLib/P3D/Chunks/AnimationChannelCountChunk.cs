@@ -2,6 +2,7 @@ using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
+using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -55,15 +56,8 @@ public class AnimationChannelCountChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(ushort) * NumNumKeys;
 
-    public AnimationChannelCountChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public AnimationChannelCountChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadUInt32(), ListHelper.ReadArray(br.ReadInt32(), br.ReadUInt16))
     {
-        Version = br.ReadUInt32();
-        ChannelChunkID = br.ReadUInt32();
-        int numChannels = br.ReadInt32();
-        var numKeys = new ushort[numChannels];
-        for (int i = 0; i < numChannels; i++)
-            numKeys[i] = br.ReadUInt16();
-        NumKeys = CreateSizeAwareList(numKeys);
     }
 
     public AnimationChannelCountChunk(uint version, uint channelChunkID, IList<ushort> numKeys) : base(ChunkID)

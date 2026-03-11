@@ -31,11 +31,8 @@ public class WallChunk : Chunk
     }
     public override uint DataLength => sizeof(float) * 3 + sizeof(float) * 3 + sizeof(float) * 3;
 
-    public WallChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public WallChunk(EndianAwareBinaryReader br) : this(br.ReadVector3(), br.ReadVector3(), br.ReadVector3())
     {
-        Start = br.ReadVector3();
-        End = br.ReadVector3();
-        Normal = br.ReadVector3();
     }
 
     public WallChunk(Vector3 start, Vector3 end, Vector3 normal) : base(ChunkID)

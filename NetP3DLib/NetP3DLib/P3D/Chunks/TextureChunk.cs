@@ -80,22 +80,11 @@ public class TextureChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint);
 
-    public TextureChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public TextureChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32(), (TextureTypes)br.ReadUInt32(), (UsageHints)br.ReadUInt32(), br.ReadUInt32())
     {
-        _name = new(this, br);
-        Version = br.ReadUInt32();
-        Width = br.ReadUInt32();
-        Height = br.ReadUInt32();
-        Bpp = br.ReadUInt32();
-        AlphaDepth = br.ReadUInt32();
-        NumMipMaps = br.ReadUInt32();
-        TextureType = (TextureTypes)br.ReadUInt32();
-        UsageHint = (UsageHints)br.ReadUInt32();
-        Priority = br.ReadUInt32();
     }
-    public TextureChunk(string name, uint version, uint width, uint height, uint bpp, uint alphaDepth, uint numMipMaps, TextureTypes textureType, UsageHints usageHint, uint priority) : base(ChunkID)
+    public TextureChunk(string name, uint version, uint width, uint height, uint bpp, uint alphaDepth, uint numMipMaps, TextureTypes textureType, UsageHints usageHint, uint priority) : base(ChunkID, name)
     {
-        _name = new(this, name);
         Version = version;
         Width = width;
         Height = height;

@@ -4,6 +4,7 @@ using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -53,13 +54,8 @@ public class PathChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(float) * 3 * NumPositions;
 
-    public PathChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public PathChunk(EndianAwareBinaryReader br) : this(ListHelper.ReadArray(br.ReadInt32(), br.ReadVector3))
     {
-        var numPositions = br.ReadInt32();
-        var positions = new Vector3[numPositions];
-        for (var i = 0; i < numPositions; i++)
-            positions[i] = br.ReadVector3();
-        Positions = CreateSizeAwareList(positions);
     }
 
     public PathChunk(IList<Vector3> positions) : base(ChunkID)

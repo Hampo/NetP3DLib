@@ -36,20 +36,13 @@ public class ImageFontChunk : NamedChunk
     }
     public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(float);
 
-    public ImageFontChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public ImageFontChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadP3DString(), br.ReadSingle(), br.ReadSingle(), br.ReadSingle(), br.ReadSingle())
     {
-        Version = br.ReadUInt32();
-        _name = new(this, br);
-        FontSize = br.ReadSingle();
-        FontWidth = br.ReadSingle();
-        FontHeight = br.ReadSingle();
-        FontBaseLine = br.ReadSingle();
     }
 
-    public ImageFontChunk(uint version, string name, float fontSize, float fontWidth, float fontHeight, float fontBaseLine) : base(ChunkID)
+    public ImageFontChunk(uint version, string name, float fontSize, float fontWidth, float fontHeight, float fontBaseLine) : base(ChunkID, name)
     {
         Version = version;
-        _name = new(this, name);
         FontSize = fontSize;
         FontWidth = fontWidth;
         FontHeight = fontHeight;

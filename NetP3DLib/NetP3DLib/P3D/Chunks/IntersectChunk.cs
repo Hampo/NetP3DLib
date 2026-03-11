@@ -4,6 +4,7 @@ using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -100,23 +101,8 @@ public class IntersectChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) * NumIndices + sizeof(uint) + sizeof(float) * 3 * NumPositions + sizeof(uint) + sizeof(float) * 3 * NumNormals;
 
-    public IntersectChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public IntersectChunk(EndianAwareBinaryReader br) : this(ListHelper.ReadArray(br.ReadInt32(), br.ReadUInt32), ListHelper.ReadArray(br.ReadInt32(), br.ReadVector3), ListHelper.ReadArray(br.ReadInt32(), br.ReadVector3))
     {
-        var numIndices = br.ReadInt32();
-        var indices = new uint[numIndices];
-        for (var i = 0; i < numIndices; i++)
-            indices[i] = br.ReadUInt32();
-        Indices = CreateSizeAwareList(indices);
-        var numPositions = br.ReadInt32();
-        var positions = new Vector3[numPositions];
-        for (var i = 0; i < numPositions; i++)
-            positions[i] = br.ReadVector3();
-        Positions = CreateSizeAwareList(positions);
-        var numNormals = br.ReadInt32();
-        var normals = new Vector3[numNormals];
-        for (var i = 0; i < numNormals; i++)
-            normals[i] = br.ReadVector3();
-        Normals = CreateSizeAwareList(normals);
     }
 
     public IntersectChunk(IList<uint> indices, IList<Vector3> positions, IList<Vector3> normals) : base(ChunkID)

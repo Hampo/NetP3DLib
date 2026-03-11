@@ -55,11 +55,11 @@ public class ShaderChunk : NamedChunk
         get => _pddiShaderName?.Value ?? string.Empty;
         set => _pddiShaderName.Value = value;
     }
-    private uint hasTranslucency;
+    private uint _hasTranslucency;
     public bool HasTranslucency
     {
-        get => hasTranslucency != 0;
-        set => hasTranslucency = value ? 1u : 0u;
+        get => _hasTranslucency != 0;
+        set => _hasTranslucency = value ? 1u : 0u;
     }
     public VertexMasks VertexNeeds { get; set; }
     public VertexMasks VertexMask { get; set; }
@@ -74,7 +74,7 @@ public class ShaderChunk : NamedChunk
             data.AddRange(BinaryExtensions.GetP3DStringBytes(Name));
             data.AddRange(BitConverter.GetBytes(Version));
             data.AddRange(BinaryExtensions.GetP3DStringBytes(PddiShaderName));
-            data.AddRange(BitConverter.GetBytes(hasTranslucency));
+            data.AddRange(BitConverter.GetBytes(_hasTranslucency));
             data.AddRange(BitConverter.GetBytes((int)VertexNeeds));
             data.AddRange(BitConverter.GetBytes((int)~VertexMask));
             data.AddRange(BitConverter.GetBytes(NumParams));
@@ -85,23 +85,20 @@ public class ShaderChunk : NamedChunk
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + BinaryExtensions.GetP3DStringLength(PddiShaderName) + sizeof(uint) + sizeof(int) + sizeof(int) + sizeof(uint);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public ShaderChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public ShaderChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadUInt32(), br.ReadP3DString(), br.ReadUInt32(), (VertexMasks)br.ReadInt32(), (VertexMasks)~br.ReadInt32())
     {
-        _name = new(this, br);
-        Version = br.ReadUInt32();
-        _pddiShaderName = new(this, br);
-        hasTranslucency = br.ReadUInt32();
-        VertexNeeds = (VertexMasks)br.ReadInt32();
-        VertexMask = (VertexMasks)~br.ReadInt32();
         var numParams = br.ReadUInt32();
     }
 
-    public ShaderChunk(string name, uint version, string pddiShaderName, bool hasTranslucency, VertexMasks vertexNeeds, VertexMasks vertexMask) : base(ChunkID)
+    public ShaderChunk(string name, uint version, string pddiShaderName, bool hasTranslucency, VertexMasks vertexNeeds, VertexMasks vertexMask) : this(name, version, pddiShaderName, hasTranslucency ? 1u : 0u, vertexNeeds, vertexMask)
     {
-        _name = new(this, name);
+    }
+
+    public ShaderChunk(string name, uint version, string pddiShaderName, uint hasTranslucency, VertexMasks vertexNeeds, VertexMasks vertexMask) : base(ChunkID, name)
+    {
         Version = version;
         _pddiShaderName = new(this, pddiShaderName);
-        HasTranslucency = hasTranslucency;
+        _hasTranslucency = hasTranslucency;
         VertexNeeds = vertexNeeds;
         VertexMask = vertexMask;
     }
@@ -120,7 +117,7 @@ public class ShaderChunk : NamedChunk
         bw.WriteP3DString(Name);
         bw.Write(Version);
         bw.WriteP3DString(PddiShaderName);
-        bw.Write(hasTranslucency);
+        bw.Write(_hasTranslucency);
         bw.Write((int)VertexNeeds);
         bw.Write((int)~VertexMask);
         bw.Write(NumParams);

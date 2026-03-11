@@ -3,6 +3,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -55,21 +56,13 @@ public class Vector2OffsetListChunk : ParamChunk
     }
     public override uint DataLength => sizeof(uint) + 4 + sizeof(uint) + Vector2Offset.Size * NumOffsets;
 
-    public Vector2OffsetListChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public Vector2OffsetListChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadFourCC(), ListHelper.ReadArray(br.ReadInt32(), () => new Vector2Offset(br)))
     {
-        Version = br.ReadUInt32();
-        _param = new(this, br);
-        var numOffsets = br.ReadInt32();
-        var offsets = new Vector2Offset[numOffsets];
-        for (int i = 0; i < numOffsets; i++)
-            offsets[i] = new(br);
-        Offsets = CreateSizeAwareList(offsets);
     }
 
-    public Vector2OffsetListChunk(uint version, string param, IList<Vector2Offset> offsets) : base(ChunkID)
+    public Vector2OffsetListChunk(uint version, string param, IList<Vector2Offset> offsets) : base(ChunkID, param)
     {
         Version = version;
-        _param = new(this, param);
         Offsets = CreateSizeAwareList(offsets);
     }
 

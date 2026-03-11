@@ -33,17 +33,12 @@ public class ShadowMeshChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint) + sizeof(uint);
 
-    public ShadowMeshChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public ShadowMeshChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32())
     {
-        _name = new(this, br);
-        Version = br.ReadUInt32();
-        NumVertices = br.ReadUInt32();
-        NumTriangles = br.ReadUInt32();
     }
 
-    public ShadowMeshChunk(string name, uint version, uint numVertices, uint numTriangles) : base(ChunkID)
+    public ShadowMeshChunk(string name, uint version, uint numVertices, uint numTriangles) : base(ChunkID, name)
     {
-        _name = new(this, name);
         Version = version;
         NumVertices = numVertices;
         NumTriangles = numTriangles;

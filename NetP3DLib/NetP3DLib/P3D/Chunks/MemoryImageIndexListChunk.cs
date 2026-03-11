@@ -2,6 +2,7 @@ using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
+using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 
@@ -53,15 +54,8 @@ public class MemoryImageIndexListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(ushort) * NumIndices;
 
-    public MemoryImageIndexListChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public MemoryImageIndexListChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadUInt32(), ListHelper.ReadArray(br.ReadInt32() / sizeof(ushort), br.ReadUInt16))
     {
-        Version = br.ReadUInt32();
-        Param = br.ReadUInt32();
-        int numIndices = br.ReadInt32() / sizeof(ushort);
-        var indices = new ushort[numIndices];
-        for (int i = 0; i < numIndices; i++)
-            indices[i] = br.ReadUInt16();
-        Indices = CreateSizeAwareList(indices);
     }
 
     public MemoryImageIndexListChunk(uint version, uint param, IList<ushort> indices) : base(ChunkID)

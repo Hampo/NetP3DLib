@@ -4,6 +4,7 @@ using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -91,31 +92,20 @@ public class CompressedQuaternionChannelChunk : ParamChunk
     }
     public override uint DataLength => sizeof(uint) + 4 + sizeof(uint) + sizeof(ushort) * NumFrames + sizeof(short) * 4 * NumValues;
 
-    public CompressedQuaternionChannelChunk(EndianAwareBinaryReader br) : base(ChunkID)
-    {
-        Version = br.ReadUInt32();
-        _param = new(this, br);
-        int numFrames = br.ReadInt32();
-        var frames = new ushort[numFrames];
-        for (uint i = 0; i < numFrames; i++)
-            frames[i] = br.ReadUInt16();
-        Frames = CreateSizeAwareList(frames);
-        var values = new Quaternion[numFrames];
-        for (uint i = 0; i < numFrames; i++)
+    public CompressedQuaternionChannelChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadFourCC(), ListHelper.ReadArray(br.ReadInt32, br.ReadUInt16, out var numFrames), ListHelper.ReadArray(numFrames, () =>
         {
             short W = br.ReadInt16();
             short X = br.ReadInt16();
             short Y = br.ReadInt16();
             short Z = br.ReadInt16();
-            values[i] = new(X / (float)short.MaxValue, Y / (float)short.MaxValue, Z / (float)short.MaxValue, W / (float)short.MaxValue);
-        }
-        Values = CreateSizeAwareList(values);
+            return new Quaternion(X / (float)short.MaxValue, Y / (float)short.MaxValue, Z / (float)short.MaxValue, W / (float)short.MaxValue);
+        }))
+    {
     }
 
-    public CompressedQuaternionChannelChunk(uint version, string param, IList<ushort> frames, IList<Quaternion> values) : base(ChunkID)
+    public CompressedQuaternionChannelChunk(uint version, string param, IList<ushort> frames, IList<Quaternion> values) : base(ChunkID, param)
     {
         Version = version;
-        _param = new(this, param);
         Frames = CreateSizeAwareList(frames);
         Values = CreateSizeAwareList(values);
     }

@@ -3,6 +3,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
+using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -51,13 +52,8 @@ public class MatrixListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) * NumMatrices;
 
-    public MatrixListChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public MatrixListChunk(EndianAwareBinaryReader br) : this(ListHelper.ReadArray(br.ReadInt32(), () => new Matrix(br)))
     {
-        var numMatrices = br.ReadInt32();
-        var matrices = new Matrix[numMatrices];
-        for (int i = 0; i < numMatrices; i++)
-            matrices[i] = new(br);
-        Matrices = CreateSizeAwareList(matrices);
     }
 
     public MatrixListChunk(IList<Matrix> matrices) : base(ChunkID)

@@ -48,22 +48,14 @@ public class BillboardQuadGroupChunk : NamedChunk
     public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + BinaryExtensions.GetP3DStringLength(Shader) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public BillboardQuadGroupChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public BillboardQuadGroupChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadP3DString(), br.ReadP3DString(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32())
     {
-        Version = br.ReadUInt32();
-        _name = new(this, br);
-        _shader = new(this, br);
-        CutOffEnabled = br.ReadUInt32();
-        ZTest = br.ReadUInt32();
-        ZWrite = br.ReadUInt32();
-        OcclusionCulling = br.ReadUInt32();
         var numQuads = br.ReadUInt32();
     }
 
-    public BillboardQuadGroupChunk(uint version, string name, string shader, uint cutOffEnabled, uint zTest, uint zWrite, uint occlusionCulling) : base(ChunkID)
+    public BillboardQuadGroupChunk(uint version, string name, string shader, uint cutOffEnabled, uint zTest, uint zWrite, uint occlusionCulling) : base(ChunkID, name)
     {
         Version = version;
-        _name = new(this, name);
         _shader = new(this, shader);
         CutOffEnabled = cutOffEnabled;
         ZTest = zTest;

@@ -30,10 +30,8 @@ public class AnimationHeaderChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint);
 
-    public AnimationHeaderChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public AnimationHeaderChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadUInt32())
     {
-        Version = br.ReadUInt32();
-        NumGroups = br.ReadUInt32();
     }
 
     public AnimationHeaderChunk(uint version, uint numGroups) : base(ChunkID)

@@ -32,24 +32,20 @@ public class TreeChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(float) * 3 + sizeof(float) * 3;
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public TreeChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public TreeChunk(EndianAwareBinaryReader br) : this(br.SkipAndRead(sizeof(uint), br.ReadVector3), br.ReadVector3())
     {
-        var numChildren = br.ReadUInt32();
-        BoundsMin = br.ReadVector3();
-        BoundsMax = br.ReadVector3();
-
-        ChildAdded += Chunk_ChildAdded;
-        ChildRemoved += Chunk_ChildRemoved;
-        ChildrenAdded += Chunk_ChildrenAdded;
-        ChildrenRemoved += Chunk_ChildrenRemoved;
-        ChildrenCleared += Chunk_ChildrenCleared;
     }
 
     public TreeChunk(Vector3 minimum, Vector3 maximum) : base(ChunkID)
     {
         BoundsMin = minimum;
         BoundsMax = maximum;
+
+        ChildAdded += Chunk_ChildAdded;
+        ChildRemoved += Chunk_ChildRemoved;
+        ChildrenAdded += Chunk_ChildrenAdded;
+        ChildrenRemoved += Chunk_ChildrenRemoved;
+        ChildrenCleared += Chunk_ChildrenCleared;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

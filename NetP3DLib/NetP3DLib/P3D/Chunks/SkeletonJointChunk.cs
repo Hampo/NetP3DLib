@@ -41,21 +41,12 @@ public class SkeletonJointChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(float) * 16;
 
-    public SkeletonJointChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public SkeletonJointChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadUInt32(), br.ReadInt32(), br.ReadInt32(), br.ReadInt32(), br.ReadInt32(), br.ReadInt32(), br.ReadMatrix4x4())
     {
-        _name = new(this, br);
-        Parent = br.ReadUInt32();
-        DOF = br.ReadInt32();
-        FreeAxis = br.ReadInt32();
-        PrimaryAxis = br.ReadInt32();
-        SecondaryAxis = br.ReadInt32();
-        TwistAxis = br.ReadInt32();
-        RestPose = br.ReadMatrix4x4();
     }
 
-    public SkeletonJointChunk(string name, uint parent, int dof, int freeAxis, int primaryAxis, int secondaryAxis, int twistAxis, Matrix4x4 restPose) : base(ChunkID)
+    public SkeletonJointChunk(string name, uint parent, int dof, int freeAxis, int primaryAxis, int secondaryAxis, int twistAxis, Matrix4x4 restPose) : base(ChunkID, name)
     {
-        _name = new(this, name);
         Parent = parent;
         DOF = dof;
         FreeAxis = freeAxis;

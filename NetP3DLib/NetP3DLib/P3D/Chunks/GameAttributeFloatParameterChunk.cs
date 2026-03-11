@@ -28,15 +28,12 @@ public class GameAttributeFloatParameterChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(float);
 
-    public GameAttributeFloatParameterChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public GameAttributeFloatParameterChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadSingle())
     {
-        _name = new(this, br);
-        Value = br.ReadSingle();
     }
 
-    public GameAttributeFloatParameterChunk(string name, float value) : base(ChunkID)
+    public GameAttributeFloatParameterChunk(string name, float value) : base(ChunkID, name)
     {
-        _name = new(this, name);
         Value = value;
     }
 

@@ -47,22 +47,12 @@ public class SpriteChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint) + BinaryExtensions.GetP3DStringLength(Shader) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint);
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public SpriteChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public SpriteChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadUInt32(), br.ReadUInt32(), br.ReadP3DString(), br.ReadUInt32(), br.ReadUInt32(), br.SkipAndRead(sizeof(uint), br.ReadUInt32))
     {
-        _name = new(this, br);
-        NativeX = br.ReadUInt32();
-        NativeY = br.ReadUInt32();
-        _shader = new(this, br);
-        ImageWidth = br.ReadUInt32();
-        ImageHeight = br.ReadUInt32();
-        var imageCount = br.ReadUInt32();
-        BlitBorder = br.ReadUInt32();
     }
 
-    public SpriteChunk(string name, uint nativeX, uint nativeY, string shader, uint imageWidth, uint imageHeight, uint blitBorder) : base(ChunkID)
+    public SpriteChunk(string name, uint nativeX, uint nativeY, string shader, uint imageWidth, uint imageHeight, uint blitBorder) : base(ChunkID, name)
     {
-        _name = new(this, name);
         NativeX = nativeX;
         NativeY = nativeY;
         _shader = new(this, shader);

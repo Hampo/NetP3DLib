@@ -27,9 +27,8 @@ public class LocatorMatrixChunk : Chunk
     }
     public override uint DataLength => sizeof(float) * 16;
 
-    public LocatorMatrixChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public LocatorMatrixChunk(EndianAwareBinaryReader br) : this(br.ReadMatrix4x4())
     {
-        Matrix = br.ReadMatrix4x4();
     }
 
     public LocatorMatrixChunk(Matrix4x4 matrix) : base(ChunkID)

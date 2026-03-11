@@ -3,6 +3,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 
@@ -51,19 +52,12 @@ public class SkeletonPartitionChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint) * NumJointValues;
 
-    public SkeletonPartitionChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public SkeletonPartitionChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), ListHelper.ReadArray(br.ReadInt32(), br.ReadUInt32))
     {
-        _name = new(this, br);
-        var numJointValues = br.ReadInt32();
-        var jointBits = new uint[numJointValues];
-        for (var i = 0; i < numJointValues; i++)
-            jointBits[i] = br.ReadUInt32();
-        JointBits = CreateSizeAwareList(jointBits);
     }
 
-    public SkeletonPartitionChunk(string name, IList<uint> jointBits) : base(ChunkID)
+    public SkeletonPartitionChunk(string name, IList<uint> jointBits) : base(ChunkID, name)
     {
-        _name = new(this, name);
         JointBits = CreateSizeAwareList(jointBits);
     }
 

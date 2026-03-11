@@ -31,30 +31,30 @@ public class OldBaseEmitterChunk : NamedChunk
         get => _generatorType?.Value ?? string.Empty;
         set => _generatorType.Value = value;
     }
-    private uint zTest;
+    private uint _zTest;
     public bool ZTest
     {
-        get => zTest == 1;
-        set => zTest = value ? 1u : 0u;
+        get => _zTest == 1;
+        set => _zTest = value ? 1u : 0u;
     }
-    private uint zWrite;
+    private uint _zWrite;
     public bool ZWrite
     {
-        get => zWrite == 1;
-        set => zWrite = value ? 1u : 0u;
+        get => _zWrite == 1;
+        set => _zWrite = value ? 1u : 0u;
     }
-    private uint fog;
+    private uint _fog;
     public bool Fog
     {
-        get => fog == 1;
-        set => fog = value ? 1u : 0u;
+        get => _fog == 1;
+        set => _fog = value ? 1u : 0u;
     }
     public uint MaxParticles { get; set; }
-    private uint infiniteLife;
+    private uint _infiniteLife;
     public bool InfiniteLife
     {
-        get => infiniteLife == 1;
-        set => infiniteLife = value ? 1u : 0u;
+        get => _infiniteLife == 1;
+        set => _infiniteLife = value ? 1u : 0u;
     }
     public float RotationalCohesion { get; set; }
     public float TranslationCohesion { get; set; }
@@ -69,11 +69,11 @@ public class OldBaseEmitterChunk : NamedChunk
             data.AddRange(BinaryExtensions.GetP3DStringBytes(Name));
             data.AddRange(BinaryExtensions.GetFourCCBytes(ParticleType));
             data.AddRange(BinaryExtensions.GetFourCCBytes(GeneratorType));
-            data.AddRange(BitConverter.GetBytes(zTest));
-            data.AddRange(BitConverter.GetBytes(zWrite));
-            data.AddRange(BitConverter.GetBytes(fog));
+            data.AddRange(BitConverter.GetBytes(_zTest));
+            data.AddRange(BitConverter.GetBytes(_zWrite));
+            data.AddRange(BitConverter.GetBytes(_fog));
             data.AddRange(BitConverter.GetBytes(MaxParticles));
-            data.AddRange(BitConverter.GetBytes(infiniteLife));
+            data.AddRange(BitConverter.GetBytes(_infiniteLife));
             data.AddRange(BitConverter.GetBytes(RotationalCohesion));
             data.AddRange(BitConverter.GetBytes(TranslationCohesion));
 
@@ -82,32 +82,24 @@ public class OldBaseEmitterChunk : NamedChunk
     }
     public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + 4 + 4 + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(float) + sizeof(float);
 
-    public OldBaseEmitterChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public OldBaseEmitterChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadP3DString(), br.ReadFourCC(), br.ReadFourCC(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32(), br.ReadSingle(), br.ReadSingle())
     {
-        Version = br.ReadUInt32();
-        _name = new(this, br);
-        _particleType = new(this, br);
-        _generatorType = new(this, br);
-        zTest = br.ReadUInt32();
-        zWrite = br.ReadUInt32();
-        fog = br.ReadUInt32();
-        MaxParticles = br.ReadUInt32();
-        infiniteLife = br.ReadUInt32();
-        RotationalCohesion = br.ReadSingle();
-        TranslationCohesion = br.ReadSingle();
     }
 
-    public OldBaseEmitterChunk(uint version, string name, string particleType, string generatorType, bool zTest, bool zWrite, bool fog, uint maxParticles, bool infiniteLife, float rotationalCohesion, float translationCohesion) : base(ChunkID)
+    public OldBaseEmitterChunk(uint version, string name, string particleType, string generatorType, bool zTest, bool zWrite, bool fog, uint maxParticles, bool infiniteLife, float rotationalCohesion, float translationCohesion) : this(version, name, particleType, generatorType, zTest ? 1u : 0u, zWrite ? 1u : 0u, fog ? 1u : 0u, maxParticles, infiniteLife ? 1u : 0u, rotationalCohesion, translationCohesion)
+    {
+    }
+
+    public OldBaseEmitterChunk(uint version, string name, string particleType, string generatorType, uint zTest, uint zWrite, uint fog, uint maxParticles, uint infiniteLife, float rotationalCohesion, float translationCohesion) : base(ChunkID, name)
     {
         Version = version;
-        _name = new(this, name);
         _particleType = new(this, particleType);
         _generatorType = new(this, generatorType);
-        ZTest = zTest;
-        ZWrite = zWrite;
-        Fog = fog;
+        _zTest = zTest;
+        _zWrite = zWrite;
+        _fog = fog;
         MaxParticles = maxParticles;
-        InfiniteLife = infiniteLife;
+        _infiniteLife = infiniteLife;
         RotationalCohesion = rotationalCohesion;
         TranslationCohesion = translationCohesion;
     }
@@ -130,11 +122,11 @@ public class OldBaseEmitterChunk : NamedChunk
         bw.WriteP3DString(Name);
         bw.WriteFourCC(ParticleType);
         bw.WriteFourCC(GeneratorType);
-        bw.Write(zTest);
-        bw.Write(zWrite);
-        bw.Write(fog);
+        bw.Write(_zTest);
+        bw.Write(_zWrite);
+        bw.Write(_fog);
         bw.Write(MaxParticles);
-        bw.Write(infiniteLife);
+        bw.Write(_infiniteLife);
         bw.Write(RotationalCohesion);
         bw.Write(TranslationCohesion);
     }

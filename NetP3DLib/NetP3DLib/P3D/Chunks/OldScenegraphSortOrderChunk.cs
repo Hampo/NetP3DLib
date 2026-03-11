@@ -26,9 +26,8 @@ public class OldScenegraphSortOrderChunk : Chunk
     }
     public override uint DataLength => sizeof(float);
 
-    public OldScenegraphSortOrderChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public OldScenegraphSortOrderChunk(EndianAwareBinaryReader br) : this(br.ReadSingle())
     {
-        SortOrder = br.ReadSingle();
     }
 
     public OldScenegraphSortOrderChunk(float sortOrder) : base(ChunkID)

@@ -2,6 +2,7 @@ using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -69,15 +70,16 @@ public class LocatorChunk : NamedChunk
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint) + sizeof(uint) * DataLen + sizeof(float) * 3 + sizeof(uint);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public LocatorChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public LocatorChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), ReadLocatorData(br), br.ReadVector3())
     {
-        _name = new(this, br);
+        var triggerCount = br.ReadUInt32();
+    }
+
+    private static LocatorData ReadLocatorData(EndianAwareBinaryReader br)
+    {
         var type = (LocatorTypes)br.ReadUInt32();
-        var len = br.ReadInt32();
-        List<uint> data = new(len);
-        for (int i = 0; i < len; i++)
-            data.Add(br.ReadUInt32());
-        TypeData = type switch
+        var data = ListHelper.ReadArray(br.ReadInt32(), br.ReadUInt32);
+        return type switch
         {
             LocatorTypes.Event => new EventLocatorData(data),
             LocatorTypes.Script => new ScriptLocatorData(data),
@@ -96,13 +98,10 @@ public class LocatorChunk : NamedChunk
             LocatorTypes.Coin => new CoinLocatorData(),
             _ => new UnknownLocatorData(type, data)
         };
-        Position = br.ReadVector3();
-        var triggerCount = br.ReadUInt32();
     }
 
-    public LocatorChunk(string name, LocatorData typeData, Vector3 position) : base(ChunkID)
+    public LocatorChunk(string name, LocatorData typeData, Vector3 position) : base(ChunkID, name)
     {
-        _name = new(this, name);
         TypeData = typeData;
         Position = position;
     }
@@ -149,7 +148,7 @@ public class LocatorChunk : NamedChunk
 
         internal abstract LocatorData Clone();
 
-        internal static (string String, int Index) ParseDataString(List<uint> data, int offset = 0)
+        internal static (string String, int Index) ParseDataString(IList<uint> data, int offset = 0)
         {
             StringBuilder result = new();
             int index = offset;
@@ -367,7 +366,7 @@ public class LocatorChunk : NamedChunk
             }
         }
 
-        public EventLocatorData(List<uint> data) : base(LocatorTypes.Event)
+        public EventLocatorData(IList<uint> data) : base(LocatorTypes.Event)
         {
             Event = (Events)data[0];
             if (data.Count > 1)
@@ -414,7 +413,7 @@ public class LocatorChunk : NamedChunk
 
         public override List<uint> DataArray => CreateStringData(Key);
 
-        public ScriptLocatorData(List<uint> data) : base(LocatorTypes.Script)
+        public ScriptLocatorData(IList<uint> data) : base(LocatorTypes.Script)
         {
             Key = ParseDataString(data).String;
         }
@@ -509,7 +508,7 @@ public class LocatorChunk : NamedChunk
             }
         }
 
-        public CarStartLocatorData(List<uint> data) : base(LocatorTypes.CarStart)
+        public CarStartLocatorData(IList<uint> data) : base(LocatorTypes.CarStart)
         {
             Rotation = ParseDataFloat(data[0]);
             ParkedCar = data.Count > 1 ? data[1] : null;
@@ -582,7 +581,7 @@ public class LocatorChunk : NamedChunk
 
         public override List<uint> DataArray => CreateStringData(DynaLoadData);
 
-        public DynamicZoneLocatorData(List<uint> data) : base(LocatorTypes.DynamicZone)
+        public DynamicZoneLocatorData(IList<uint> data) : base(LocatorTypes.DynamicZone)
         {
             DynaLoadData = ParseDataString(data).String;
         }
@@ -628,7 +627,7 @@ public class LocatorChunk : NamedChunk
         public override uint DataLen => Occlusions.HasValue ? 1u : 0u;
         public override List<uint> DataArray => Occlusions.HasValue ? [Occlusions.Value] : [];
 
-        public OcclusionLocatorData(List<uint> data) : base(LocatorTypes.Occlusion)
+        public OcclusionLocatorData(IList<uint> data) : base(LocatorTypes.Occlusion)
         {
             Occlusions = data.Count > 0 ? data[0] : null;
         }
@@ -691,7 +690,7 @@ public class LocatorChunk : NamedChunk
             }
         }
 
-        public InteriorEntranceLocatorData(List<uint> data) : base(LocatorTypes.InteriorEntrance)
+        public InteriorEntranceLocatorData(IList<uint> data) : base(LocatorTypes.InteriorEntrance)
         {
             var interiorName = ParseDataString(data);
             InteriorName = interiorName.String;
@@ -737,7 +736,7 @@ public class LocatorChunk : NamedChunk
             CreateFloatData(Front.Z),
         ];
 
-        public DirectionalLocatorData(List<uint> data) : base(LocatorTypes.Directional)
+        public DirectionalLocatorData(IList<uint> data) : base(LocatorTypes.Directional)
         {
             var index = 0;
             Right = new(ParseDataFloat(data[index++]), ParseDataFloat(data[index++]), ParseDataFloat(data[index++]));
@@ -850,7 +849,7 @@ public class LocatorChunk : NamedChunk
             }
         }
 
-        public ActionLocatorData(List<uint> data) : base(LocatorTypes.Action)
+        public ActionLocatorData(IList<uint> data) : base(LocatorTypes.Action)
         {
             var objectName = ParseDataString(data);
             ObjectName = objectName.String;
@@ -893,7 +892,7 @@ public class LocatorChunk : NamedChunk
             CreateFloatData(Rate),
         ];
 
-        public FOVLocatorData(List<uint> data) : base(LocatorTypes.FOV)
+        public FOVLocatorData(IList<uint> data) : base(LocatorTypes.FOV)
         {
             FOV = ParseDataFloat(data[0]);
             Type = ParseDataFloat(data[1]);
@@ -1173,7 +1172,7 @@ public class LocatorChunk : NamedChunk
             }
         }
 
-        public StaticCameraLocatorData(List<uint> data) : base(LocatorTypes.StaticCamera)
+        public StaticCameraLocatorData(IList<uint> data) : base(LocatorTypes.StaticCamera)
         {
             TargetPosition = new(ParseDataFloat(data[0]), ParseDataFloat(data[1]), ParseDataFloat(data[2]));
             FOV = ParseDataFloat(data[3]);
@@ -1264,7 +1263,7 @@ public class LocatorChunk : NamedChunk
         public override uint DataLen => 1;
         public override List<uint> DataArray => [GroupNum];
 
-        public PedGroupLocatorData(List<uint> data) : base(LocatorTypes.PedGroup)
+        public PedGroupLocatorData(IList<uint> data) : base(LocatorTypes.PedGroup)
         {
             GroupNum = data[0];
         }

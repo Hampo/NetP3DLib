@@ -40,16 +40,8 @@ public class VertexCompressionHintChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint);
 
-    public VertexCompressionHintChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public VertexCompressionHintChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32())
     {
-        Version = br.ReadUInt32();
-        UV0Size = br.ReadUInt32();
-        UV1Size = br.ReadUInt32();
-        UV2Size = br.ReadUInt32();
-        UV3Size = br.ReadUInt32();
-        NormalSize = br.ReadUInt32();
-        ColourSize = br.ReadUInt32();
-        PositionSize = br.ReadUInt32();
     }
 
     public VertexCompressionHintChunk(uint version, uint uv0Size, uint uv1Size, uint uv2Size, uint uv3Size, uint normalSize, uint colourSize, uint positionSize) : base(ChunkID)

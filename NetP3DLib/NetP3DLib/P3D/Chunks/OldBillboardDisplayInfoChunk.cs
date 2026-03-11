@@ -48,14 +48,8 @@ public class OldBillboardDisplayInfoChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(float) * 4 + 4 + sizeof(float) * 2 + sizeof(float) + sizeof(float);
 
-    public OldBillboardDisplayInfoChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public OldBillboardDisplayInfoChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadQuaternion(), br.ReadFourCC(), br.ReadVector2(), br.ReadSingle(), br.ReadSingle())
     {
-        Version = br.ReadUInt32();
-        Rotation = br.ReadQuaternion();
-        _cutOffMode = new(this, br);
-        UVOffsetRange = br.ReadVector2();
-        SourceRange = br.ReadSingle();
-        EdgeRange = br.ReadSingle();
     }
 
     public OldBillboardDisplayInfoChunk(uint version, Quaternion rotation, string cutOffMode, Vector2 uvOffsetRange, float sourceRange, float edgeRange) : base(ChunkID)

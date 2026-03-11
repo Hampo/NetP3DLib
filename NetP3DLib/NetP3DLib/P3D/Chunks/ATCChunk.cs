@@ -4,6 +4,7 @@ using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -64,15 +65,8 @@ public class ATCChunk : Chunk
         }
     }
 
-    public ATCChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public ATCChunk(EndianAwareBinaryReader br) : this(ListHelper.ReadArray(br.ReadInt32(), () => new Entry(br)))
     {
-        var numEntries = br.ReadInt32();
-        Entries = CreateSizeAwareList<Entry>(numEntries);
-        Entries.CollectionChanged += Entries_CollectionChanged;
-        var entries = new Entry[numEntries];
-        for (int i = 0; i < numEntries; i++)
-            entries[i] = new(br);
-        Entries.AddRange(entries);
     }
 
     public ATCChunk(IList<Entry> entries) : base(ChunkID)

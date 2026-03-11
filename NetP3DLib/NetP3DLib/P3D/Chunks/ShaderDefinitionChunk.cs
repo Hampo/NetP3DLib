@@ -33,15 +33,12 @@ public class ShaderDefinitionChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + BinaryExtensions.GetP3DLongStringLength(Definition);
 
-    public ShaderDefinitionChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public ShaderDefinitionChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadP3DLongString())
     {
-        _name = new(this, br);
-        _definition = new(this, br);
     }
 
-    public ShaderDefinitionChunk(string name, string definition) : base(ChunkID)
+    public ShaderDefinitionChunk(string name, string definition) : base(ChunkID, name)
     {
-        _name = new(this, name);
         _definition = new(this, definition);
     }
 

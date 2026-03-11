@@ -44,19 +44,13 @@ public class VisibilityAnimChunk : NamedChunk
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + BinaryExtensions.GetP3DStringLength(SceneName) + sizeof(uint) + sizeof(uint) + sizeof(float) + sizeof(uint);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public VisibilityAnimChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public VisibilityAnimChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadP3DString(), br.ReadUInt32(), br.ReadUInt32(), br.ReadSingle())
     {
-        _name = new(this, br);
-        _sceneName = new(this, br);
-        Version = br.ReadUInt32();
-        NumFrames = br.ReadUInt32();
-        FrameRate = br.ReadSingle();
         var numChannels = br.ReadUInt32();
     }
 
-    public VisibilityAnimChunk(string name, string sceneName, uint version, uint numFrames, float frameRate) : base(ChunkID)
+    public VisibilityAnimChunk(string name, string sceneName, uint version, uint numFrames, float frameRate) : base(ChunkID, name)
     {
-        _name = new(this, name);
         _sceneName = new(this, sceneName);
         Version = version;
         NumFrames = numFrames;

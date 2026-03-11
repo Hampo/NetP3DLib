@@ -4,6 +4,7 @@ using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -72,36 +73,28 @@ public class OldOffsetListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) + OffsetEntry.Size * NumOffsets + (HasPrimGroupIndex ? sizeof(uint) : 0u);
 
-    public OldOffsetListChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    // TODO: Implement `PrimGroupIndex`
+    public OldOffsetListChunk(EndianAwareBinaryReader br) : this(ReadKeyIndex(br, out var numOffsets), ListHelper.ReadArray(numOffsets, () => new OffsetEntry(br)), br.ReadUInt32())
     {
-        var numOffsets = br.ReadInt32();
-        KeyIndex = br.ReadUInt32();
-        var offsets = new OffsetEntry[numOffsets];
-        for (int i = 0; i < numOffsets; i++)
-            offsets[i] = new(br);
-        Offsets = CreateSizeAwareList(offsets);
-        if (br.BaseStream.Position == br.BaseStream.Length)
-        {
-            HasPrimGroupIndex = false;
-            return;
-        }
-        HasPrimGroupIndex = true;
-        PrimGroupIndex = br.ReadUInt32();
     }
 
-    public OldOffsetListChunk(uint keyIndex, IList<OffsetEntry> offsets, uint primGroupIndex) : base(ChunkID)
+    private static uint ReadKeyIndex(EndianAwareBinaryReader br, out int numOffsets)
+    {
+        numOffsets = br.ReadInt32();
+        return br.ReadUInt32();
+    }
+
+    public OldOffsetListChunk(uint keyIndex, IList<OffsetEntry> offsets) : this(keyIndex, offsets, null)
+    {
+    }
+
+    public OldOffsetListChunk(uint keyIndex, IList<OffsetEntry> offsets, uint? primGroupIndex = null) : base(ChunkID)
     {
         KeyIndex = keyIndex;
         Offsets = CreateSizeAwareList(offsets);
-        HasPrimGroupIndex = true;
-        PrimGroupIndex = primGroupIndex;
-    }
-
-    public OldOffsetListChunk(uint keyIndex, IList<OffsetEntry> offsets) : base(ChunkID)
-    {
-        KeyIndex = keyIndex;
-        Offsets = CreateSizeAwareList(offsets);
-        HasPrimGroupIndex = false;
+        HasPrimGroupIndex = primGroupIndex.HasValue;
+        if (HasPrimGroupIndex)
+            PrimGroupIndex = primGroupIndex!.Value;
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

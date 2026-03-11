@@ -39,17 +39,12 @@ public class TriggerVolumeChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(float) * 3 + sizeof(float) * 16;
 
-    public TriggerVolumeChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public TriggerVolumeChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), (Types)br.ReadUInt32(), br.ReadVector3(), br.ReadMatrix4x4())
     {
-        _name = new(this, br);
-        Type = (Types)br.ReadUInt32();
-        HalfExtents = br.ReadVector3();
-        Matrix = br.ReadMatrix4x4();
     }
 
-    public TriggerVolumeChunk(string name, Types type, Vector3 halfExtents, Matrix4x4 matrix) : base(ChunkID)
+    public TriggerVolumeChunk(string name, Types type, Vector3 halfExtents, Matrix4x4 matrix) : base(ChunkID, name)
     {
-        _name = new(this, name);
         Type = type;
         HalfExtents = halfExtents;
         Matrix = matrix;

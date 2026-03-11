@@ -4,6 +4,7 @@ using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -81,25 +82,13 @@ public class ExpressionChunk : NamedChunk
     }
     public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(float) * NumKeys + sizeof(uint) * NumIndices;
 
-    public ExpressionChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public ExpressionChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadP3DString(), ListHelper.ReadArray(br.ReadInt32, br.ReadSingle, out var numKeys), ListHelper.ReadArray(numKeys, br.ReadUInt32))
     {
-        Version = br.ReadUInt32();
-        _name = new(this, br);
-        var numKeys = br.ReadInt32();
-        var keys = new float[numKeys];
-        for (int i = 0; i < numKeys; i++)
-            keys[i] = br.ReadSingle();
-        Keys = CreateSizeAwareList(keys);
-        var indices = new uint[numKeys];
-        for (int i = 0; i < numKeys; i++)
-            indices[i] = br.ReadUInt32();
-        Indices = CreateSizeAwareList(indices);
     }
 
-    public ExpressionChunk(uint version, string name, IList<float> keys, IList<uint> indices) : base(ChunkID)
+    public ExpressionChunk(uint version, string name, IList<float> keys, IList<uint> indices) : base(ChunkID, name)
     {
         Version = version;
-        _name = new(this, name);
         Keys = CreateSizeAwareList(keys);
         Indices = CreateSizeAwareList(indices);
     }

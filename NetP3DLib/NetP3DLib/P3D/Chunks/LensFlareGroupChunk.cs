@@ -21,23 +21,23 @@ public class LensFlareGroupChunk : NamedChunk
         get => _shaderName?.Value ?? string.Empty;
         set => _shaderName.Value = value;
     }
-    private uint zTest;
+    private uint _zTest;
     public bool ZTest
     {
-        get => zTest == 1;
-        set => zTest = value ? 1u : 0u;
+        get => _zTest == 1;
+        set => _zTest = value ? 1u : 0u;
     }
-    private uint zWrite;
+    private uint _zWrite;
     public bool ZWrite
     {
-        get => zWrite == 1;
-        set => zWrite = value ? 1u : 0u;
+        get => _zWrite == 1;
+        set => _zWrite = value ? 1u : 0u;
     }
-    private uint fog;
+    private uint _fog;
     public bool Fog
     {
-        get => fog == 1;
-        set => fog = value ? 1u : 0u;
+        get => _fog == 1;
+        set => _fog = value ? 1u : 0u;
     }
     public float SourceRadius { get; set; }
     public float EdgeRadius { get; set; }
@@ -52,9 +52,9 @@ public class LensFlareGroupChunk : NamedChunk
             data.AddRange(BitConverter.GetBytes(Version));
             data.AddRange(BinaryExtensions.GetP3DStringBytes(Name));
             data.AddRange(BinaryExtensions.GetP3DStringBytes(ShaderName));
-            data.AddRange(BitConverter.GetBytes(zTest));
-            data.AddRange(BitConverter.GetBytes(zWrite));
-            data.AddRange(BitConverter.GetBytes(fog));
+            data.AddRange(BitConverter.GetBytes(_zTest));
+            data.AddRange(BitConverter.GetBytes(_zWrite));
+            data.AddRange(BitConverter.GetBytes(_fog));
             data.AddRange(BitConverter.GetBytes(SourceRadius));
             data.AddRange(BitConverter.GetBytes(EdgeRadius));
             data.AddRange(BitConverter.GetBytes(NumLensFlares));
@@ -65,27 +65,22 @@ public class LensFlareGroupChunk : NamedChunk
     public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + BinaryExtensions.GetP3DStringLength(ShaderName) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(float) + sizeof(float) + sizeof(uint);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public LensFlareGroupChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public LensFlareGroupChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadP3DString(), br.ReadP3DString(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32(), br.ReadSingle(), br.ReadSingle())
     {
-        Version = br.ReadUInt32();
-        _name = new(this, br);
-        _shaderName = new(this, br);
-        zTest = br.ReadUInt32();
-        zWrite = br.ReadUInt32();
-        fog = br.ReadUInt32();
-        SourceRadius = br.ReadSingle();
-        EdgeRadius = br.ReadSingle();
         var numLensFlares = br.ReadUInt32();
     }
 
-    public LensFlareGroupChunk(uint version, string name, string shaderName, bool zTest, bool zWrite, bool fog, float sourceRadius, float edgeRadius) : base(ChunkID)
+    public LensFlareGroupChunk(uint version, string name, string shaderName, bool zTest, bool zWrite, bool fog, float sourceRadius, float edgeRadius) : this(version, name, shaderName, zTest ? 1u : 0u, zWrite ? 1u : 0u, fog ? 1u : 0u, sourceRadius, edgeRadius)
+    {
+    }
+
+    public LensFlareGroupChunk(uint version, string name, string shaderName, uint zTest, uint zWrite, uint fog, float sourceRadius, float edgeRadius) : base(ChunkID, name)
     {
         Version = version;
-        _name = new(this, name);
         _shaderName = new(this, shaderName);
-        ZTest = zTest;
-        ZWrite = zWrite;
-        Fog = fog;
+        _zTest = zTest;
+        _zWrite = zWrite;
+        _fog = fog;
         SourceRadius = sourceRadius;
         EdgeRadius = edgeRadius;
     }
@@ -104,9 +99,9 @@ public class LensFlareGroupChunk : NamedChunk
         bw.Write(Version);
         bw.WriteP3DString(Name);
         bw.WriteP3DString(ShaderName);
-        bw.Write(zTest);
-        bw.Write(zWrite);
-        bw.Write(fog);
+        bw.Write(_zTest);
+        bw.Write(_zWrite);
+        bw.Write(_fog);
         bw.Write(SourceRadius);
         bw.Write(EdgeRadius);
         bw.Write(NumLensFlares);

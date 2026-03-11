@@ -14,11 +14,11 @@ public class StatePropStateDataV1Chunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.State_Prop_State_Data_V1;
 
-    private uint autoTransition;
+    private uint _autoTransition;
     public bool AutoTransition
     {
-        get => autoTransition != 0;
-        set => autoTransition = value ? 1u : 0u;
+        get => _autoTransition != 0;
+        set => _autoTransition = value ? 1u : 0u;
     }
     public uint OutState { get; set; }
     public uint NumDrawables => GetChildCount(ChunkIdentifier.State_Prop_Visibilities_Data);
@@ -34,7 +34,7 @@ public class StatePropStateDataV1Chunk : NamedChunk
             List<byte> data = [];
 
             data.AddRange(BinaryExtensions.GetP3DStringBytes(Name));
-            data.AddRange(BitConverter.GetBytes(autoTransition));
+            data.AddRange(BitConverter.GetBytes(_autoTransition));
             data.AddRange(BitConverter.GetBytes(OutState));
             data.AddRange(BitConverter.GetBytes(NumDrawables));
             data.AddRange(BitConverter.GetBytes(NumFrameControllers));
@@ -48,22 +48,17 @@ public class StatePropStateDataV1Chunk : NamedChunk
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(float);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public StatePropStateDataV1Chunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public StatePropStateDataV1Chunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadUInt32(), br.ReadUInt32(), br.SkipAndRead(sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint), br.ReadSingle))
     {
-        _name = new(this, br);
-        autoTransition = br.ReadUInt32();
-        OutState = br.ReadUInt32();
-        var numDrawables = br.ReadUInt32();
-        var numFrameControllers = br.ReadUInt32();
-        var numEvents = br.ReadUInt32();
-        var numCallbacks = br.ReadUInt32();
-        OutFrame = br.ReadSingle();
     }
 
-    public StatePropStateDataV1Chunk(string name, bool autoTransition, uint outState, float outFrame) : base(ChunkID)
+    public StatePropStateDataV1Chunk(string name, bool autoTransition, uint outState, float outFrame) : this(name, autoTransition ? 1u : 0u, outState, outFrame)
     {
-        _name = new(this, name);
-        AutoTransition = autoTransition;
+    }
+
+    public StatePropStateDataV1Chunk(string name, uint autoTransition, uint outState, float outFrame) : base(ChunkID, name)
+    {
+        _autoTransition = autoTransition;
         OutState = outState;
         OutFrame = outFrame;
     }
@@ -94,7 +89,7 @@ public class StatePropStateDataV1Chunk : NamedChunk
     protected override void WriteData(EndianAwareBinaryWriter bw)
     {
         bw.WriteP3DString(Name);
-        bw.Write(autoTransition);
+        bw.Write(_autoTransition);
         bw.Write(OutState);
         bw.Write(NumDrawables);
         bw.Write(NumFrameControllers);

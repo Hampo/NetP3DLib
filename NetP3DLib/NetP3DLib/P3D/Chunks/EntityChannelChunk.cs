@@ -4,6 +4,7 @@ using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -93,25 +94,13 @@ public class EntityChannelChunk : ParamChunk
         }
     }
 
-    public EntityChannelChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public EntityChannelChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadFourCC(), ListHelper.ReadArray(br.ReadInt32, br.ReadUInt16, out var numFrames), ListHelper.ReadArray(numFrames, br.ReadP3DString))
     {
-        Version = br.ReadUInt32();
-        _param = new(this, br);
-        var numFrames = br.ReadInt32();
-        var frames = new ushort[numFrames];
-        for (var i = 0; i < numFrames; i++)
-            frames[i] = br.ReadUInt16();
-        Frames = CreateSizeAwareList(frames);
-        var values = new string[numFrames];
-        for (var i = 0; i < numFrames; i++)
-            values[i] = br.ReadP3DString();
-        Values = CreateSizeAwareList(values);
     }
 
-    public EntityChannelChunk(uint version, string param, IList<ushort> frames, IList<string> values) : base(ChunkID)
+    public EntityChannelChunk(uint version, string param, IList<ushort> frames, IList<string> values) : base(ChunkID, param)
     {
         Version = version;
-        _param = new(this, param);
         Frames = CreateSizeAwareList(frames);
         Values = CreateSizeAwareList(values);
     }

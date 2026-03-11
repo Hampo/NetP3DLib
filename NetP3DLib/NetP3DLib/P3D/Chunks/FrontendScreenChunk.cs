@@ -4,6 +4,7 @@ using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -68,20 +69,12 @@ public class FrontendScreenChunk : NamedChunk
         }
     }
 
-    public FrontendScreenChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public FrontendScreenChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadUInt32(), ListHelper.ReadArray(br.ReadInt32(), br.ReadP3DString))
     {
-        _name = new(this, br);
-        Version = br.ReadUInt32();
-        var numPageNames = br.ReadInt32();
-        var pageNames = new string[numPageNames];
-        for (int i = 0; i < numPageNames; i++)
-            pageNames[i] = br.ReadP3DString();
-        PageNames = CreateSizeAwareList(pageNames);
     }
 
-    public FrontendScreenChunk(string name, uint version, IList<string> pageNames) : base(ChunkID)
+    public FrontendScreenChunk(string name, uint version, IList<string> pageNames) : base(ChunkID, name)
     {
-        _name = new(this, name);
         Version = version;
         PageNames = CreateSizeAwareList(pageNames);
     }

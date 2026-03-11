@@ -35,17 +35,14 @@ public class WorldSphereChunk : NamedChunk
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint) + sizeof(uint);
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "We want to read the value to progress the BinaryReader, but not set the value anywhere because it's calculated dynamically.")]
-    public WorldSphereChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public WorldSphereChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadUInt32())
     {
-        _name = new(this, br);
-        Version = br.ReadUInt32();
         var numMeshes = br.ReadUInt32();
         var numOldBillboardQuadGroups = br.ReadUInt32();
     }
 
-    public WorldSphereChunk(string name, uint version) : base(ChunkID)
+    public WorldSphereChunk(string name, uint version) : base(ChunkID, name)
     {
-        _name = new(this, name);
         Version = version;
     }
 

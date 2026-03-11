@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace NetP3DLib.P3D.Helpers;
 public static class ListHelper
@@ -46,5 +47,22 @@ public static class ListHelper
 
         if (list.Count == 0)
             dict.Remove(key);
+    }
+
+    public static T[] ReadArray<T>(Func<int> getCount, Func<T> readValue, out int count)
+    {
+        count = getCount();
+        var results = new T[count];
+        for (var i = 0; i < count; i++)
+            results[i] = readValue();
+        return results;
+    }
+
+    public static T[] ReadArray<T>(int count, Func<T> readValue)
+    {
+        var results = new T[count];
+        for (var i = 0; i < count; i++)
+            results[i] = readValue();
+        return results;
     }
 }

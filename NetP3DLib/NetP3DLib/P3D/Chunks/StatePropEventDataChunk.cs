@@ -46,16 +46,12 @@ public class StatePropEventDataChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint);
 
-    public StatePropEventDataChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public StatePropEventDataChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadUInt32(), (Events)br.ReadUInt32())
     {
-        _name = new(this, br);
-        ToState = br.ReadUInt32();
-        Event = (Events)br.ReadUInt32();
     }
 
-    public StatePropEventDataChunk(string name, uint toState, Events @event) : base(ChunkID)
+    public StatePropEventDataChunk(string name, uint toState, Events @event) : base(ChunkID, name)
     {
-        _name = new(this, name);
         ToState = toState;
         Event = @event;
     }

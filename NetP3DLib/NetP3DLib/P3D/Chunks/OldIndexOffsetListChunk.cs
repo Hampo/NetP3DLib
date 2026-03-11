@@ -2,6 +2,7 @@ using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
+using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -53,14 +54,8 @@ public class OldIndexOffsetListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) + sizeof(uint) * NumOffsets;
 
-    public OldIndexOffsetListChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public OldIndexOffsetListChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), ListHelper.ReadArray(br.ReadInt32(), br.ReadUInt32))
     {
-        Version = br.ReadUInt32();
-        var numOffsets = br.ReadInt32();
-        var offsets = new uint[numOffsets];
-        for (int i = 0; i < numOffsets; i++)
-            offsets[i] = br.ReadUInt32();
-        Offsets = CreateSizeAwareList(offsets);
     }
 
     public OldIndexOffsetListChunk(uint version, IList<uint> offsets) : base(ChunkID)

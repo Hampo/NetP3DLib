@@ -59,28 +59,13 @@ public class SpriteParticleEmitterChunk : NamedChunk
     }
     public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + BinaryExtensions.GetP3DStringLength(ShaderName) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(float);
 
-    public SpriteParticleEmitterChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public SpriteParticleEmitterChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadP3DString(), br.ReadP3DString(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32(), br.ReadUInt32(), br.ReadSingle(), br.ReadSingle(), br.ReadSingle(), br.ReadSingle())
     {
-        Version = br.ReadUInt32();
-        _name = new(this, br);
-        _shaderName = new(this, br);
-        UpdateMode = br.ReadUInt32();
-        ZTest = br.ReadUInt32();
-        ZWrite = br.ReadUInt32();
-        MaxParticles = br.ReadUInt32();
-        InfiniteLife = br.ReadUInt32();
-        NumTextureFrames = br.ReadUInt32();
-        TextureFrameRate = br.ReadUInt32();
-        InitialAngle = br.ReadSingle();
-        InitialAngleVariance = br.ReadSingle();
-        TranslationalCohesion = br.ReadSingle();
-        RotationalCohesion = br.ReadSingle();
     }
 
-    public SpriteParticleEmitterChunk(uint version, string name, string shaderName, uint updateMode, uint zTest, uint zWrite, uint maxParticles, uint infiniteLife, uint numTextureFrames, uint textureFrameRate, float initialAngle, float initialAngleVariance, float translationalCohesion, float rotationalCohesion) : base(ChunkID)
+    public SpriteParticleEmitterChunk(uint version, string name, string shaderName, uint updateMode, uint zTest, uint zWrite, uint maxParticles, uint infiniteLife, uint numTextureFrames, uint textureFrameRate, float initialAngle, float initialAngleVariance, float translationalCohesion, float rotationalCohesion) : base(ChunkID, name)
     {
         Version = version;
-        _name = new(this, name);
         _shaderName = new(this, shaderName);
         UpdateMode = updateMode;
         ZTest = zTest;

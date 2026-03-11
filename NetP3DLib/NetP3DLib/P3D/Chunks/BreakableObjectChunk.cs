@@ -3,6 +3,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using System;
 using System.Collections.Generic;
+using static NetP3DLib.P3D.Chunks.InstParticleSystemChunk;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -59,10 +60,8 @@ public class BreakableObjectChunk : Chunk
     }
     public override uint DataLength => sizeof(int) + sizeof(uint);
 
-    public BreakableObjectChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public BreakableObjectChunk(EndianAwareBinaryReader br) : this((Indexes)br.ReadInt32(), br.ReadUInt32())
     {
-        Index = (Indexes)br.ReadInt32();
-        MaxInstances = br.ReadUInt32();
     }
 
     public BreakableObjectChunk(Indexes index, uint maxInstances) : base(ChunkID)
@@ -78,4 +77,6 @@ public class BreakableObjectChunk : Chunk
     }
 
     protected override Chunk CloneSelf() => new BreakableObjectChunk(Index, MaxInstances);
+
+    public override string ToString() => $"{Index} ({GetChunkType(this)} (0x{ID:X}))";
 }

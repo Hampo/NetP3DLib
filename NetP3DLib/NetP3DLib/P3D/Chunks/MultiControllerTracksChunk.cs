@@ -4,6 +4,7 @@ using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
+using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -64,15 +65,8 @@ public class MultiControllerTracksChunk : Chunk
         }
     }
 
-    public MultiControllerTracksChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public MultiControllerTracksChunk(EndianAwareBinaryReader br) : this(ListHelper.ReadArray(br.ReadInt32(), () => new Track(br)))
     {
-        var numTracks = br.ReadInt32();
-        Tracks = CreateSizeAwareList<Track>(numTracks);
-        Tracks.CollectionChanged += Tracks_CollectionChanged;
-        var tracks = new Track[numTracks];
-        for (int i = 0; i < numTracks; i++)
-            tracks[i] = new(br);
-        Tracks.AddRange(tracks);
     }
 
     public MultiControllerTracksChunk(IList<Track> tracks) : base(ChunkID)

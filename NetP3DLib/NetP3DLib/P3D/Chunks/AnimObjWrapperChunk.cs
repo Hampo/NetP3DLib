@@ -14,11 +14,11 @@ public class AnimObjWrapperChunk : NamedChunk
 
     [DefaultValue(1)]
     public byte Version { get; set; }
-    private byte hasAlpha;
+    private byte _hasAlpha;
     public bool HasAlpha
     {
-        get => hasAlpha != 0;
-        set => hasAlpha = (byte)(value ? 1 : 0);
+        get => _hasAlpha != 0;
+        set => _hasAlpha = (byte)(value ? 1 : 0);
     }
 
     public override byte[] DataBytes
@@ -29,32 +29,32 @@ public class AnimObjWrapperChunk : NamedChunk
 
             data.AddRange(BinaryExtensions.GetP3DStringBytes(Name));
             data.Add(Version);
-            data.Add(hasAlpha);
+            data.Add(_hasAlpha);
 
             return [.. data];
         }
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(byte) + sizeof(byte);
 
-    public AnimObjWrapperChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public AnimObjWrapperChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadByte(), br.ReadByte())
     {
-        _name = new(this, br);
-        Version = br.ReadByte();
-        hasAlpha = br.ReadByte();
     }
 
-    public AnimObjWrapperChunk(string name, byte version, bool hasAlpha) : base(ChunkID)
+    public AnimObjWrapperChunk(string name, byte version, bool hasAlpha) : this(name, version, (byte)(hasAlpha ? 1 : 0))
     {
-        _name = new(this, name);
+    }
+
+    public AnimObjWrapperChunk(string name, byte version, byte hasAlpha) : base(ChunkID, name)
+    {
         Version = version;
-        HasAlpha = hasAlpha;
+        _hasAlpha = hasAlpha;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
     {
         bw.WriteP3DString(Name);
         bw.Write(Version);
-        bw.Write(hasAlpha);
+        bw.Write(_hasAlpha);
     }
 
     protected override Chunk CloneSelf() => new AnimObjWrapperChunk(Name, Version, HasAlpha);

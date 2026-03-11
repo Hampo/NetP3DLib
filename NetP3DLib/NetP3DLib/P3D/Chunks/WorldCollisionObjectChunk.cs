@@ -28,15 +28,12 @@ public class WorldCollisionObjectChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint);
 
-    public WorldCollisionObjectChunk(EndianAwareBinaryReader br) : base(ChunkID)
+    public WorldCollisionObjectChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadUInt32())
     {
-        _name = new(this, br);
-        Version = br.ReadUInt32();
     }
 
-    public WorldCollisionObjectChunk(string name, uint version) : base(ChunkID)
+    public WorldCollisionObjectChunk(string name, uint version) : base(ChunkID, name)
     {
-        _name = new(this, name);
         Version = version;
     }
 
