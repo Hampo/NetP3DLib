@@ -382,33 +382,12 @@ public abstract class Chunk
             _childCounts[child.ID] = 1;
 
         var childType = child.GetType();
-        if (!_chunksByType.TryGetValue(childType, out var list))
-        {
-            list = [];
-            _chunksByType[childType] = list;
-        }
-        ListHelper.InsertSorted(list, child);
+        ListHelper.InsertSorted(_chunksByType, childType, child);
 
         if (child is NamedChunk namedChunk)
-        {
-            var key = (childType, namedChunk.Name);
-            if (!_namedChunks.TryGetValue(key, out var namedList))
-            {
-                namedList = [];
-                _namedChunks[key] = namedList;
-            }
-            ListHelper.InsertSorted(namedList, namedChunk);
-        }
+            ListHelper.InsertSorted(_namedChunks, (childType, namedChunk.Name), namedChunk);
         else if (child is ParamChunk paramChunk)
-        {
-            var key = (childType, paramChunk.Param);
-            if (!_paramChunks.TryGetValue(key, out var paramList))
-            {
-                paramList = [];
-                _paramChunks[key] = paramList;
-            }
-            ListHelper.InsertSorted(paramList, paramChunk);
-        }
+            ListHelper.InsertSorted(_paramChunks, (childType, paramChunk.Param), paramChunk);
     }
 
     private void ProcessRemovedChild(Chunk child)
@@ -419,42 +398,12 @@ public abstract class Chunk
             _childCounts[child.ID]--;
 
         var childType = child.GetType();
-        if (_chunksByType.TryGetValue(childType, out var list))
-        {
-            for (var i = list.Count - 1; i >= 0; i--)
-                if (list[i].IndexInParent == -1)
-                    list.RemoveAt(i);
-
-            if (list.Count == 0)
-                _chunksByType.Remove(childType);
-        }
+        ListHelper.CleanListInDictionary(_chunksByType, childType);
 
         if (child is NamedChunk namedChunk)
-        {
-            var key = (childType, namedChunk.Name);
-            if (_namedChunks.TryGetValue(key, out var namedList))
-            {
-                for (var i = namedList.Count - 1; i >= 0; i--)
-                    if (namedList[i].IndexInParent == -1)
-                        namedList.RemoveAt(i);
-
-                if (namedList.Count == 0)
-                    _namedChunks.Remove(key);
-            }
-        }
+            ListHelper.CleanListInDictionary(_namedChunks, (childType, namedChunk.Name));
         else if (child is ParamChunk paramChunk)
-        {
-            var key = (childType, paramChunk.Param);
-            if (_paramChunks.TryGetValue(key, out var paramList))
-            {
-                for (var i = paramList.Count - 1; i >= 0; i--)
-                    if (paramList[i].IndexInParent == -1)
-                        paramList.RemoveAt(i);
-
-                if (paramList.Count == 0)
-                    _paramChunks.Remove(key);
-            }
-        }
+            ListHelper.CleanListInDictionary(_paramChunks, (childType, paramChunk.Param));
     }
 
     public event Action<Chunk>? ChildAdded;
