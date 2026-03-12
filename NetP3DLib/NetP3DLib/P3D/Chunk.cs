@@ -512,7 +512,8 @@ public abstract class Chunk
         if (dataLength != chunk2.DataLength)
             return false;
 
-        if (Children.Count != chunk2.Children.Count)
+        var childCount = GetChildCount();
+        if (childCount != chunk2.Children.Count)
             return false;
 
         var dataBytes = DataBytes;
@@ -521,7 +522,7 @@ public abstract class Chunk
             if (dataBytes[i] != dataBytes2[i])
                 return false;
 
-        for (int i = 0; i < Children.Count; i++)
+        for (int i = 0; i < childCount; i++)
         {
             var subChunk = Children[i];
             var subChunk2 = chunk2.Children[i];
