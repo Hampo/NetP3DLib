@@ -606,7 +606,7 @@ public class UnknownChunk : Chunk
         }
     }
 
-    public override byte[] DataBytes => Data.ToArray();
+    public override byte[] DataBytes => [.. Data];
 
     public override uint DataLength => (uint)Data.Length;
 

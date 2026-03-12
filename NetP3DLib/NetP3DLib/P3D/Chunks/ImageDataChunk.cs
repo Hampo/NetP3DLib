@@ -40,7 +40,7 @@ public class ImageDataChunk : Chunk
             List<byte> data = [];
 
             data.AddRange(BitConverter.GetBytes(ImageData.Length));
-            data.AddRange(ImageData.ToArray());
+            data.AddRange([.. ImageData]);
 
             return [.. data];
         }
@@ -69,8 +69,8 @@ public class ImageDataChunk : Chunk
     protected override void WriteData(EndianAwareBinaryWriter bw)
     {
         bw.Write(ImageData.Length);
-        bw.Write(ImageData.ToArray());
+        bw.Write([.. ImageData]);
     }
 
-    protected override Chunk CloneSelf() => new ImageDataChunk(ImageData.ToArray());
+    protected override Chunk CloneSelf() => new ImageDataChunk([.. ImageData]);
 }
