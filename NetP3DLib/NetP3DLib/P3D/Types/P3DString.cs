@@ -17,7 +17,7 @@ internal class P3DString
             var oldSize = _chunk.HeaderSize;
             _value = value;
             _chunk.RecalculateSize(oldSize);
-            _chunk.OnPropertyUpdated(_propertyName);
+            _chunk.OnPropertyChanged(_propertyName);
         }
     }
 

@@ -484,8 +484,8 @@ public abstract class Chunk
         ChildrenCleared?.Invoke();
     }
 
-    public event Action<string>? PropertyUpdated;
-    internal void OnPropertyUpdated(string propertyName) => PropertyUpdated?.Invoke(propertyName);
+    public event Action<string>? PropertyChanged;
+    internal void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(propertyName);
 
     /// <summary>
     /// Creates a clone of the current chunk.
@@ -619,7 +619,7 @@ public class UnknownChunk : Chunk
     {
         ID = chunkId;
 
-        _dataChanged = () => OnPropertyUpdated(nameof(Data));
+        _dataChanged = () => OnPropertyChanged(nameof(Data));
         _data = new((byte[])data.Clone(), _dataChanged);
     }
 

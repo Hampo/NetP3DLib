@@ -53,7 +53,7 @@ public class ImageDataChunk : Chunk
 
     public ImageDataChunk(byte[] imageData) : base(ChunkID)
     {
-        _imageDataChanged = () => OnPropertyUpdated(nameof(ImageData));
+        _imageDataChanged = () => OnPropertyChanged(nameof(ImageData));
         _imageData = new((byte[])imageData.Clone(), _imageDataChanged);
     }
 

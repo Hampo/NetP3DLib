@@ -13,9 +13,35 @@ public class AnimatedObjectAnimationChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Animated_Object_Animation;
 
+    private uint _version;
     [DefaultValue(0)]
-    public uint Version { get; set; }
-    public float FrameRate { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+
+    private float _frameRate;
+    public float FrameRate
+    {
+        get => _frameRate;
+        set
+        {
+            if (_frameRate == value)
+                return;
+
+            _frameRate = value;
+            OnPropertyChanged(nameof(FrameRate));
+        }
+    }
+
     public uint NumOldFrameControllers => GetChildCount(ChunkIdentifier.Old_Frame_Controller);
 
     public override byte[] DataBytes
@@ -42,8 +68,8 @@ public class AnimatedObjectAnimationChunk : NamedChunk
 
     public AnimatedObjectAnimationChunk(uint version, string name, float frameRate) : base(ChunkID, name)
     {
-        Version = version;
-        FrameRate = frameRate;
+        _version = version;
+        _frameRate = frameRate;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
