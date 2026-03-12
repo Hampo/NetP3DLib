@@ -50,7 +50,7 @@ public class StatePropDataV1Chunk : NamedChunk
     public StatePropDataV1Chunk(uint version, string name, string objectFactoryName) : base(ChunkID, name)
     {
         Version = version;
-        _objectFactoryName = new(this, objectFactoryName);
+        _objectFactoryName = new(this, objectFactoryName, nameof(ObjectFactoryName));
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

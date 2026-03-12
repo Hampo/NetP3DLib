@@ -46,8 +46,8 @@ public class FrontendStringTextBibleChunk : Chunk
 
     public FrontendStringTextBibleChunk(string bibleName, string stringID) : base(ChunkID)
     {
-        _bibleName = new(this, bibleName);
-        _stringID = new(this, stringID);
+        _bibleName = new(this, bibleName, nameof(BibleName));
+        _stringID = new(this, stringID, nameof(StringID));
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

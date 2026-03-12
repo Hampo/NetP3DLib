@@ -56,7 +56,7 @@ public class BillboardQuadGroupChunk : NamedChunk
     public BillboardQuadGroupChunk(uint version, string name, string shader, uint cutOffEnabled, uint zTest, uint zWrite, uint occlusionCulling) : base(ChunkID, name)
     {
         Version = version;
-        _shader = new(this, shader);
+        _shader = new(this, shader, nameof(Shader));
         CutOffEnabled = cutOffEnabled;
         ZTest = zTest;
         ZWrite = zWrite;

@@ -52,7 +52,7 @@ public class CollisionObjectChunk : NamedChunk
     public CollisionObjectChunk(string name, uint version, string materialName, uint numSubObjects) : base(ChunkID, name)
     {
         Version = version;
-        _materialName = new(this, materialName);
+        _materialName = new(this, materialName, nameof(MaterialName));
         NumSubObjects = numSubObjects;
     }
 

@@ -56,7 +56,7 @@ public class OldBillboardDisplayInfoChunk : Chunk
     {
         Version = version;
         Rotation = rotation;
-        _cutOffMode = new(this, cutOffMode);
+        _cutOffMode = new(this, cutOffMode, nameof(CutOffMode));
         UVOffsetRange = uvOffsetRange;
         SourceRange = sourceRange;
         EdgeRange = edgeRange;

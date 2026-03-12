@@ -175,7 +175,7 @@ public class OldPrimitiveGroupChunk : Chunk
     public OldPrimitiveGroupChunk(uint version, string shaderName, PrimitiveTypes primitiveType) : base(ChunkID)
     {
         Version = version;
-        _shaderName = new(this, shaderName);
+        _shaderName = new(this, shaderName, nameof(ShaderName));
         PrimitiveType = primitiveType;
     }
 

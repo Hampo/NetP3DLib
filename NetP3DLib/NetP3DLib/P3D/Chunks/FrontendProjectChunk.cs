@@ -73,10 +73,10 @@ public class FrontendProjectChunk : NamedChunk
         Version = version;
         ResolutionX = resolutionX;
         ResolutionY = resolutionY;
-        _platform = new(this, platform);
-        _pagePath = new(this, pagePath);
-        _resourcePath = new(this, resourcePath);
-        _screenPath = new(this, screenPath);
+        _platform = new(this, platform, nameof(Platform));
+        _pagePath = new(this, pagePath, nameof(PagePath));
+        _resourcePath = new(this, resourcePath, nameof(ResourcePath));
+        _screenPath = new(this, screenPath, nameof(ScreenPath));
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

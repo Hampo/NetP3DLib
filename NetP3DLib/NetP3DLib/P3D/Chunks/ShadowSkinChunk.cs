@@ -49,7 +49,7 @@ public class ShadowSkinChunk : NamedChunk
     public ShadowSkinChunk(string name, uint version, string skeletonName, uint numVertices, uint numTriangles) : base(ChunkID, name)
     {
         Version = version;
-        _skeletonName = new(this, skeletonName);
+        _skeletonName = new(this, skeletonName, nameof(SkeletonName));
         NumVertices = numVertices;
         NumTriangles = numTriangles;
     }

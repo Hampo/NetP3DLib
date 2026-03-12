@@ -143,7 +143,7 @@ public class PrimitiveGroupChunk : Chunk
     public PrimitiveGroupChunk(uint version, string shaderName, PrimitiveTypes primitiveType, uint numVertices, uint numIndices, uint numMatrices, uint memoryImaged, uint optimized, uint vertexAnimated, uint vertexAnimationMask) : base(ChunkID)
     {
         Version = version;
-        _shaderName = new(this, shaderName);
+        _shaderName = new(this, shaderName, nameof(ShaderName));
         PrimitiveType = primitiveType;
         NumVertices = numVertices;
         NumIndices = numIndices;

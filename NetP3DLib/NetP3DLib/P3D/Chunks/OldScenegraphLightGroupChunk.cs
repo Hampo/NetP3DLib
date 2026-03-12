@@ -40,7 +40,7 @@ public class OldScenegraphLightGroupChunk : NamedChunk
 
     public OldScenegraphLightGroupChunk(string name, string lightGroupName) : base(ChunkID, name)
     {
-        _lightGroupName = new(this, lightGroupName);
+        _lightGroupName = new(this, lightGroupName, nameof(LightGroupName));
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

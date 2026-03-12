@@ -46,7 +46,7 @@ public class ParticleSystem2Chunk : NamedChunk
     public ParticleSystem2Chunk(uint version, string name, string factoryName) : base(ChunkID, name)
     {
         Version = version;
-        _factoryName = new(this, factoryName);
+        _factoryName = new(this, factoryName, nameof(FactoryName));
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

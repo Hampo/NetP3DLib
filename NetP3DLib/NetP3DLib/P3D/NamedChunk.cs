@@ -6,7 +6,6 @@ using System.Collections.Generic;
 
 namespace NetP3DLib.P3D;
 
-#pragma warning disable CS8618
 public abstract class NamedChunk : Chunk
 {
     internal readonly P3DString _name;
@@ -18,7 +17,7 @@ public abstract class NamedChunk : Chunk
 
     protected NamedChunk(uint ID, string name) : base(ID)
     {
-        _name = new(this, name);
+        _name = new(this, name, nameof(Name));
     }
 
     protected NamedChunk(ChunkIdentifier ID, string name) : this((uint)ID, name)
@@ -36,4 +35,3 @@ public abstract class NamedChunk : Chunk
 
     public override string ToString() => $"\"{Name}\" ({GetChunkType(this)} (0x{ID:X}))";
 }
-#pragma warning restore CS8618

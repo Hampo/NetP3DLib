@@ -67,10 +67,10 @@ public class FrontendPure3DResourceChunk : NamedChunk
     public FrontendPure3DResourceChunk(string name, uint version, string filename, string inventoryName, string cameraName, string animationName) : base(ChunkID, name)
     {
         Version = version;
-        _filename = new(this, filename);
-        _inventoryName = new(this, inventoryName);
-        _cameraName = new(this, cameraName);
-        _animationName = new(this, animationName);
+        _filename = new(this, filename, nameof(Filename));
+        _inventoryName = new(this, inventoryName, nameof(InventoryName));
+        _cameraName = new(this, cameraName, nameof(CameraName));
+        _animationName = new(this, animationName, nameof(AnimationName));
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

@@ -48,7 +48,7 @@ public class AnimatedObjectFactoryChunk : NamedChunk
     public AnimatedObjectFactoryChunk(uint version, string name, string baseAnimation, uint numAnimations) : base(ChunkID, name)
     {
         Version = version;
-        _baseAnimation = new(this, baseAnimation);
+        _baseAnimation = new(this, baseAnimation, nameof(BaseAnimation));
         NumAnimations = numAnimations;
     }
 

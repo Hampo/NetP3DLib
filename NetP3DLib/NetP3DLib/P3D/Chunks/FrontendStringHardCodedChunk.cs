@@ -40,7 +40,7 @@ public class FrontendStringHardCodedChunk : Chunk
 
     public FrontendStringHardCodedChunk(string @string) : base(ChunkID)
     {
-        _string = new(this, @string);
+        _string = new(this, @string, nameof(String));
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

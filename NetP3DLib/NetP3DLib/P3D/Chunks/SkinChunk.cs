@@ -51,7 +51,7 @@ public class SkinChunk : NamedChunk
     public SkinChunk(string name, uint version, string skeletonName) : base(ChunkID, name)
     {
         Version = version;
-        _skeletonName = new(this, skeletonName);
+        _skeletonName = new(this, skeletonName, nameof(SkeletonName));
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

@@ -46,7 +46,7 @@ public class FrontendImageResourceChunk : NamedChunk
     public FrontendImageResourceChunk(string name, uint version, string filename) : base(ChunkID, name)
     {
         Version = version;
-        _filename = new(this, filename);
+        _filename = new(this, filename, nameof(Filename));
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

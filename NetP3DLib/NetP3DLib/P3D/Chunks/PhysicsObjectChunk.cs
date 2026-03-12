@@ -52,7 +52,7 @@ public class PhysicsObjectChunk : NamedChunk
     public PhysicsObjectChunk(string name, uint version, string materialName, uint numJoints, float volume, float restingSensitivity) : base(ChunkID, name)
     {
         Version = version;
-        _materialName = new(this, materialName);
+        _materialName = new(this, materialName, nameof(MaterialName));
         NumJoints = numJoints;
         Volume = volume;
         RestingSensitivity = restingSensitivity;

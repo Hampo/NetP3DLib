@@ -60,7 +60,7 @@ public class TextureAnimationChunk : NamedChunk
     public TextureAnimationChunk(string name, uint version, string materialName, uint numFrames, float frameRate, uint cyclic) : base(ChunkID, name)
     {
         Version = version;
-        _materialName = new(this, materialName);
+        _materialName = new(this, materialName, nameof(MaterialName));
         NumFrames = numFrames;
         FrameRate = frameRate;
         _cyclic = cyclic;

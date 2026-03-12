@@ -97,7 +97,7 @@ public class ShaderChunk : NamedChunk
     public ShaderChunk(string name, uint version, string pddiShaderName, uint hasTranslucency, VertexMasks vertexNeeds, VertexMasks vertexMask) : base(ChunkID, name)
     {
         Version = version;
-        _pddiShaderName = new(this, pddiShaderName);
+        _pddiShaderName = new(this, pddiShaderName, nameof(PddiShaderName));
         _hasTranslucency = hasTranslucency;
         VertexNeeds = vertexNeeds;
         VertexMask = vertexMask;

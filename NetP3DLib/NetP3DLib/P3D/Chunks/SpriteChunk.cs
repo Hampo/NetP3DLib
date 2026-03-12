@@ -55,7 +55,7 @@ public class SpriteChunk : NamedChunk
     {
         NativeX = nativeX;
         NativeY = nativeY;
-        _shader = new(this, shader);
+        _shader = new(this, shader, nameof(Shader));
         ImageWidth = imageWidth;
         ImageHeight = imageHeight;
         BlitBorder = blitBorder;

@@ -95,8 +95,8 @@ public class RoadChunk : NamedChunk
     public RoadChunk(string name, uint type, string startIntersection, string endIntersection, uint maximumCars, uint bitmask) : base(ChunkID, name)
     {
         Type = type;
-        _startIntersection = new(this, startIntersection);
-        _endIntersection = new(this, endIntersection);
+        _startIntersection = new(this, startIntersection, nameof(StartIntersection));
+        _endIntersection = new(this, endIntersection, nameof(EndIntersection));
         MaximumCars = maximumCars;
         _bitmask = bitmask;
     }

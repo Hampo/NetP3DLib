@@ -70,7 +70,7 @@ public class OldBillboardQuadGroupChunk : NamedChunk
     public OldBillboardQuadGroupChunk(uint version, string name, string shader, uint zTest, uint zWrite, uint occlusion) : base(ChunkID, name)
     {
         Version = version;
-        _shader = new(this, shader);
+        _shader = new(this, shader, nameof(Shader));
         _zTest = zTest;
         _zWrite = zWrite;
         Occlusion = occlusion;

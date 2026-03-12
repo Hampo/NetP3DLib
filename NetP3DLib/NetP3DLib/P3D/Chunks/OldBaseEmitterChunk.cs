@@ -93,8 +93,8 @@ public class OldBaseEmitterChunk : NamedChunk
     public OldBaseEmitterChunk(uint version, string name, string particleType, string generatorType, uint zTest, uint zWrite, uint fog, uint maxParticles, uint infiniteLife, float rotationalCohesion, float translationCohesion) : base(ChunkID, name)
     {
         Version = version;
-        _particleType = new(this, particleType);
-        _generatorType = new(this, generatorType);
+        _particleType = new(this, particleType, nameof(ParticleType));
+        _generatorType = new(this, generatorType, nameof(GeneratorType));
         _zTest = zTest;
         _zWrite = zWrite;
         _fog = fog;

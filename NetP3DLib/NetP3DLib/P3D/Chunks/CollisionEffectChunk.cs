@@ -62,7 +62,7 @@ public class CollisionEffectChunk : Chunk
     {
         ClassType = classType;
         PhysPropID = phyPropID;
-        _soundResourceDataName = new(this, soundResourceDataName);
+        _soundResourceDataName = new(this, soundResourceDataName, nameof(SoundResourceDataName));
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

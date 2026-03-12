@@ -58,7 +58,7 @@ public class TextureFontChunk : NamedChunk
     public TextureFontChunk(uint version, string name, string shader, float fontSize, float fontWidth, float fontHeight, float fontBaseLine) : base(ChunkID, name)
     {
         Version = version;
-        _shader = new(this, shader);
+        _shader = new(this, shader, nameof(Shader));
         FontSize = fontSize;
         FontWidth = fontWidth;
         FontHeight = fontHeight;

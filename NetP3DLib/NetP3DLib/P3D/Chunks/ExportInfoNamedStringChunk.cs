@@ -40,7 +40,7 @@ public class ExportInfoNamedStringChunk : NamedChunk
 
     public ExportInfoNamedStringChunk(string name, string value) : base(ChunkID, name)
     {
-        _value = new(this, value);
+        _value = new(this, value, nameof(Value));
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

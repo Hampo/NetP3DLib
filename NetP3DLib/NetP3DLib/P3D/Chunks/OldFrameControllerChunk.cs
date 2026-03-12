@@ -79,8 +79,8 @@ public class OldFrameControllerChunk : NamedChunk
         Version = version;
         Type = type;
         FrameOffset = frameOffset;
-        _hierarchyName = new(this, hierarchyName);
-        _animationName = new(this, animationName);
+        _hierarchyName = new(this, hierarchyName, nameof(HierarchyName));
+        _animationName = new(this, animationName, nameof(AnimationName));
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

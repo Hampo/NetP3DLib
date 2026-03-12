@@ -68,10 +68,10 @@ public class OldSpriteEmitterChunk : NamedChunk
     public OldSpriteEmitterChunk(uint version, string name, string shaderName, string angleMode, float angle, string textureAnimMode, uint numTextureFrames, uint textureFrameRate) : base(ChunkID, name)
     {
         Version = version;
-        _shaderName = new(this, shaderName);
-        _angleMode = new(this, angleMode);
+        _shaderName = new(this, shaderName, nameof(ShaderName));
+        _angleMode = new(this, angleMode, nameof(AngleMode));
         Angle = angle;
-        _textureAnimMode = new(this, textureAnimMode);
+        _textureAnimMode = new(this, textureAnimMode, nameof(TextureAnimMode));
         NumTextureFrames = numTextureFrames;
         TextureFrameRate = textureFrameRate;
     }

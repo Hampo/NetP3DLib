@@ -40,7 +40,7 @@ public class CompositeDrawableChunk : NamedChunk
 
     public CompositeDrawableChunk(string name, string skeletonName) : base(ChunkID, name)
     {
-        _skeletonName = new(this, skeletonName);
+        _skeletonName = new(this, skeletonName, nameof(SkeletonName));
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

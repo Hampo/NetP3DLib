@@ -51,7 +51,7 @@ public class VisibilityAnimChunk : NamedChunk
 
     public VisibilityAnimChunk(string name, string sceneName, uint version, uint numFrames, float frameRate) : base(ChunkID, name)
     {
-        _sceneName = new(this, sceneName);
+        _sceneName = new(this, sceneName, nameof(SceneName));
         Version = version;
         NumFrames = numFrames;
         FrameRate = frameRate;

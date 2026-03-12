@@ -39,7 +39,7 @@ public class ShaderDefinitionChunk : NamedChunk
 
     public ShaderDefinitionChunk(string name, string definition) : base(ChunkID, name)
     {
-        _definition = new(this, definition);
+        _definition = new(this, definition, nameof(Definition));
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

@@ -26,14 +26,10 @@ public class ChunkGenerator : IIncrementalGenerator
         var symbol = (INamedTypeSymbol)context.TargetSymbol;
         var attribute = context.Attributes.First(a => a.AttributeClass?.ToDisplayString() == ChunkAttributesFullName);
 
-        // Assuming the ID is the first constructor argument of the attribute
         if (attribute.ConstructorArguments.Length == 0 || attribute.ConstructorArguments[0].Value is not uint id)
             return null;
 
-        return new ChunkData(
-            FullyQualifiedName: symbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
-            Identifier: id
-        );
+        return new ChunkData(symbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat), id);
     }
 
     private static void Execute(SourceProductionContext context, System.Collections.Immutable.ImmutableArray<ChunkData?> chunks)
@@ -55,7 +51,6 @@ public class ChunkGenerator : IIncrementalGenerator
 
         foreach (var chunk in chunks.Where(c => c != null))
         {
-            // Instead of using Reflection and Expressions, we just write the exact code needed!
             sb.AppendLine($"            ChunkTypes[{chunk!.Identifier}] = (typeof({chunk.FullyQualifiedName}), br => new {chunk.FullyQualifiedName}(br));");
             sb.AppendLine($"            ChunkTypeMap[typeof({chunk.FullyQualifiedName})] = {chunk!.Identifier};");
         }

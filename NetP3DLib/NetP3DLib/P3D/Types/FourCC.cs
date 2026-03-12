@@ -1,11 +1,10 @@
-﻿using NetP3DLib.P3D.Extensions;
-using System.IO;
-
-namespace NetP3DLib.P3D.Types;
+﻿namespace NetP3DLib.P3D.Types;
 
 internal class FourCC
 {
     private readonly Chunk _chunk;
+    private readonly string _propertyName;
+
     private string _value;
     public string Value
     {
@@ -18,18 +17,14 @@ internal class FourCC
             var oldSize = _chunk.HeaderSize;
             _value = value;
             _chunk.RecalculateSize(oldSize);
+            _chunk.OnPropertyUpdated(_propertyName);
         }
     }
 
-    internal FourCC(Chunk chunk, BinaryReader br)
-    {
-        _chunk = chunk;
-        _value = br.ReadFourCC();
-    }
-
-    internal FourCC(Chunk chunk, string value)
+    internal FourCC(Chunk chunk, string value, string propertyName)
     {
         _chunk = chunk;
         _value = value;
+        _propertyName = propertyName;
     }
 }

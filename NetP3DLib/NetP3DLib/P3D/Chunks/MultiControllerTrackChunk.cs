@@ -47,7 +47,7 @@ public class MultiControllerTrackChunk : NamedChunk
     public MultiControllerTrackChunk(uint version, string name, string type) : base(ChunkID, name)
     {
         Version = version;
-        _type = new(this, type);
+        _type = new(this, type, nameof(Type));
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

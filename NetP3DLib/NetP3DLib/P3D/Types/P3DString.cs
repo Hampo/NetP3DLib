@@ -1,11 +1,10 @@
-﻿using NetP3DLib.P3D.Extensions;
-using System.IO;
-
-namespace NetP3DLib.P3D.Types;
+﻿namespace NetP3DLib.P3D.Types;
 
 internal class P3DString
 {
     private readonly Chunk _chunk;
+    private readonly string _propertyName;
+
     private string _value;
     public string Value
     {
@@ -18,18 +17,14 @@ internal class P3DString
             var oldSize = _chunk.HeaderSize;
             _value = value;
             _chunk.RecalculateSize(oldSize);
+            _chunk.OnPropertyUpdated(_propertyName);
         }
     }
 
-    internal P3DString(Chunk chunk, BinaryReader br)
-    {
-        _chunk = chunk;
-        _value = br.ReadP3DString();
-    }
-
-    internal P3DString(Chunk chunk, string value)
+    internal P3DString(Chunk chunk, string value, string propertyName)
     {
         _chunk = chunk;
         _value = value;
+        _propertyName = propertyName;
     }
 }

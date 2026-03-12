@@ -53,8 +53,8 @@ public class FrontendTextStyleResourceChunk : NamedChunk
     public FrontendTextStyleResourceChunk(string name, uint version, string filename, string inventoryName) : base(ChunkID, name)
     {
         Version = version;
-        _filename = new(this, filename);
-        _inventoryName = new(this, inventoryName);
+        _filename = new(this, filename, nameof(Filename));
+        _inventoryName = new(this, inventoryName, nameof(InventoryName));
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

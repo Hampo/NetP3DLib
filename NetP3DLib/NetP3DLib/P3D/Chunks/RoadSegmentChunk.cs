@@ -45,7 +45,7 @@ public class RoadSegmentChunk : NamedChunk
 
     public RoadSegmentChunk(string name, string roadDataSegment, Matrix4x4 transform, Matrix4x4 scale) : base(ChunkID, name)
     {
-        _roadDataSegment = new(this, roadDataSegment);
+        _roadDataSegment = new(this, roadDataSegment, nameof(RoadDataSegment));
         Transform = transform;
         Scale = scale;
     }

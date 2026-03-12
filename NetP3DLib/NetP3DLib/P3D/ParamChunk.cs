@@ -7,7 +7,6 @@ using System.Collections.Generic;
 
 namespace NetP3DLib.P3D;
 
-#pragma warning disable CS8618
 public abstract class ParamChunk : Chunk
 {
     internal readonly FourCC _param;
@@ -20,7 +19,7 @@ public abstract class ParamChunk : Chunk
 
     public ParamChunk(uint ID, string param) : base(ID)
     {
-        _param = new(this, param);
+        _param = new(this, param, nameof(Param));
     }
 
     public ParamChunk(ChunkIdentifier ID, string param) : this((uint)ID, param)
@@ -38,4 +37,3 @@ public abstract class ParamChunk : Chunk
 
     public override string ToString() => $"\"{Param}\" ({GetChunkType(this)} (0x{ID:X}))";
 }
-#pragma warning restore CS8618

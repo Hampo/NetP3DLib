@@ -69,7 +69,7 @@ public class OldBillboardQuadChunk : NamedChunk
     public OldBillboardQuadChunk(uint version, string name, string billboardMode, Vector3 translation, Color colour, Vector2 uv0, Vector2 uv1, Vector2 uv2, Vector2 uv3, float width, float height, float distance, Vector2 uvOffset) : base(ChunkID, name)
     {
         Version = version;
-        _billboardMode = new(this, billboardMode);
+        _billboardMode = new(this, billboardMode, nameof(BillboardMode));
         Translation = translation;
         Colour = colour;
         UV0 = uv0;

@@ -83,7 +83,7 @@ public class FrontendPure3DObjectChunk : NamedChunk
         Colour = colour;
         Translucency = translucency;
         RotationValue = rotationValue;
-        _pure3DFilename = new(this, pure3DFilename);
+        _pure3DFilename = new(this, pure3DFilename, nameof(Pure3DFilename));
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

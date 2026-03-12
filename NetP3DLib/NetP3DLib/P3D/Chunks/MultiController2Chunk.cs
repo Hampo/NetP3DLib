@@ -59,7 +59,7 @@ public class MultiController2Chunk : NamedChunk
     public MultiController2Chunk(uint version, string name, string cycleMode, uint numCycles, uint infiniteCycle, float numFrames, float frameRate) : base(ChunkID, name)
     {
         Version = version;
-        _cycleMode = new(this, cycleMode);
+        _cycleMode = new(this, cycleMode, nameof(CycleMode));
         NumCycles = numCycles;
         InfiniteCycle = infiniteCycle;
         NumFrames = numFrames;

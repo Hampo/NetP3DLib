@@ -64,8 +64,8 @@ public class ExpressionMixerChunk : NamedChunk
     {
         Version = version;
         Type = type;
-        _targetName = new(this, targetName);
-        _expressionGroupName = new(this, expressionGroupName);
+        _targetName = new(this, targetName, nameof(TargetName));
+        _expressionGroupName = new(this, expressionGroupName, nameof(ExpressionGroupName));
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

@@ -66,7 +66,7 @@ public class SpriteParticleEmitterChunk : NamedChunk
     public SpriteParticleEmitterChunk(uint version, string name, string shaderName, uint updateMode, uint zTest, uint zWrite, uint maxParticles, uint infiniteLife, uint numTextureFrames, uint textureFrameRate, float initialAngle, float initialAngleVariance, float translationalCohesion, float rotationalCohesion) : base(ChunkID, name)
     {
         Version = version;
-        _shaderName = new(this, shaderName);
+        _shaderName = new(this, shaderName, nameof(ShaderName));
         UpdateMode = updateMode;
         ZTest = zTest;
         ZWrite = zWrite;

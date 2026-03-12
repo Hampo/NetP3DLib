@@ -61,8 +61,8 @@ public class SmartPropChunk : NamedChunk
     public SmartPropChunk(uint version, string name, string objectFactoryName, string material, uint materialEnum, uint numBreakables, uint renderingCost, uint simulationCost, uint numStates) : base(ChunkID, name)
     {
         Version = version;
-        _objectFactoryName = new(this, objectFactoryName);
-        _material = new(this, material);
+        _objectFactoryName = new(this, objectFactoryName, nameof(ObjectFactoryName));
+        _material = new(this, material, nameof(Material));
         MaterialEnum = materialEnum;
         NumBreakables = numBreakables;
         RenderingCost = renderingCost;

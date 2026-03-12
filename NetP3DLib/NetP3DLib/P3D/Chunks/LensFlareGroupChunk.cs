@@ -77,7 +77,7 @@ public class LensFlareGroupChunk : NamedChunk
     public LensFlareGroupChunk(uint version, string name, string shaderName, uint zTest, uint zWrite, uint fog, float sourceRadius, float edgeRadius) : base(ChunkID, name)
     {
         Version = version;
-        _shaderName = new(this, shaderName);
+        _shaderName = new(this, shaderName, nameof(ShaderName));
         _zTest = zTest;
         _zWrite = zWrite;
         _fog = fog;

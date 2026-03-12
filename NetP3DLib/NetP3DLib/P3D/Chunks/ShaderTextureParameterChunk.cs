@@ -40,7 +40,7 @@ public class ShaderTextureParameterChunk : ParamChunk
 
     public ShaderTextureParameterChunk(string param, string value) : base(ChunkID, param)
     {
-        _value = new(this, value);
+        _value = new(this, value, nameof(Value));
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

@@ -52,7 +52,7 @@ public class OldScenegraphDrawableChunk : NamedChunk
 
     public OldScenegraphDrawableChunk(string name, string drawableName, uint isTranslucent) : base(ChunkID, name)
     {
-        _drawableName = new(this, drawableName);
+        _drawableName = new(this, drawableName, nameof(DrawableName));
         _isTranslucent = isTranslucent;
     }
 

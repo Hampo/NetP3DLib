@@ -102,7 +102,7 @@ public class FrontendMultiTextChunk : NamedChunk
         Colour = colour;
         Translucency = translucency;
         RotationValue = rotationValue;
-        _textStyleName = new(this, textStyleName);
+        _textStyleName = new(this, textStyleName, nameof(TextStyleName));
         _shadowEnabled = shadowEnabled;
         ShadowColour = shadowColour;
         ShadowOffsetX = shadowOffsetX;

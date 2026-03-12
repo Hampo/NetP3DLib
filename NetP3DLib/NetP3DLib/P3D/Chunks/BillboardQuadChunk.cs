@@ -60,7 +60,7 @@ public class BillboardQuadChunk : NamedChunk
         Version = version;
         CutOffEnabled = cutOffEnabled;
         Perspective = perspective;
-        _axisMode = new(this, axisMode);
+        _axisMode = new(this, axisMode, nameof(AxisMode));
         Colour = colour;
         Width = width;
         Height = height;

@@ -79,7 +79,7 @@ public class ExpressionGroupChunk : NamedChunk
     public ExpressionGroupChunk(uint version, string name, string targetName, IList<Stage> stages) : base(ChunkID, name)
     {
         Version = version;
-        _targetName = new(this, targetName);
+        _targetName = new(this, targetName, nameof(TargetName));
         Stages = CreateSizeAwareList(stages);
     }
 

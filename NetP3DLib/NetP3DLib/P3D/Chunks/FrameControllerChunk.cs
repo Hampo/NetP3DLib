@@ -73,12 +73,12 @@ public class FrameControllerChunk : NamedChunk
     public FrameControllerChunk(uint version, string name, string type, string cycleMode, uint numCycles, uint infiniteCycle, string hierarchyName, string animationName) : base(ChunkID, name)
     {
         Version = version;
-        _type = new(this, type);
-        _cycleMode = new(this, cycleMode);
+        _type = new(this, type, nameof(Type));
+        _cycleMode = new(this, cycleMode, nameof(CycleMode));
         NumCycles = numCycles;
         InfiniteCycle = infiniteCycle;
-        _hierarchyName = new(this, hierarchyName);
-        _animationName = new(this, animationName);
+        _hierarchyName = new(this, hierarchyName, nameof(HierarchyName));
+        _animationName = new(this, animationName, nameof(AnimationName));
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
