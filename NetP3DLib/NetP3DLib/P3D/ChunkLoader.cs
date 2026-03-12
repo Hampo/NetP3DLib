@@ -93,8 +93,7 @@ public static partial class ChunkLoader
             if (ctor1 == null && ctor2 == null)
             {
                 if (throwOnInvalid)
-                    throw new InvalidOperationException(
-                        $"Type {chunkType.FullName} must have a constructor with (EndianAwareBinaryReader) or (EndianAwareBinaryReader,uint).");
+                    throw new InvalidOperationException($"Type {chunkType.FullName} must have a constructor with (EndianAwareBinaryReader) or (EndianAwareBinaryReader,uint).");
 
 #if DEBUG
                 Console.WriteLine($"[ChunkLoader] Skipped: {chunkType.FullName} lacks expected constructor.");
