@@ -28,11 +28,8 @@ public static partial class ChunkLoader
         ChunkTypes = [];
         ChunkTypeMap = [];
 
-#if !DEBUG
         LoadInternalChunks();
-#else
-        LoadChunkTypes("NetP3DLib.P3D.Chunks", true, true);
-        LoadChunkTypes("NetP3DLib.P3D.UnknownChunks", true, true);
+#if DEBUG
         Console.WriteLine($"Known chunk identifiers: {Enum.GetValues(typeof(ChunkIdentifier)).Length}. Loaded chunk classes: {ChunkTypes.Count}.");
         foreach (var chunkIdentifier in Enum.GetValues(typeof(ChunkIdentifier)))
             if (!ChunkTypes.ContainsKey((uint)chunkIdentifier))
