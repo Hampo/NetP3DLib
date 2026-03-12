@@ -17,7 +17,7 @@ namespace NetP3DLib.P3D;
 
 public static partial class ChunkLoader
 {
-    public static readonly Dictionary<uint, (Type, Func<EndianAwareBinaryReader, Chunk>)> ChunkTypes;
+    public static readonly Dictionary<uint, (Type, Func<EndianAwareBinaryReader, uint, Chunk>)> ChunkTypes;
     public static readonly Dictionary<Type, uint> ChunkTypeMap;
 #if DEBUG
     public static HashSet<uint> UnknownChunks = [];
@@ -91,12 +91,13 @@ public static partial class ChunkLoader
                 throw new InvalidOperationException($"Chunk type with identifier 0x{chunkAttriutes.Identifier:X} already exists.");
 
 
-            var ctor = chunkType.GetConstructor([typeof(EndianAwareBinaryReader)]);
-            if (ctor == null)
+            var ctor1 = chunkType.GetConstructor([typeof(EndianAwareBinaryReader)]);
+            var ctor2 = chunkType.GetConstructor([typeof(EndianAwareBinaryReader), typeof(uint)]);
+            if (ctor1 == null && ctor2 == null)
             {
                 if (throwOnInvalid)
                     throw new InvalidOperationException(
-                        $"Type {chunkType.FullName} must have a constructor with a EndianAwareBinaryReader parameter.");
+                        $"Type {chunkType.FullName} must have a constructor with (EndianAwareBinaryReader) or (EndianAwareBinaryReader,uint).");
 
 #if DEBUG
                 Console.WriteLine($"[ChunkLoader] Skipped: {chunkType.FullName} lacks expected constructor.");
@@ -104,9 +105,20 @@ public static partial class ChunkLoader
                 continue;
             }
 
-            var param = Expression.Parameter(typeof(EndianAwareBinaryReader), "br");
-            var newExpr = Expression.New(ctor, param);
-            var lambda = Expression.Lambda<Func<EndianAwareBinaryReader, Chunk>>(newExpr, param);
+            var brParam = Expression.Parameter(typeof(EndianAwareBinaryReader), "br");
+            var headerParam = Expression.Parameter(typeof(uint), "headerSize");
+
+            Expression newExpr;
+            if (ctor2 != null)
+            {
+                newExpr = Expression.New(ctor2, brParam, headerParam);
+            }
+            else
+            {
+                newExpr = Expression.New(ctor1, brParam);
+            }
+
+            var lambda = Expression.Lambda<Func<EndianAwareBinaryReader, uint, Chunk>>(newExpr, brParam, headerParam);
             ChunkTypes[chunkAttriutes.Identifier] = (chunkType, lambda.Compile());
             ChunkTypeMap[chunkType] = chunkAttriutes.Identifier;
         }
@@ -133,7 +145,7 @@ public static partial class ChunkLoader
             var startPos = br.BaseStream.Position;
             var expectedEndPos = startPos + headerSize;
 
-            c = chunkConstructor(br);
+            c = chunkConstructor(br, headerSize);
 
             var actualEndPos = br.BaseStream.Position;
 

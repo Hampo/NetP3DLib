@@ -73,8 +73,7 @@ public class OldOffsetListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) + OffsetEntry.Size * NumOffsets + (HasPrimGroupIndex ? sizeof(uint) : 0u);
 
-    // TODO: Implement `PrimGroupIndex`
-    public OldOffsetListChunk(EndianAwareBinaryReader br) : this(ReadKeyIndex(br, out var numOffsets), ListHelper.ReadArray(numOffsets, () => new OffsetEntry(br)), br.ReadUInt32())
+    public OldOffsetListChunk(EndianAwareBinaryReader br, uint headerSize) : this(ReadKeyIndex(br, out var numOffsets), ListHelper.ReadArray(numOffsets, () => new OffsetEntry(br)), headerSize >= (sizeof(uint) + sizeof(uint) + OffsetEntry.Size * numOffsets + sizeof(uint)) ? br.ReadUInt32() : null)
     {
     }
 

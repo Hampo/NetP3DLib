@@ -8,6 +8,7 @@ namespace NetP3DLib.Generators;
 public class ChunkGenerator : IIncrementalGenerator
 {
     private const string ChunkAttributesFullName = "NetP3DLib.P3D.Attributes.ChunkAttributes";
+    private const string EndianAwareBinaryReaderFullName = "NetP3DLib.IO.EndianAwareBinaryReader";
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
@@ -29,7 +30,26 @@ public class ChunkGenerator : IIncrementalGenerator
         if (attribute.ConstructorArguments.Length == 0 || attribute.ConstructorArguments[0].Value is not uint id)
             return null;
 
-        return new ChunkData(symbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat), id);
+        bool hasHeaderCtor = false;
+
+        foreach (var ctor in symbol.InstanceConstructors)
+        {
+            var paramaters = ctor.Parameters;
+
+            if (paramaters.Length != 2)
+                continue;
+
+            if (paramaters[0].Type.ToDisplayString() != EndianAwareBinaryReaderFullName)
+                continue;
+
+            if (paramaters[1].Type.SpecialType != SpecialType.System_UInt32)
+                continue;
+
+            hasHeaderCtor = true;
+            break;
+        }
+
+        return new ChunkData(symbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat), id, hasHeaderCtor);
     }
 
     private static void Execute(SourceProductionContext context, System.Collections.Immutable.ImmutableArray<ChunkData?> chunks)
@@ -51,7 +71,11 @@ public class ChunkGenerator : IIncrementalGenerator
 
         foreach (var chunk in chunks.Where(c => c != null))
         {
-            sb.AppendLine($"            ChunkTypes[{chunk!.Identifier}] = (typeof({chunk.FullyQualifiedName}), br => new {chunk.FullyQualifiedName}(br));");
+            if (chunk!.HasHeaderSizeCtor)
+                sb.AppendLine($"            ChunkTypes[{chunk.Identifier}] = (typeof({chunk.FullyQualifiedName}), (br, headerSize) => new {chunk.FullyQualifiedName}(br, headerSize));");
+            else
+                sb.AppendLine($"            ChunkTypes[{chunk.Identifier}] = (typeof({chunk.FullyQualifiedName}), (br, _) => new {chunk.FullyQualifiedName}(br));");
+
             sb.AppendLine($"            ChunkTypeMap[typeof({chunk.FullyQualifiedName})] = {chunk!.Identifier};");
         }
 
@@ -62,5 +86,5 @@ public class ChunkGenerator : IIncrementalGenerator
         context.AddSource("ChunkLoader.g.cs", sb.ToString());
     }
 
-    private record ChunkData(string FullyQualifiedName, uint Identifier);
+    private record ChunkData(string FullyQualifiedName, uint Identifier, bool HasHeaderSizeCtor);
 }
