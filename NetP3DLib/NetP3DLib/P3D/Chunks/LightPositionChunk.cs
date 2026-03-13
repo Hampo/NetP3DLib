@@ -12,7 +12,20 @@ public class LightPositionChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Light_Position;
 
-    public Vector3 Position { get; set; }
+    private Vector3 _position;
+    public Vector3 Position
+    {
+        get => _position;
+        set
+        {
+            if (_position == value)
+                return;
+    
+            _position = value;
+            OnPropertyChanged(nameof(Position));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -33,7 +46,7 @@ public class LightPositionChunk : Chunk
 
     public LightPositionChunk(Vector3 position) : base(ChunkID)
     {
-        Position = position;
+        _position = position;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

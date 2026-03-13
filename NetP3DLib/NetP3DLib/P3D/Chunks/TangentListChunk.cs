@@ -59,8 +59,10 @@ public class TangentListChunk : Chunk
 
     public TangentListChunk(IList<Vector3> tangents) : base(ChunkID)
     {
-        Tangents = CreateSizeAwareList(tangents);
+        Tangents = CreateSizeAwareList(tangents, Tangents_CollectionChanged);
     }
+    
+    private void Tangents_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(Tangents));
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {

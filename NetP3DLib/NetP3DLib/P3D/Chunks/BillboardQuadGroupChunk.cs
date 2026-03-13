@@ -14,17 +14,83 @@ public class BillboardQuadGroupChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Billboard_Quad_Group;
 
-    public uint Version { get; set; }
+    private uint _version;
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     private readonly P3DString _shader;
     public string Shader
     {
         get => _shader?.Value ?? string.Empty;
         set => _shader.Value = value;
     }
-    public uint CutOffEnabled { get; set; }
-    public uint ZTest { get; set; }
-    public uint ZWrite { get; set; }
-    public uint OcclusionCulling { get; set; }
+    
+    private uint _cutOffEnabled;
+    public uint CutOffEnabled
+    {
+        get => _cutOffEnabled;
+        set
+        {
+            if (_cutOffEnabled == value)
+                return;
+    
+            _cutOffEnabled = value;
+            OnPropertyChanged(nameof(CutOffEnabled));
+        }
+    }
+    
+    private uint _zTest;
+    public uint ZTest
+    {
+        get => _zTest;
+        set
+        {
+            if (_zTest == value)
+                return;
+    
+            _zTest = value;
+            OnPropertyChanged(nameof(ZTest));
+        }
+    }
+    
+    private uint _zWrite;
+    public uint ZWrite
+    {
+        get => _zWrite;
+        set
+        {
+            if (_zWrite == value)
+                return;
+    
+            _zWrite = value;
+            OnPropertyChanged(nameof(ZWrite));
+        }
+    }
+    
+    private uint _occlusionCulling;
+    public uint OcclusionCulling
+    {
+        get => _occlusionCulling;
+        set
+        {
+            if (_occlusionCulling == value)
+                return;
+    
+            _occlusionCulling = value;
+            OnPropertyChanged(nameof(OcclusionCulling));
+        }
+    }
+    
     public uint NumQuads => GetChildCount(ChunkIdentifier.Billboard_Quad);
 
     public override byte[] DataBytes
@@ -55,12 +121,12 @@ public class BillboardQuadGroupChunk : NamedChunk
 
     public BillboardQuadGroupChunk(uint version, string name, string shader, uint cutOffEnabled, uint zTest, uint zWrite, uint occlusionCulling) : base(ChunkID, name)
     {
-        Version = version;
+        _version = version;
         _shader = new(this, shader, nameof(Shader));
-        CutOffEnabled = cutOffEnabled;
-        ZTest = zTest;
-        ZWrite = zWrite;
-        OcclusionCulling = occlusionCulling;
+        _cutOffEnabled = cutOffEnabled;
+        _zTest = zTest;
+        _zWrite = zWrite;
+        _occlusionCulling = occlusionCulling;
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

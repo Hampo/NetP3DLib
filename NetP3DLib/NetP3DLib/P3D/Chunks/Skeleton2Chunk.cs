@@ -12,11 +12,37 @@ public class Skeleton2Chunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Skeleton_2;
 
-    public uint Version { get; set; }
+    private uint _version;
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     public uint NumJoints => GetChildCount(ChunkIdentifier.Skeleton_Joint_2);
     public uint NumPartitions => GetChildCount(ChunkIdentifier.Skeleton_Partition);
     // TODO: Check if these are somehow automated
-    public uint NumLimbs { get; set; }
+    private uint _numLimbs;
+    public uint NumLimbs
+    {
+        get => _numLimbs;
+        set
+        {
+            if (_numLimbs == value)
+                return;
+    
+            _numLimbs = value;
+            OnPropertyChanged(nameof(NumLimbs));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -41,8 +67,8 @@ public class Skeleton2Chunk : NamedChunk
 
     public Skeleton2Chunk(string name, uint version, uint numLimbs) : base(ChunkID, name)
     {
-        Version = version;
-        NumLimbs = numLimbs;
+        _version = version;
+        _numLimbs = numLimbs;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

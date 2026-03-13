@@ -14,9 +14,35 @@ public class OldLocatorChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Locator;
 
+    private uint _version;
     [DefaultValue(257)]
-    public uint Version { get; set; }
-    public Vector3 Position { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
+    private Vector3 _position;
+    public Vector3 Position
+    {
+        get => _position;
+        set
+        {
+            if (_position == value)
+                return;
+    
+            _position = value;
+            OnPropertyChanged(nameof(Position));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -39,8 +65,8 @@ public class OldLocatorChunk : NamedChunk
 
     public OldLocatorChunk(string name, uint version, Vector3 position) : base(ChunkID, name)
     {
-        Version = version;
-        Position = position;
+        _version = version;
+        _position = position;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

@@ -17,7 +17,14 @@ public class OldScenegraphVisibilityChunk : NamedChunk
     public bool IsVisible
     {
         get => _isVisible != 0;
-        set => _isVisible = value ? 1u : 0u;
+        set
+        {
+            if (IsVisible == value)
+                return;
+
+            _isVisible = value ? 1u : 0u;
+            OnPropertyChanged(nameof(IsVisible));
+        }
     }
 
     public override byte[] DataBytes

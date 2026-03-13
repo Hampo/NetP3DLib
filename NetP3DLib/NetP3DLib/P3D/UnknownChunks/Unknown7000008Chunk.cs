@@ -1,6 +1,7 @@
 using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Collections;
+using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 
@@ -46,19 +47,16 @@ public class Unknown7000008Chunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(short) * NumUnknown;
 
-    public Unknown7000008Chunk(EndianAwareBinaryReader br) : base(0x7000008)
+    public Unknown7000008Chunk(EndianAwareBinaryReader br) : this(ListHelper.ReadArray(br.ReadInt32(), br.ReadInt16))
     {
-        var numUnknown = br.ReadInt32();
-        var unknown = new short[numUnknown];
-        for (var i = 0; i < numUnknown; i++)
-            unknown[i] = br.ReadInt16();
-        Unknown = CreateSizeAwareList(unknown);
     }
 
     public Unknown7000008Chunk(IList<short> unknown) : base(0x7000008)
     {
-        Unknown = CreateSizeAwareList(unknown);
+        Unknown = CreateSizeAwareList(unknown, Unknown_CollectionChanged);
     }
+
+    private void Unknown_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(Unknown));
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
     {

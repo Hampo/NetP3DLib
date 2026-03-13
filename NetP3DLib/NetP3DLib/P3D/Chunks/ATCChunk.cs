@@ -71,27 +71,35 @@ public class ATCChunk : Chunk
 
     public ATCChunk(IList<Entry> entries) : base(ChunkID)
     {
-        Entries = CreateSizeAwareList<Entry>(entries.Count);
-        Entries.CollectionChanged += Entries_CollectionChanged;
-
-        Entries.AddRange(entries);
+        Entries = CreateSizeAwareList(entries, Entries_CollectionChanged);
     }
 
     private void Entries_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
+        OnPropertyChanged(nameof(Entries));
+
         if (e.OldItems != null)
+        {
             foreach (Entry oldEntry in e.OldItems)
+            {
                 oldEntry.SizeChanged -= Entry_SizeChanged;
+                oldEntry.PropertyChanged -= Entry_PropertyChanged;
+            }
+        }
 
         if (e.NewItems != null)
+        {
             foreach (Entry newEntry in e.NewItems)
+            {
                 newEntry.SizeChanged += Entry_SizeChanged;
+                newEntry.PropertyChanged += Entry_PropertyChanged;
+            }
+        }
     }
 
-    private void Entry_SizeChanged(int delta)
-    {
-        RecalculateSize((uint)(HeaderSize - delta));
-    }
+    private void Entry_SizeChanged(int delta) => RecalculateSize((uint)(HeaderSize - delta));
+
+    private void Entry_PropertyChanged() => OnPropertyChanged(nameof(Entries));
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
@@ -121,6 +129,7 @@ public class ATCChunk : Chunk
     public class Entry
     {
         public event Action<int>? SizeChanged;
+        public event Action? PropertyChanged;
 
         private string _soundResourceDataName = string.Empty;
         public string SoundResourceDataName
@@ -128,12 +137,14 @@ public class ATCChunk : Chunk
             get => _soundResourceDataName;
             set
             {
-                if (_soundResourceDataName == value) return;
+                if (_soundResourceDataName == value)
+                    return;
 
                 var oldSize = DataLength;
                 _soundResourceDataName = value;
                 var newSize = DataLength;
                 SizeChanged?.Invoke((int)(newSize - oldSize));
+                PropertyChanged?.Invoke();
             }
         }
 
@@ -143,12 +154,14 @@ public class ATCChunk : Chunk
             get => _particle;
             set
             {
-                if (_particle == value) return;
+                if (_particle == value)
+                    return;
 
                 var oldSize = DataLength;
                 _particle = value;
                 var newSize = DataLength;
                 SizeChanged?.Invoke((int)(newSize - oldSize));
+                PropertyChanged?.Invoke();
             }
         }
 
@@ -158,17 +171,58 @@ public class ATCChunk : Chunk
             get => _breakableObject;
             set
             {
-                if (_breakableObject == value) return;
+                if (_breakableObject == value)
+                    return;
 
                 var oldSize = DataLength;
                 _breakableObject = value;
                 var newSize = DataLength;
                 SizeChanged?.Invoke((int)(newSize - oldSize));
+                PropertyChanged?.Invoke();
             }
         }
-        public float Friction { get; set; }
-        public float Mass { get; set; }
-        public float Elasticity { get; set; }
+    
+        private float _friction;
+        public float Friction
+        {
+            get => _friction;
+            set
+            {
+                if (_friction == value)
+                    return;
+    
+                _friction = value;
+                PropertyChanged?.Invoke();
+            }
+        }
+    
+        private float _mass;
+        public float Mass
+        {
+            get => _mass;
+            set
+            {
+                if (_mass == value)
+                    return;
+    
+                _mass = value;
+                PropertyChanged?.Invoke();
+            }
+        }
+    
+        private float _elasticity;
+        public float Elasticity
+        {
+            get => _elasticity;
+            set
+            {
+                if (_elasticity == value)
+                    return;
+    
+                _elasticity = value;
+                PropertyChanged?.Invoke();
+            }
+        }
 
         public byte[] DataBytes
         {
@@ -192,31 +246,31 @@ public class ATCChunk : Chunk
         public Entry(BinaryReader br)
         {
             _soundResourceDataName = br.ReadP3DString();
-            Particle = br.ReadP3DString();
-            BreakableObject = br.ReadP3DString();
-            Friction = br.ReadSingle();
-            Mass = br.ReadSingle();
-            Elasticity = br.ReadSingle();
+            _particle = br.ReadP3DString();
+            _breakableObject = br.ReadP3DString();
+            _friction = br.ReadSingle();
+            _mass = br.ReadSingle();
+            _elasticity = br.ReadSingle();
         }
 
         public Entry(string soundResourceDataName, string particle, string breakableObject, float friction, float mass, float elasticity)
         {
             _soundResourceDataName = soundResourceDataName;
-            Particle = particle;
-            BreakableObject = breakableObject;
-            Friction = friction;
-            Mass = mass;
-            Elasticity = elasticity;
+            _particle = particle;
+            _breakableObject = breakableObject;
+            _friction = friction;
+            _mass = mass;
+            _elasticity = elasticity;
         }
 
         public Entry()
         {
-            SoundResourceDataName = string.Empty;
-            Particle = string.Empty;
-            BreakableObject = string.Empty;
-            Friction = 0;
-            Mass = 0;
-            Elasticity = 0;
+            _soundResourceDataName = string.Empty;
+            _particle = string.Empty;
+            _breakableObject = string.Empty;
+            _friction = 0;
+            _mass = 0;
+            _elasticity = 0;
         }
 
         public IEnumerable<InvalidP3DException> Validate(ATCChunk chunk)

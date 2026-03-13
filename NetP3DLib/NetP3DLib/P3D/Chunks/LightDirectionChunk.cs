@@ -12,7 +12,20 @@ public class LightDirectionChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Light_Direction;
 
-    public Vector3 Direction { get; set; }
+    private Vector3 _direction;
+    public Vector3 Direction
+    {
+        get => _direction;
+        set
+        {
+            if (_direction == value)
+                return;
+    
+            _direction = value;
+            OnPropertyChanged(nameof(Direction));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -33,7 +46,7 @@ public class LightDirectionChunk : Chunk
 
     public LightDirectionChunk(Vector3 direction) : base(ChunkID)
     {
-        Direction = direction;
+        _direction = direction;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

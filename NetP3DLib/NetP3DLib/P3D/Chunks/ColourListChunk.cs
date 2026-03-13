@@ -59,8 +59,10 @@ public class ColourListChunk : Chunk
 
     public ColourListChunk(IList<Color> colours) : base(ChunkID)
     {
-        Colours = CreateSizeAwareList(colours);
+        Colours = CreateSizeAwareList(colours, Colours_CollectionChanged);
     }
+    
+    private void Colours_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(Colours));
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {

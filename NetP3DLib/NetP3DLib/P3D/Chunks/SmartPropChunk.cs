@@ -14,7 +14,20 @@ public class SmartPropChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Smart_Prop;
 
-    public uint Version { get; set; }
+    private uint _version;
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     private readonly P3DString _objectFactoryName;
     public string ObjectFactoryName
     {
@@ -27,11 +40,77 @@ public class SmartPropChunk : NamedChunk
         get => _material?.Value ?? string.Empty;
         set => _material.Value = value;
     }
-    public uint MaterialEnum { get; set; }
-    public uint NumBreakables { get; set; }
-    public uint RenderingCost { get; set; }
-    public uint SimulationCost { get; set; }
-    public uint NumStates { get; set; }
+    
+    private uint _materialEnum;
+    public uint MaterialEnum
+    {
+        get => _materialEnum;
+        set
+        {
+            if (_materialEnum == value)
+                return;
+    
+            _materialEnum = value;
+            OnPropertyChanged(nameof(MaterialEnum));
+        }
+    }
+    
+    private uint _numBreakables;
+    public uint NumBreakables
+    {
+        get => _numBreakables;
+        set
+        {
+            if (_numBreakables == value)
+                return;
+    
+            _numBreakables = value;
+            OnPropertyChanged(nameof(NumBreakables));
+        }
+    }
+    
+    private uint _renderingCost;
+    public uint RenderingCost
+    {
+        get => _renderingCost;
+        set
+        {
+            if (_renderingCost == value)
+                return;
+    
+            _renderingCost = value;
+            OnPropertyChanged(nameof(RenderingCost));
+        }
+    }
+    
+    private uint _simulationCost;
+    public uint SimulationCost
+    {
+        get => _simulationCost;
+        set
+        {
+            if (_simulationCost == value)
+                return;
+    
+            _simulationCost = value;
+            OnPropertyChanged(nameof(SimulationCost));
+        }
+    }
+    
+    private uint _numStates;
+    public uint NumStates
+    {
+        get => _numStates;
+        set
+        {
+            if (_numStates == value)
+                return;
+    
+            _numStates = value;
+            OnPropertyChanged(nameof(NumStates));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -60,14 +139,14 @@ public class SmartPropChunk : NamedChunk
 
     public SmartPropChunk(uint version, string name, string objectFactoryName, string material, uint materialEnum, uint numBreakables, uint renderingCost, uint simulationCost, uint numStates) : base(ChunkID, name)
     {
-        Version = version;
+        _version = version;
         _objectFactoryName = new(this, objectFactoryName, nameof(ObjectFactoryName));
         _material = new(this, material, nameof(Material));
-        MaterialEnum = materialEnum;
-        NumBreakables = numBreakables;
-        RenderingCost = renderingCost;
-        SimulationCost = simulationCost;
-        NumStates = numStates;
+        _materialEnum = materialEnum;
+        _numBreakables = numBreakables;
+        _renderingCost = renderingCost;
+        _simulationCost = simulationCost;
+        _numStates = numStates;
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

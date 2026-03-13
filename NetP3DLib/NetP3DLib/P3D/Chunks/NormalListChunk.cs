@@ -59,8 +59,10 @@ public class NormalListChunk : Chunk
 
     public NormalListChunk(IList<Vector3> normals) : base(ChunkID)
     {
-        Normals = CreateSizeAwareList(normals);
+        Normals = CreateSizeAwareList(normals, Normals_CollectionChanged);
     }
+    
+    private void Normals_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(Normals));
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {

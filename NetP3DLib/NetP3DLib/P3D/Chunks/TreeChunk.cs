@@ -14,8 +14,34 @@ public class TreeChunk : Chunk
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Tree;
 
     public uint NumNodes => GetChildCount(ChunkIdentifier.Tree_Node);
-    public Vector3 BoundsMin { get; set; }
-    public Vector3 BoundsMax { get; set; }
+    private Vector3 _boundsMin;
+    public Vector3 BoundsMin
+    {
+        get => _boundsMin;
+        set
+        {
+            if (_boundsMin == value)
+                return;
+    
+            _boundsMin = value;
+            OnPropertyChanged(nameof(BoundsMin));
+        }
+    }
+    
+    private Vector3 _boundsMax;
+    public Vector3 BoundsMax
+    {
+        get => _boundsMax;
+        set
+        {
+            if (_boundsMax == value)
+                return;
+    
+            _boundsMax = value;
+            OnPropertyChanged(nameof(BoundsMax));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -38,8 +64,8 @@ public class TreeChunk : Chunk
 
     public TreeChunk(Vector3 minimum, Vector3 maximum) : base(ChunkID)
     {
-        BoundsMin = minimum;
-        BoundsMax = maximum;
+        _boundsMin = minimum;
+        _boundsMax = maximum;
 
         ChildAdded += Chunk_ChildAdded;
         ChildRemoved += Chunk_ChildRemoved;

@@ -14,7 +14,20 @@ public class CompositeDrawable2Chunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Composite_Drawable_2;
 
-    public uint Version { get; set; }
+    private uint _version;
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     private readonly P3DString _skeletonName;
     public string SkeletonName
     {
@@ -47,7 +60,7 @@ public class CompositeDrawable2Chunk : NamedChunk
 
     public CompositeDrawable2Chunk(uint version, string name, string skeletonName) : base(ChunkID, name)
     {
-        Version = version;
+        _version = version;
         _skeletonName = new(this, skeletonName, nameof(SkeletonName));
     }
 

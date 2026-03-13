@@ -24,13 +24,17 @@ public class TopologyChunk : Chunk
 
             if (value < NumTopology)
             {
-                while (NumTopology > value)
-                    Topologies.RemoveAt(Topologies.Count - 1);
+                Topologies.RemoveRange((int)value, (int)(NumTopology - value));
             }
             else
             {
-                while (NumTopology < value)
-                    Topologies.Add(new());
+                int count = (int)(value - NumTopology);
+                var newTopologies = new Topology[count];
+
+                for (var i = 0; i < count; i++)
+                    newTopologies[i] = new();
+
+                Topologies.AddRange(newTopologies);
             }
         }
     }
@@ -57,8 +61,23 @@ public class TopologyChunk : Chunk
 
     public TopologyChunk(IList<Topology> topologies) : base(ChunkID)
     {
-        Topologies = CreateSizeAwareList(topologies);
+        Topologies = CreateSizeAwareList(topologies, Topologies_CollectionChanged);
     }
+    
+    private void Topologies_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
+        OnPropertyChanged(nameof(Topologies));
+
+        if (e.OldItems != null)
+            foreach (Topology oldItem in e.OldItems)
+                oldItem.PropertyChanged -= Topologies_PropertyChanged;
+    
+        if (e.NewItems != null)
+            foreach (Topology newItem in e.NewItems)
+                newItem.PropertyChanged += Topologies_PropertyChanged;
+    }
+    
+    private void Topologies_PropertyChanged() => OnPropertyChanged(nameof(Topologies));
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
     {
@@ -79,12 +98,91 @@ public class TopologyChunk : Chunk
     {
         public const uint Size = sizeof(ushort) + sizeof(ushort) + sizeof(ushort) + sizeof(ushort) + sizeof(ushort) + sizeof(ushort);
 
-        public ushort V0 { get; set; }
-        public ushort V1 { get; set; }
-        public ushort V2 { get; set; }
-        public ushort N0 { get; set; }
-        public ushort N1 { get; set; }
-        public ushort N2 { get; set; }
+        public event Action? PropertyChanged;
+
+        private ushort _v0;
+        public ushort V0
+        {
+            get => _v0;
+            set
+            {
+                if (_v0 == value)
+                    return;
+    
+                _v0 = value;
+                PropertyChanged?.Invoke();
+            }
+        }
+    
+        private ushort _v1;
+        public ushort V1
+        {
+            get => _v1;
+            set
+            {
+                if (_v1 == value)
+                    return;
+    
+                _v1 = value;
+                PropertyChanged?.Invoke();
+            }
+        }
+    
+        private ushort _v2;
+        public ushort V2
+        {
+            get => _v2;
+            set
+            {
+                if (_v2 == value)
+                    return;
+    
+                _v2 = value;
+                PropertyChanged?.Invoke();
+            }
+        }
+    
+        private ushort _n0;
+        public ushort N0
+        {
+            get => _n0;
+            set
+            {
+                if (_n0 == value)
+                    return;
+    
+                _n0 = value;
+                PropertyChanged?.Invoke();
+            }
+        }
+    
+        private ushort _n1;
+        public ushort N1
+        {
+            get => _n1;
+            set
+            {
+                if (_n1 == value)
+                    return;
+    
+                _n1 = value;
+                PropertyChanged?.Invoke();
+            }
+        }
+    
+        private ushort _n2;
+        public ushort N2
+        {
+            get => _n2;
+            set
+            {
+                if (_n2 == value)
+                    return;
+    
+                _n2 = value;
+                PropertyChanged?.Invoke();
+            }
+        }
 
         public byte[] DataBytes
         {
@@ -105,32 +203,32 @@ public class TopologyChunk : Chunk
 
         public Topology(BinaryReader br)
         {
-            V0 = br.ReadUInt16();
-            V1 = br.ReadUInt16();
-            V2 = br.ReadUInt16();
-            N0 = br.ReadUInt16();
-            N1 = br.ReadUInt16();
-            N2 = br.ReadUInt16();
+            _v0 = br.ReadUInt16();
+            _v1 = br.ReadUInt16();
+            _v2 = br.ReadUInt16();
+            _n0 = br.ReadUInt16();
+            _n1 = br.ReadUInt16();
+            _n2 = br.ReadUInt16();
         }
 
         public Topology(ushort v0, ushort v1, ushort v2, ushort n0, ushort n1, ushort n2)
         {
-            V0 = v0;
-            V1 = v1;
-            V2 = v2;
-            N0 = n0;
-            N1 = n1;
-            N2 = n2;
+            _v0 = v0;
+            _v1 = v1;
+            _v2 = v2;
+            _n0 = n0;
+            _n1 = n1;
+            _n2 = n2;
         }
 
         public Topology()
         {
-            V0 = 0;
-            V1 = 0;
-            V2 = 0;
-            N0 = 0;
-            N1 = 0;
-            N2 = 0;
+            _v0 = 0;
+            _v1 = 0;
+            _v2 = 0;
+            _n0 = 0;
+            _n1 = 0;
+            _n2 = 0;
         }
 
         internal void Write(BinaryWriter bw)

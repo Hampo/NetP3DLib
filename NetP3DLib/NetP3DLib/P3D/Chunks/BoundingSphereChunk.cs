@@ -13,8 +13,34 @@ public class BoundingSphereChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Bounding_Sphere;
 
-    public Vector3 Centre { get; set; }
-    public float Radius { get; set; }
+    private Vector3 _centre;
+    public Vector3 Centre
+    {
+        get => _centre;
+        set
+        {
+            if (_centre == value)
+                return;
+    
+            _centre = value;
+            OnPropertyChanged(nameof(Centre));
+        }
+    }
+    
+    private float _radius;
+    public float Radius
+    {
+        get => _radius;
+        set
+        {
+            if (_radius == value)
+                return;
+    
+            _radius = value;
+            OnPropertyChanged(nameof(Radius));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -36,8 +62,8 @@ public class BoundingSphereChunk : Chunk
 
     public BoundingSphereChunk(Vector3 centre, float radius) : base(ChunkID)
     {
-        Centre = centre;
-        Radius = radius;
+        _centre = centre;
+        _radius = radius;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

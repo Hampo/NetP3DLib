@@ -14,7 +14,20 @@ public class FrontendLanguageChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Frontend_Language;
 
-    public char Language { get; set; }
+    private char _language;
+    public char Language
+    {
+        get => _language;
+        set
+        {
+            if (_language == value)
+                return;
+    
+            _language = value;
+            OnPropertyChanged(nameof(Language));
+        }
+    }
+    
     public uint NumEntries
     {
         get => (uint)(Entries?.Count ?? 0);
@@ -35,7 +48,21 @@ public class FrontendLanguageChunk : NamedChunk
             }
         }
     }
-    public uint Modulo { get; set; }
+    
+    private uint _modulo;
+    public uint Modulo
+    {
+        get => _modulo;
+        set
+        {
+            if (_modulo == value)
+                return;
+    
+            _modulo = value;
+            OnPropertyChanged(nameof(Modulo));
+        }
+    }
+    
     public SizeAwareList<Entry> Entries { get; }
 
     public override byte[] DataBytes
@@ -99,43 +126,49 @@ public class FrontendLanguageChunk : NamedChunk
 
     public FrontendLanguageChunk(string name, char language, uint modulo, IList<Entry> entries) : base(ChunkID, name)
     {
-        Language = language;
-        Modulo = modulo;
-        Entries = CreateSizeAwareList<Entry>(entries.Count);
-        Entries.CollectionChanged += Entries_CollectionChanged;
-
-        Entries.AddRange(entries);
+        _language = language;
+        _modulo = modulo;
+        Entries = CreateSizeAwareList(entries, Entries_CollectionChanged);
     }
 
     public FrontendLanguageChunk(string name, char language, uint modulo, Dictionary<string, string> entries) : base(ChunkID, name)
     {
-        Language = language;
-        Modulo = modulo;
+        _language = language;
+        _modulo = modulo;
         var entries2 = new Entry[entries.Count];
         var i = 0;
         foreach (var entry in entries)
             entries2[i++] = new(GetNameHash(entry.Key), entry.Value);
 
-        Entries = CreateSizeAwareList<Entry>(entries.Count);
-        Entries.AddRange(entries2);
-        Entries.CollectionChanged += Entries_CollectionChanged;
+        Entries = CreateSizeAwareList(entries2, Entries_CollectionChanged);
     }
 
     private void Entries_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
+        OnPropertyChanged(nameof(Entries));
+
         if (e.OldItems != null)
+        {
             foreach (Entry oldEntry in e.OldItems)
+            {
                 oldEntry.SizeChanged -= Entry_SizeChanged;
+                oldEntry.PropertyChanged -= Entry_PropertyChanged;
+            }
+        }
 
         if (e.NewItems != null)
+        {
             foreach (Entry newEntry in e.NewItems)
+            {
                 newEntry.SizeChanged += Entry_SizeChanged;
+                newEntry.PropertyChanged += Entry_PropertyChanged;
+            }
+        }
     }
 
-    private void Entry_SizeChanged(int delta)
-    {
-        RecalculateSize((uint)(HeaderSize - delta));
-    }
+    private void Entry_SizeChanged(int delta) => RecalculateSize((uint)(HeaderSize - delta));
+
+    private void Entry_PropertyChanged() => OnPropertyChanged(nameof(Entries));
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
     {
@@ -227,39 +260,55 @@ public class FrontendLanguageChunk : NamedChunk
     public class Entry
     {
         public event Action<int>? SizeChanged;
+        public event Action? PropertyChanged;
 
-        public uint Hash { get; set; }
+        private uint _hash;
+        public uint Hash
+        {
+            get => _hash;
+            set
+            {
+                if (_hash == value)
+                    return;
+    
+                _hash = value;
+                PropertyChanged?.Invoke();
+            }
+        }
+    
         private string _value = string.Empty;
         public string Value
         {
             get => _value;
             set
             {
-                if (_value == value) return;
+                if (_value == value)
+                    return;
 
                 var oldSize = Encoding.Unicode.GetByteCount(_value);
                 _value = value;
                 var newSize = Encoding.Unicode.GetByteCount(_value);
                 SizeChanged?.Invoke(newSize - oldSize);
+                PropertyChanged?.Invoke();
             }
         }
 
         public Entry(uint hash, string value)
         {
-            Hash = hash;
-            Value = value;
+            _hash = hash;
+            _value = value;
         }
 
         public Entry(uint hash)
         {
-            Hash = hash;
-            Value = string.Empty;
+            _hash = hash;
+            _value = string.Empty;
         }
 
         public Entry()
         {
-            Hash = 0;
-            Value = string.Empty;
+            _hash = 0;
+            _value = string.Empty;
         }
 
         public Entry Clone() => new(Hash, Value);

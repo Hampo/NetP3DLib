@@ -19,9 +19,48 @@ public class TriggerVolumeChunk : NamedChunk
         Rectangle
     }
 
-    public Types Type { get; set; }
-    public Vector3 HalfExtents { get; set; }
-    public Matrix4x4 Matrix { get; set; }
+    private Types _type;
+    public Types Type
+    {
+        get => _type;
+        set
+        {
+            if (_type == value)
+                return;
+    
+            _type = value;
+            OnPropertyChanged(nameof(Type));
+        }
+    }
+    
+    private Vector3 _halfExtents;
+    public Vector3 HalfExtents
+    {
+        get => _halfExtents;
+        set
+        {
+            if (_halfExtents == value)
+                return;
+    
+            _halfExtents = value;
+            OnPropertyChanged(nameof(HalfExtents));
+        }
+    }
+    
+    private Matrix4x4 _matrix;
+    public Matrix4x4 Matrix
+    {
+        get => _matrix;
+        set
+        {
+            if (_matrix == value)
+                return;
+    
+            _matrix = value;
+            OnPropertyChanged(nameof(Matrix));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -45,9 +84,9 @@ public class TriggerVolumeChunk : NamedChunk
 
     public TriggerVolumeChunk(string name, Types type, Vector3 halfExtents, Matrix4x4 matrix) : base(ChunkID, name)
     {
-        Type = type;
-        HalfExtents = halfExtents;
-        Matrix = matrix;
+        _type = type;
+        _halfExtents = halfExtents;
+        _matrix = matrix;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

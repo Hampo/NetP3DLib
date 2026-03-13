@@ -43,11 +43,27 @@ public class LocatorChunk : NamedChunk
         set
         {
             _typeData.SizeChanged -= TypeData_SizeChanged;
+            _typeData.PropertyChanged -= TypeData_PropertyChanged;
             _typeData = value;
             value.SizeChanged += TypeData_SizeChanged;
+            value.PropertyChanged += TypeData_PropertyChanged;
         }
     }
-    public Vector3 Position { get; set; }
+    
+    private Vector3 _position;
+    public Vector3 Position
+    {
+        get => _position;
+        set
+        {
+            if (_position == value)
+                return;
+    
+            _position = value;
+            OnPropertyChanged(nameof(Position));
+        }
+    }
+    
     public uint TriggerCount => GetChildCount(ChunkIdentifier.Trigger_Volume);
 
     public override byte[] DataBytes
@@ -103,13 +119,12 @@ public class LocatorChunk : NamedChunk
     public LocatorChunk(string name, LocatorData typeData, Vector3 position) : base(ChunkID, name)
     {
         TypeData = typeData;
-        Position = position;
+        _position = position;
     }
 
-    private void TypeData_SizeChanged(int delta)
-    {
-        RecalculateSize((uint)(HeaderSize - delta));
-    }
+    private void TypeData_SizeChanged(int delta) => RecalculateSize((uint)(HeaderSize - delta));
+
+    private void TypeData_PropertyChanged() => OnPropertyChanged(nameof(TypeData));
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
     {
@@ -130,6 +145,8 @@ public class LocatorChunk : NamedChunk
         public event Action<int>? SizeChanged;
         protected void OnSizeChanged(int delta) => SizeChanged?.Invoke(delta);
 
+        public event Action? PropertyChanged;
+        protected void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke();
 
         public LocatorTypes LocatorType { get; }
         public virtual uint DataLen => (uint)DataArray.Count;
@@ -214,6 +231,7 @@ public class LocatorChunk : NamedChunk
                 _data = value ?? [];
                 var newSize = _data.Length;
                 OnSizeChanged((newSize - oldSize) * sizeof(uint));
+                OnPropertyChanged(nameof(Data));
             }
         }
         public override List<uint> DataArray => [.. Data];
@@ -326,7 +344,20 @@ public class LocatorChunk : NamedChunk
             Gag = 85,
         }
 
-        public Events Event { get; set; }
+        private Events _event;
+        public Events Event
+        {
+            get => _event;
+            set
+            {
+                if (_event == value)
+                    return;
+    
+                _event = value;
+                OnPropertyChanged(nameof(Event));
+            }
+        }
+    
         private uint? _parameter = null;
         public uint? Parameter
         {
@@ -347,6 +378,8 @@ public class LocatorChunk : NamedChunk
                     else
                         OnSizeChanged(sizeof(uint));
                 }
+
+                OnPropertyChanged(nameof(Parameter));
             }
         }
 
@@ -368,26 +401,26 @@ public class LocatorChunk : NamedChunk
 
         public EventLocatorData(IList<uint> data) : base(LocatorTypes.Event)
         {
-            Event = (Events)data[0];
+            _event = (Events)data[0];
             if (data.Count > 1)
                 Parameter = data[1];
         }
 
         public EventLocatorData(Events @event) : base(LocatorTypes.Event)
         {
-            Event = @event;
+            _event = @event;
             Parameter = null;
         }
 
         public EventLocatorData(Events @event, uint parameter) : base(LocatorTypes.Event)
         {
-            Event = @event;
+            _event = @event;
             Parameter = parameter;
         }
 
         internal override LocatorData Clone() => Parameter.HasValue ? new EventLocatorData(Event, Parameter.Value) : new EventLocatorData(Event);
 
-        public override string ToString() => $"Event = {Event}, Parameter = {Parameter?.ToString() ?? "null"}";
+        public override string ToString() => $"_event = {Event}, Parameter = {Parameter?.ToString() ?? "null"}";
     }
 
     /// <summary>
@@ -408,6 +441,7 @@ public class LocatorChunk : NamedChunk
                 _key = value;
                 var newSize = DataArray.Count;
                 OnSizeChanged(newSize - oldSize);
+                OnPropertyChanged(nameof(Key));
             }
         }
 
@@ -450,7 +484,20 @@ public class LocatorChunk : NamedChunk
     /// </summary>
     public class CarStartLocatorData : LocatorData
     {
-        public float Rotation { get; set; }
+        private float _rotation;
+        public float Rotation
+        {
+            get => _rotation;
+            set
+            {
+                if (_rotation == value)
+                    return;
+    
+                _rotation = value;
+                OnPropertyChanged(nameof(Rotation));
+            }
+        }
+    
         private uint? _parkedCar = null;
         public uint? ParkedCar
         {
@@ -471,6 +518,8 @@ public class LocatorChunk : NamedChunk
                     else
                         OnSizeChanged(sizeof(uint));
                 }
+
+                OnPropertyChanged(nameof(ParkedCar));
             }
         }
         private string? _freeCar = null;
@@ -486,6 +535,7 @@ public class LocatorChunk : NamedChunk
                 _freeCar = value;
                 var newSize = DataArray.Count;
                 OnSizeChanged(newSize - oldSize);
+                OnPropertyChanged(nameof(FreeCar));
             }
         }
 
@@ -510,35 +560,35 @@ public class LocatorChunk : NamedChunk
 
         public CarStartLocatorData(IList<uint> data) : base(LocatorTypes.CarStart)
         {
-            Rotation = ParseDataFloat(data[0]);
+            _rotation = ParseDataFloat(data[0]);
             ParkedCar = data.Count > 1 ? data[1] : null;
             FreeCar = data.Count > 2 ? ParseDataString(data, 2).String : null;
         }
 
         public CarStartLocatorData(float rotation) : base(LocatorTypes.CarStart)
         {
-            Rotation = rotation;
+            _rotation = rotation;
             ParkedCar = null;
             FreeCar = null;
         }
 
         public CarStartLocatorData(float rotation, uint parkedCar) : base(LocatorTypes.CarStart)
         {
-            Rotation = rotation;
+            _rotation = rotation;
             ParkedCar = parkedCar;
             FreeCar = null;
         }
 
         public CarStartLocatorData(float rotation, uint parkedCar, string? freeCar) : base(LocatorTypes.CarStart)
         {
-            Rotation = rotation;
+            _rotation = rotation;
             ParkedCar = parkedCar;
             FreeCar = freeCar;
         }
 
         internal override LocatorData Clone() => ParkedCar.HasValue ? new CarStartLocatorData(Rotation, ParkedCar.Value, FreeCar) : new CarStartLocatorData(Rotation);
 
-        public override string ToString() => $"Rotation = {Rotation}, ParkedCar = {ParkedCar?.ToString() ?? "null"}, FreeCar = {FreeCar ?? "null"}";
+        public override string ToString() => $"_rotation = {Rotation}, ParkedCar = {ParkedCar?.ToString() ?? "null"}, FreeCar = {FreeCar ?? "null"}";
     }
 
     /// <summary>
@@ -576,6 +626,7 @@ public class LocatorChunk : NamedChunk
                 _dynaLoadData = value;
                 var newSize = DataArray.Count;
                 OnSizeChanged(newSize - oldSize);
+                OnPropertyChanged(nameof(DynaLoadData));
             }
         }
 
@@ -621,6 +672,8 @@ public class LocatorChunk : NamedChunk
                     else
                         OnSizeChanged(sizeof(uint));
                 }
+
+                OnPropertyChanged(nameof(Occlusions));
             }
         }
 
@@ -663,11 +716,51 @@ public class LocatorChunk : NamedChunk
                 _interiorName = value;
                 var newSize = DataArray.Count;
                 OnSizeChanged(newSize - oldSize);
+                OnPropertyChanged(nameof(InteriorName));
             }
         }
-        public Vector3 Right { get; set; }
-        public Vector3 Up { get; set; }
-        public Vector3 Front { get; set; }
+    
+        private Vector3 _right;
+        public Vector3 Right
+        {
+            get => _right;
+            set
+            {
+                if (_right == value)
+                    return;
+    
+                _right = value;
+                OnPropertyChanged(nameof(Right));
+            }
+        }
+    
+        private Vector3 _up;
+        public Vector3 Up
+        {
+            get => _up;
+            set
+            {
+                if (_up == value)
+                    return;
+    
+                _up = value;
+                OnPropertyChanged(nameof(Up));
+            }
+        }
+    
+        private Vector3 _front;
+        public Vector3 Front
+        {
+            get => _front;
+            set
+            {
+                if (_front == value)
+                    return;
+    
+                _front = value;
+                OnPropertyChanged(nameof(Front));
+            }
+        }
 
         public override List<uint> DataArray
         {
@@ -695,22 +788,22 @@ public class LocatorChunk : NamedChunk
             var interiorName = ParseDataString(data);
             InteriorName = interiorName.String;
             var index = interiorName.Index;
-            Right = new(ParseDataFloat(data[index++]), ParseDataFloat(data[index++]), ParseDataFloat(data[index++]));
-            Up = new(ParseDataFloat(data[index++]), ParseDataFloat(data[index++]), ParseDataFloat(data[index++]));
-            Front = new(ParseDataFloat(data[index++]), ParseDataFloat(data[index++]), ParseDataFloat(data[index++]));
+            _right = new(ParseDataFloat(data[index++]), ParseDataFloat(data[index++]), ParseDataFloat(data[index++]));
+            _up = new(ParseDataFloat(data[index++]), ParseDataFloat(data[index++]), ParseDataFloat(data[index++]));
+            _front = new(ParseDataFloat(data[index++]), ParseDataFloat(data[index++]), ParseDataFloat(data[index++]));
         }
 
         public InteriorEntranceLocatorData(string interiorName, Vector3 right, Vector3 up, Vector3 front) : base(LocatorTypes.InteriorEntrance)
         {
             InteriorName = interiorName;
-            Right = right;
-            Up = up;
-            Front = front;
+            _right = right;
+            _up = up;
+            _front = front;
         }
 
         internal override LocatorData Clone() => new InteriorEntranceLocatorData(InteriorName, Right, Up, Front);
 
-        public override string ToString() => $"InteriorName = {InteriorName}, Right = {Right}, Up = {Up}, Front = {Front}";
+        public override string ToString() => $"InteriorName = {InteriorName}, _right = {Right}, _up = {Up}, _front = {Front}";
     }
 
     /// <summary>
@@ -718,9 +811,48 @@ public class LocatorChunk : NamedChunk
     /// </summary>
     public class DirectionalLocatorData : LocatorData
     {
-        public Vector3 Right { get; set; }
-        public Vector3 Up { get; set; }
-        public Vector3 Front { get; set; }
+        private Vector3 _right;
+        public Vector3 Right
+        {
+            get => _right;
+            set
+            {
+                if (_right == value)
+                    return;
+    
+                _right = value;
+                OnPropertyChanged(nameof(Right));
+            }
+        }
+    
+        private Vector3 _up;
+        public Vector3 Up
+        {
+            get => _up;
+            set
+            {
+                if (_up == value)
+                    return;
+    
+                _up = value;
+                OnPropertyChanged(nameof(Up));
+            }
+        }
+    
+        private Vector3 _front;
+        public Vector3 Front
+        {
+            get => _front;
+            set
+            {
+                if (_front == value)
+                    return;
+    
+                _front = value;
+                OnPropertyChanged(nameof(Front));
+            }
+        }
+    
 
         public override uint DataLen => 9;
         public override List<uint> DataArray =>
@@ -739,21 +871,21 @@ public class LocatorChunk : NamedChunk
         public DirectionalLocatorData(IList<uint> data) : base(LocatorTypes.Directional)
         {
             var index = 0;
-            Right = new(ParseDataFloat(data[index++]), ParseDataFloat(data[index++]), ParseDataFloat(data[index++]));
-            Up = new(ParseDataFloat(data[index++]), ParseDataFloat(data[index++]), ParseDataFloat(data[index++]));
-            Front = new(ParseDataFloat(data[index++]), ParseDataFloat(data[index++]), ParseDataFloat(data[index++]));
+            _right = new(ParseDataFloat(data[index++]), ParseDataFloat(data[index++]), ParseDataFloat(data[index++]));
+            _up = new(ParseDataFloat(data[index++]), ParseDataFloat(data[index++]), ParseDataFloat(data[index++]));
+            _front = new(ParseDataFloat(data[index++]), ParseDataFloat(data[index++]), ParseDataFloat(data[index++]));
         }
 
         public DirectionalLocatorData(Vector3 right, Vector3 up, Vector3 front) : base(LocatorTypes.Directional)
         {
-            Right = right;
-            Up = up;
-            Front = front;
+            _right = right;
+            _up = up;
+            _front = front;
         }
 
         internal override LocatorData Clone() => new DirectionalLocatorData(Right, Up, Front);
 
-        public override string ToString() => $"Right = {Right}, Up = {Up}, Front = {Front}";
+        public override string ToString() => $"_right = {Right}, _up = {Up}, _front = {Front}";
     }
 
     /// <summary>
@@ -792,6 +924,7 @@ public class LocatorChunk : NamedChunk
                 _objectName = value;
                 var newSize = DataArray.Count;
                 OnSizeChanged(newSize - oldSize);
+                OnPropertyChanged(nameof(ObjectName));
             }
         }
         private string _jointName = string.Empty;
@@ -807,6 +940,7 @@ public class LocatorChunk : NamedChunk
                 _jointName = value;
                 var newSize = DataArray.Count;
                 OnSizeChanged(newSize - oldSize);
+                OnPropertyChanged(nameof(JointName));
             }
         }
         private string _actionName = string.Empty;
@@ -823,14 +957,36 @@ public class LocatorChunk : NamedChunk
                 _actionName = value;
                 var newSize = DataArray.Count;
                 OnSizeChanged(newSize - oldSize);
+                OnPropertyChanged(nameof(ActionName));
             }
         }
-        public Intention ButtonInput { get; set; }
-        private uint shouldTransform;
+    
+        private Intention _buttonInput;
+        public Intention ButtonInput
+        {
+            get => _buttonInput;
+            set
+            {
+                if (_buttonInput == value)
+                    return;
+    
+                _buttonInput = value;
+                OnPropertyChanged(nameof(ButtonInput));
+            }
+        }
+    
+        private uint _shouldTransform;
         public bool ShouldTransform
         {
-            get => shouldTransform == 1;
-            set => shouldTransform = value ? 1u : 0u;
+            get => _shouldTransform == 1;
+            set
+            {
+                if (ShouldTransform == value)
+                    return;
+
+                _shouldTransform = value ? 1u : 0u;
+                OnPropertyChanged(nameof(ShouldTransform));
+            }
         }
 
         public override List<uint> DataArray
@@ -858,8 +1014,8 @@ public class LocatorChunk : NamedChunk
             var actionName = ParseDataString(data, jointName.Index);
             ActionName = actionName.String;
             var index = actionName.Index;
-            ButtonInput = (Intention)data[index++];
-            shouldTransform = data[index++];
+            _buttonInput = (Intention)data[index++];
+            _shouldTransform = data[index++];
         }
 
         public ActionLocatorData(string objectName, string jointName, string actionName, Intention buttonInput, bool shouldTransform) : base(LocatorTypes.Action)
@@ -867,13 +1023,13 @@ public class LocatorChunk : NamedChunk
             ObjectName = objectName;
             JointName = jointName;
             ActionName = actionName;
-            ButtonInput = buttonInput;
+            _buttonInput = buttonInput;
             ShouldTransform = shouldTransform;
         }
 
         internal override LocatorData Clone() => new ActionLocatorData(ObjectName, JointName, ActionName, ButtonInput, ShouldTransform);
 
-        public override string ToString() => $"ObjectName = {ObjectName}, JointName = {JointName}, ActionName = {ActionName}, ButtonInput = {ButtonInput}, ShouldTransform = {ShouldTransform}";
+        public override string ToString() => $"ObjectName = {ObjectName}, JointName = {JointName}, ActionName = {ActionName}, _buttonInput = {ButtonInput}, ShouldTransform = {ShouldTransform}";
     }
 
     /// <summary>
@@ -881,9 +1037,47 @@ public class LocatorChunk : NamedChunk
     /// </summary>
     public class FOVLocatorData : LocatorData
     {
-        public float FOV { get; set; }
-        public float Type { get; set; }
-        public float Rate { get; set; }
+        private float _fov;
+        public float FOV
+        {
+            get => _fov;
+            set
+            {
+                if (_fov == value)
+                    return;
+    
+                _fov = value;
+                OnPropertyChanged(nameof(FOV));
+            }
+        }
+    
+        private float _type;
+        public float Type
+        {
+            get => _type;
+            set
+            {
+                if (_type == value)
+                    return;
+    
+                _type = value;
+                OnPropertyChanged(nameof(Type));
+            }
+        }
+    
+        private float _rate;
+        public float Rate
+        {
+            get => _rate;
+            set
+            {
+                if (_rate == value)
+                    return;
+    
+                _rate = value;
+                OnPropertyChanged(nameof(Rate));
+            }
+        }
 
         public override uint DataLen => 3;
         public override List<uint> DataArray => [
@@ -894,21 +1088,21 @@ public class LocatorChunk : NamedChunk
 
         public FOVLocatorData(IList<uint> data) : base(LocatorTypes.FOV)
         {
-            FOV = ParseDataFloat(data[0]);
-            Type = ParseDataFloat(data[1]);
-            Rate = ParseDataFloat(data[2]);
+            _fov = ParseDataFloat(data[0]);
+            _type = ParseDataFloat(data[1]);
+            _rate = ParseDataFloat(data[2]);
         }
 
         public FOVLocatorData(float fov, float type, float rate) : base(LocatorTypes.FOV)
         {
-            FOV = fov;
-            Type = type;
-            Rate = rate;
+            _fov = fov;
+            _type = type;
+            _rate = rate;
         }
 
         internal override LocatorData Clone() => new FOVLocatorData(FOV, Type, Rate);
 
-        public override string ToString() => $"FOV = {FOV}, Type = {Type}, Rate = {Rate}";
+        public override string ToString() => $"_fOV = {FOV}, _type = {Type}, _rate = {Rate}";
     }
 
     /// <summary>
@@ -932,14 +1126,60 @@ public class LocatorChunk : NamedChunk
     /// </summary>
     public class StaticCameraLocatorData : LocatorData
     {
-        public Vector3 TargetPosition { get; set; }
-        public float FOV { get; set; }
-        public float TargetLag { get; set; }
+        private Vector3 _targetPosition;
+        public Vector3 TargetPosition
+        {
+            get => _targetPosition;
+            set
+            {
+                if (_targetPosition == value)
+                    return;
+    
+                _targetPosition = value;
+                OnPropertyChanged(nameof(TargetPosition));
+            }
+        }
+    
+        private float _fov;
+        public float FOV
+        {
+            get => _fov;
+            set
+            {
+                if (_fov == value)
+                    return;
+    
+                _fov = value;
+                OnPropertyChanged(nameof(FOV));
+            }
+        }
+    
+        private float _targetLag;
+        public float TargetLag
+        {
+            get => _targetLag;
+            set
+            {
+                if (_targetLag == value)
+                    return;
+    
+                _targetLag = value;
+                OnPropertyChanged(nameof(TargetLag));
+            }
+        }
+    
         private uint _followPlayer;
         public bool FollowPlayer
         {
             get => _followPlayer == 1u;
-            set => _followPlayer = value ? 1u : 0u;
+            set
+        {
+            if (FollowPlayer == value)
+                return;
+
+            _followPlayer = value ? 1u : 0u;
+            OnPropertyChanged(nameof(FollowPlayer));
+        }
         }
         private float? _transitionTargetRate = null;
         public float? TransitionTargetRate
@@ -960,7 +1200,10 @@ public class LocatorChunk : NamedChunk
                         OnSizeChanged(-sizeof(float));
                     else
                         OnSizeChanged(sizeof(float));
+
                 }
+                
+                OnPropertyChanged(nameof(TransitionTargetRate));
             }
         }
         private uint? _flags = null;
@@ -998,6 +1241,8 @@ public class LocatorChunk : NamedChunk
                     else
                         OnSizeChanged(sizeof(uint));
                 }
+
+                OnPropertyChanged(nameof(OneShot));
             }
         }
         public bool? DisableFOV
@@ -1034,6 +1279,8 @@ public class LocatorChunk : NamedChunk
                     else
                         OnSizeChanged(sizeof(uint));
                 }
+
+                OnPropertyChanged(nameof(DisableFOV));
             }
         }
         private uint? _cutInOut = null;
@@ -1066,6 +1313,8 @@ public class LocatorChunk : NamedChunk
                     else
                         OnSizeChanged(sizeof(uint));
                 }
+
+                OnPropertyChanged(nameof(CutInOut));
             }
         }
         private uint? _flags2 = null;
@@ -1103,6 +1352,8 @@ public class LocatorChunk : NamedChunk
                     else
                         OnSizeChanged(sizeof(uint));
                 }
+
+                OnPropertyChanged(nameof(CarOnly));
             }
         }
         public bool? OnFootOnly
@@ -1139,6 +1390,8 @@ public class LocatorChunk : NamedChunk
                     else
                         OnSizeChanged(sizeof(uint));
                 }
+
+                OnPropertyChanged(nameof(OnFootOnly));
             }
         }
 
@@ -1175,8 +1428,8 @@ public class LocatorChunk : NamedChunk
         public StaticCameraLocatorData(IList<uint> data) : base(LocatorTypes.StaticCamera)
         {
             TargetPosition = new(ParseDataFloat(data[0]), ParseDataFloat(data[1]), ParseDataFloat(data[2]));
-            FOV = ParseDataFloat(data[3]);
-            TargetLag = ParseDataFloat(data[4]);
+            _fov = ParseDataFloat(data[3]);
+            _targetLag = ParseDataFloat(data[4]);
             _followPlayer = data[5];
             TransitionTargetRate = data.Count > 6 ? ParseDataFloat(data[6]) : null;
             _flags = data.Count > 7 ? data[7] : null;
@@ -1187,8 +1440,8 @@ public class LocatorChunk : NamedChunk
         public StaticCameraLocatorData(Vector3 targetPosition, float fov, float targetLag, uint followPlayer) : base(LocatorTypes.StaticCamera)
         {
             TargetPosition = targetPosition;
-            FOV = fov;
-            TargetLag = targetLag;
+            _fov = fov;
+            _targetLag = targetLag;
             _followPlayer = followPlayer;
             TransitionTargetRate = null;
             _flags = null;
@@ -1199,8 +1452,8 @@ public class LocatorChunk : NamedChunk
         public StaticCameraLocatorData(Vector3 targetPosition, float fov, float targetLag, uint followPlayer, float? transitionTargetRate) : base(LocatorTypes.StaticCamera)
         {
             TargetPosition = targetPosition;
-            FOV = fov;
-            TargetLag = targetLag;
+            _fov = fov;
+            _targetLag = targetLag;
             _followPlayer = followPlayer;
             TransitionTargetRate = transitionTargetRate;
             _flags = null;
@@ -1211,8 +1464,8 @@ public class LocatorChunk : NamedChunk
         public StaticCameraLocatorData(Vector3 targetPosition, float fov, float targetLag, uint followPlayer, float? transitionTargetRate, bool oneShot, bool disableFOV) : base(LocatorTypes.StaticCamera)
         {
             TargetPosition = targetPosition;
-            FOV = fov;
-            TargetLag = targetLag;
+            _fov = fov;
+            _targetLag = targetLag;
             _followPlayer = followPlayer;
             TransitionTargetRate = transitionTargetRate;
             OneShot = oneShot;
@@ -1224,8 +1477,8 @@ public class LocatorChunk : NamedChunk
         public StaticCameraLocatorData(Vector3 targetPosition, float fov, float targetLag, uint followPlayer, float? transitionTargetRate, bool oneShot, bool disableFOV, bool cutInOut, bool carOnly, bool onFootOnly) : base(LocatorTypes.StaticCamera)
         {
             TargetPosition = targetPosition;
-            FOV = fov;
-            TargetLag = targetLag;
+            _fov = fov;
+            _targetLag = targetLag;
             _followPlayer = followPlayer;
             TransitionTargetRate = transitionTargetRate;
             OneShot = oneShot;
@@ -1250,7 +1503,7 @@ public class LocatorChunk : NamedChunk
                 new StaticCameraLocatorData(TargetPosition, FOV, TargetLag, _followPlayer)
         };
 
-        public override string ToString() => $"TargetPosition = {TargetPosition}, FOV = {FOV}, TargetLag = {TargetLag}, FollowPlayer = {_followPlayer}, TransitionTargetRate = {TransitionTargetRate?.ToString() ?? "null"}, OneShot = {OneShot}, DisableFOV = {DisableFOV}, CutInOut = {CutInOut}, CarOnly = {CarOnly}, OnFootOnly = {OnFootOnly}";
+        public override string ToString() => $"TargetPosition = {TargetPosition}, _fOV = {FOV}, _targetLag = {TargetLag}, FollowPlayer = {_followPlayer}, TransitionTargetRate = {TransitionTargetRate?.ToString() ?? "null"}, OneShot = {OneShot}, DisableFOV = {DisableFOV}, CutInOut = {CutInOut}, CarOnly = {CarOnly}, OnFootOnly = {OnFootOnly}";
     }
 
     /// <summary>
@@ -1258,24 +1511,37 @@ public class LocatorChunk : NamedChunk
     /// </summary>
     public class PedGroupLocatorData : LocatorData
     {
-        public uint GroupNum { get; set; }
+        private uint _groupNum;
+        public uint GroupNum
+        {
+            get => _groupNum;
+            set
+            {
+                if (_groupNum == value)
+                    return;
+    
+                _groupNum = value;
+                OnPropertyChanged(nameof(GroupNum));
+            }
+        }
+    
 
         public override uint DataLen => 1;
         public override List<uint> DataArray => [GroupNum];
 
         public PedGroupLocatorData(IList<uint> data) : base(LocatorTypes.PedGroup)
         {
-            GroupNum = data[0];
+            _groupNum = data[0];
         }
 
         public PedGroupLocatorData(uint groupNum) : base(LocatorTypes.PedGroup)
         {
-            GroupNum = groupNum;
+            _groupNum = groupNum;
         }
 
         internal override LocatorData Clone() => new PedGroupLocatorData(GroupNum);
 
-        public override string ToString() => $"GroupNum = {GroupNum}";
+        public override string ToString() => $"_groupNum = {GroupNum}";
     }
 
     /// <summary>

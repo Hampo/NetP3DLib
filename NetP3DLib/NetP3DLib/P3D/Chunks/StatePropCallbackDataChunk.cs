@@ -35,8 +35,34 @@ public class StatePropCallbackDataChunk : NamedChunk
         RemoveThirdCollisionVolume,
     }
 
-    public Events Event { get; set; }
-    public float OnFrame { get; set; }
+    private Events _event;
+    public Events Event
+    {
+        get => _event;
+        set
+        {
+            if (_event == value)
+                return;
+    
+            _event = value;
+            OnPropertyChanged(nameof(Event));
+        }
+    }
+    
+    private float _onFrame;
+    public float OnFrame
+    {
+        get => _onFrame;
+        set
+        {
+            if (_onFrame == value)
+                return;
+    
+            _onFrame = value;
+            OnPropertyChanged(nameof(OnFrame));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -59,8 +85,8 @@ public class StatePropCallbackDataChunk : NamedChunk
 
     public StatePropCallbackDataChunk(string name, Events @event, float onFrame) : base(ChunkID, name)
     {
-        Event = @event;
-        OnFrame = onFrame;
+        _event = @event;
+        _onFrame = onFrame;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

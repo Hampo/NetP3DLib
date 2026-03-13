@@ -12,7 +12,20 @@ public class CollisionVectorChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Collision_Vector;
 
-    public Vector3 Vector { get; set; }
+    private Vector3 _vector;
+    public Vector3 Vector
+    {
+        get => _vector;
+        set
+        {
+            if (_vector == value)
+                return;
+    
+            _vector = value;
+            OnPropertyChanged(nameof(Vector));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -33,7 +46,7 @@ public class CollisionVectorChunk : Chunk
 
     public CollisionVectorChunk(Vector3 vector) : base(ChunkID)
     {
-        Vector = vector;
+        _vector = vector;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

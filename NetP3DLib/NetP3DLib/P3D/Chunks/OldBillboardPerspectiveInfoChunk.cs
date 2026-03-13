@@ -12,13 +12,33 @@ public class OldBillboardPerspectiveInfoChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Billboard_Perspective_Info;
 
+    private uint _version;
     [DefaultValue(0)]
-    public uint Version { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     private uint _perspectiveScale;
     public bool PerspectiveScale
     {
         get => _perspectiveScale != 0;
-        set => _perspectiveScale = value ? 1u : 0u;
+        set
+        {
+            if (PerspectiveScale == value)
+                return;
+
+            _perspectiveScale = value ? 1u : 0u;
+            OnPropertyChanged(nameof(PerspectiveScale));
+        }
     }
 
     public override byte[] DataBytes
@@ -45,7 +65,7 @@ public class OldBillboardPerspectiveInfoChunk : Chunk
 
     public OldBillboardPerspectiveInfoChunk(uint version, uint perspectiveScale) : base(ChunkID)
     {
-        Version = version;
+        _version = version;
         _perspectiveScale = perspectiveScale;
     }
 

@@ -16,7 +16,20 @@ public class Vector2OffsetListChunk : ParamChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Vector2_Offset_List;
 
-    public uint Version { get; set; }
+    private uint _version;
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     public uint NumOffsets
     {
         get => (uint)(Offsets?.Count ?? 0);
@@ -62,9 +75,11 @@ public class Vector2OffsetListChunk : ParamChunk
 
     public Vector2OffsetListChunk(uint version, string param, IList<Vector2Offset> offsets) : base(ChunkID, param)
     {
-        Version = version;
-        Offsets = CreateSizeAwareList(offsets);
+        _version = version;
+        Offsets = CreateSizeAwareList(offsets, Offsets_CollectionChanged);
     }
+    
+    private void Offsets_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(Offsets));
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
     {

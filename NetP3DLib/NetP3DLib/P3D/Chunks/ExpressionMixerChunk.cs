@@ -23,9 +23,35 @@ public class ExpressionMixerChunk : NamedChunk
         VertexOffset,
     }
 
+    private uint _version;
     [DefaultValue(0)]
-    public uint Version { get; set; }
-    public MixerType Type { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
+    private MixerType _type;
+    public MixerType Type
+    {
+        get => _type;
+        set
+        {
+            if (_type == value)
+                return;
+    
+            _type = value;
+            OnPropertyChanged(nameof(Type));
+        }
+    }
+    
     private readonly P3DString _targetName;
     public string TargetName
     {
@@ -62,8 +88,8 @@ public class ExpressionMixerChunk : NamedChunk
 
     public ExpressionMixerChunk(uint version, string name, MixerType type, string targetName, string expressionGroupName) : base(ChunkID, name)
     {
-        Version = version;
-        Type = type;
+        _version = version;
+        _type = type;
         _targetName = new(this, targetName, nameof(TargetName));
         _expressionGroupName = new(this, expressionGroupName, nameof(ExpressionGroupName));
     }

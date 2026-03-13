@@ -47,16 +47,133 @@ public class TextureChunk : NamedChunk
         NoCache,
     }
 
+    private uint _version;
     [DefaultValue(14000)]
-    public uint Version { get; set; }
-    public uint Width { get; set; }
-    public uint Height { get; set; }
-    public uint Bpp { get; set; }
-    public uint AlphaDepth { get; set; }
-    public uint NumMipMaps { get; set; }
-    public TextureTypes TextureType { get; set; }
-    public UsageHints UsageHint { get; set; }
-    public uint Priority { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
+    private uint _width;
+    public uint Width
+    {
+        get => _width;
+        set
+        {
+            if (_width == value)
+                return;
+    
+            _width = value;
+            OnPropertyChanged(nameof(Width));
+        }
+    }
+    
+    private uint _height;
+    public uint Height
+    {
+        get => _height;
+        set
+        {
+            if (_height == value)
+                return;
+    
+            _height = value;
+            OnPropertyChanged(nameof(Height));
+        }
+    }
+    
+    private uint _bpp;
+    public uint Bpp
+    {
+        get => _bpp;
+        set
+        {
+            if (_bpp == value)
+                return;
+    
+            _bpp = value;
+            OnPropertyChanged(nameof(Bpp));
+        }
+    }
+    
+    private uint _alphaDepth;
+    public uint AlphaDepth
+    {
+        get => _alphaDepth;
+        set
+        {
+            if (_alphaDepth == value)
+                return;
+    
+            _alphaDepth = value;
+            OnPropertyChanged(nameof(AlphaDepth));
+        }
+    }
+    
+    private uint _numMipMaps;
+    public uint NumMipMaps
+    {
+        get => _numMipMaps;
+        set
+        {
+            if (_numMipMaps == value)
+                return;
+    
+            _numMipMaps = value;
+            OnPropertyChanged(nameof(NumMipMaps));
+        }
+    }
+    
+    private TextureTypes _textureType;
+    public TextureTypes TextureType
+    {
+        get => _textureType;
+        set
+        {
+            if (_textureType == value)
+                return;
+    
+            _textureType = value;
+            OnPropertyChanged(nameof(TextureType));
+        }
+    }
+    
+    private UsageHints _usageHint;
+    public UsageHints UsageHint
+    {
+        get => _usageHint;
+        set
+        {
+            if (_usageHint == value)
+                return;
+    
+            _usageHint = value;
+            OnPropertyChanged(nameof(UsageHint));
+        }
+    }
+    
+    private uint _priority;
+    public uint Priority
+    {
+        get => _priority;
+        set
+        {
+            if (_priority == value)
+                return;
+    
+            _priority = value;
+            OnPropertyChanged(nameof(Priority));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -85,15 +202,15 @@ public class TextureChunk : NamedChunk
     }
     public TextureChunk(string name, uint version, uint width, uint height, uint bpp, uint alphaDepth, uint numMipMaps, TextureTypes textureType, UsageHints usageHint, uint priority) : base(ChunkID, name)
     {
-        Version = version;
-        Width = width;
-        Height = height;
-        Bpp = bpp;
-        AlphaDepth = alphaDepth;
-        NumMipMaps = numMipMaps;
-        TextureType = textureType;
-        UsageHint = usageHint;
-        Priority = priority;
+        _version = version;
+        _width = width;
+        _height = height;
+        _bpp = bpp;
+        _alphaDepth = alphaDepth;
+        _numMipMaps = numMipMaps;
+        _textureType = textureType;
+        _usageHint = usageHint;
+        _priority = priority;
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

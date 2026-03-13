@@ -59,8 +59,10 @@ public class WeightListChunk : Chunk
 
     public WeightListChunk(IList<Vector3> weights) : base(ChunkID)
     {
-        Weights = CreateSizeAwareList(weights);
+        Weights = CreateSizeAwareList(weights, Weights_CollectionChanged);
     }
+    
+    private void Weights_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(Weights));
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {

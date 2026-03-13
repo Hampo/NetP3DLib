@@ -11,7 +11,20 @@ public class IntersectMesh2Chunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Intersect_Mesh_2;
 
-    public uint SurfaceType { get; set; }
+    private uint _surfaceType;
+    public uint SurfaceType
+    {
+        get => _surfaceType;
+        set
+        {
+            if (_surfaceType == value)
+                return;
+    
+            _surfaceType = value;
+            OnPropertyChanged(nameof(SurfaceType));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -32,7 +45,7 @@ public class IntersectMesh2Chunk : Chunk
 
     public IntersectMesh2Chunk(uint surfaceType) : base(ChunkID)
     {
-        SurfaceType = surfaceType;
+        _surfaceType = surfaceType;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

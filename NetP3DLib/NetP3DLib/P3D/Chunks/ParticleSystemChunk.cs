@@ -13,12 +13,90 @@ public class ParticleSystemChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Particle_System;
 
-    public uint Version { get; set; }
-    public float FrameRate { get; set; }
-    public uint NumFrames { get; set; }
-    public uint IsCyclic { get; set; }
-    public Quaternion Rotation { get; set; }
-    public Vector3 Translation { get; set; }
+    private uint _version;
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
+    private float _frameRate;
+    public float FrameRate
+    {
+        get => _frameRate;
+        set
+        {
+            if (_frameRate == value)
+                return;
+    
+            _frameRate = value;
+            OnPropertyChanged(nameof(FrameRate));
+        }
+    }
+    
+    private uint _numFrames;
+    public uint NumFrames
+    {
+        get => _numFrames;
+        set
+        {
+            if (_numFrames == value)
+                return;
+    
+            _numFrames = value;
+            OnPropertyChanged(nameof(NumFrames));
+        }
+    }
+    
+    private uint _isCyclic;
+    public uint IsCyclic
+    {
+        get => _isCyclic;
+        set
+        {
+            if (_isCyclic == value)
+                return;
+    
+            _isCyclic = value;
+            OnPropertyChanged(nameof(IsCyclic));
+        }
+    }
+    
+    private Quaternion _rotation;
+    public Quaternion Rotation
+    {
+        get => _rotation;
+        set
+        {
+            if (_rotation == value)
+                return;
+    
+            _rotation = value;
+            OnPropertyChanged(nameof(Rotation));
+        }
+    }
+    
+    private Vector3 _translation;
+    public Vector3 Translation
+    {
+        get => _translation;
+        set
+        {
+            if (_translation == value)
+                return;
+    
+            _translation = value;
+            OnPropertyChanged(nameof(Translation));
+        }
+    }
+    
     public uint NumEmitters => GetChildCount(ChunkIdentifier.Sprite_Particle_Emitter);
 
     public override byte[] DataBytes
@@ -49,12 +127,12 @@ public class ParticleSystemChunk : NamedChunk
 
     public ParticleSystemChunk(uint version, string name, float frameRate, uint numFrames, uint isCyclic, Quaternion rotation, Vector3 translation) : base(ChunkID, name)
     {
-        Version = version;
-        FrameRate = frameRate;
-        NumFrames = numFrames;
-        IsCyclic = isCyclic;
-        Rotation = rotation;
-        Translation = translation;
+        _version = version;
+        _frameRate = frameRate;
+        _numFrames = numFrames;
+        _isCyclic = isCyclic;
+        _rotation = rotation;
+        _translation = translation;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

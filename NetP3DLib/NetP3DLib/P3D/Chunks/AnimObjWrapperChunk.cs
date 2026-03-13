@@ -12,13 +12,33 @@ public class AnimObjWrapperChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Anim_Obj_Wrapper;
 
+    private byte _version;
     [DefaultValue(1)]
-    public byte Version { get; set; }
+    public byte Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     private byte _hasAlpha;
     public bool HasAlpha
     {
         get => _hasAlpha != 0;
-        set => _hasAlpha = (byte)(value ? 1 : 0);
+        set
+        {
+            if (HasAlpha == value)
+                return;
+
+            _hasAlpha = (byte)(value ? 1 : 0);
+            OnPropertyChanged(nameof(HasAlpha));
+        }
     }
 
     public override byte[] DataBytes
@@ -46,7 +66,7 @@ public class AnimObjWrapperChunk : NamedChunk
 
     public AnimObjWrapperChunk(string name, byte version, byte hasAlpha) : base(ChunkID, name)
     {
-        Version = version;
+        _version = version;
         _hasAlpha = hasAlpha;
     }
 

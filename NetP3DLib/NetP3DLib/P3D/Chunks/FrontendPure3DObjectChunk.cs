@@ -25,17 +25,147 @@ public class FrontendPure3DObjectChunk : NamedChunk
         Centre
     }
 
+    private uint _version;
     [DefaultValue(1)]
-    public uint Version { get; set; }
-    public int PositionX { get; set; }
-    public int PositionY { get; set; }
-    public uint DimensionX { get; set; }
-    public uint DimensionY { get; set; }
-    public Justifications JustificationX { get; set; }
-    public Justifications JustificationY { get; set; }
-    public Color Colour { get; set; }
-    public uint Translucency { get; set; }
-    public float RotationValue { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
+    private int _positionX;
+    public int PositionX
+    {
+        get => _positionX;
+        set
+        {
+            if (_positionX == value)
+                return;
+    
+            _positionX = value;
+            OnPropertyChanged(nameof(PositionX));
+        }
+    }
+    
+    private int _positionY;
+    public int PositionY
+    {
+        get => _positionY;
+        set
+        {
+            if (_positionY == value)
+                return;
+    
+            _positionY = value;
+            OnPropertyChanged(nameof(PositionY));
+        }
+    }
+    
+    private uint _dimensionX;
+    public uint DimensionX
+    {
+        get => _dimensionX;
+        set
+        {
+            if (_dimensionX == value)
+                return;
+    
+            _dimensionX = value;
+            OnPropertyChanged(nameof(DimensionX));
+        }
+    }
+    
+    private uint _dimensionY;
+    public uint DimensionY
+    {
+        get => _dimensionY;
+        set
+        {
+            if (_dimensionY == value)
+                return;
+    
+            _dimensionY = value;
+            OnPropertyChanged(nameof(DimensionY));
+        }
+    }
+    
+    private Justifications _justificationX;
+    public Justifications JustificationX
+    {
+        get => _justificationX;
+        set
+        {
+            if (_justificationX == value)
+                return;
+    
+            _justificationX = value;
+            OnPropertyChanged(nameof(JustificationX));
+        }
+    }
+    
+    private Justifications _justificationY;
+    public Justifications JustificationY
+    {
+        get => _justificationY;
+        set
+        {
+            if (_justificationY == value)
+                return;
+    
+            _justificationY = value;
+            OnPropertyChanged(nameof(JustificationY));
+        }
+    }
+    
+    private Color _colour;
+    public Color Colour
+    {
+        get => _colour;
+        set
+        {
+            if (_colour == value)
+                return;
+    
+            _colour = value;
+            OnPropertyChanged(nameof(Colour));
+        }
+    }
+    
+    private uint _translucency;
+    public uint Translucency
+    {
+        get => _translucency;
+        set
+        {
+            if (_translucency == value)
+                return;
+    
+            _translucency = value;
+            OnPropertyChanged(nameof(Translucency));
+        }
+    }
+    
+    private float _rotationValue;
+    public float RotationValue
+    {
+        get => _rotationValue;
+        set
+        {
+            if (_rotationValue == value)
+                return;
+    
+            _rotationValue = value;
+            OnPropertyChanged(nameof(RotationValue));
+        }
+    }
+    
     private readonly P3DString _pure3DFilename;
     public string Pure3DFilename
     {
@@ -73,16 +203,16 @@ public class FrontendPure3DObjectChunk : NamedChunk
 
     public FrontendPure3DObjectChunk(string name, uint version, int positionX, int positionY, uint dimensionX, uint dimensionY, Justifications justificationX, Justifications justificationY, Color colour, uint translucency, float rotationValue, string pure3DFilename) : base(ChunkID, name)
     {
-        Version = version;
-        PositionX = positionX;
-        PositionY = positionY;
-        DimensionX = dimensionX;
-        DimensionY = dimensionY;
-        JustificationX = justificationX;
-        JustificationY = justificationY;
-        Colour = colour;
-        Translucency = translucency;
-        RotationValue = rotationValue;
+        _version = version;
+        _positionX = positionX;
+        _positionY = positionY;
+        _dimensionX = dimensionX;
+        _dimensionY = dimensionY;
+        _justificationX = justificationX;
+        _justificationY = justificationY;
+        _colour = colour;
+        _translucency = translucency;
+        _rotationValue = rotationValue;
         _pure3DFilename = new(this, pure3DFilename, nameof(Pure3DFilename));
     }
 

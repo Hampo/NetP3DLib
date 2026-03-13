@@ -12,7 +12,20 @@ public class GameAttributeColourParameterChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Game_Attribute_Colour_Parameter;
 
-    public Color Value { get; set; }
+    private Color _value;
+    public Color Value
+    {
+        get => _value;
+        set
+        {
+            if (_value == value)
+                return;
+    
+            _value = value;
+            OnPropertyChanged(nameof(Value));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -34,7 +47,7 @@ public class GameAttributeColourParameterChunk : NamedChunk
 
     public GameAttributeColourParameterChunk(string name, Color value) : base(ChunkID, name)
     {
-        Value = value;
+        _value = value;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

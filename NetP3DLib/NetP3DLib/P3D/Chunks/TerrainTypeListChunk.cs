@@ -15,8 +15,21 @@ public class TerrainTypeListChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Terrain_Type_List;
 
+    private uint _version;
     [DefaultValue(0)]
-    public uint Version { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     public uint NumTypes
     {
         get => (uint)(Types?.Count ?? 0);
@@ -61,9 +74,24 @@ public class TerrainTypeListChunk : Chunk
 
     public TerrainTypeListChunk(uint version, IList<TerrainType> types) : base(ChunkID)
     {
-        Version = version;
-        Types = CreateSizeAwareList(types);
+        _version = version;
+        Types = CreateSizeAwareList(types, Types_CollectionChanged);
     }
+    
+    private void Types_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
+        OnPropertyChanged(nameof(Types));
+
+        if (e.OldItems != null)
+            foreach (TerrainType oldItem in e.OldItems)
+                oldItem.PropertyChanged -= Types_PropertyChanged;
+    
+        if (e.NewItems != null)
+            foreach (TerrainType newItem in e.NewItems)
+                newItem.PropertyChanged += Types_PropertyChanged;
+    }
+    
+    private void Types_PropertyChanged() => OnPropertyChanged(nameof(Types));
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
     {
@@ -113,8 +141,36 @@ public class TerrainTypeListChunk : Chunk
             Dirt
         }
 
-        public Types Type { get; set; }
-        public bool Interior { get; set; }
+        public event Action? PropertyChanged;
+
+        private Types _type;
+        public Types Type
+        {
+            get => _type;
+            set
+            {
+                if (_type == value)
+                    return;
+    
+                _type = value;
+                PropertyChanged?.Invoke();
+            }
+        }
+    
+        private bool _interior;
+        public bool Interior
+        {
+            get => _interior;
+            set
+            {
+                if (_interior == value)
+                    return;
+    
+                _interior = value;
+                PropertyChanged?.Invoke();
+            }
+        }
+    
         internal byte Value
         {
             get
@@ -126,8 +182,8 @@ public class TerrainTypeListChunk : Chunk
             }
             set
             {
-                Type = (Types)(value & ~0x80);
-                Interior = (value & 0x80) == 0x80;
+                _type = (Types)(value & ~0x80);
+                _interior = (value & 0x80) == 0x80;
             }
         }
 
@@ -138,14 +194,14 @@ public class TerrainTypeListChunk : Chunk
 
         public TerrainType(Types type, bool interior)
         {
-            Type = type;
-            Interior = interior;
+            _type = type;
+            _interior = interior;
         }
 
         public TerrainType()
         {
-            Type = Types.Road;
-            Interior = false;
+            _type = Types.Road;
+            _interior = false;
         }
 
         internal void Write(BinaryWriter bw)

@@ -16,8 +16,21 @@ public class ExpressionChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Expression;
 
+    private uint _version;
     [DefaultValue(0)]
-    public uint Version { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     public uint NumKeys
     {
         get => (uint)(Keys?.Count ?? 0);
@@ -88,10 +101,14 @@ public class ExpressionChunk : NamedChunk
 
     public ExpressionChunk(uint version, string name, IList<float> keys, IList<uint> indices) : base(ChunkID, name)
     {
-        Version = version;
-        Keys = CreateSizeAwareList(keys);
-        Indices = CreateSizeAwareList(indices);
+        _version = version;
+        Keys = CreateSizeAwareList(keys, Keys_CollectionChanged);
+        Indices = CreateSizeAwareList(indices, Indices_CollectionChanged);
     }
+    
+    private void Keys_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(Keys));
+    
+    private void Indices_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(Indices));
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {

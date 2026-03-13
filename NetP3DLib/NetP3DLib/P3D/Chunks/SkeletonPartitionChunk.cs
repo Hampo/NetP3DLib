@@ -58,8 +58,10 @@ public class SkeletonPartitionChunk : NamedChunk
 
     public SkeletonPartitionChunk(string name, IList<uint> jointBits) : base(ChunkID, name)
     {
-        JointBits = CreateSizeAwareList(jointBits);
+        JointBits = CreateSizeAwareList(jointBits, JointBits_CollectionChanged);
     }
+    
+    private void JointBits_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(JointBits));
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
     {

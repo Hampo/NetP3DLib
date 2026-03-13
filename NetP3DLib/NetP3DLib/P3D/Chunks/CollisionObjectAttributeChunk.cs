@@ -15,36 +15,125 @@ public class CollisionObjectAttributeChunk : Chunk
     public bool IsStatic
     {
         get => _isStatic != 0;
-        set => _isStatic = (ushort)(value ? 1 : 0);
+        set
+        {
+            if (IsStatic == value)
+                return;
+
+            _isStatic = (ushort)(value ? 1 : 0);
+            OnPropertyChanged(nameof(IsStatic));
+        }
     }
-    public uint DefaultArea { get; set; }
+    
+    private uint _defaultArea;
+    public uint DefaultArea
+    {
+        get => _defaultArea;
+        set
+        {
+            if (_defaultArea == value)
+                return;
+    
+            _defaultArea = value;
+            OnPropertyChanged(nameof(DefaultArea));
+        }
+    }
+    
     private ushort _canRoll;
     public bool CanRoll
     {
         get => _canRoll != 0;
-        set => _canRoll = (ushort)(value ? 1 : 0);
+        set
+        {
+            if (CanRoll == value)
+                return;
+
+            _canRoll = (ushort)(value ? 1 : 0);
+            OnPropertyChanged(nameof(CanRoll));
+        }
     }
     private ushort _canSlide;
     public bool CanSlide
     {
         get => _canSlide != 0;
-        set => _canSlide = (ushort)(value ? 1 : 0);
+        set
+        {
+            if (CanSlide == value)
+                return;
+
+            _canSlide = (ushort)(value ? 1 : 0);
+            OnPropertyChanged(nameof(CanSlide));
+        }
     }
     private ushort _canSpin;
     public bool CanSpin
     {
         get => _canSpin != 0;
-        set => _canSpin = (ushort)(value ? 1 : 0);
+        set
+        {
+            if (CanSpin == value)
+                return;
+
+            _canSpin = (ushort)(value ? 1 : 0);
+            OnPropertyChanged(nameof(CanSpin));
+        }
     }
     private ushort _canBounce;
     public bool CanBounce
     {
         get => _canBounce != 0;
-        set => _canBounce = (ushort)(value ? 1 : 0);
+        set
+        {
+            if (CanBounce == value)
+                return;
+
+            _canBounce = (ushort)(value ? 1 : 0);
+            OnPropertyChanged(nameof(CanBounce));
+        }
     }
-    public uint ExtraAttribute1 { get; set; }
-    public uint ExtraAttribute2 { get; set; }
-    public uint ExtraAttribute3 { get; set; }
+    
+    private uint _extraAttribute1;
+    public uint ExtraAttribute1
+    {
+        get => _extraAttribute1;
+        set
+        {
+            if (_extraAttribute1 == value)
+                return;
+    
+            _extraAttribute1 = value;
+            OnPropertyChanged(nameof(ExtraAttribute1));
+        }
+    }
+    
+    private uint _extraAttribute2;
+    public uint ExtraAttribute2
+    {
+        get => _extraAttribute2;
+        set
+        {
+            if (_extraAttribute2 == value)
+                return;
+    
+            _extraAttribute2 = value;
+            OnPropertyChanged(nameof(ExtraAttribute2));
+        }
+    }
+    
+    private uint _extraAttribute3;
+    public uint ExtraAttribute3
+    {
+        get => _extraAttribute3;
+        set
+        {
+            if (_extraAttribute3 == value)
+                return;
+    
+            _extraAttribute3 = value;
+            OnPropertyChanged(nameof(ExtraAttribute3));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -78,14 +167,14 @@ public class CollisionObjectAttributeChunk : Chunk
     public CollisionObjectAttributeChunk(ushort isStatic, uint defaultArea, ushort canRoll, ushort canSlide, ushort canSpin, ushort canBounce, uint extraAttribute1, uint extraAttribute2, uint extraAttribute3) : base(ChunkID)
     {
         _isStatic = isStatic;
-        DefaultArea = defaultArea;
+        _defaultArea = defaultArea;
         _canRoll = canRoll;
         _canSlide = canSlide;
         _canSpin = canSpin;
         _canBounce = canBounce;
-        ExtraAttribute1 = extraAttribute1;
-        ExtraAttribute2 = extraAttribute2;
-        ExtraAttribute3 = extraAttribute3;
+        _extraAttribute1 = extraAttribute1;
+        _extraAttribute2 = extraAttribute2;
+        _extraAttribute3 = extraAttribute3;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

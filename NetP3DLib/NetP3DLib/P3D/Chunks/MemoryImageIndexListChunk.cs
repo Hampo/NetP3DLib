@@ -13,8 +13,34 @@ public class MemoryImageIndexListChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Memory_Image_Index_List;
 
-    public uint Version { get; set; }
-    public uint Param { get; set; }
+    private uint _version;
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
+    private uint _param;
+    public uint Param
+    {
+        get => _param;
+        set
+        {
+            if (_param == value)
+                return;
+    
+            _param = value;
+            OnPropertyChanged(nameof(Param));
+        }
+    }
+    
     public uint NumIndices
     {
         get => (uint)(Indices?.Count ?? 0);
@@ -60,10 +86,12 @@ public class MemoryImageIndexListChunk : Chunk
 
     public MemoryImageIndexListChunk(uint version, uint param, IList<ushort> indices) : base(ChunkID)
     {
-        Version = version;
-        Param = param;
-        Indices = CreateSizeAwareList(indices);
+        _version = version;
+        _param = param;
+        Indices = CreateSizeAwareList(indices, Indices_CollectionChanged);
     }
+    
+    private void Indices_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(Indices));
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
     {

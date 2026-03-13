@@ -11,8 +11,34 @@ public class SortOrderChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Sort_Order;
 
-    public uint Version { get; set; }
-    public float SortOrder { get; set; }
+    private uint _version;
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
+    private float _sortOrder;
+    public float SortOrder
+    {
+        get => _sortOrder;
+        set
+        {
+            if (_sortOrder == value)
+                return;
+    
+            _sortOrder = value;
+            OnPropertyChanged(nameof(SortOrder));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -34,8 +60,8 @@ public class SortOrderChunk : Chunk
 
     public SortOrderChunk(uint version, float sortOrder) : base(ChunkID)
     {
-        Version = version;
-        SortOrder = sortOrder;
+        _version = version;
+        _sortOrder = sortOrder;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

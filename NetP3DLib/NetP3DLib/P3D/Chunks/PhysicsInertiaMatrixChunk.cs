@@ -12,7 +12,20 @@ public class PhysicsInertiaMatrixChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Physics_Inertia_Matrix;
 
-    public SymmetricMatrix3x3 Matrix { get; set; }
+    private SymmetricMatrix3x3 _matrix;
+    public SymmetricMatrix3x3 Matrix
+    {
+        get => _matrix;
+        set
+        {
+            if (_matrix == value)
+                return;
+    
+            _matrix = value;
+            OnPropertyChanged(nameof(Matrix));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -33,7 +46,7 @@ public class PhysicsInertiaMatrixChunk : Chunk
 
     public PhysicsInertiaMatrixChunk(SymmetricMatrix3x3 matrix) : base(ChunkID)
     {
-        Matrix = matrix;
+        _matrix = matrix;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

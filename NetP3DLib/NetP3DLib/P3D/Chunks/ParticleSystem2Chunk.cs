@@ -15,8 +15,21 @@ public class ParticleSystem2Chunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Particle_System_2;
 
+    private uint _version;
     [DefaultValue(0)]
-    public uint Version { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     private readonly P3DString _factoryName;
     public string FactoryName
     {
@@ -45,7 +58,7 @@ public class ParticleSystem2Chunk : NamedChunk
 
     public ParticleSystem2Chunk(uint version, string name, string factoryName) : base(ChunkID, name)
     {
-        Version = version;
+        _version = version;
         _factoryName = new(this, factoryName, nameof(FactoryName));
     }
 

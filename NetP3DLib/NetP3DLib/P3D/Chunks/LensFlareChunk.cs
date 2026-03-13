@@ -13,8 +13,21 @@ public class LensFlareChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Lens_Flare;
 
+    private uint _version;
     [DefaultValue(0)]
-    public uint Version { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     public uint NumOldBillboardQuadGroups => GetChildCount(ChunkIdentifier.Old_Billboard_Quad_Group);
 
     public override byte[] DataBytes
@@ -40,7 +53,7 @@ public class LensFlareChunk : NamedChunk
 
     public LensFlareChunk(string name, uint version) : base(ChunkID, name)
     {
-        Version = version;
+        _version = version;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

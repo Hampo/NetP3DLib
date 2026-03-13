@@ -15,8 +15,21 @@ public class OldBaseEmitterChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Base_Emitter;
 
+    private uint _version;
     [DefaultValue(0)]
-    public uint Version { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     private readonly FourCC _particleType;
     [MaxLength(4)]
     public string ParticleType
@@ -35,29 +48,98 @@ public class OldBaseEmitterChunk : NamedChunk
     public bool ZTest
     {
         get => _zTest == 1;
-        set => _zTest = value ? 1u : 0u;
+        set
+        {
+            if (ZTest == value)
+                return;
+
+            _zTest = value ? 1u : 0u;
+            OnPropertyChanged(nameof(ZTest));
+        }
     }
     private uint _zWrite;
     public bool ZWrite
     {
         get => _zWrite == 1;
-        set => _zWrite = value ? 1u : 0u;
+        set
+        {
+            if (ZWrite == value)
+                return;
+
+            _zWrite = value ? 1u : 0u;
+            OnPropertyChanged(nameof(ZWrite));
+        }
     }
     private uint _fog;
     public bool Fog
     {
         get => _fog == 1;
-        set => _fog = value ? 1u : 0u;
+        set
+        {
+            if (Fog == value)
+                return;
+
+            _fog = value ? 1u : 0u;
+            OnPropertyChanged(nameof(Fog));
+        }
     }
-    public uint MaxParticles { get; set; }
+    
+    private uint _maxParticles;
+    public uint MaxParticles
+    {
+        get => _maxParticles;
+        set
+        {
+            if (_maxParticles == value)
+                return;
+    
+            _maxParticles = value;
+            OnPropertyChanged(nameof(MaxParticles));
+        }
+    }
+    
     private uint _infiniteLife;
     public bool InfiniteLife
     {
         get => _infiniteLife == 1;
-        set => _infiniteLife = value ? 1u : 0u;
+        set
+        {
+            if (InfiniteLife == value)
+                return;
+
+            _infiniteLife = value ? 1u : 0u;
+            OnPropertyChanged(nameof(InfiniteLife));
+        }
     }
-    public float RotationalCohesion { get; set; }
-    public float TranslationCohesion { get; set; }
+    
+    private float _rotationalCohesion;
+    public float RotationalCohesion
+    {
+        get => _rotationalCohesion;
+        set
+        {
+            if (_rotationalCohesion == value)
+                return;
+    
+            _rotationalCohesion = value;
+            OnPropertyChanged(nameof(RotationalCohesion));
+        }
+    }
+    
+    private float _translationCohesion;
+    public float TranslationCohesion
+    {
+        get => _translationCohesion;
+        set
+        {
+            if (_translationCohesion == value)
+                return;
+    
+            _translationCohesion = value;
+            OnPropertyChanged(nameof(TranslationCohesion));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -92,16 +174,16 @@ public class OldBaseEmitterChunk : NamedChunk
 
     public OldBaseEmitterChunk(uint version, string name, string particleType, string generatorType, uint zTest, uint zWrite, uint fog, uint maxParticles, uint infiniteLife, float rotationalCohesion, float translationCohesion) : base(ChunkID, name)
     {
-        Version = version;
+        _version = version;
         _particleType = new(this, particleType, nameof(ParticleType));
         _generatorType = new(this, generatorType, nameof(GeneratorType));
         _zTest = zTest;
         _zWrite = zWrite;
         _fog = fog;
-        MaxParticles = maxParticles;
+        _maxParticles = maxParticles;
         _infiniteLife = infiniteLife;
-        RotationalCohesion = rotationalCohesion;
-        TranslationCohesion = translationCohesion;
+        _rotationalCohesion = rotationalCohesion;
+        _translationCohesion = translationCohesion;
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

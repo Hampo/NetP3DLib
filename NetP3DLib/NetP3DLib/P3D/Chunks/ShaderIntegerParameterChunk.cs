@@ -12,7 +12,20 @@ public class ShaderIntegerParameterChunk : ParamChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Shader_Integer_Parameter;
 
-    public uint Value { get; set; }
+    private uint _value;
+    public uint Value
+    {
+        get => _value;
+        set
+        {
+            if (_value == value)
+                return;
+    
+            _value = value;
+            OnPropertyChanged(nameof(Value));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -34,7 +47,7 @@ public class ShaderIntegerParameterChunk : ParamChunk
 
     public ShaderIntegerParameterChunk(string param, uint value) : base(ChunkID, param)
     {
-        Value = value;
+        _value = value;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

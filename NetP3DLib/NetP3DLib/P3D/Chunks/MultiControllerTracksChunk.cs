@@ -79,19 +79,30 @@ public class MultiControllerTracksChunk : Chunk
 
     private void Tracks_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
+        OnPropertyChanged(nameof(Tracks));
+
         if (e.OldItems != null)
+        {
             foreach (Track oldTrack in e.OldItems)
+            {
                 oldTrack.SizeChanged -= Track_SizeChanged;
+                oldTrack.PropertyChanged -= Track_PropertyChanged;
+            }
+        }
 
         if (e.NewItems != null)
+        {
             foreach (Track newTrack in e.NewItems)
+            {
                 newTrack.SizeChanged += Track_SizeChanged;
+                newTrack.PropertyChanged += Track_PropertyChanged;
+            }
+        }
     }
 
-    private void Track_SizeChanged(int delta)
-    {
-        RecalculateSize((uint)(HeaderSize - delta));
-    }
+    private void Track_SizeChanged(int delta) => RecalculateSize((uint)(HeaderSize - delta));
+
+    private void Track_PropertyChanged() => OnPropertyChanged(nameof(Tracks));
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
@@ -121,6 +132,7 @@ public class MultiControllerTracksChunk : Chunk
     public class Track
     {
         public event Action<int>? SizeChanged;
+        public event Action? PropertyChanged;
 
         private string _name = string.Empty;
         public string Name
@@ -134,11 +146,51 @@ public class MultiControllerTracksChunk : Chunk
                 _name = value;
                 var newSize = BinaryExtensions.GetP3DStringLength(_name);
                 SizeChanged?.Invoke((int)(newSize - oldSize));
+                PropertyChanged?.Invoke();
             }
         }
-        public float StartTime { get; set; }
-        public float EndTime { get; set; }
-        public float Scale { get; set; }
+    
+        private float _startTime;
+        public float StartTime
+        {
+            get => _startTime;
+            set
+            {
+                if (_startTime == value)
+                    return;
+    
+                _startTime = value;
+                PropertyChanged?.Invoke();
+            }
+        }
+    
+        private float _endTime;
+        public float EndTime
+        {
+            get => _endTime;
+            set
+            {
+                if (_endTime == value)
+                    return;
+    
+                _endTime = value;
+                PropertyChanged?.Invoke();
+            }
+        }
+    
+        private float _scale;
+        public float Scale
+        {
+            get => _scale;
+            set
+            {
+                if (_scale == value)
+                    return;
+    
+                _scale = value;
+                PropertyChanged?.Invoke();
+            }
+        }
 
         public byte[] DataBytes
         {
@@ -160,25 +212,25 @@ public class MultiControllerTracksChunk : Chunk
         public Track(BinaryReader br)
         {
             _name = br.ReadP3DString();
-            StartTime = br.ReadSingle();
-            EndTime = br.ReadSingle();
-            Scale = br.ReadSingle();
+            _startTime = br.ReadSingle();
+            _endTime = br.ReadSingle();
+            _scale = br.ReadSingle();
         }
 
         public Track(string name, float startTime, float endTime, float scale)
         {
             _name = name;
-            StartTime = startTime;
-            EndTime = endTime;
-            Scale = scale;
+            _startTime = startTime;
+            _endTime = endTime;
+            _scale = scale;
         }
 
         public Track()
         {
             Name = string.Empty;
-            StartTime = 0;
-            EndTime = 0;
-            Scale = 0;
+            _startTime = 0;
+            _endTime = 0;
+            _scale = 0;
         }
 
         public IEnumerable<InvalidP3DException> Validate(MultiControllerTracksChunk chunk)

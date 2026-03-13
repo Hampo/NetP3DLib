@@ -13,11 +13,76 @@ public class FollowCameraDataChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Follow_Camera_Data;
 
-    public uint Index { get; set; }
-    public float Rotation { get; set; }
-    public float Elevation { get; set; }
-    public float Magnitude { get; set; }
-    public Vector3 TargetOffset { get; set; }
+    private uint _index;
+    public uint Index
+    {
+        get => _index;
+        set
+        {
+            if (_index == value)
+                return;
+    
+            _index = value;
+            OnPropertyChanged(nameof(Index));
+        }
+    }
+    
+    private float _rotation;
+    public float Rotation
+    {
+        get => _rotation;
+        set
+        {
+            if (_rotation == value)
+                return;
+    
+            _rotation = value;
+            OnPropertyChanged(nameof(Rotation));
+        }
+    }
+    
+    private float _elevation;
+    public float Elevation
+    {
+        get => _elevation;
+        set
+        {
+            if (_elevation == value)
+                return;
+    
+            _elevation = value;
+            OnPropertyChanged(nameof(Elevation));
+        }
+    }
+    
+    private float _magnitude;
+    public float Magnitude
+    {
+        get => _magnitude;
+        set
+        {
+            if (_magnitude == value)
+                return;
+    
+            _magnitude = value;
+            OnPropertyChanged(nameof(Magnitude));
+        }
+    }
+    
+    private Vector3 _targetOffset;
+    public Vector3 TargetOffset
+    {
+        get => _targetOffset;
+        set
+        {
+            if (_targetOffset == value)
+                return;
+    
+            _targetOffset = value;
+            OnPropertyChanged(nameof(TargetOffset));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -42,11 +107,11 @@ public class FollowCameraDataChunk : Chunk
 
     public FollowCameraDataChunk(uint index, float rotation, float elevation, float magnitude, Vector3 targetOffset) : base(ChunkID)
     {
-        Index = index;
-        Rotation = rotation;
-        Elevation = elevation;
-        Magnitude = magnitude;
-        TargetOffset = targetOffset;
+        _index = index;
+        _rotation = rotation;
+        _elevation = elevation;
+        _magnitude = magnitude;
+        _targetOffset = targetOffset;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

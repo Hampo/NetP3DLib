@@ -12,11 +12,63 @@ public class CompositeDrawablePrimitiveChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Composite_Drawable_Primitive;
 
-    public uint Version { get; set; }
-    public uint CreateInstance { get; set; }
+    private uint _version;
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
+    private uint _createInstance;
+    public uint CreateInstance
+    {
+        get => _createInstance;
+        set
+        {
+            if (_createInstance == value)
+                return;
+    
+            _createInstance = value;
+            OnPropertyChanged(nameof(CreateInstance));
+        }
+    }
+    
     // TODO: Type enum
-    public uint Type { get; set; }
-    public uint SkeletonJointID { get; set; }
+    private uint _type;
+    public uint Type
+    {
+        get => _type;
+        set
+        {
+            if (_type == value)
+                return;
+    
+            _type = value;
+            OnPropertyChanged(nameof(Type));
+        }
+    }
+    
+    private uint _skeletonJointID;
+    public uint SkeletonJointID
+    {
+        get => _skeletonJointID;
+        set
+        {
+            if (_skeletonJointID == value)
+                return;
+    
+            _skeletonJointID = value;
+            OnPropertyChanged(nameof(SkeletonJointID));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -41,10 +93,10 @@ public class CompositeDrawablePrimitiveChunk : NamedChunk
 
     public CompositeDrawablePrimitiveChunk(uint version, uint createInstance, string name, uint type, uint skeletonJointId) : base(ChunkID, name)
     {
-        Version = version;
-        CreateInstance = createInstance;
-        Type = type;
-        SkeletonJointID = skeletonJointId;
+        _version = version;
+        _createInstance = createInstance;
+        _type = type;
+        _skeletonJointID = skeletonJointId;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

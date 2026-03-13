@@ -13,13 +13,33 @@ public class AnimChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Anim;
 
+    private uint _version;
     [DefaultValue(0)]
-    public uint Version { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     private uint _hasAlpha;
     public bool HasAlpha
     {
         get => _hasAlpha != 0;
-        set => _hasAlpha = value ? 1u : 0u;
+        set
+        {
+            if (HasAlpha == value)
+                return;
+
+            _hasAlpha = value ? 1u : 0u;
+            OnPropertyChanged(nameof(HasAlpha));
+        }
     }
 
     public override byte[] DataBytes
@@ -47,7 +67,7 @@ public class AnimChunk : NamedChunk
 
     public AnimChunk(string name, uint version, uint hasAlpha) : base(ChunkID, name)
     {
-        Version = version;
+        _version = version;
         _hasAlpha = hasAlpha;
     }
 

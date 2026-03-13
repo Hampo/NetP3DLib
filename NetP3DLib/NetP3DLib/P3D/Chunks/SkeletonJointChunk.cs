@@ -13,13 +13,104 @@ public class SkeletonJointChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Skeleton_Joint;
 
-    public uint Parent { get; set; }
-    public int DOF { get; set; }
-    public int FreeAxis { get; set; }
-    public int PrimaryAxis { get; set; }
-    public int SecondaryAxis { get; set; }
-    public int TwistAxis { get; set; }
-    public Matrix4x4 RestPose { get; set; }
+    private uint _parent;
+    public uint Parent
+    {
+        get => _parent;
+        set
+        {
+            if (_parent == value)
+                return;
+    
+            _parent = value;
+            OnPropertyChanged(nameof(Parent));
+        }
+    }
+    
+    private int _dOF;
+    public int DOF
+    {
+        get => _dOF;
+        set
+        {
+            if (_dOF == value)
+                return;
+    
+            _dOF = value;
+            OnPropertyChanged(nameof(DOF));
+        }
+    }
+    
+    private int _freeAxis;
+    public int FreeAxis
+    {
+        get => _freeAxis;
+        set
+        {
+            if (_freeAxis == value)
+                return;
+    
+            _freeAxis = value;
+            OnPropertyChanged(nameof(FreeAxis));
+        }
+    }
+    
+    private int _primaryAxis;
+    public int PrimaryAxis
+    {
+        get => _primaryAxis;
+        set
+        {
+            if (_primaryAxis == value)
+                return;
+    
+            _primaryAxis = value;
+            OnPropertyChanged(nameof(PrimaryAxis));
+        }
+    }
+    
+    private int _secondaryAxis;
+    public int SecondaryAxis
+    {
+        get => _secondaryAxis;
+        set
+        {
+            if (_secondaryAxis == value)
+                return;
+    
+            _secondaryAxis = value;
+            OnPropertyChanged(nameof(SecondaryAxis));
+        }
+    }
+    
+    private int _twistAxis;
+    public int TwistAxis
+    {
+        get => _twistAxis;
+        set
+        {
+            if (_twistAxis == value)
+                return;
+    
+            _twistAxis = value;
+            OnPropertyChanged(nameof(TwistAxis));
+        }
+    }
+    
+    private Matrix4x4 _restPose;
+    public Matrix4x4 RestPose
+    {
+        get => _restPose;
+        set
+        {
+            if (_restPose == value)
+                return;
+    
+            _restPose = value;
+            OnPropertyChanged(nameof(RestPose));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -47,13 +138,13 @@ public class SkeletonJointChunk : NamedChunk
 
     public SkeletonJointChunk(string name, uint parent, int dof, int freeAxis, int primaryAxis, int secondaryAxis, int twistAxis, Matrix4x4 restPose) : base(ChunkID, name)
     {
-        Parent = parent;
-        DOF = dof;
-        FreeAxis = freeAxis;
-        PrimaryAxis = primaryAxis;
-        SecondaryAxis = secondaryAxis;
-        TwistAxis = twistAxis;
-        RestPose = restPose;
+        _parent = parent;
+        _dOF = dof;
+        _freeAxis = freeAxis;
+        _primaryAxis = primaryAxis;
+        _secondaryAxis = secondaryAxis;
+        _twistAxis = twistAxis;
+        _restPose = restPose;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

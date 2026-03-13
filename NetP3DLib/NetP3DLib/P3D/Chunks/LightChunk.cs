@@ -20,18 +20,103 @@ public class LightChunk : NamedChunk
         Directional = 2,
     }
 
+    private uint _version;
     [DefaultValue(257)]
-    public uint Version { get; set; }
-    public Types Type { get; set; }
-    public Color Colour { get; set; }
-    public float Constant { get; set; }
-    public float Linear { get; set; }
-    public float Squared { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
+    private Types _type;
+    public Types Type
+    {
+        get => _type;
+        set
+        {
+            if (_type == value)
+                return;
+    
+            _type = value;
+            OnPropertyChanged(nameof(Type));
+        }
+    }
+    
+    private Color _colour;
+    public Color Colour
+    {
+        get => _colour;
+        set
+        {
+            if (_colour == value)
+                return;
+    
+            _colour = value;
+            OnPropertyChanged(nameof(Colour));
+        }
+    }
+    
+    private float _constant;
+    public float Constant
+    {
+        get => _constant;
+        set
+        {
+            if (_constant == value)
+                return;
+    
+            _constant = value;
+            OnPropertyChanged(nameof(Constant));
+        }
+    }
+    
+    private float _linear;
+    public float Linear
+    {
+        get => _linear;
+        set
+        {
+            if (_linear == value)
+                return;
+    
+            _linear = value;
+            OnPropertyChanged(nameof(Linear));
+        }
+    }
+    
+    private float _squared;
+    public float Squared
+    {
+        get => _squared;
+        set
+        {
+            if (_squared == value)
+                return;
+    
+            _squared = value;
+            OnPropertyChanged(nameof(Squared));
+        }
+    }
+    
     private uint _enabled;
     public bool Enabled
     {
         get => _enabled != 0;
-        set => _enabled = value ? 1u : 0u;
+        set
+        {
+            if (Enabled == value)
+                return;
+
+            _enabled = value ? 1u : 0u;
+            OnPropertyChanged(nameof(Enabled));
+        }
     }
 
     public override byte[] DataBytes
@@ -64,12 +149,12 @@ public class LightChunk : NamedChunk
 
     public LightChunk(string name, uint version, Types type, Color colour, float constant, float linear, float squared, uint enabled) : base(ChunkID, name)
     {
-        Version = version;
-        Type = type;
-        Colour = colour;
-        Constant = constant;
-        Linear = linear;
-        Squared = squared;
+        _version = version;
+        _type = type;
+        _colour = colour;
+        _constant = constant;
+        _linear = linear;
+        _squared = squared;
         _enabled = enabled;
     }
 

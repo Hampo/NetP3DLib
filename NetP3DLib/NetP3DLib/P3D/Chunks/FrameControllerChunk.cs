@@ -15,8 +15,21 @@ public class FrameControllerChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Frame_Controller;
 
+    private uint _version;
     [DefaultValue(1)]
-    public uint Version { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     private readonly FourCC _type;
     [MaxLength(4)]
     public string Type
@@ -31,8 +44,35 @@ public class FrameControllerChunk : NamedChunk
         get => _cycleMode?.Value ?? string.Empty;
         set => _cycleMode.Value = value;
     }
-    public uint NumCycles { get; set; }
-    public uint InfiniteCycle { get; set; }
+    
+    private uint _numCycles;
+    public uint NumCycles
+    {
+        get => _numCycles;
+        set
+        {
+            if (_numCycles == value)
+                return;
+    
+            _numCycles = value;
+            OnPropertyChanged(nameof(NumCycles));
+        }
+    }
+    
+    private uint _infiniteCycle;
+    public uint InfiniteCycle
+    {
+        get => _infiniteCycle;
+        set
+        {
+            if (_infiniteCycle == value)
+                return;
+    
+            _infiniteCycle = value;
+            OnPropertyChanged(nameof(InfiniteCycle));
+        }
+    }
+    
     private readonly P3DString _hierarchyName;
     public string HierarchyName
     {
@@ -72,11 +112,11 @@ public class FrameControllerChunk : NamedChunk
 
     public FrameControllerChunk(uint version, string name, string type, string cycleMode, uint numCycles, uint infiniteCycle, string hierarchyName, string animationName) : base(ChunkID, name)
     {
-        Version = version;
+        _version = version;
         _type = new(this, type, nameof(Type));
         _cycleMode = new(this, cycleMode, nameof(CycleMode));
-        NumCycles = numCycles;
-        InfiniteCycle = infiniteCycle;
+        _numCycles = numCycles;
+        _infiniteCycle = infiniteCycle;
         _hierarchyName = new(this, hierarchyName, nameof(HierarchyName));
         _animationName = new(this, animationName, nameof(AnimationName));
     }

@@ -15,15 +15,42 @@ public class CollisionObjectChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Collision_Object;
 
+    private uint _version;
     [DefaultValue(1)]
-    public uint Version { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     private readonly P3DString _materialName;
     public string MaterialName
     {
         get => _materialName?.Value ?? string.Empty;
         set => _materialName.Value = value;
     }
-    public uint NumSubObjects { get; set; }
+    
+    private uint _numSubObjects;
+    public uint NumSubObjects
+    {
+        get => _numSubObjects;
+        set
+        {
+            if (_numSubObjects == value)
+                return;
+    
+            _numSubObjects = value;
+            OnPropertyChanged(nameof(NumSubObjects));
+        }
+    }
+    
     public uint NumOwners => GetChildCount(ChunkIdentifier.Collision_Volume_Owner);
 
     public override byte[] DataBytes
@@ -51,9 +78,9 @@ public class CollisionObjectChunk : NamedChunk
 
     public CollisionObjectChunk(string name, uint version, string materialName, uint numSubObjects) : base(ChunkID, name)
     {
-        Version = version;
+        _version = version;
         _materialName = new(this, materialName, nameof(MaterialName));
-        NumSubObjects = numSubObjects;
+        _numSubObjects = numSubObjects;
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

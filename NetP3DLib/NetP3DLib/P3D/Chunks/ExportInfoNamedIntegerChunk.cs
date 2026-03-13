@@ -12,7 +12,20 @@ public class ExportInfoNamedIntegerChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Export_Info_Named_Integer;
 
-    public uint Value { get; set; }
+    private uint _value;
+    public uint Value
+    {
+        get => _value;
+        set
+        {
+            if (_value == value)
+                return;
+    
+            _value = value;
+            OnPropertyChanged(nameof(Value));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -34,7 +47,7 @@ public class ExportInfoNamedIntegerChunk : NamedChunk
 
     public ExportInfoNamedIntegerChunk(string name, uint value) : base(ChunkID, name)
     {
-        Value = value;
+        _value = value;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

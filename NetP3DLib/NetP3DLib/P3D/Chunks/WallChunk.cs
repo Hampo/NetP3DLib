@@ -12,9 +12,48 @@ public class WallChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Wall;
 
-    public Vector3 Start { get; set; }
-    public Vector3 End { get; set; }
-    public Vector3 Normal { get; set; }
+    private Vector3 _start;
+    public Vector3 Start
+    {
+        get => _start;
+        set
+        {
+            if (_start == value)
+                return;
+    
+            _start = value;
+            OnPropertyChanged(nameof(Start));
+        }
+    }
+    
+    private Vector3 _end;
+    public Vector3 End
+    {
+        get => _end;
+        set
+        {
+            if (_end == value)
+                return;
+    
+            _end = value;
+            OnPropertyChanged(nameof(End));
+        }
+    }
+    
+    private Vector3 _normal;
+    public Vector3 Normal
+    {
+        get => _normal;
+        set
+        {
+            if (_normal == value)
+                return;
+    
+            _normal = value;
+            OnPropertyChanged(nameof(Normal));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -37,9 +76,9 @@ public class WallChunk : Chunk
 
     public WallChunk(Vector3 start, Vector3 end, Vector3 normal) : base(ChunkID)
     {
-        Start = start;
-        End = end;
-        Normal = normal;
+        _start = start;
+        _end = end;
+        _normal = normal;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

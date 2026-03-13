@@ -15,17 +15,70 @@ public class PhysicsObjectChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Physics_Object;
 
+    private uint _version;
     [DefaultValue(1)]
-    public uint Version { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     private readonly P3DString _materialName;
     public string MaterialName
     {
         get => _materialName?.Value ?? string.Empty;
         set => _materialName.Value = value;
     }
-    public uint NumJoints { get; set; }
-    public float Volume { get; set; }
-    public float RestingSensitivity { get; set; }
+    
+    private uint _numJoints;
+    public uint NumJoints
+    {
+        get => _numJoints;
+        set
+        {
+            if (_numJoints == value)
+                return;
+    
+            _numJoints = value;
+            OnPropertyChanged(nameof(NumJoints));
+        }
+    }
+    
+    private float _volume;
+    public float Volume
+    {
+        get => _volume;
+        set
+        {
+            if (_volume == value)
+                return;
+    
+            _volume = value;
+            OnPropertyChanged(nameof(Volume));
+        }
+    }
+    
+    private float _restingSensitivity;
+    public float RestingSensitivity
+    {
+        get => _restingSensitivity;
+        set
+        {
+            if (_restingSensitivity == value)
+                return;
+    
+            _restingSensitivity = value;
+            OnPropertyChanged(nameof(RestingSensitivity));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -51,11 +104,11 @@ public class PhysicsObjectChunk : NamedChunk
 
     public PhysicsObjectChunk(string name, uint version, string materialName, uint numJoints, float volume, float restingSensitivity) : base(ChunkID, name)
     {
-        Version = version;
+        _version = version;
         _materialName = new(this, materialName, nameof(MaterialName));
-        NumJoints = numJoints;
-        Volume = volume;
-        RestingSensitivity = restingSensitivity;
+        _numJoints = numJoints;
+        _volume = volume;
+        _restingSensitivity = restingSensitivity;
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

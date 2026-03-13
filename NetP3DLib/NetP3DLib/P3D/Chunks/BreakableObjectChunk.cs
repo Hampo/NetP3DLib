@@ -43,8 +43,34 @@ public class BreakableObjectChunk : Chunk
         CasinoJump = 33,
     }
 
-    public Indexes Index { get; set; }
-    public uint MaxInstances { get; set; }
+    private Indexes _index;
+    public Indexes Index
+    {
+        get => _index;
+        set
+        {
+            if (_index == value)
+                return;
+    
+            _index = value;
+            OnPropertyChanged(nameof(Index));
+        }
+    }
+    
+    private uint _maxInstances;
+    public uint MaxInstances
+    {
+        get => _maxInstances;
+        set
+        {
+            if (_maxInstances == value)
+                return;
+    
+            _maxInstances = value;
+            OnPropertyChanged(nameof(MaxInstances));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -66,8 +92,8 @@ public class BreakableObjectChunk : Chunk
 
     public BreakableObjectChunk(Indexes index, uint maxInstances) : base(ChunkID)
     {
-        Index = index;
-        MaxInstances = maxInstances;
+        _index = index;
+        _maxInstances = maxInstances;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

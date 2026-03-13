@@ -60,8 +60,10 @@ public class PathChunk : Chunk
 
     public PathChunk(IList<Vector3> positions) : base(ChunkID)
     {
-        Positions = CreateSizeAwareList(positions);
+        Positions = CreateSizeAwareList(positions, Positions_CollectionChanged);
     }
+    
+    private void Positions_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(Positions));
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {

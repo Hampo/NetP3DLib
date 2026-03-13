@@ -15,9 +15,48 @@ public class BillboardQuadChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Billboard_Quad;
 
-    public uint Version { get; set; }
-    public uint CutOffEnabled { get; set; }
-    public uint Perspective { get; set; }
+    private uint _version;
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
+    private uint _cutOffEnabled;
+    public uint CutOffEnabled
+    {
+        get => _cutOffEnabled;
+        set
+        {
+            if (_cutOffEnabled == value)
+                return;
+    
+            _cutOffEnabled = value;
+            OnPropertyChanged(nameof(CutOffEnabled));
+        }
+    }
+    
+    private uint _perspective;
+    public uint Perspective
+    {
+        get => _perspective;
+        set
+        {
+            if (_perspective == value)
+                return;
+    
+            _perspective = value;
+            OnPropertyChanged(nameof(Perspective));
+        }
+    }
+    
     private readonly FourCC _axisMode;
     [MaxLength(4)]
     public string AxisMode
@@ -25,10 +64,63 @@ public class BillboardQuadChunk : NamedChunk
         get => _axisMode?.Value ?? string.Empty;
         set => _axisMode.Value = value;
     }
-    public Color Colour { get; set; }
-    public float Width { get; set; }
-    public float Height { get; set; }
-    public float Distance { get; set; }
+    
+    private Color _colour;
+    public Color Colour
+    {
+        get => _colour;
+        set
+        {
+            if (_colour == value)
+                return;
+    
+            _colour = value;
+            OnPropertyChanged(nameof(Colour));
+        }
+    }
+    
+    private float _width;
+    public float Width
+    {
+        get => _width;
+        set
+        {
+            if (_width == value)
+                return;
+    
+            _width = value;
+            OnPropertyChanged(nameof(Width));
+        }
+    }
+    
+    private float _height;
+    public float Height
+    {
+        get => _height;
+        set
+        {
+            if (_height == value)
+                return;
+    
+            _height = value;
+            OnPropertyChanged(nameof(Height));
+        }
+    }
+    
+    private float _distance;
+    public float Distance
+    {
+        get => _distance;
+        set
+        {
+            if (_distance == value)
+                return;
+    
+            _distance = value;
+            OnPropertyChanged(nameof(Distance));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -57,14 +149,14 @@ public class BillboardQuadChunk : NamedChunk
 
     public BillboardQuadChunk(uint version, string name, uint cutOffEnabled, uint perspective, string axisMode, Color colour, float width, float height, float distance) : base(ChunkID, name)
     {
-        Version = version;
-        CutOffEnabled = cutOffEnabled;
-        Perspective = perspective;
+        _version = version;
+        _cutOffEnabled = cutOffEnabled;
+        _perspective = perspective;
         _axisMode = new(this, axisMode, nameof(AxisMode));
-        Colour = colour;
-        Width = width;
-        Height = height;
-        Distance = distance;
+        _colour = colour;
+        _width = width;
+        _height = height;
+        _distance = distance;
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

@@ -17,7 +17,20 @@ public class RoadChunk : NamedChunk
     private const uint IntelligenceMask = 0x0000FF00;
     private const uint ShortcutMask = 0x00010000;
 
-    public uint Type { get; set; }
+    private uint _type;
+    public uint Type
+    {
+        get => _type;
+        set
+        {
+            if (_type == value)
+                return;
+    
+            _type = value;
+            OnPropertyChanged(nameof(Type));
+        }
+    }
+    
     private readonly P3DString _startIntersection;
     public string StartIntersection
     {
@@ -30,7 +43,21 @@ public class RoadChunk : NamedChunk
         get => _endIntersection?.Value ?? string.Empty;
         set => _endIntersection.Value = value;
     }
-    public uint MaximumCars { get; set; }
+    
+    private uint _maximumCars;
+    public uint MaximumCars
+    {
+        get => _maximumCars;
+        set
+        {
+            if (_maximumCars == value)
+                return;
+    
+            _maximumCars = value;
+            OnPropertyChanged(nameof(MaximumCars));
+        }
+    }
+    
     private uint _bitmask;
     public byte Speed
     {
@@ -94,10 +121,10 @@ public class RoadChunk : NamedChunk
 
     public RoadChunk(string name, uint type, string startIntersection, string endIntersection, uint maximumCars, uint bitmask) : base(ChunkID, name)
     {
-        Type = type;
+        _type = type;
         _startIntersection = new(this, startIntersection, nameof(StartIntersection));
         _endIntersection = new(this, endIntersection, nameof(EndIntersection));
-        MaximumCars = maximumCars;
+        _maximumCars = maximumCars;
         _bitmask = bitmask;
     }
 

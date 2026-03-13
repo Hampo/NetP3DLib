@@ -26,13 +26,17 @@ public class BinormalListChunk : Chunk
 
             if (value < NumBinormals)
             {
-                while (NumBinormals > value)
-                    Binormals.RemoveAt(Binormals.Count - 1);
+                Binormals.RemoveRange((int)value, (int)(NumBinormals - value));
             }
             else
             {
-                while (NumBinormals < value)
-                    Binormals.Add(default);
+                int count = (int)(value - NumBinormals);
+                var newBinormals = new Vector3[count];
+
+                for (var i = 0; i < count; i++)
+                    newBinormals[i] = default;
+
+                Binormals.AddRange(newBinormals);
             }
         }
     }
@@ -59,8 +63,10 @@ public class BinormalListChunk : Chunk
 
     public BinormalListChunk(IList<Vector3> binormals) : base(ChunkID)
     {
-        Binormals = CreateSizeAwareList(binormals);
+        Binormals = CreateSizeAwareList(binormals, Binormals_CollectionChanged);
     }
+    
+    private void Binormals_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(Binormals));
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {

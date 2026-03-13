@@ -15,7 +15,14 @@ public class RenderStatusChunk : Chunk
     public bool CastShadow
     {
         get => _castShadow == 0;
-        set => _castShadow = value ? 0u : 1u;
+        set
+        {
+            if (CastShadow == value)
+                return;
+
+            _castShadow = value ? 0u : 1u;
+            OnPropertyChanged(nameof(CastShadow));
+        }
     }
 
     public override byte[] DataBytes

@@ -11,10 +11,62 @@ public class LightConeParamChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Light_Cone_Param;
 
-    public float Phi { get; set; }
-    public float Theta { get; set; }
-    public float Falloff { get; set; }
-    public float Range { get; set; }
+    private float _phi;
+    public float Phi
+    {
+        get => _phi;
+        set
+        {
+            if (_phi == value)
+                return;
+    
+            _phi = value;
+            OnPropertyChanged(nameof(Phi));
+        }
+    }
+    
+    private float _theta;
+    public float Theta
+    {
+        get => _theta;
+        set
+        {
+            if (_theta == value)
+                return;
+    
+            _theta = value;
+            OnPropertyChanged(nameof(Theta));
+        }
+    }
+    
+    private float _falloff;
+    public float Falloff
+    {
+        get => _falloff;
+        set
+        {
+            if (_falloff == value)
+                return;
+    
+            _falloff = value;
+            OnPropertyChanged(nameof(Falloff));
+        }
+    }
+    
+    private float _range;
+    public float Range
+    {
+        get => _range;
+        set
+        {
+            if (_range == value)
+                return;
+    
+            _range = value;
+            OnPropertyChanged(nameof(Range));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -38,10 +90,10 @@ public class LightConeParamChunk : Chunk
 
     public LightConeParamChunk(float phi, float theta, float falloff, float range) : base(ChunkID)
     {
-        Phi = phi;
-        Theta = theta;
-        Falloff = falloff;
-        Range = range;
+        _phi = phi;
+        _theta = theta;
+        _falloff = falloff;
+        _range = range;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

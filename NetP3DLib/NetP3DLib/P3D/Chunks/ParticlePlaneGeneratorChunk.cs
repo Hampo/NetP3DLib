@@ -11,12 +11,90 @@ public class ParticlePlaneGeneratorChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Particle_Plane_Generator;
 
-    public uint Version { get; set; }
-    public float Width { get; set; }
-    public float Height { get; set; }
-    public float HorizontalSpread { get; set; }
-    public float VerticalSpread { get; set; }
-    public float RadialVar { get; set; }
+    private uint _version;
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
+    private float _width;
+    public float Width
+    {
+        get => _width;
+        set
+        {
+            if (_width == value)
+                return;
+    
+            _width = value;
+            OnPropertyChanged(nameof(Width));
+        }
+    }
+    
+    private float _height;
+    public float Height
+    {
+        get => _height;
+        set
+        {
+            if (_height == value)
+                return;
+    
+            _height = value;
+            OnPropertyChanged(nameof(Height));
+        }
+    }
+    
+    private float _horizontalSpread;
+    public float HorizontalSpread
+    {
+        get => _horizontalSpread;
+        set
+        {
+            if (_horizontalSpread == value)
+                return;
+    
+            _horizontalSpread = value;
+            OnPropertyChanged(nameof(HorizontalSpread));
+        }
+    }
+    
+    private float _verticalSpread;
+    public float VerticalSpread
+    {
+        get => _verticalSpread;
+        set
+        {
+            if (_verticalSpread == value)
+                return;
+    
+            _verticalSpread = value;
+            OnPropertyChanged(nameof(VerticalSpread));
+        }
+    }
+    
+    private float _radialVar;
+    public float RadialVar
+    {
+        get => _radialVar;
+        set
+        {
+            if (_radialVar == value)
+                return;
+    
+            _radialVar = value;
+            OnPropertyChanged(nameof(RadialVar));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -42,12 +120,12 @@ public class ParticlePlaneGeneratorChunk : Chunk
 
     public ParticlePlaneGeneratorChunk(uint version, float width, float height, float horizontalSpread, float verticalSpread, float radialVar) : base(ChunkID)
     {
-        Version = version;
-        Width = width;
-        Height = height;
-        HorizontalSpread = horizontalSpread;
-        VerticalSpread = verticalSpread;
-        RadialVar = radialVar;
+        _version = version;
+        _width = width;
+        _height = height;
+        _horizontalSpread = horizontalSpread;
+        _verticalSpread = verticalSpread;
+        _radialVar = radialVar;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

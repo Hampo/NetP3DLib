@@ -15,8 +15,21 @@ public class FrontendTextBibleResourceChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Frontend_Text_Bible_Resource;
 
+    private uint _version;
     [DefaultValue(1)]
-    public uint Version { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     private readonly P3DString _filename;
     public string Filename
     {
@@ -52,7 +65,7 @@ public class FrontendTextBibleResourceChunk : NamedChunk
 
     public FrontendTextBibleResourceChunk(string name, uint version, string filename, string inventoryName) : base(ChunkID, name)
     {
-        Version = version;
+        _version = version;
         _filename = new(this, filename, nameof(Filename));
         _inventoryName = new(this, inventoryName, nameof(InventoryName));
     }

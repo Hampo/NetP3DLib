@@ -11,7 +11,20 @@ public class CollisionMetaDataChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Collision_Meta_Data;
 
-    public uint Version { get; set; }
+    private uint _version;
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     public uint NumChannels => (uint)Children.Count; // TODO: Potentially calculate from channel chunks specifically
 
     public override byte[] DataBytes
@@ -36,7 +49,7 @@ public class CollisionMetaDataChunk : Chunk
 
     public CollisionMetaDataChunk(uint version) : base(ChunkID)
     {
-        Version = version;
+        _version = version;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

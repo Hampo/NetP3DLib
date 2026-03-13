@@ -84,9 +84,10 @@ public abstract class Chunk
 
     public event Action<Chunk, int>? SizeChanged;
     protected SizeAwareList<T> CreateSizeAwareList<T>(int capacity = 0) => new(this, RecalculateSize, capacity);
-    protected SizeAwareList<T> CreateSizeAwareList<T>(IList<T> values)
+    protected SizeAwareList<T> CreateSizeAwareList<T>(IList<T> values, System.Collections.Specialized.NotifyCollectionChangedEventHandler collectionChangedHandler)
     {
         var list = new SizeAwareList<T>(this, RecalculateSize, values.Count);
+        list.CollectionChanged += collectionChangedHandler;
         list.AddRange(values);
         return list;
     }

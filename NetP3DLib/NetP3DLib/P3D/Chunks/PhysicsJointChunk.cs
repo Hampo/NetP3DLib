@@ -18,12 +18,90 @@ public class PhysicsJointChunk : Chunk
         BallAndSocket_3D = 3
     }
 
-    public int Index { get; set; }
-    public float Volume { get; set; }
-    public float Stiffness { get; set; }
-    public float MaxAngle { get; set; }
-    public float MinAngle { get; set; }
-    public DegreeOfFreedom DegreesOfFreedom { get; set; }
+    private int _index;
+    public int Index
+    {
+        get => _index;
+        set
+        {
+            if (_index == value)
+                return;
+    
+            _index = value;
+            OnPropertyChanged(nameof(Index));
+        }
+    }
+    
+    private float _volume;
+    public float Volume
+    {
+        get => _volume;
+        set
+        {
+            if (_volume == value)
+                return;
+    
+            _volume = value;
+            OnPropertyChanged(nameof(Volume));
+        }
+    }
+    
+    private float _stiffness;
+    public float Stiffness
+    {
+        get => _stiffness;
+        set
+        {
+            if (_stiffness == value)
+                return;
+    
+            _stiffness = value;
+            OnPropertyChanged(nameof(Stiffness));
+        }
+    }
+    
+    private float _maxAngle;
+    public float MaxAngle
+    {
+        get => _maxAngle;
+        set
+        {
+            if (_maxAngle == value)
+                return;
+    
+            _maxAngle = value;
+            OnPropertyChanged(nameof(MaxAngle));
+        }
+    }
+    
+    private float _minAngle;
+    public float MinAngle
+    {
+        get => _minAngle;
+        set
+        {
+            if (_minAngle == value)
+                return;
+    
+            _minAngle = value;
+            OnPropertyChanged(nameof(MinAngle));
+        }
+    }
+    
+    private DegreeOfFreedom _degreesOfFreedom;
+    public DegreeOfFreedom DegreesOfFreedom
+    {
+        get => _degreesOfFreedom;
+        set
+        {
+            if (_degreesOfFreedom == value)
+                return;
+    
+            _degreesOfFreedom = value;
+            OnPropertyChanged(nameof(DegreesOfFreedom));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -49,12 +127,12 @@ public class PhysicsJointChunk : Chunk
 
     public PhysicsJointChunk(int index, float volume, float stiffness, float maxAngle, float minAngle, DegreeOfFreedom degreesOfFreedom) : base(ChunkID)
     {
-        Index = index;
-        Volume = volume;
-        Stiffness = stiffness;
-        MaxAngle = maxAngle;
-        MinAngle = minAngle;
-        DegreesOfFreedom = degreesOfFreedom;
+        _index = index;
+        _volume = volume;
+        _stiffness = stiffness;
+        _maxAngle = maxAngle;
+        _minAngle = minAngle;
+        _degreesOfFreedom = degreesOfFreedom;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

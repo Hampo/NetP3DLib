@@ -15,7 +15,14 @@ public class LightShadowChunk : Chunk
     public bool Shadow
     {
         get => _shadow == 1;
-        set => _shadow = value ? 1u : 0u;
+        set
+        {
+            if (Shadow == value)
+                return;
+
+            _shadow = value ? 1u : 0u;
+            OnPropertyChanged(nameof(Shadow));
+        }
     }
 
     public override byte[] DataBytes

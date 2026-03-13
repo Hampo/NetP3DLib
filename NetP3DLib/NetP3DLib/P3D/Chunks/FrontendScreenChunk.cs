@@ -16,8 +16,21 @@ public class FrontendScreenChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Frontend_Screen;
 
+    private uint _version;
     [DefaultValue(0)]
-    public uint Version { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     public uint NumPageNames
     {
         get => (uint)(PageNames?.Count ?? 0);
@@ -75,9 +88,11 @@ public class FrontendScreenChunk : NamedChunk
 
     public FrontendScreenChunk(string name, uint version, IList<string> pageNames) : base(ChunkID, name)
     {
-        Version = version;
-        PageNames = CreateSizeAwareList(pageNames);
+        _version = version;
+        PageNames = CreateSizeAwareList(pageNames, PageNames_CollectionChanged);
     }
+    
+    private void PageNames_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(PageNames));
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {

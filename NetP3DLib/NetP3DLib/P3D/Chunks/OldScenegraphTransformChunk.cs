@@ -14,7 +14,20 @@ public class OldScenegraphTransformChunk : NamedChunk
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Scenegraph_Transform;
 
     public uint NumChildren => (uint)Children.Count;
-    public Matrix4x4 Transform { get; set; }
+    private Matrix4x4 _transform;
+    public Matrix4x4 Transform
+    {
+        get => _transform;
+        set
+        {
+            if (_transform == value)
+                return;
+    
+            _transform = value;
+            OnPropertyChanged(nameof(Transform));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -37,7 +50,7 @@ public class OldScenegraphTransformChunk : NamedChunk
 
     public OldScenegraphTransformChunk(string name, Matrix4x4 transform) : base(ChunkID, name)
     {
-        Transform = transform;
+        _transform = transform;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

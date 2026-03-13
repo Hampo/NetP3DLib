@@ -15,8 +15,21 @@ public class StatePropDataV1Chunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.State_Prop_Data_V1;
 
+    private uint _version;
     [DefaultValue(1)]
-    public uint Version { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     private readonly P3DString _objectFactoryName;
     public string ObjectFactoryName
     {
@@ -49,7 +62,7 @@ public class StatePropDataV1Chunk : NamedChunk
 
     public StatePropDataV1Chunk(uint version, string name, string objectFactoryName) : base(ChunkID, name)
     {
-        Version = version;
+        _version = version;
         _objectFactoryName = new(this, objectFactoryName, nameof(ObjectFactoryName));
     }
 

@@ -12,7 +12,20 @@ public class PhysicsVectorChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Physics_Vector;
 
-    public Vector3 Vector { get; set; }
+    private Vector3 _vector;
+    public Vector3 Vector
+    {
+        get => _vector;
+        set
+        {
+            if (_vector == value)
+                return;
+    
+            _vector = value;
+            OnPropertyChanged(nameof(Vector));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -33,7 +46,7 @@ public class PhysicsVectorChunk : Chunk
 
     public PhysicsVectorChunk(Vector3 vector) : base(ChunkID)
     {
-        Vector = vector;
+        _vector = vector;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

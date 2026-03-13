@@ -16,18 +16,86 @@ public class StatePropFrameControllerDataChunk : NamedChunk
     public bool Cyclic
     {
         get => _cyclic != 0;
-        set => _cyclic = value ? 1u : 0u;
+        set
+        {
+            if (Cyclic == value)
+                return;
+
+            _cyclic = value ? 1u : 0u;
+            OnPropertyChanged(nameof(Cyclic));
+        }
     }
-    public uint NumCycles { get; set; }
+    
+    private uint _numCycles;
+    public uint NumCycles
+    {
+        get => _numCycles;
+        set
+        {
+            if (_numCycles == value)
+                return;
+    
+            _numCycles = value;
+            OnPropertyChanged(nameof(NumCycles));
+        }
+    }
+    
     private uint _holdFrame;
     public bool HoldFrame
     {
         get => _holdFrame != 0;
-        set => _holdFrame = value ? 1u : 0u;
+        set
+        {
+            if (HoldFrame == value)
+                return;
+
+            _holdFrame = value ? 1u : 0u;
+            OnPropertyChanged(nameof(HoldFrame));
+        }
     }
-    public float MinFrame { get; set; }
-    public float MaxFrame { get; set; }
-    public float RelativeSpeed { get; set; }
+    
+    private float _minFrame;
+    public float MinFrame
+    {
+        get => _minFrame;
+        set
+        {
+            if (_minFrame == value)
+                return;
+    
+            _minFrame = value;
+            OnPropertyChanged(nameof(MinFrame));
+        }
+    }
+    
+    private float _maxFrame;
+    public float MaxFrame
+    {
+        get => _maxFrame;
+        set
+        {
+            if (_maxFrame == value)
+                return;
+    
+            _maxFrame = value;
+            OnPropertyChanged(nameof(MaxFrame));
+        }
+    }
+    
+    private float _relativeSpeed;
+    public float RelativeSpeed
+    {
+        get => _relativeSpeed;
+        set
+        {
+            if (_relativeSpeed == value)
+                return;
+    
+            _relativeSpeed = value;
+            OnPropertyChanged(nameof(RelativeSpeed));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -59,11 +127,11 @@ public class StatePropFrameControllerDataChunk : NamedChunk
     public StatePropFrameControllerDataChunk(string name, uint cyclic, uint numCycles, uint holdFrame, float minFrame, float maxFrame, float relativeSpeed) : base(ChunkID, name)
     {
         _cyclic = cyclic;
-        NumCycles = numCycles;
+        _numCycles = numCycles;
         _holdFrame = holdFrame;
-        MinFrame = minFrame;
-        MaxFrame = maxFrame;
-        RelativeSpeed = relativeSpeed;
+        _minFrame = minFrame;
+        _maxFrame = maxFrame;
+        _relativeSpeed = relativeSpeed;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

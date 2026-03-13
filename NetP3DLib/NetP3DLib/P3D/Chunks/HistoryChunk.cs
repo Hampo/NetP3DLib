@@ -71,8 +71,10 @@ public class HistoryChunk : Chunk
 
     public HistoryChunk(IList<string> history) : base(ChunkID)
     {
-        History = CreateSizeAwareList(history);
+        History = CreateSizeAwareList(history, History_CollectionChanged);
     }
+    
+    private void History_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(History));
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {

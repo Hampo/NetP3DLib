@@ -19,27 +19,160 @@ public class RailCamChunk : NamedChunk
         Projection,
     }
 
-    public Behaviours Behaviour { get; set; }
-    public float MinRadius { get; set; }
-    public float MaxRadius { get; set; }
+    private Behaviours _behaviour;
+    public Behaviours Behaviour
+    {
+        get => _behaviour;
+        set
+        {
+            if (_behaviour == value)
+                return;
+    
+            _behaviour = value;
+            OnPropertyChanged(nameof(Behaviour));
+        }
+    }
+    
+    private float _minRadius;
+    public float MinRadius
+    {
+        get => _minRadius;
+        set
+        {
+            if (_minRadius == value)
+                return;
+    
+            _minRadius = value;
+            OnPropertyChanged(nameof(MinRadius));
+        }
+    }
+    
+    private float _maxRadius;
+    public float MaxRadius
+    {
+        get => _maxRadius;
+        set
+        {
+            if (_maxRadius == value)
+                return;
+    
+            _maxRadius = value;
+            OnPropertyChanged(nameof(MaxRadius));
+        }
+    }
+    
     private uint _trackRail;
     public bool TrackRail
     {
         get => _trackRail == 1;
-        set => _trackRail = value ? 1u : 0u;
+        set
+        {
+            if (TrackRail == value)
+                return;
+
+            _trackRail = value ? 1u : 0u;
+            OnPropertyChanged(nameof(TrackRail));
+        }
     }
-    public float TrackDist { get; set; }
+    
+    private float _trackDist;
+    public float TrackDist
+    {
+        get => _trackDist;
+        set
+        {
+            if (_trackDist == value)
+                return;
+    
+            _trackDist = value;
+            OnPropertyChanged(nameof(TrackDist));
+        }
+    }
+    
     private uint _reverseSense;
     public bool ReverseSense
     {
         get => _reverseSense == 1;
-        set => _reverseSense = value ? 1u : 0u;
+        set
+        {
+            if (ReverseSense == value)
+                return;
+
+            _reverseSense = value ? 1u : 0u;
+            OnPropertyChanged(nameof(ReverseSense));
+        }
     }
-    public float FOV { get; set; }
-    public Vector3 TargetOffset { get; set; }
-    public Vector3 AxisPlay { get; set; }
-    public float PositionLag { get; set; }
-    public float TargetLag { get; set; }
+    
+    private float _fOV;
+    public float FOV
+    {
+        get => _fOV;
+        set
+        {
+            if (_fOV == value)
+                return;
+    
+            _fOV = value;
+            OnPropertyChanged(nameof(FOV));
+        }
+    }
+    
+    private Vector3 _targetOffset;
+    public Vector3 TargetOffset
+    {
+        get => _targetOffset;
+        set
+        {
+            if (_targetOffset == value)
+                return;
+    
+            _targetOffset = value;
+            OnPropertyChanged(nameof(TargetOffset));
+        }
+    }
+    
+    private Vector3 _axisPlay;
+    public Vector3 AxisPlay
+    {
+        get => _axisPlay;
+        set
+        {
+            if (_axisPlay == value)
+                return;
+    
+            _axisPlay = value;
+            OnPropertyChanged(nameof(AxisPlay));
+        }
+    }
+    
+    private float _positionLag;
+    public float PositionLag
+    {
+        get => _positionLag;
+        set
+        {
+            if (_positionLag == value)
+                return;
+    
+            _positionLag = value;
+            OnPropertyChanged(nameof(PositionLag));
+        }
+    }
+    
+    private float _targetLag;
+    public float TargetLag
+    {
+        get => _targetLag;
+        set
+        {
+            if (_targetLag == value)
+                return;
+    
+            _targetLag = value;
+            OnPropertyChanged(nameof(TargetLag));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -75,17 +208,17 @@ public class RailCamChunk : NamedChunk
 
     public RailCamChunk(string name, Behaviours behaviour, float minRadius, float maxRadius, uint trackRail, float trackDist, uint reverseSense, float fov, Vector3 targetOffset, Vector3 axisPlay, float positionLag, float targetLag) : base(ChunkID, name)
     {
-        Behaviour = behaviour;
-        MinRadius = minRadius;
-        MaxRadius = maxRadius;
+        _behaviour = behaviour;
+        _minRadius = minRadius;
+        _maxRadius = maxRadius;
         _trackRail = trackRail;
-        TrackDist = trackDist;
+        _trackDist = trackDist;
         _reverseSense = reverseSense;
-        FOV = fov;
-        TargetOffset = targetOffset;
-        AxisPlay = axisPlay;
-        PositionLag = positionLag;
-        TargetLag = targetLag;
+        _fOV = fov;
+        _targetOffset = targetOffset;
+        _axisPlay = axisPlay;
+        _positionLag = positionLag;
+        _targetLag = targetLag;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

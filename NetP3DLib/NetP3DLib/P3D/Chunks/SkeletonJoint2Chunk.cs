@@ -13,8 +13,34 @@ public class SkeletonJoint2Chunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Skeleton_Joint_2;
 
-    public uint Parent { get; set; }
-    public Matrix4x4 RestPose { get; set; }
+    private uint _parent;
+    public uint Parent
+    {
+        get => _parent;
+        set
+        {
+            if (_parent == value)
+                return;
+    
+            _parent = value;
+            OnPropertyChanged(nameof(Parent));
+        }
+    }
+    
+    private Matrix4x4 _restPose;
+    public Matrix4x4 RestPose
+    {
+        get => _restPose;
+        set
+        {
+            if (_restPose == value)
+                return;
+    
+            _restPose = value;
+            OnPropertyChanged(nameof(RestPose));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -37,8 +63,8 @@ public class SkeletonJoint2Chunk : NamedChunk
 
     public SkeletonJoint2Chunk(string name, uint parent, Matrix4x4 restPose) : base(ChunkID, name)
     {
-        Parent = parent;
-        RestPose = restPose;
+        _parent = parent;
+        _restPose = restPose;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

@@ -11,7 +11,20 @@ public class FrameControllerListChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Frame_Controller_List;
 
-    public uint Version { get; set; }
+    private uint _version;
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     public uint NumControllers => GetChildCount(ChunkIdentifier.Frame_Controller);
 
     public override byte[] DataBytes
@@ -36,7 +49,7 @@ public class FrameControllerListChunk : Chunk
 
     public FrameControllerListChunk(uint version) : base(ChunkID)
     {
-        Version = version;
+        _version = version;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

@@ -36,10 +36,49 @@ public class OldFrameControllerChunk : NamedChunk
 
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Frame_Controller;
 
+    private uint _version;
     [DefaultValue(0)]
-    public uint Version { get; set; }
-    public AnimationType Type { get; set; }
-    public float FrameOffset { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
+    private AnimationType _type;
+    public AnimationType Type
+    {
+        get => _type;
+        set
+        {
+            if (_type == value)
+                return;
+    
+            _type = value;
+            OnPropertyChanged(nameof(Type));
+        }
+    }
+    
+    private float _frameOffset;
+    public float FrameOffset
+    {
+        get => _frameOffset;
+        set
+        {
+            if (_frameOffset == value)
+                return;
+    
+            _frameOffset = value;
+            OnPropertyChanged(nameof(FrameOffset));
+        }
+    }
+    
     private readonly P3DString _hierarchyName;
     public string HierarchyName
     {
@@ -76,9 +115,9 @@ public class OldFrameControllerChunk : NamedChunk
 
     public OldFrameControllerChunk(uint version, string name, AnimationType type, float frameOffset, string hierarchyName, string animationName) : base(ChunkID, name)
     {
-        Version = version;
-        Type = type;
-        FrameOffset = frameOffset;
+        _version = version;
+        _type = type;
+        _frameOffset = frameOffset;
         _hierarchyName = new(this, hierarchyName, nameof(HierarchyName));
         _animationName = new(this, animationName, nameof(AnimationName));
     }

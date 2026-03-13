@@ -20,8 +20,35 @@ public class RoadSegmentChunk : NamedChunk
         get => _roadDataSegment?.Value ?? string.Empty;
         set => _roadDataSegment.Value = value;
     }
-    public Matrix4x4 Transform { get; set; }
-    public Matrix4x4 Scale { get; set; }
+    
+    private Matrix4x4 _transform;
+    public Matrix4x4 Transform
+    {
+        get => _transform;
+        set
+        {
+            if (_transform == value)
+                return;
+    
+            _transform = value;
+            OnPropertyChanged(nameof(Transform));
+        }
+    }
+    
+    private Matrix4x4 _scale;
+    public Matrix4x4 Scale
+    {
+        get => _scale;
+        set
+        {
+            if (_scale == value)
+                return;
+    
+            _scale = value;
+            OnPropertyChanged(nameof(Scale));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -46,8 +73,8 @@ public class RoadSegmentChunk : NamedChunk
     public RoadSegmentChunk(string name, string roadDataSegment, Matrix4x4 transform, Matrix4x4 scale) : base(ChunkID, name)
     {
         _roadDataSegment = new(this, roadDataSegment, nameof(RoadDataSegment));
-        Transform = transform;
-        Scale = scale;
+        _transform = transform;
+        _scale = scale;
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

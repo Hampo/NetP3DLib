@@ -14,7 +14,20 @@ public class VertexAnimKeyFrameListChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Vertex_Anim_Key_Frame_List;
 
-    public uint Version { get; set; }
+    private uint _version;
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     public uint NumKeyFrameIds
     {
         get => (uint)(KeyFrameIds?.Count ?? 0);
@@ -84,10 +97,14 @@ public class VertexAnimKeyFrameListChunk : Chunk
 
     public VertexAnimKeyFrameListChunk(uint version, IList<uint> keyFrameIds, IList<uint> keyFrameCounts) : base(ChunkID)
     {
-        Version = version;
-        KeyFrameIds = CreateSizeAwareList(keyFrameIds);
-        KeyFrameCounts = CreateSizeAwareList(keyFrameCounts);
+        _version = version;
+        KeyFrameIds = CreateSizeAwareList(keyFrameIds, KeyFrameIds_CollectionChanged);
+        KeyFrameCounts = CreateSizeAwareList(keyFrameCounts, KeyFrameCounts_CollectionChanged);
     }
+    
+    private void KeyFrameIds_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(KeyFrameIds));
+    
+    private void KeyFrameCounts_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(KeyFrameCounts));
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {

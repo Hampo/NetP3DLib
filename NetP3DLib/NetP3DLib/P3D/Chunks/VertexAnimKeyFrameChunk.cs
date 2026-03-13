@@ -11,9 +11,48 @@ public class VertexAnimKeyFrameChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Vertex_Anim_Key_Frame;
 
-    public uint Version { get; set; }
-    public uint KeyFrameId { get; set; }
-    public uint PrimGroupIndex { get; set; }
+    private uint _version;
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
+    private uint _keyFrameId;
+    public uint KeyFrameId
+    {
+        get => _keyFrameId;
+        set
+        {
+            if (_keyFrameId == value)
+                return;
+    
+            _keyFrameId = value;
+            OnPropertyChanged(nameof(KeyFrameId));
+        }
+    }
+    
+    private uint _primGroupIndex;
+    public uint PrimGroupIndex
+    {
+        get => _primGroupIndex;
+        set
+        {
+            if (_primGroupIndex == value)
+                return;
+    
+            _primGroupIndex = value;
+            OnPropertyChanged(nameof(PrimGroupIndex));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -36,9 +75,9 @@ public class VertexAnimKeyFrameChunk : Chunk
 
     public VertexAnimKeyFrameChunk(uint version, uint keyFrameId, uint primGroupIndex) : base(ChunkID)
     {
-        Version = version;
-        KeyFrameId = keyFrameId;
-        PrimGroupIndex = primGroupIndex;
+        _version = version;
+        _keyFrameId = keyFrameId;
+        _primGroupIndex = primGroupIndex;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

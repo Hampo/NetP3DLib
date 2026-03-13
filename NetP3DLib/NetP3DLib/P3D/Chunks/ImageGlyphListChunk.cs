@@ -57,8 +57,23 @@ public class ImageGlyphListChunk : Chunk
 
     public ImageGlyphListChunk(IList<Glyph> glyphs) : base(ChunkID)
     {
-        Glyphs = CreateSizeAwareList(glyphs);
+        Glyphs = CreateSizeAwareList(glyphs, Glyphs_CollectionChanged);
     }
+    
+    private void Glyphs_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
+        OnPropertyChanged(nameof(Glyphs));
+
+        if (e.OldItems != null)
+            foreach (Glyph oldItem in e.OldItems)
+                oldItem.PropertyChanged -= Glyphs_PropertyChanged;
+    
+        if (e.NewItems != null)
+            foreach (Glyph newItem in e.NewItems)
+                newItem.PropertyChanged += Glyphs_PropertyChanged;
+    }
+    
+    private void Glyphs_PropertyChanged() => OnPropertyChanged(nameof(Glyphs));
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
     {
@@ -79,12 +94,91 @@ public class ImageGlyphListChunk : Chunk
     {
         public const uint Size = sizeof(ushort) + sizeof(ushort) + sizeof(ushort) + sizeof(ushort) + sizeof(ushort) + sizeof(uint);
 
-        public ushort XOrigin { get; set; }
-        public ushort LeftBearing { get; set; }
-        public ushort RightBearing { get; set; }
-        public ushort Width { get; set; }
-        public ushort Advance { get; set; }
-        public uint Code { get; set; }
+        public Action? PropertyChanged;
+
+        private ushort _xOrigin;
+        public ushort XOrigin
+        {
+            get => _xOrigin;
+            set
+            {
+                if (_xOrigin == value)
+                    return;
+    
+                _xOrigin = value;
+                PropertyChanged?.Invoke();
+            }
+        }
+    
+        private ushort _leftBearing;
+        public ushort LeftBearing
+        {
+            get => _leftBearing;
+            set
+            {
+                if (_leftBearing == value)
+                    return;
+    
+                _leftBearing = value;
+                PropertyChanged?.Invoke();
+            }
+        }
+    
+        private ushort _rightBearing;
+        public ushort RightBearing
+        {
+            get => _rightBearing;
+            set
+            {
+                if (_rightBearing == value)
+                    return;
+    
+                _rightBearing = value;
+                PropertyChanged?.Invoke();
+            }
+        }
+    
+        private ushort _width;
+        public ushort Width
+        {
+            get => _width;
+            set
+            {
+                if (_width == value)
+                    return;
+    
+                _width = value;
+                PropertyChanged?.Invoke();
+            }
+        }
+    
+        private ushort _advance;
+        public ushort Advance
+        {
+            get => _advance;
+            set
+            {
+                if (_advance == value)
+                    return;
+    
+                _advance = value;
+                PropertyChanged?.Invoke();
+            }
+        }
+    
+        private uint _code;
+        public uint Code
+        {
+            get => _code;
+            set
+            {
+                if (_code == value)
+                    return;
+    
+                _code = value;
+                PropertyChanged?.Invoke();
+            }
+        }
 
         public byte[] DataBytes
         {
@@ -105,32 +199,32 @@ public class ImageGlyphListChunk : Chunk
 
         public Glyph(BinaryReader br)
         {
-            XOrigin = br.ReadUInt16();
-            LeftBearing = br.ReadUInt16();
-            RightBearing = br.ReadUInt16();
-            Width = br.ReadUInt16();
-            Advance = br.ReadUInt16();
-            Code = br.ReadUInt32();
+            _xOrigin = br.ReadUInt16();
+            _leftBearing = br.ReadUInt16();
+            _rightBearing = br.ReadUInt16();
+            _width = br.ReadUInt16();
+            _advance = br.ReadUInt16();
+            _code = br.ReadUInt32();
         }
 
         public Glyph(ushort xOrigin, ushort leftBearing, ushort rightBearing, ushort width, ushort advance, uint code)
         {
-            XOrigin = xOrigin;
-            LeftBearing = leftBearing;
-            RightBearing = rightBearing;
-            Width = width;
-            Advance = advance;
-            Code = code;
+            _xOrigin = xOrigin;
+            _leftBearing = leftBearing;
+            _rightBearing = rightBearing;
+            _width = width;
+            _advance = advance;
+            _code = code;
         }
 
         public Glyph()
         {
-            XOrigin = 0;
-            LeftBearing = 0;
-            RightBearing = 0;
-            Width = 0;
-            Advance = 0;
-            Code = 0;
+            _xOrigin = 0;
+            _leftBearing = 0;
+            _rightBearing = 0;
+            _width = 0;
+            _advance = 0;
+            _code = 0;
         }
 
         internal void Write(BinaryWriter bw)

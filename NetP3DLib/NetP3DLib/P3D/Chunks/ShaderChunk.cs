@@ -47,8 +47,21 @@ public class ShaderChunk : NamedChunk
         ColourCount7 = 7 << 15,
     }
 
+    private uint _version;
     [DefaultValue(0)]
-    public uint Version { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     private readonly P3DString _pddiShaderName;
     public string PddiShaderName
     {
@@ -59,10 +72,44 @@ public class ShaderChunk : NamedChunk
     public bool HasTranslucency
     {
         get => _hasTranslucency != 0;
-        set => _hasTranslucency = value ? 1u : 0u;
+        set
+        {
+            if (HasTranslucency == value)
+                return;
+
+            _hasTranslucency = value ? 1u : 0u;
+            OnPropertyChanged(nameof(HasTranslucency));
+        }
     }
-    public VertexMasks VertexNeeds { get; set; }
-    public VertexMasks VertexMask { get; set; }
+    
+    private VertexMasks _vertexNeeds;
+    public VertexMasks VertexNeeds
+    {
+        get => _vertexNeeds;
+        set
+        {
+            if (_vertexNeeds == value)
+                return;
+    
+            _vertexNeeds = value;
+            OnPropertyChanged(nameof(VertexNeeds));
+        }
+    }
+    
+    private VertexMasks _vertexMask;
+    public VertexMasks VertexMask
+    {
+        get => _vertexMask;
+        set
+        {
+            if (_vertexMask == value)
+                return;
+    
+            _vertexMask = value;
+            OnPropertyChanged(nameof(VertexMask));
+        }
+    }
+    
     public uint NumParams => (uint)Children.Count;
 
     public override byte[] DataBytes
@@ -96,11 +143,11 @@ public class ShaderChunk : NamedChunk
 
     public ShaderChunk(string name, uint version, string pddiShaderName, uint hasTranslucency, VertexMasks vertexNeeds, VertexMasks vertexMask) : base(ChunkID, name)
     {
-        Version = version;
+        _version = version;
         _pddiShaderName = new(this, pddiShaderName, nameof(PddiShaderName));
         _hasTranslucency = hasTranslucency;
-        VertexNeeds = vertexNeeds;
-        VertexMask = vertexMask;
+        _vertexNeeds = vertexNeeds;
+        _vertexMask = vertexMask;
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

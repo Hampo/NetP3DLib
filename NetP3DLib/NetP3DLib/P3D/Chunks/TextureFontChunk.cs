@@ -15,18 +15,84 @@ public class TextureFontChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Texture_Font;
 
+    private uint _version;
     [DefaultValue(0)]
-    public uint Version { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     private readonly P3DString _shader;
     public string Shader
     {
         get => _shader?.Value ?? string.Empty;
         set => _shader.Value = value;
     }
-    public float FontSize { get; set; }
-    public float FontWidth { get; set; }
-    public float FontHeight { get; set; }
-    public float FontBaseLine { get; set; }
+    
+    private float _fontSize;
+    public float FontSize
+    {
+        get => _fontSize;
+        set
+        {
+            if (_fontSize == value)
+                return;
+    
+            _fontSize = value;
+            OnPropertyChanged(nameof(FontSize));
+        }
+    }
+    
+    private float _fontWidth;
+    public float FontWidth
+    {
+        get => _fontWidth;
+        set
+        {
+            if (_fontWidth == value)
+                return;
+    
+            _fontWidth = value;
+            OnPropertyChanged(nameof(FontWidth));
+        }
+    }
+    
+    private float _fontHeight;
+    public float FontHeight
+    {
+        get => _fontHeight;
+        set
+        {
+            if (_fontHeight == value)
+                return;
+    
+            _fontHeight = value;
+            OnPropertyChanged(nameof(FontHeight));
+        }
+    }
+    
+    private float _fontBaseLine;
+    public float FontBaseLine
+    {
+        get => _fontBaseLine;
+        set
+        {
+            if (_fontBaseLine == value)
+                return;
+    
+            _fontBaseLine = value;
+            OnPropertyChanged(nameof(FontBaseLine));
+        }
+    }
+    
     public uint NumTextures => GetChildCount(ChunkIdentifier.Texture);
 
     public override byte[] DataBytes
@@ -57,12 +123,12 @@ public class TextureFontChunk : NamedChunk
 
     public TextureFontChunk(uint version, string name, string shader, float fontSize, float fontWidth, float fontHeight, float fontBaseLine) : base(ChunkID, name)
     {
-        Version = version;
+        _version = version;
         _shader = new(this, shader, nameof(Shader));
-        FontSize = fontSize;
-        FontWidth = fontWidth;
-        FontHeight = fontHeight;
-        FontBaseLine = fontBaseLine;
+        _fontSize = fontSize;
+        _fontWidth = fontWidth;
+        _fontHeight = fontHeight;
+        _fontBaseLine = fontBaseLine;
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

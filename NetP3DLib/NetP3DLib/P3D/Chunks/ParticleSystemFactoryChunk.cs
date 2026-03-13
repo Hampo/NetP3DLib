@@ -13,13 +13,91 @@ public class ParticleSystemFactoryChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Particle_System_Factory;
 
+    private uint _version;
     [DefaultValue(0)]
-    public uint Version { get; set; }
-    public float FrameRate { get; set; }
-    public uint NumAnimFrames { get; set; }
-    public uint NumOLFrames { get; set; }
-    public ushort CycleAnim { get; set; }
-    public ushort EnableSorting { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
+    private float _frameRate;
+    public float FrameRate
+    {
+        get => _frameRate;
+        set
+        {
+            if (_frameRate == value)
+                return;
+    
+            _frameRate = value;
+            OnPropertyChanged(nameof(FrameRate));
+        }
+    }
+    
+    private uint _numAnimFrames;
+    public uint NumAnimFrames
+    {
+        get => _numAnimFrames;
+        set
+        {
+            if (_numAnimFrames == value)
+                return;
+    
+            _numAnimFrames = value;
+            OnPropertyChanged(nameof(NumAnimFrames));
+        }
+    }
+    
+    private uint _numOLFrames;
+    public uint NumOLFrames
+    {
+        get => _numOLFrames;
+        set
+        {
+            if (_numOLFrames == value)
+                return;
+    
+            _numOLFrames = value;
+            OnPropertyChanged(nameof(NumOLFrames));
+        }
+    }
+    
+    private ushort _cycleAnim;
+    public ushort CycleAnim
+    {
+        get => _cycleAnim;
+        set
+        {
+            if (_cycleAnim == value)
+                return;
+    
+            _cycleAnim = value;
+            OnPropertyChanged(nameof(CycleAnim));
+        }
+    }
+    
+    private ushort _enableSorting;
+    public ushort EnableSorting
+    {
+        get => _enableSorting;
+        set
+        {
+            if (_enableSorting == value)
+                return;
+    
+            _enableSorting = value;
+            OnPropertyChanged(nameof(EnableSorting));
+        }
+    }
+    
     public uint NumEmitters => GetChildCount(ChunkIdentifier.Old_Sprite_Emitter);
 
     public override byte[] DataBytes
@@ -50,12 +128,12 @@ public class ParticleSystemFactoryChunk : NamedChunk
 
     public ParticleSystemFactoryChunk(uint version, string name, float frameRate, uint numAnimFrames, uint numOLFrames, ushort cycleAnim, ushort enableSorting) : base(ChunkID, name)
     {
-        Version = version;
-        FrameRate = frameRate;
-        NumAnimFrames = numAnimFrames;
-        NumOLFrames = numOLFrames;
-        CycleAnim = cycleAnim;
-        EnableSorting = enableSorting;
+        _version = version;
+        _frameRate = frameRate;
+        _numAnimFrames = numAnimFrames;
+        _numOLFrames = numOLFrames;
+        _cycleAnim = cycleAnim;
+        _enableSorting = enableSorting;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

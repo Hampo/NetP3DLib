@@ -15,7 +15,20 @@ public class CollisionMetaDataShortChannelChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Collision_Meta_Data_Short_Channel;
 
-    public uint Version { get; set; }
+    private uint _version;
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     public uint NumIndices
     {
         get => (uint)(Indices?.Count ?? 0);
@@ -26,13 +39,17 @@ public class CollisionMetaDataShortChannelChunk : NamedChunk
 
             if (value < NumIndices)
             {
-                while (NumIndices > value)
-                    Indices.RemoveAt(Indices.Count - 1);
+                Indices.RemoveRange((int)value, (int)(NumIndices - value));
             }
             else
             {
-                while (NumIndices < value)
-                    Indices.Add(default);
+                int count = (int)(value - NumIndices);
+                var newIndices = new ushort[count];
+
+                for (var i = 0; i < count; i++)
+                    newIndices[i] = default;
+
+                Indices.AddRange(newIndices);
             }
             NumValues = value;
         }
@@ -48,13 +65,17 @@ public class CollisionMetaDataShortChannelChunk : NamedChunk
 
             if (value < NumValues)
             {
-                while (NumValues > value)
-                    Values.RemoveAt(Values.Count - 1);
+                Values.RemoveRange((int)value, (int)(NumValues - value));
             }
             else
             {
-                while (NumValues < value)
-                    Values.Add(default);
+                int count = (int)(value - NumValues);
+                var newValues = new ushort[count];
+
+                for (var i = 0; i < count; i++)
+                    newValues[i] = default;
+
+                Values.AddRange(newValues);
             }
             NumIndices = value;
         }
@@ -86,10 +107,14 @@ public class CollisionMetaDataShortChannelChunk : NamedChunk
 
     public CollisionMetaDataShortChannelChunk(uint version, string name, IList<ushort> indices, IList<ushort> values) : base(ChunkID, name)
     {
-        Version = version;
-        Indices = CreateSizeAwareList(indices);
-        Values = CreateSizeAwareList(values);
+        _version = version;
+        Indices = CreateSizeAwareList(indices, Indices_CollectionChanged);
+        Values = CreateSizeAwareList(values, Values_CollectionChanged);
     }
+    
+    private void Indices_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(Indices));
+    
+    private void Values_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(Values));
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {

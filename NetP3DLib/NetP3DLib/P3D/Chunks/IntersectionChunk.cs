@@ -19,9 +19,48 @@ public class IntersectionChunk : NamedChunk
         NWay
     }
 
-    public Vector3 Position { get; set; }
-    public float Radius { get; set; }
-    public TrafficBehaviours TrafficBehaviour { get; set; }
+    private Vector3 _position;
+    public Vector3 Position
+    {
+        get => _position;
+        set
+        {
+            if (_position == value)
+                return;
+    
+            _position = value;
+            OnPropertyChanged(nameof(Position));
+        }
+    }
+    
+    private float _radius;
+    public float Radius
+    {
+        get => _radius;
+        set
+        {
+            if (_radius == value)
+                return;
+    
+            _radius = value;
+            OnPropertyChanged(nameof(Radius));
+        }
+    }
+    
+    private TrafficBehaviours _trafficBehaviour;
+    public TrafficBehaviours TrafficBehaviour
+    {
+        get => _trafficBehaviour;
+        set
+        {
+            if (_trafficBehaviour == value)
+                return;
+    
+            _trafficBehaviour = value;
+            OnPropertyChanged(nameof(TrafficBehaviour));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -45,9 +84,9 @@ public class IntersectionChunk : NamedChunk
 
     public IntersectionChunk(string name, Vector3 position, float radius, TrafficBehaviours trafficBehaviour) : base(ChunkID, name)
     {
-        Position = position;
-        Radius = radius;
-        TrafficBehaviour = trafficBehaviour;
+        _position = position;
+        _radius = radius;
+        _trafficBehaviour = trafficBehaviour;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

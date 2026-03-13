@@ -18,7 +18,20 @@ public class LightIlluminationTypeChunk : Chunk
         PositiveIlluminant = 3,
     }
 
-    public IlluminationTypes IlluminationType { get; set; }
+    private IlluminationTypes _illuminationType;
+    public IlluminationTypes IlluminationType
+    {
+        get => _illuminationType;
+        set
+        {
+            if (_illuminationType == value)
+                return;
+    
+            _illuminationType = value;
+            OnPropertyChanged(nameof(IlluminationType));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -39,7 +52,7 @@ public class LightIlluminationTypeChunk : Chunk
 
     public LightIlluminationTypeChunk(IlluminationTypes illuminationType) : base(ChunkID)
     {
-        IlluminationType = illuminationType;
+        _illuminationType = illuminationType;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

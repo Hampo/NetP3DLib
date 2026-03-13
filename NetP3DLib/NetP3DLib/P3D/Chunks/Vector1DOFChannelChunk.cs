@@ -18,10 +18,49 @@ public class Vector1DOFChannelChunk : ParamChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Vector_1D_OF_Channel;
 
+    private uint _version;
     [DefaultValue(0)]
-    public uint Version { get; set; }
-    public Coordinate DynamicIndex { get; set; }
-    public Vector3 Constants { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
+    private Coordinate _dynamicIndex;
+    public Coordinate DynamicIndex
+    {
+        get => _dynamicIndex;
+        set
+        {
+            if (_dynamicIndex == value)
+                return;
+    
+            _dynamicIndex = value;
+            OnPropertyChanged(nameof(DynamicIndex));
+        }
+    }
+    
+    private Vector3 _constants;
+    public Vector3 Constants
+    {
+        get => _constants;
+        set
+        {
+            if (_constants == value)
+                return;
+    
+            _constants = value;
+            OnPropertyChanged(nameof(Constants));
+        }
+    }
+    
     public uint NumFrames
     {
         get => (uint)(Frames?.Count ?? 0);
@@ -94,12 +133,16 @@ public class Vector1DOFChannelChunk : ParamChunk
 
     public Vector1DOFChannelChunk(uint version, string param, Coordinate dynamicIndex, Vector3 constants, IList<ushort> frames, IList<float> values) : base(ChunkID, param)
     {
-        Version = version;
-        DynamicIndex = dynamicIndex;
-        Constants = constants;
-        Frames = CreateSizeAwareList(frames);
-        Values = CreateSizeAwareList(values);
+        _version = version;
+        _dynamicIndex = dynamicIndex;
+        _constants = constants;
+        Frames = CreateSizeAwareList(frames, Frames_CollectionChanged);
+        Values = CreateSizeAwareList(values, Values_CollectionChanged);
     }
+    
+    private void Frames_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(Frames));
+    
+    private void Values_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(Values));
 
     public Vector3[] GetValues()
     {

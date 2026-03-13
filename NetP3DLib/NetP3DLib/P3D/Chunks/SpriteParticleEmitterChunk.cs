@@ -14,24 +14,181 @@ public class SpriteParticleEmitterChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Sprite_Particle_Emitter;
 
-    public uint Version { get; set; }
+    private uint _version;
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     private readonly P3DString _shaderName;
     public string ShaderName
     {
         get => _shaderName?.Value ?? string.Empty;
         set => _shaderName.Value = value;
     }
-    public uint UpdateMode { get; set; }
-    public uint ZTest { get; set; }
-    public uint ZWrite { get; set; }
-    public uint MaxParticles { get; set; }
-    public uint InfiniteLife { get; set; }
-    public uint NumTextureFrames { get; set; }
-    public uint TextureFrameRate { get; set; }
-    public float InitialAngle { get; set; }
-    public float InitialAngleVariance { get; set; }
-    public float TranslationalCohesion { get; set; }
-    public float RotationalCohesion { get; set; }
+    
+    private uint _updateMode;
+    public uint UpdateMode
+    {
+        get => _updateMode;
+        set
+        {
+            if (_updateMode == value)
+                return;
+    
+            _updateMode = value;
+            OnPropertyChanged(nameof(UpdateMode));
+        }
+    }
+    
+    private uint _zTest;
+    public uint ZTest
+    {
+        get => _zTest;
+        set
+        {
+            if (_zTest == value)
+                return;
+    
+            _zTest = value;
+            OnPropertyChanged(nameof(ZTest));
+        }
+    }
+    
+    private uint _zWrite;
+    public uint ZWrite
+    {
+        get => _zWrite;
+        set
+        {
+            if (_zWrite == value)
+                return;
+    
+            _zWrite = value;
+            OnPropertyChanged(nameof(ZWrite));
+        }
+    }
+    
+    private uint _maxParticles;
+    public uint MaxParticles
+    {
+        get => _maxParticles;
+        set
+        {
+            if (_maxParticles == value)
+                return;
+    
+            _maxParticles = value;
+            OnPropertyChanged(nameof(MaxParticles));
+        }
+    }
+    
+    private uint _infiniteLife;
+    public uint InfiniteLife
+    {
+        get => _infiniteLife;
+        set
+        {
+            if (_infiniteLife == value)
+                return;
+    
+            _infiniteLife = value;
+            OnPropertyChanged(nameof(InfiniteLife));
+        }
+    }
+    
+    private uint _numTextureFrames;
+    public uint NumTextureFrames
+    {
+        get => _numTextureFrames;
+        set
+        {
+            if (_numTextureFrames == value)
+                return;
+    
+            _numTextureFrames = value;
+            OnPropertyChanged(nameof(NumTextureFrames));
+        }
+    }
+    
+    private uint _textureFrameRate;
+    public uint TextureFrameRate
+    {
+        get => _textureFrameRate;
+        set
+        {
+            if (_textureFrameRate == value)
+                return;
+    
+            _textureFrameRate = value;
+            OnPropertyChanged(nameof(TextureFrameRate));
+        }
+    }
+    
+    private float _initialAngle;
+    public float InitialAngle
+    {
+        get => _initialAngle;
+        set
+        {
+            if (_initialAngle == value)
+                return;
+    
+            _initialAngle = value;
+            OnPropertyChanged(nameof(InitialAngle));
+        }
+    }
+    
+    private float _initialAngleVariance;
+    public float InitialAngleVariance
+    {
+        get => _initialAngleVariance;
+        set
+        {
+            if (_initialAngleVariance == value)
+                return;
+    
+            _initialAngleVariance = value;
+            OnPropertyChanged(nameof(InitialAngleVariance));
+        }
+    }
+    
+    private float _translationalCohesion;
+    public float TranslationalCohesion
+    {
+        get => _translationalCohesion;
+        set
+        {
+            if (_translationalCohesion == value)
+                return;
+    
+            _translationalCohesion = value;
+            OnPropertyChanged(nameof(TranslationalCohesion));
+        }
+    }
+    
+    private float _rotationalCohesion;
+    public float RotationalCohesion
+    {
+        get => _rotationalCohesion;
+        set
+        {
+            if (_rotationalCohesion == value)
+                return;
+    
+            _rotationalCohesion = value;
+            OnPropertyChanged(nameof(RotationalCohesion));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -65,19 +222,19 @@ public class SpriteParticleEmitterChunk : NamedChunk
 
     public SpriteParticleEmitterChunk(uint version, string name, string shaderName, uint updateMode, uint zTest, uint zWrite, uint maxParticles, uint infiniteLife, uint numTextureFrames, uint textureFrameRate, float initialAngle, float initialAngleVariance, float translationalCohesion, float rotationalCohesion) : base(ChunkID, name)
     {
-        Version = version;
+        _version = version;
         _shaderName = new(this, shaderName, nameof(ShaderName));
-        UpdateMode = updateMode;
-        ZTest = zTest;
-        ZWrite = zWrite;
-        MaxParticles = maxParticles;
-        InfiniteLife = infiniteLife;
-        NumTextureFrames = numTextureFrames;
-        TextureFrameRate = textureFrameRate;
-        InitialAngle = initialAngle;
-        InitialAngleVariance = initialAngleVariance;
-        TranslationalCohesion = translationalCohesion;
-        RotationalCohesion = rotationalCohesion;
+        _updateMode = updateMode;
+        _zTest = zTest;
+        _zWrite = zWrite;
+        _maxParticles = maxParticles;
+        _infiniteLife = infiniteLife;
+        _numTextureFrames = numTextureFrames;
+        _textureFrameRate = textureFrameRate;
+        _initialAngle = initialAngle;
+        _initialAngleVariance = initialAngleVariance;
+        _translationalCohesion = translationalCohesion;
+        _rotationalCohesion = rotationalCohesion;
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

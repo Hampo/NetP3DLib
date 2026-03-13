@@ -11,10 +11,62 @@ public class ParticlePointGeneratorChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Particle_Point_Generator;
 
-    public uint Version { get; set; }
-    public float HorizontalSpread { get; set; }
-    public float VerticalSpread { get; set; }
-    public float RadialVar { get; set; }
+    private uint _version;
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
+    private float _horizontalSpread;
+    public float HorizontalSpread
+    {
+        get => _horizontalSpread;
+        set
+        {
+            if (_horizontalSpread == value)
+                return;
+    
+            _horizontalSpread = value;
+            OnPropertyChanged(nameof(HorizontalSpread));
+        }
+    }
+    
+    private float _verticalSpread;
+    public float VerticalSpread
+    {
+        get => _verticalSpread;
+        set
+        {
+            if (_verticalSpread == value)
+                return;
+    
+            _verticalSpread = value;
+            OnPropertyChanged(nameof(VerticalSpread));
+        }
+    }
+    
+    private float _radialVar;
+    public float RadialVar
+    {
+        get => _radialVar;
+        set
+        {
+            if (_radialVar == value)
+                return;
+    
+            _radialVar = value;
+            OnPropertyChanged(nameof(RadialVar));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -38,10 +90,10 @@ public class ParticlePointGeneratorChunk : Chunk
 
     public ParticlePointGeneratorChunk(uint version, float horizontalSpread, float verticalSpread, float radialVar) : base(ChunkID)
     {
-        Version = version;
-        HorizontalSpread = horizontalSpread;
-        VerticalSpread = verticalSpread;
-        RadialVar = radialVar;
+        _version = version;
+        _horizontalSpread = horizontalSpread;
+        _verticalSpread = verticalSpread;
+        _radialVar = radialVar;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

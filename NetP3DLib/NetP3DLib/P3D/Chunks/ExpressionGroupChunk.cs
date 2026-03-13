@@ -24,8 +24,21 @@ public class ExpressionGroupChunk : NamedChunk
         Stage3,
     }
 
+    private uint _version;
     [DefaultValue(0)]
-    public uint Version { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     private readonly P3DString _targetName;
     public string TargetName
     {
@@ -78,10 +91,12 @@ public class ExpressionGroupChunk : NamedChunk
 
     public ExpressionGroupChunk(uint version, string name, string targetName, IList<Stage> stages) : base(ChunkID, name)
     {
-        Version = version;
+        _version = version;
         _targetName = new(this, targetName, nameof(TargetName));
-        Stages = CreateSizeAwareList(stages);
+        Stages = CreateSizeAwareList(stages, Stages_CollectionChanged);
     }
+    
+    private void Stages_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(Stages));
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {

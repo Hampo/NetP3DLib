@@ -24,7 +24,14 @@ public class OldScenegraphDrawableChunk : NamedChunk
     public bool IsTranslucent
     {
         get => _isTranslucent == 1;
-        set => _isTranslucent = value ? 1u : 0u;
+        set
+        {
+            if (IsTranslucent == value)
+                return;
+
+            _isTranslucent = value ? 1u : 0u;
+            OnPropertyChanged(nameof(IsTranslucent));
+        }
     }
 
     public override byte[] DataBytes

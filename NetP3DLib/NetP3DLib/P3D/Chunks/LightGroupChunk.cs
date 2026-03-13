@@ -71,8 +71,10 @@ public class LightGroupChunk : NamedChunk
 
     public LightGroupChunk(string name, IList<string> lights) : base(ChunkID, name)
     {
-        Lights = CreateSizeAwareList(lights);
+        Lights = CreateSizeAwareList(lights, Lights_CollectionChanged);
     }
+    
+    private void Lights_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(Lights));
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {

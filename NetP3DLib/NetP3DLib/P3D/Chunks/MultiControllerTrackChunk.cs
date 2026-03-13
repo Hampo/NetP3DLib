@@ -15,8 +15,21 @@ public class MultiControllerTrackChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Multi_Controller_Track;
 
+    private uint _version;
     [DefaultValue(0)]
-    public uint Version { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     private readonly FourCC _type;
     [MaxLength(4)]
     public string Type
@@ -46,7 +59,7 @@ public class MultiControllerTrackChunk : NamedChunk
 
     public MultiControllerTrackChunk(uint version, string name, string type) : base(ChunkID, name)
     {
-        Version = version;
+        _version = version;
         _type = new(this, type, nameof(Type));
     }
 

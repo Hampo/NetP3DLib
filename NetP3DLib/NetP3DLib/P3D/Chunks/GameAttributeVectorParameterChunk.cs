@@ -12,7 +12,20 @@ public class GameAttributeVectorParameterChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Game_Attribute_Vector_Parameter;
 
-    public Vector3 Value { get; set; }
+    private Vector3 _value;
+    public Vector3 Value
+    {
+        get => _value;
+        set
+        {
+            if (_value == value)
+                return;
+    
+            _value = value;
+            OnPropertyChanged(nameof(Value));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -34,7 +47,7 @@ public class GameAttributeVectorParameterChunk : NamedChunk
 
     public GameAttributeVectorParameterChunk(string name, Vector3 value) : base(ChunkID, name)
     {
-        Value = value;
+        _value = value;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

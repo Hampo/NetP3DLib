@@ -36,7 +36,21 @@ public class MultiColourListChunk : Chunk
             }
         }
     }
-    public uint Channel { get; set; }
+    
+    private uint _channel;
+    public uint Channel
+    {
+        get => _channel;
+        set
+        {
+            if (_channel == value)
+                return;
+    
+            _channel = value;
+            OnPropertyChanged(nameof(Channel));
+        }
+    }
+    
     public SizeAwareList<Color> Colours { get; }
 
     public override byte[] DataBytes
@@ -67,9 +81,11 @@ public class MultiColourListChunk : Chunk
 
     public MultiColourListChunk(uint channel, IList<Color> colours) : base(ChunkID)
     {
-        Channel = channel;
-        Colours = CreateSizeAwareList(colours);
+        _channel = channel;
+        Colours = CreateSizeAwareList(colours, Colours_CollectionChanged);
     }
+    
+    private void Colours_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(Colours));
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {

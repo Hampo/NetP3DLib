@@ -14,18 +14,84 @@ public class SpriteChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Sprite;
 
-    public uint NativeX { get; set; }
-    public uint NativeY { get; set; }
+    private uint _nativeX;
+    public uint NativeX
+    {
+        get => _nativeX;
+        set
+        {
+            if (_nativeX == value)
+                return;
+    
+            _nativeX = value;
+            OnPropertyChanged(nameof(NativeX));
+        }
+    }
+    
+    private uint _nativeY;
+    public uint NativeY
+    {
+        get => _nativeY;
+        set
+        {
+            if (_nativeY == value)
+                return;
+    
+            _nativeY = value;
+            OnPropertyChanged(nameof(NativeY));
+        }
+    }
+    
     private readonly P3DString _shader;
     public string Shader
     {
         get => _shader?.Value ?? string.Empty;
         set => _shader.Value = value;
     }
-    public uint ImageWidth { get; set; }
-    public uint ImageHeight { get; set; }
+    
+    private uint _imageWidth;
+    public uint ImageWidth
+    {
+        get => _imageWidth;
+        set
+        {
+            if (_imageWidth == value)
+                return;
+    
+            _imageWidth = value;
+            OnPropertyChanged(nameof(ImageWidth));
+        }
+    }
+    
+    private uint _imageHeight;
+    public uint ImageHeight
+    {
+        get => _imageHeight;
+        set
+        {
+            if (_imageHeight == value)
+                return;
+    
+            _imageHeight = value;
+            OnPropertyChanged(nameof(ImageHeight));
+        }
+    }
+    
     public uint ImageCount => GetChildCount(ChunkIdentifier.Image);
-    public uint BlitBorder { get; set; }
+    private uint _blitBorder;
+    public uint BlitBorder
+    {
+        get => _blitBorder;
+        set
+        {
+            if (_blitBorder == value)
+                return;
+    
+            _blitBorder = value;
+            OnPropertyChanged(nameof(BlitBorder));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -53,12 +119,12 @@ public class SpriteChunk : NamedChunk
 
     public SpriteChunk(string name, uint nativeX, uint nativeY, string shader, uint imageWidth, uint imageHeight, uint blitBorder) : base(ChunkID, name)
     {
-        NativeX = nativeX;
-        NativeY = nativeY;
+        _nativeX = nativeX;
+        _nativeY = nativeY;
         _shader = new(this, shader, nameof(Shader));
-        ImageWidth = imageWidth;
-        ImageHeight = imageHeight;
-        BlitBorder = blitBorder;
+        _imageWidth = imageWidth;
+        _imageHeight = imageHeight;
+        _blitBorder = blitBorder;
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

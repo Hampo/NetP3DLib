@@ -10,7 +10,20 @@ public class ScenegraphRootChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Scenegraph_Root;
 
-    public uint Version { get; set; }
+    private uint _version;
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -27,7 +40,7 @@ public class ScenegraphRootChunk : Chunk
 
     public ScenegraphRootChunk(uint version) : base(ChunkID)
     {
-        Version = version;
+        _version = version;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

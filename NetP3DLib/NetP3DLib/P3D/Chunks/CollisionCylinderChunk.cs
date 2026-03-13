@@ -12,13 +12,46 @@ public class CollisionCylinderChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Collision_Cylinder;
 
-    public float Radius { get; set; }
-    public float HalfLength { get; set; }
+    private float _radius;
+    public float Radius
+    {
+        get => _radius;
+        set
+        {
+            if (_radius == value)
+                return;
+    
+            _radius = value;
+            OnPropertyChanged(nameof(Radius));
+        }
+    }
+    
+    private float _halfLength;
+    public float HalfLength
+    {
+        get => _halfLength;
+        set
+        {
+            if (_halfLength == value)
+                return;
+    
+            _halfLength = value;
+            OnPropertyChanged(nameof(HalfLength));
+        }
+    }
+    
     private ushort _flatEnd;
     public bool FlatEnd
     {
         get => _flatEnd != 0;
-        set => _flatEnd = (ushort)(value ? 1 : 0);
+        set
+        {
+            if (FlatEnd == value)
+                return;
+
+            _flatEnd = (ushort)(value ? 1 : 0);
+            OnPropertyChanged(nameof(FlatEnd));
+        }
     }
 
     public override byte[] DataBytes
@@ -46,8 +79,8 @@ public class CollisionCylinderChunk : Chunk
 
     public CollisionCylinderChunk(float radius, float halfLength, ushort flatEnd) : base(ChunkID)
     {
-        Radius = radius;
-        HalfLength = halfLength;
+        _radius = radius;
+        _halfLength = halfLength;
         _flatEnd = flatEnd;
     }
 

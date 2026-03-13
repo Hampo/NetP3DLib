@@ -16,9 +16,35 @@ public class OldBillboardDisplayInfoChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Billboard_Display_Info;
 
+    private uint _version;
     [DefaultValue(1)]
-    public uint Version { get; set; }
-    public Quaternion Rotation { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
+    private Quaternion _rotation;
+    public Quaternion Rotation
+    {
+        get => _rotation;
+        set
+        {
+            if (_rotation == value)
+                return;
+    
+            _rotation = value;
+            OnPropertyChanged(nameof(Rotation));
+        }
+    }
+    
     private readonly FourCC _cutOffMode;
     [MaxLength(4)]
     public string CutOffMode
@@ -26,9 +52,49 @@ public class OldBillboardDisplayInfoChunk : Chunk
         get => _cutOffMode?.Value ?? string.Empty;
         set => _cutOffMode.Value = value;
     }
-    public Vector2 UVOffsetRange { get; set; }
-    public float SourceRange { get; set; }
-    public float EdgeRange { get; set; }
+    
+    private Vector2 _uVOffsetRange;
+    public Vector2 UVOffsetRange
+    {
+        get => _uVOffsetRange;
+        set
+        {
+            if (_uVOffsetRange == value)
+                return;
+    
+            _uVOffsetRange = value;
+            OnPropertyChanged(nameof(UVOffsetRange));
+        }
+    }
+    
+    private float _sourceRange;
+    public float SourceRange
+    {
+        get => _sourceRange;
+        set
+        {
+            if (_sourceRange == value)
+                return;
+    
+            _sourceRange = value;
+            OnPropertyChanged(nameof(SourceRange));
+        }
+    }
+    
+    private float _edgeRange;
+    public float EdgeRange
+    {
+        get => _edgeRange;
+        set
+        {
+            if (_edgeRange == value)
+                return;
+    
+            _edgeRange = value;
+            OnPropertyChanged(nameof(EdgeRange));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -54,12 +120,12 @@ public class OldBillboardDisplayInfoChunk : Chunk
 
     public OldBillboardDisplayInfoChunk(uint version, Quaternion rotation, string cutOffMode, Vector2 uvOffsetRange, float sourceRange, float edgeRange) : base(ChunkID)
     {
-        Version = version;
-        Rotation = rotation;
+        _version = version;
+        _rotation = rotation;
         _cutOffMode = new(this, cutOffMode, nameof(CutOffMode));
-        UVOffsetRange = uvOffsetRange;
-        SourceRange = sourceRange;
-        EdgeRange = edgeRange;
+        _uVOffsetRange = uvOffsetRange;
+        _sourceRange = sourceRange;
+        _edgeRange = edgeRange;
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

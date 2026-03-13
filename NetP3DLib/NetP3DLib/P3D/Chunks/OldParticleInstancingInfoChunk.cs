@@ -12,9 +12,35 @@ public class OldParticleInstancingInfoChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Particle_Instancing_Info;
 
+    private uint _version;
     [DefaultValue(0)]
-    public uint Version { get; set; }
-    public uint MaxInstances { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
+    private uint _maxInstances;
+    public uint MaxInstances
+    {
+        get => _maxInstances;
+        set
+        {
+            if (_maxInstances == value)
+                return;
+    
+            _maxInstances = value;
+            OnPropertyChanged(nameof(MaxInstances));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -36,8 +62,8 @@ public class OldParticleInstancingInfoChunk : Chunk
 
     public OldParticleInstancingInfoChunk(uint version, uint maxInstances) : base(ChunkID)
     {
-        Version = version;
-        MaxInstances = maxInstances;
+        _version = version;
+        _maxInstances = maxInstances;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

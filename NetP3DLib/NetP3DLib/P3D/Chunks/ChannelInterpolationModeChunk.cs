@@ -12,13 +12,33 @@ public class ChannelInterpolationModeChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Channel_Interpolation_Mode;
 
+    private uint _version;
     [DefaultValue(0)]
-    public uint Version { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     private uint _interpolate;
     public bool Interpolate
     {
         get => _interpolate != 0;
-        set => _interpolate = value ? 1u : 0u;
+        set
+        {
+            if (Interpolate == value)
+                return;
+
+            _interpolate = value ? 1u : 0u;
+            OnPropertyChanged(nameof(Interpolate));
+        }
     }
 
     public override byte[] DataBytes
@@ -45,7 +65,7 @@ public class ChannelInterpolationModeChunk : Chunk
 
     public ChannelInterpolationModeChunk(uint version, uint interpolate) : base(ChunkID)
     {
-        Version = version;
+        _version = version;
         _interpolate = interpolate;
     }
 

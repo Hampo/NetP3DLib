@@ -37,7 +37,21 @@ public class OldOffsetListChunk : Chunk
             }
         }
     }
-    public uint KeyIndex { get; set; }
+    
+    private uint _keyIndex;
+    public uint KeyIndex
+    {
+        get => _keyIndex;
+        set
+        {
+            if (_keyIndex == value)
+                return;
+    
+            _keyIndex = value;
+            OnPropertyChanged(nameof(KeyIndex));
+        }
+    }
+    
     public SizeAwareList<OffsetEntry> Offsets { get; }
     private bool _hasPrimGroupIndex = false;
     public bool HasPrimGroupIndex
@@ -53,7 +67,21 @@ public class OldOffsetListChunk : Chunk
             RecalculateSize(oldSize);
         }
     }
-    public uint PrimGroupIndex { get; set; }
+    
+    private uint _primGroupIndex;
+    public uint PrimGroupIndex
+    {
+        get => _primGroupIndex;
+        set
+        {
+            if (_primGroupIndex == value)
+                return;
+    
+            _primGroupIndex = value;
+            OnPropertyChanged(nameof(PrimGroupIndex));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -89,12 +117,27 @@ public class OldOffsetListChunk : Chunk
 
     public OldOffsetListChunk(uint keyIndex, IList<OffsetEntry> offsets, uint? primGroupIndex = null) : base(ChunkID)
     {
-        KeyIndex = keyIndex;
-        Offsets = CreateSizeAwareList(offsets);
-        HasPrimGroupIndex = primGroupIndex.HasValue;
-        if (HasPrimGroupIndex)
-            PrimGroupIndex = primGroupIndex!.Value;
+        _keyIndex = keyIndex;
+        Offsets = CreateSizeAwareList(offsets, Offsets_CollectionChanged);
+        _hasPrimGroupIndex = primGroupIndex.HasValue;
+        if (_hasPrimGroupIndex)
+            _primGroupIndex = primGroupIndex!.Value;
     }
+    
+    private void Offsets_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
+        OnPropertyChanged(nameof(Offsets));
+
+        if (e.OldItems != null)
+            foreach (OffsetEntry oldItem in e.OldItems)
+                oldItem.PropertyChanged -= Offsets_PropertyChanged;
+    
+        if (e.NewItems != null)
+            foreach (OffsetEntry newItem in e.NewItems)
+                newItem.PropertyChanged += Offsets_PropertyChanged;
+    }
+    
+    private void Offsets_PropertyChanged() => OnPropertyChanged(nameof(Offsets));
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
@@ -127,8 +170,36 @@ public class OldOffsetListChunk : Chunk
     {
         public const uint Size = sizeof(uint) + sizeof(float) * 3;
 
-        public uint Index { get; set; }
-        public Vector3 Offset { get; set; }
+        public event Action? PropertyChanged;
+
+        private uint _index;
+        public uint Index
+        {
+            get => _index;
+            set
+            {
+                if (_index == value)
+                    return;
+    
+                _index = value;
+                PropertyChanged?.Invoke();
+            }
+        }
+    
+        private Vector3 _offset;
+        public Vector3 Offset
+        {
+            get => _offset;
+            set
+            {
+                if (_offset == value)
+                    return;
+    
+                _offset = value;
+                PropertyChanged?.Invoke();
+            }
+        }
+    
 
         public byte[] DataBytes
         {
@@ -145,20 +216,20 @@ public class OldOffsetListChunk : Chunk
 
         public OffsetEntry(BinaryReader br)
         {
-            Index = br.ReadUInt32();
-            Offset = br.ReadVector3();
+            _index = br.ReadUInt32();
+            _offset = br.ReadVector3();
         }
 
         public OffsetEntry(uint index, Vector3 offset)
         {
-            Index = index;
-            Offset = offset;
+            _index = index;
+            _offset = offset;
         }
 
         public OffsetEntry()
         {
-            Index = 0;
-            Offset = Vector3.Zero;
+            _index = 0;
+            _offset = Vector3.Zero;
         }
 
         internal void Write(BinaryWriter bw)

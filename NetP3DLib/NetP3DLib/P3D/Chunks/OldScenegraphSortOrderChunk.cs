@@ -11,7 +11,20 @@ public class OldScenegraphSortOrderChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Scenegraph_Sort_Order;
 
-    public float SortOrder { get; set; }
+    private float _sortOrder;
+    public float SortOrder
+    {
+        get => _sortOrder;
+        set
+        {
+            if (_sortOrder == value)
+                return;
+    
+            _sortOrder = value;
+            OnPropertyChanged(nameof(SortOrder));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -32,7 +45,7 @@ public class OldScenegraphSortOrderChunk : Chunk
 
     public OldScenegraphSortOrderChunk(float sortOrder) : base(ChunkID)
     {
-        SortOrder = sortOrder;
+        _sortOrder = sortOrder;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

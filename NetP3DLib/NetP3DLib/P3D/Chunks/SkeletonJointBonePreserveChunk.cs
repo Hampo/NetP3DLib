@@ -15,7 +15,14 @@ public class SkeletonJointBonePreserveChunk : Chunk
     public bool PreserveBoneLengths
     {
         get => _preserveBoneLengths != 0;
-        set => _preserveBoneLengths = value ? 1u : 0u;
+        set
+        {
+            if (PreserveBoneLengths == value)
+                return;
+
+            _preserveBoneLengths = value ? 1u : 0u;
+            OnPropertyChanged(nameof(PreserveBoneLengths));
+        }
     }
 
     public override byte[] DataBytes

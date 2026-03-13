@@ -14,7 +14,20 @@ public class ShadowSkinChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Shadow_Skin;
 
-    public uint Version { get; set; }
+    private uint _version;
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     private readonly P3DString _skeletonName;
     public string SkeletonName
     {
@@ -22,8 +35,34 @@ public class ShadowSkinChunk : NamedChunk
         set => _skeletonName.Value = value;
     }
     // TODO: Calculate from children
-    public uint NumVertices { get; set; }
-    public uint NumTriangles { get; set; }
+    private uint _numVertices;
+    public uint NumVertices
+    {
+        get => _numVertices;
+        set
+        {
+            if (_numVertices == value)
+                return;
+    
+            _numVertices = value;
+            OnPropertyChanged(nameof(NumVertices));
+        }
+    }
+    
+    private uint _numTriangles;
+    public uint NumTriangles
+    {
+        get => _numTriangles;
+        set
+        {
+            if (_numTriangles == value)
+                return;
+    
+            _numTriangles = value;
+            OnPropertyChanged(nameof(NumTriangles));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -48,10 +87,10 @@ public class ShadowSkinChunk : NamedChunk
 
     public ShadowSkinChunk(string name, uint version, string skeletonName, uint numVertices, uint numTriangles) : base(ChunkID, name)
     {
-        Version = version;
+        _version = version;
         _skeletonName = new(this, skeletonName, nameof(SkeletonName));
-        NumVertices = numVertices;
-        NumTriangles = numTriangles;
+        _numVertices = numVertices;
+        _numTriangles = numTriangles;
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

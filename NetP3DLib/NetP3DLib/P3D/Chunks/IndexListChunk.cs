@@ -56,8 +56,10 @@ public class IndexListChunk : Chunk
 
     public IndexListChunk(IList<uint> indices) : base(ChunkID)
     {
-        Indices = CreateSizeAwareList(indices);
+        Indices = CreateSizeAwareList(indices, Indices_CollectionChanged);
     }
+    
+    private void Indices_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(Indices));
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
     {

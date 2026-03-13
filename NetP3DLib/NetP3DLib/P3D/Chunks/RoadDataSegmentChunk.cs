@@ -13,17 +13,90 @@ public class RoadDataSegmentChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Road_Data_Segment;
 
-    public uint Type { get; set; }
-    public uint Lanes { get; set; }
+    private uint _type;
+    public uint Type
+    {
+        get => _type;
+        set
+        {
+            if (_type == value)
+                return;
+    
+            _type = value;
+            OnPropertyChanged(nameof(Type));
+        }
+    }
+    
+    private uint _lanes;
+    public uint Lanes
+    {
+        get => _lanes;
+        set
+        {
+            if (_lanes == value)
+                return;
+    
+            _lanes = value;
+            OnPropertyChanged(nameof(Lanes));
+        }
+    }
+    
     private uint _hasShoulder;
     public bool HasShoulder
     {
         get => _hasShoulder != 0;
-        set => _hasShoulder = value ? 1u : 0u;
+        set
+        {
+            if (HasShoulder == value)
+                return;
+
+            _hasShoulder = value ? 1u : 0u;
+            OnPropertyChanged(nameof(HasShoulder));
+        }
     }
-    public Vector3 Direction { get; set; }
-    public Vector3 Top { get; set; }
-    public Vector3 Bottom { get; set; }
+    
+    private Vector3 _direction;
+    public Vector3 Direction
+    {
+        get => _direction;
+        set
+        {
+            if (_direction == value)
+                return;
+    
+            _direction = value;
+            OnPropertyChanged(nameof(Direction));
+        }
+    }
+    
+    private Vector3 _top;
+    public Vector3 Top
+    {
+        get => _top;
+        set
+        {
+            if (_top == value)
+                return;
+    
+            _top = value;
+            OnPropertyChanged(nameof(Top));
+        }
+    }
+    
+    private Vector3 _bottom;
+    public Vector3 Bottom
+    {
+        get => _bottom;
+        set
+        {
+            if (_bottom == value)
+                return;
+    
+            _bottom = value;
+            OnPropertyChanged(nameof(Bottom));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -54,12 +127,12 @@ public class RoadDataSegmentChunk : NamedChunk
 
     public RoadDataSegmentChunk(string name, uint type, uint lanes, uint hasShoulder, Vector3 direction, Vector3 top, Vector3 bottom) : base(ChunkID, name)
     {
-        Type = type;
-        Lanes = lanes;
+        _type = type;
+        _lanes = lanes;
         _hasShoulder = hasShoulder;
-        Direction = direction;
-        Top = top;
-        Bottom = bottom;
+        _direction = direction;
+        _top = top;
+        _bottom = bottom;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

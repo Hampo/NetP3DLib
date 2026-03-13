@@ -11,10 +11,62 @@ public class SkeletonJointMirrorMapChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Skeleton_Joint_Mirror_Map;
 
-    public uint MappedJointIndex { get; set; }
-    public float XAxisMap { get; set; }
-    public float YAxisMap { get; set; }
-    public float ZAxisMap { get; set; }
+    private uint _mappedJointIndex;
+    public uint MappedJointIndex
+    {
+        get => _mappedJointIndex;
+        set
+        {
+            if (_mappedJointIndex == value)
+                return;
+    
+            _mappedJointIndex = value;
+            OnPropertyChanged(nameof(MappedJointIndex));
+        }
+    }
+    
+    private float _xAxisMap;
+    public float XAxisMap
+    {
+        get => _xAxisMap;
+        set
+        {
+            if (_xAxisMap == value)
+                return;
+    
+            _xAxisMap = value;
+            OnPropertyChanged(nameof(XAxisMap));
+        }
+    }
+    
+    private float _yAxisMap;
+    public float YAxisMap
+    {
+        get => _yAxisMap;
+        set
+        {
+            if (_yAxisMap == value)
+                return;
+    
+            _yAxisMap = value;
+            OnPropertyChanged(nameof(YAxisMap));
+        }
+    }
+    
+    private float _zAxisMap;
+    public float ZAxisMap
+    {
+        get => _zAxisMap;
+        set
+        {
+            if (_zAxisMap == value)
+                return;
+    
+            _zAxisMap = value;
+            OnPropertyChanged(nameof(ZAxisMap));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -38,10 +90,10 @@ public class SkeletonJointMirrorMapChunk : Chunk
 
     public SkeletonJointMirrorMapChunk(uint mappedJointIndex, float xAxisMap, float yAxisMap, float zAxisMap) : base(ChunkID)
     {
-        MappedJointIndex = mappedJointIndex;
-        XAxisMap = xAxisMap;
-        YAxisMap = yAxisMap;
-        ZAxisMap = zAxisMap;
+        _mappedJointIndex = mappedJointIndex;
+        _xAxisMap = xAxisMap;
+        _yAxisMap = yAxisMap;
+        _zAxisMap = zAxisMap;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

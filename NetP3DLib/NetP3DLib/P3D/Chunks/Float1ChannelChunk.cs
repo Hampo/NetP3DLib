@@ -16,8 +16,21 @@ public class Float1ChannelChunk : ParamChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Float_1_Channel;
 
+    private uint _version;
     [DefaultValue(0)]
-    public uint Version { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     public uint NumFrames
     {
         get => (uint)(Frames?.Count ?? 0);
@@ -88,10 +101,14 @@ public class Float1ChannelChunk : ParamChunk
 
     public Float1ChannelChunk(uint version, string param, IList<ushort> frames, IList<float> values) : base(ChunkID, param)
     {
-        Version = version;
-        Frames = CreateSizeAwareList(frames);
-        Values = CreateSizeAwareList(values);
+        _version = version;
+        Frames = CreateSizeAwareList(frames, Frames_CollectionChanged);
+        Values = CreateSizeAwareList(values, Values_CollectionChanged);
     }
+    
+    private void Frames_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(Frames));
+    
+    private void Values_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(Values));
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {

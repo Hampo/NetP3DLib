@@ -69,14 +69,41 @@ public class PrimitiveGroupChunk : Chunk
         { (uint)ChunkIdentifier.Tangent_List, VertexTypes.Tangent },
     };
 
-    public uint Version { get; set; }
+    private uint _version;
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     private readonly P3DString _shaderName;
     public string ShaderName
     {
         get => _shaderName?.Value ?? string.Empty;
         set => _shaderName.Value = value;
     }
-    public PrimitiveTypes PrimitiveType { get; set; }
+    
+    private PrimitiveTypes _primitiveType;
+    public PrimitiveTypes PrimitiveType
+    {
+        get => _primitiveType;
+        set
+        {
+            if (_primitiveType == value)
+                return;
+    
+            _primitiveType = value;
+            OnPropertyChanged(nameof(PrimitiveType));
+        }
+    }
+    
     public VertexTypes VertexType
     {
         get
@@ -105,13 +132,105 @@ public class PrimitiveGroupChunk : Chunk
             return vertexType;
         }
     }
-    public uint NumVertices { get; set; }
-    public uint NumIndices { get; set; }
-    public uint NumMatrices { get; set; }
-    public uint MemoryImaged { get; set; }
-    public uint Optimized { get; set; }
-    public uint VertexAnimated { get; set; }
-    public uint VertexAnimationMask { get; set; }
+    
+    private uint _numVertices;
+    public uint NumVertices
+    {
+        get => _numVertices;
+        set
+        {
+            if (_numVertices == value)
+                return;
+    
+            _numVertices = value;
+            OnPropertyChanged(nameof(NumVertices));
+        }
+    }
+    
+    private uint _numIndices;
+    public uint NumIndices
+    {
+        get => _numIndices;
+        set
+        {
+            if (_numIndices == value)
+                return;
+    
+            _numIndices = value;
+            OnPropertyChanged(nameof(NumIndices));
+        }
+    }
+    
+    private uint _numMatrices;
+    public uint NumMatrices
+    {
+        get => _numMatrices;
+        set
+        {
+            if (_numMatrices == value)
+                return;
+    
+            _numMatrices = value;
+            OnPropertyChanged(nameof(NumMatrices));
+        }
+    }
+    
+    private uint _memoryImaged;
+    public uint MemoryImaged
+    {
+        get => _memoryImaged;
+        set
+        {
+            if (_memoryImaged == value)
+                return;
+    
+            _memoryImaged = value;
+            OnPropertyChanged(nameof(MemoryImaged));
+        }
+    }
+    
+    private uint _optimized;
+    public uint Optimized
+    {
+        get => _optimized;
+        set
+        {
+            if (_optimized == value)
+                return;
+    
+            _optimized = value;
+            OnPropertyChanged(nameof(Optimized));
+        }
+    }
+    
+    private uint _vertexAnimated;
+    public uint VertexAnimated
+    {
+        get => _vertexAnimated;
+        set
+        {
+            if (_vertexAnimated == value)
+                return;
+    
+            _vertexAnimated = value;
+            OnPropertyChanged(nameof(VertexAnimated));
+        }
+    }
+    
+    private uint _vertexAnimationMask;
+    public uint VertexAnimationMask
+    {
+        get => _vertexAnimationMask;
+        set
+        {
+            if (_vertexAnimationMask == value)
+                return;
+    
+            _vertexAnimationMask = value;
+            OnPropertyChanged(nameof(VertexAnimationMask));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -142,16 +261,16 @@ public class PrimitiveGroupChunk : Chunk
 
     public PrimitiveGroupChunk(uint version, string shaderName, PrimitiveTypes primitiveType, uint numVertices, uint numIndices, uint numMatrices, uint memoryImaged, uint optimized, uint vertexAnimated, uint vertexAnimationMask) : base(ChunkID)
     {
-        Version = version;
+        _version = version;
         _shaderName = new(this, shaderName, nameof(ShaderName));
-        PrimitiveType = primitiveType;
-        NumVertices = numVertices;
-        NumIndices = numIndices;
-        NumMatrices = numMatrices;
-        MemoryImaged = memoryImaged;
-        Optimized = optimized;
-        VertexAnimated = vertexAnimated;
-        VertexAnimationMask = vertexAnimationMask;
+        _primitiveType = primitiveType;
+        _numVertices = numVertices;
+        _numIndices = numIndices;
+        _numMatrices = numMatrices;
+        _memoryImaged = memoryImaged;
+        _optimized = optimized;
+        _vertexAnimated = vertexAnimated;
+        _vertexAnimationMask = vertexAnimationMask;
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

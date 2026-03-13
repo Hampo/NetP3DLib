@@ -56,8 +56,10 @@ public class MatrixPaletteChunk : Chunk
 
     public MatrixPaletteChunk(IList<uint> matrices) : base(ChunkID)
     {
-        Matrices = CreateSizeAwareList(matrices);
+        Matrices = CreateSizeAwareList(matrices, Matrices_CollectionChanged);
     }
+    
+    private void Matrices_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(Matrices));
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
     {

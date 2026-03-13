@@ -13,8 +13,21 @@ public class OldEmitterAnimationChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Emitter_Animation;
 
+    private uint _version;
     [DefaultValue(0)]
-    public uint Version { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -35,7 +48,7 @@ public class OldEmitterAnimationChunk : Chunk
 
     public OldEmitterAnimationChunk(uint version) : base(ChunkID)
     {
-        Version = version;
+        _version = version;
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

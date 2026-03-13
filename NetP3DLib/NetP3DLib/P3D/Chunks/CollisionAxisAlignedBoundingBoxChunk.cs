@@ -11,7 +11,20 @@ public class CollisionAxisAlignedBoundingBoxChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Collision_Axis_Aligned_Bounding_Box;
 
-    public uint Dummy { get; set; }
+    private uint _dummy;
+    public uint Dummy
+    {
+        get => _dummy;
+        set
+        {
+            if (_dummy == value)
+                return;
+    
+            _dummy = value;
+            OnPropertyChanged(nameof(Dummy));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -36,7 +49,7 @@ public class CollisionAxisAlignedBoundingBoxChunk : Chunk
 
     public CollisionAxisAlignedBoundingBoxChunk(uint dummy) : base(ChunkID)
     {
-        Dummy = dummy;
+        _dummy = dummy;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

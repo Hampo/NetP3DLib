@@ -14,15 +14,119 @@ public class CameraChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Camera;
 
+    private uint _version;
     [DefaultValue(2)]
-    public uint Version { get; set; }
-    public float FOV { get; set; }
-    public float AspectRatio { get; set; }
-    public float NearClip { get; set; }
-    public float FarClip { get; set; }
-    public Vector3 Position { get; set; }
-    public Vector3 Look { get; set; }
-    public Vector3 Up { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
+    private float _fOV;
+    public float FOV
+    {
+        get => _fOV;
+        set
+        {
+            if (_fOV == value)
+                return;
+    
+            _fOV = value;
+            OnPropertyChanged(nameof(FOV));
+        }
+    }
+    
+    private float _aspectRatio;
+    public float AspectRatio
+    {
+        get => _aspectRatio;
+        set
+        {
+            if (_aspectRatio == value)
+                return;
+    
+            _aspectRatio = value;
+            OnPropertyChanged(nameof(AspectRatio));
+        }
+    }
+    
+    private float _nearClip;
+    public float NearClip
+    {
+        get => _nearClip;
+        set
+        {
+            if (_nearClip == value)
+                return;
+    
+            _nearClip = value;
+            OnPropertyChanged(nameof(NearClip));
+        }
+    }
+    
+    private float _farClip;
+    public float FarClip
+    {
+        get => _farClip;
+        set
+        {
+            if (_farClip == value)
+                return;
+    
+            _farClip = value;
+            OnPropertyChanged(nameof(FarClip));
+        }
+    }
+    
+    private Vector3 _position;
+    public Vector3 Position
+    {
+        get => _position;
+        set
+        {
+            if (_position == value)
+                return;
+    
+            _position = value;
+            OnPropertyChanged(nameof(Position));
+        }
+    }
+    
+    private Vector3 _look;
+    public Vector3 Look
+    {
+        get => _look;
+        set
+        {
+            if (_look == value)
+                return;
+    
+            _look = value;
+            OnPropertyChanged(nameof(Look));
+        }
+    }
+    
+    private Vector3 _up;
+    public Vector3 Up
+    {
+        get => _up;
+        set
+        {
+            if (_up == value)
+                return;
+    
+            _up = value;
+            OnPropertyChanged(nameof(Up));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -51,14 +155,14 @@ public class CameraChunk : NamedChunk
 
     public CameraChunk(string name, uint version, float fov, float aspectRatio, float nearClip, float farClip, Vector3 position, Vector3 look, Vector3 up) : base(ChunkID, name)
     {
-        Version = version;
-        FOV = fov;
-        AspectRatio = aspectRatio;
-        NearClip = nearClip;
-        FarClip = farClip;
-        Position = position;
-        Look = look;
-        Up = up;
+        _version = version;
+        _fOV = fov;
+        _aspectRatio = aspectRatio;
+        _nearClip = nearClip;
+        _farClip = farClip;
+        _position = position;
+        _look = look;
+        _up = up;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

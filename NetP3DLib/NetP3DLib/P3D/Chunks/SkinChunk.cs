@@ -15,8 +15,21 @@ public class SkinChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Skin;
 
+    private uint _version;
     [DefaultValue(4)]
-    public uint Version { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     private readonly P3DString _skeletonName;
     public string SkeletonName
     {
@@ -50,7 +63,7 @@ public class SkinChunk : NamedChunk
 
     public SkinChunk(string name, uint version, string skeletonName) : base(ChunkID, name)
     {
-        Version = version;
+        _version = version;
         _skeletonName = new(this, skeletonName, nameof(SkeletonName));
     }
 

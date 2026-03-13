@@ -14,8 +14,21 @@ public class OldIndexOffsetListChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Index_Offset_List;
 
+    private uint _version;
     [DefaultValue(0)]
-    public uint Version { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     public uint NumOffsets
     {
         get => (uint)(Offsets?.Count ?? 0);
@@ -60,9 +73,11 @@ public class OldIndexOffsetListChunk : Chunk
 
     public OldIndexOffsetListChunk(uint version, IList<uint> offsets) : base(ChunkID)
     {
-        Version = version;
-        Offsets = CreateSizeAwareList(offsets);
+        _version = version;
+        Offsets = CreateSizeAwareList(offsets, Offsets_CollectionChanged);
     }
+    
+    private void Offsets_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(Offsets));
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
     {

@@ -30,8 +30,34 @@ public class CollisionEffectChunk : Chunk
         PropOnetimeMoveable,
     }
 
-    public ClassTypes ClassType { get; set; }
-    public uint PhysPropID { get; set; }
+    private ClassTypes _classType;
+    public ClassTypes ClassType
+    {
+        get => _classType;
+        set
+        {
+            if (_classType == value)
+                return;
+    
+            _classType = value;
+            OnPropertyChanged(nameof(ClassType));
+        }
+    }
+    
+    private uint _physPropID;
+    public uint PhysPropID
+    {
+        get => _physPropID;
+        set
+        {
+            if (_physPropID == value)
+                return;
+    
+            _physPropID = value;
+            OnPropertyChanged(nameof(PhysPropID));
+        }
+    }
+    
     private readonly P3DString _soundResourceDataName;
     public string SoundResourceDataName
     {
@@ -60,8 +86,8 @@ public class CollisionEffectChunk : Chunk
 
     public CollisionEffectChunk(ClassTypes classType, uint phyPropID, string soundResourceDataName) : base(ChunkID)
     {
-        ClassType = classType;
-        PhysPropID = phyPropID;
+        _classType = classType;
+        _physPropID = phyPropID;
         _soundResourceDataName = new(this, soundResourceDataName, nameof(SoundResourceDataName));
     }
 

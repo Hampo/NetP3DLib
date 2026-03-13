@@ -21,16 +21,75 @@ public class AnimationChunk : NamedChunk
         GC,
     }
 
+    private uint _version;
     [DefaultValue(0)]
-    public uint Version { get; set; }
-    public AnimationType AnimationType { get; set; }
-    public float NumFrames { get; set; }
-    public float FrameRate { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
+    private AnimationType _animationType;
+    public AnimationType AnimationType
+    {
+        get => _animationType;
+        set
+        {
+            if (_animationType == value)
+                return;
+    
+            _animationType = value;
+            OnPropertyChanged(nameof(AnimationType));
+        }
+    }
+    
+    private float _numFrames;
+    public float NumFrames
+    {
+        get => _numFrames;
+        set
+        {
+            if (_numFrames == value)
+                return;
+    
+            _numFrames = value;
+            OnPropertyChanged(nameof(NumFrames));
+        }
+    }
+    
+    private float _frameRate;
+    public float FrameRate
+    {
+        get => _frameRate;
+        set
+        {
+            if (_frameRate == value)
+                return;
+    
+            _frameRate = value;
+            OnPropertyChanged(nameof(FrameRate));
+        }
+    }
+    
     private uint _cyclic;
     public bool Cyclic
     {
         get => _cyclic == 1;
-        set => _cyclic = value ? 1u : 0u;
+        set
+        {
+            if (Cyclic == value)
+                return;
+
+            _cyclic = value ? 1u : 0u;
+            OnPropertyChanged(nameof(Cyclic));
+        }
     }
 
     public override byte[] DataBytes
@@ -61,10 +120,10 @@ public class AnimationChunk : NamedChunk
 
     public AnimationChunk(uint version, string name, AnimationType animationType, float numFrames, float frameRate, uint cyclic) : base(ChunkID, name)
     {
-        Version = version;
-        AnimationType = animationType;
-        NumFrames = numFrames;
-        FrameRate = frameRate;
+        _version = version;
+        _animationType = animationType;
+        _numFrames = numFrames;
+        _frameRate = frameRate;
         _cyclic = cyclic;
     }
 

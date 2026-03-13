@@ -6,6 +6,7 @@ using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using static NetP3DLib.P3D.Chunks.TopologyChunk;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -14,9 +15,35 @@ public class AnimationChannelCountChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Animation_Channel_Count;
 
+    private uint _version;
     [DefaultValue(0)]
-    public uint Version { get; set; }
-    public uint ChannelChunkID { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
+    private uint _channelChunkID;
+    public uint ChannelChunkID
+    {
+        get => _channelChunkID;
+        set
+        {
+            if (_channelChunkID == value)
+                return;
+    
+            _channelChunkID = value;
+            OnPropertyChanged(nameof(ChannelChunkID));
+        }
+    }
+    
     public uint NumNumKeys
     {
         get => (uint)(NumKeys?.Count ?? 0);
@@ -27,13 +54,17 @@ public class AnimationChannelCountChunk : Chunk
 
             if (value < NumNumKeys)
             {
-                while (NumNumKeys > value)
-                    NumKeys.RemoveAt(NumKeys.Count - 1);
+                NumKeys.RemoveRange((int)value, (int)(NumNumKeys - value));
             }
             else
             {
-                while (NumNumKeys < value)
-                    NumKeys.Add(default);
+                int count = (int)(value - NumNumKeys);
+                var newKeys = new ushort[count];
+
+                for (var i = 0; i < count; i++)
+                    newKeys[i] = default;
+
+                NumKeys.AddRange(newKeys);
             }
         }
     }
@@ -62,10 +93,12 @@ public class AnimationChannelCountChunk : Chunk
 
     public AnimationChannelCountChunk(uint version, uint channelChunkID, IList<ushort> numKeys) : base(ChunkID)
     {
-        Version = version;
-        ChannelChunkID = channelChunkID;
-        NumKeys = CreateSizeAwareList(numKeys);
+        _version = version;
+        _channelChunkID = channelChunkID;
+        NumKeys = CreateSizeAwareList(numKeys, NumKeys_CollectionChanged);
     }
+    
+    private void NumKeys_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(NumKeys));
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
     {

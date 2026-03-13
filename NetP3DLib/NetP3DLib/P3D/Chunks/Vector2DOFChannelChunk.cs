@@ -18,10 +18,49 @@ public class Vector2DOFChannelChunk : ParamChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Vector_2D_OF_Channel;
 
+    private uint _version;
     [DefaultValue(0)]
-    public uint Version { get; set; }
-    public Coordinate StaticIndex { get; set; }
-    public Vector3 Constants { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
+    private Coordinate _staticIndex;
+    public Coordinate StaticIndex
+    {
+        get => _staticIndex;
+        set
+        {
+            if (_staticIndex == value)
+                return;
+    
+            _staticIndex = value;
+            OnPropertyChanged(nameof(StaticIndex));
+        }
+    }
+    
+    private Vector3 _constants;
+    public Vector3 Constants
+    {
+        get => _constants;
+        set
+        {
+            if (_constants == value)
+                return;
+    
+            _constants = value;
+            OnPropertyChanged(nameof(Constants));
+        }
+    }
+    
     public uint NumFrames
     {
         get => (uint)(Frames?.Count ?? 0);
@@ -94,12 +133,16 @@ public class Vector2DOFChannelChunk : ParamChunk
 
     public Vector2DOFChannelChunk(uint version, string param, Coordinate staticIndex, Vector3 constants, IList<ushort> frames, IList<Vector2> values) : base(ChunkID, param)
     {
-        Version = version;
-        StaticIndex = staticIndex;
-        Constants = constants;
-        Frames = CreateSizeAwareList(frames);
-        Values = CreateSizeAwareList(values);
+        _version = version;
+        _staticIndex = staticIndex;
+        _constants = constants;
+        Frames = CreateSizeAwareList(frames, Frames_CollectionChanged);
+        Values = CreateSizeAwareList(values, Values_CollectionChanged);
     }
+    
+    private void Frames_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(Frames));
+    
+    private void Values_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(Values));
 
     public Vector3[] GetValues()
     {

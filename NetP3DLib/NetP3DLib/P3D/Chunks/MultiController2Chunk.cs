@@ -15,8 +15,21 @@ public class MultiController2Chunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Multi_Controller_2;
 
+    private uint _version;
     [DefaultValue(1)]
-    public uint Version { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     private readonly FourCC _cycleMode;
     [MaxLength(4)]
     public string CycleMode
@@ -24,10 +37,63 @@ public class MultiController2Chunk : NamedChunk
         get => _cycleMode?.Value ?? string.Empty;
         set => _cycleMode.Value = value;
     }
-    public uint NumCycles { get; set; }
-    public uint InfiniteCycle { get; set; }
-    public float NumFrames { get; set; }
-    public float FrameRate { get; set; }
+    
+    private uint _numCycles;
+    public uint NumCycles
+    {
+        get => _numCycles;
+        set
+        {
+            if (_numCycles == value)
+                return;
+    
+            _numCycles = value;
+            OnPropertyChanged(nameof(NumCycles));
+        }
+    }
+    
+    private uint _infiniteCycle;
+    public uint InfiniteCycle
+    {
+        get => _infiniteCycle;
+        set
+        {
+            if (_infiniteCycle == value)
+                return;
+    
+            _infiniteCycle = value;
+            OnPropertyChanged(nameof(InfiniteCycle));
+        }
+    }
+    
+    private float _numFrames;
+    public float NumFrames
+    {
+        get => _numFrames;
+        set
+        {
+            if (_numFrames == value)
+                return;
+    
+            _numFrames = value;
+            OnPropertyChanged(nameof(NumFrames));
+        }
+    }
+    
+    private float _frameRate;
+    public float FrameRate
+    {
+        get => _frameRate;
+        set
+        {
+            if (_frameRate == value)
+                return;
+    
+            _frameRate = value;
+            OnPropertyChanged(nameof(FrameRate));
+        }
+    }
+    
     public uint NumTracks => GetChildCount(ChunkIdentifier.Multi_Controller_Track);
 
     public override byte[] DataBytes
@@ -58,12 +124,12 @@ public class MultiController2Chunk : NamedChunk
 
     public MultiController2Chunk(uint version, string name, string cycleMode, uint numCycles, uint infiniteCycle, float numFrames, float frameRate) : base(ChunkID, name)
     {
-        Version = version;
+        _version = version;
         _cycleMode = new(this, cycleMode, nameof(CycleMode));
-        NumCycles = numCycles;
-        InfiniteCycle = infiniteCycle;
-        NumFrames = numFrames;
-        FrameRate = frameRate;
+        _numCycles = numCycles;
+        _infiniteCycle = infiniteCycle;
+        _numFrames = numFrames;
+        _frameRate = frameRate;
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

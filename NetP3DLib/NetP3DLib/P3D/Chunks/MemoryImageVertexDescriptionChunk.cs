@@ -13,8 +13,34 @@ public class MemoryImageVertexDescriptionChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Memory_Image_Vertex_Description;
 
-    public uint Version { get; set; }
-    public uint Param { get; set; }
+    private uint _version;
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
+    private uint _param;
+    public uint Param
+    {
+        get => _param;
+        set
+        {
+            if (_param == value)
+                return;
+    
+            _param = value;
+            OnPropertyChanged(nameof(Param));
+        }
+    }
+    
     public uint DescriptionSize
     {
         get => (uint)(Description?.Count ?? 0);
@@ -59,10 +85,12 @@ public class MemoryImageVertexDescriptionChunk : Chunk
 
     public MemoryImageVertexDescriptionChunk(uint version, uint param, IList<byte> description) : base(ChunkID)
     {
-        Version = version;
-        Param = param;
-        Description = CreateSizeAwareList(description);
+        _version = version;
+        _param = param;
+        Description = CreateSizeAwareList(description, Description_CollectionChanged);
     }
+    
+    private void Description_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(Description));
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
     {

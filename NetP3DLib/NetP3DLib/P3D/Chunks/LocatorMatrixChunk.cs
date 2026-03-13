@@ -12,7 +12,20 @@ public class LocatorMatrixChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Locator_Matrix;
 
-    public Matrix4x4 Matrix { get; set; }
+    private Matrix4x4 _matrix;
+    public Matrix4x4 Matrix
+    {
+        get => _matrix;
+        set
+        {
+            if (_matrix == value)
+                return;
+    
+            _matrix = value;
+            OnPropertyChanged(nameof(Matrix));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -33,7 +46,7 @@ public class LocatorMatrixChunk : Chunk
 
     public LocatorMatrixChunk(Matrix4x4 matrix) : base(ChunkID)
     {
-        Matrix = matrix;
+        _matrix = matrix;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

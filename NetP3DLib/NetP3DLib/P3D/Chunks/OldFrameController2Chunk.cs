@@ -34,8 +34,34 @@ public class OldFrameController2Chunk : NamedChunk
         CompositeDrawableVisibility,
     }
 
-    public uint Version { get; set; }
-    public Types Type { get; set; }
+    private uint _version;
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
+    private Types _type;
+    public Types Type
+    {
+        get => _type;
+        set
+        {
+            if (_type == value)
+                return;
+    
+            _type = value;
+            OnPropertyChanged(nameof(Type));
+        }
+    }
+    
     private readonly P3DString _hierarchyName;
     public string HierarchyName
     {
@@ -72,8 +98,8 @@ public class OldFrameController2Chunk : NamedChunk
 
     public OldFrameController2Chunk(string name, uint version, Types type, string hierarchyName, string animationName) : base(ChunkID, name)
     {
-        Version = version;
-        Type = type;
+        _version = version;
+        _type = type;
         _hierarchyName = new(this, hierarchyName, nameof(HierarchyName));
         _animationName = new(this, animationName, nameof(AnimationName));
     }

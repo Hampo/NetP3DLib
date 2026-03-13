@@ -39,8 +39,34 @@ public class InstParticleSystemChunk : Chunk
         Popsicles = 26,
     }
 
-    public ParticleTypes ParticleType { get; set; }
-    public uint MaxInstances { get; set; }
+    private ParticleTypes _particleType;
+    public ParticleTypes ParticleType
+    {
+        get => _particleType;
+        set
+        {
+            if (_particleType == value)
+                return;
+    
+            _particleType = value;
+            OnPropertyChanged(nameof(ParticleType));
+        }
+    }
+    
+    private uint _maxInstances;
+    public uint MaxInstances
+    {
+        get => _maxInstances;
+        set
+        {
+            if (_maxInstances == value)
+                return;
+    
+            _maxInstances = value;
+            OnPropertyChanged(nameof(MaxInstances));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -62,8 +88,8 @@ public class InstParticleSystemChunk : Chunk
 
     public InstParticleSystemChunk(ParticleTypes particleType, uint maxInstances) : base(ChunkID)
     {
-        ParticleType = particleType;
-        MaxInstances = maxInstances;
+        _particleType = particleType;
+        _maxInstances = maxInstances;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

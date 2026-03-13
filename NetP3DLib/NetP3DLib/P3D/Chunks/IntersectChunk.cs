@@ -107,10 +107,16 @@ public class IntersectChunk : Chunk
 
     public IntersectChunk(IList<uint> indices, IList<Vector3> positions, IList<Vector3> normals) : base(ChunkID)
     {
-        Indices = CreateSizeAwareList(indices);
-        Positions = CreateSizeAwareList(positions);
-        Normals = CreateSizeAwareList(normals);
+        Indices = CreateSizeAwareList(indices, Indices_CollectionChanged);
+        Positions = CreateSizeAwareList(positions, Positions_CollectionChanged);
+        Normals = CreateSizeAwareList(normals, Normals_CollectionChanged);
     }
+    
+    private void Indices_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(Indices));
+    
+    private void Positions_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(Positions));
+    
+    private void Normals_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(Normals));
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {

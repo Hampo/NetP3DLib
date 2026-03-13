@@ -13,10 +13,49 @@ public class FrontendPageChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Frontend_Page;
 
+    private uint _version;
     [DefaultValue(0)]
-    public uint Version { get; set; }
-    public uint ResolutionX { get; set; }
-    public uint ResolutionY { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
+    private uint _resolutionX;
+    public uint ResolutionX
+    {
+        get => _resolutionX;
+        set
+        {
+            if (_resolutionX == value)
+                return;
+    
+            _resolutionX = value;
+            OnPropertyChanged(nameof(ResolutionX));
+        }
+    }
+    
+    private uint _resolutionY;
+    public uint ResolutionY
+    {
+        get => _resolutionY;
+        set
+        {
+            if (_resolutionY == value)
+                return;
+    
+            _resolutionY = value;
+            OnPropertyChanged(nameof(ResolutionY));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -40,9 +79,9 @@ public class FrontendPageChunk : NamedChunk
 
     public FrontendPageChunk(string name, uint version, uint resolutionX, uint resolutionY) : base(ChunkID, name)
     {
-        Version = version;
-        ResolutionX = resolutionX;
-        ResolutionY = resolutionY;
+        _version = version;
+        _resolutionX = resolutionX;
+        _resolutionY = resolutionY;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

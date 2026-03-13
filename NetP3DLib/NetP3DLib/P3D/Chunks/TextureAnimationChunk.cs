@@ -14,20 +14,67 @@ public class TextureAnimationChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Texture_Animation;
 
-    public uint Version { get; set; }
+    private uint _version;
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     private readonly P3DString _materialName;
     public string MaterialName
     {
         get => _materialName?.Value ?? string.Empty;
         set => _materialName.Value = value;
     }
-    public uint NumFrames { get; set; }
-    public float FrameRate { get; set; }
+    
+    private uint _numFrames;
+    public uint NumFrames
+    {
+        get => _numFrames;
+        set
+        {
+            if (_numFrames == value)
+                return;
+    
+            _numFrames = value;
+            OnPropertyChanged(nameof(NumFrames));
+        }
+    }
+    
+    private float _frameRate;
+    public float FrameRate
+    {
+        get => _frameRate;
+        set
+        {
+            if (_frameRate == value)
+                return;
+    
+            _frameRate = value;
+            OnPropertyChanged(nameof(FrameRate));
+        }
+    }
+    
     private uint _cyclic;
     public bool Cyclic
     {
         get => _cyclic == 1;
-        set => _cyclic = value ? 1u : 0u;
+        set
+        {
+            if (Cyclic == value)
+                return;
+
+            _cyclic = value ? 1u : 0u;
+            OnPropertyChanged(nameof(Cyclic));
+        }
     }
 
     public override byte[] DataBytes
@@ -59,10 +106,10 @@ public class TextureAnimationChunk : NamedChunk
 
     public TextureAnimationChunk(string name, uint version, string materialName, uint numFrames, float frameRate, uint cyclic) : base(ChunkID, name)
     {
-        Version = version;
+        _version = version;
         _materialName = new(this, materialName, nameof(MaterialName));
-        NumFrames = numFrames;
-        FrameRate = frameRate;
+        _numFrames = numFrames;
+        _frameRate = frameRate;
         _cyclic = cyclic;
     }
 

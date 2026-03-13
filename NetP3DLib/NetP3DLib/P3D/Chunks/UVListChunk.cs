@@ -36,7 +36,21 @@ public class UVListChunk : Chunk
             }
         }
     }
-    public uint Channel { get; set; }
+    
+    private uint _channel;
+    public uint Channel
+    {
+        get => _channel;
+        set
+        {
+            if (_channel == value)
+                return;
+    
+            _channel = value;
+            OnPropertyChanged(nameof(Channel));
+        }
+    }
+    
     public SizeAwareList<Vector2> UVs { get; }
 
     public override byte[] DataBytes
@@ -67,9 +81,11 @@ public class UVListChunk : Chunk
 
     public UVListChunk(uint channel, IList<Vector2> uvs) : base(ChunkID)
     {
-        Channel = channel;
-        UVs = CreateSizeAwareList(uvs);
+        _channel = channel;
+        UVs = CreateSizeAwareList(uvs, UVs_CollectionChanged);
     }
+    
+    private void UVs_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(UVs));
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {

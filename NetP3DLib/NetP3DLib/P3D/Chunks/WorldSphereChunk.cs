@@ -13,8 +13,21 @@ public class WorldSphereChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.World_Sphere;
 
+    private uint _version;
     [DefaultValue(0)]
-    public uint Version { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     public uint NumMeshes => GetChildCount(ChunkIdentifier.Mesh);
     public uint NumOldBillboardQuadGroups => GetChildCount(ChunkIdentifier.Old_Billboard_Quad_Group);
 
@@ -43,7 +56,7 @@ public class WorldSphereChunk : NamedChunk
 
     public WorldSphereChunk(string name, uint version) : base(ChunkID, name)
     {
-        Version = version;
+        _version = version;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

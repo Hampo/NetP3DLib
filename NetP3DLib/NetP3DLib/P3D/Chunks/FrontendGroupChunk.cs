@@ -14,9 +14,35 @@ public class FrontendGroupChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Frontend_Group;
 
+    private uint _version;
     [DefaultValue(0)]
-    public uint Version { get; set; }
-    public uint Alpha { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
+    private uint _alpha;
+    public uint Alpha
+    {
+        get => _alpha;
+        set
+        {
+            if (_alpha == value)
+                return;
+    
+            _alpha = value;
+            OnPropertyChanged(nameof(Alpha));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -39,8 +65,8 @@ public class FrontendGroupChunk : NamedChunk
 
     public FrontendGroupChunk(string name, uint version, uint alpha) : base(ChunkID, name)
     {
-        Version = version;
-        Alpha = alpha;
+        _version = version;
+        _alpha = alpha;
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

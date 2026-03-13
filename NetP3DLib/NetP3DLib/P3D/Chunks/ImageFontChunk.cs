@@ -12,11 +12,76 @@ public class ImageFontChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Image_Font;
 
-    public uint Version { get; set; }
-    public float FontSize { get; set; }
-    public float FontWidth { get; set; }
-    public float FontHeight { get; set; }
-    public float FontBaseLine { get; set; }
+    private uint _version;
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
+    private float _fontSize;
+    public float FontSize
+    {
+        get => _fontSize;
+        set
+        {
+            if (_fontSize == value)
+                return;
+    
+            _fontSize = value;
+            OnPropertyChanged(nameof(FontSize));
+        }
+    }
+    
+    private float _fontWidth;
+    public float FontWidth
+    {
+        get => _fontWidth;
+        set
+        {
+            if (_fontWidth == value)
+                return;
+    
+            _fontWidth = value;
+            OnPropertyChanged(nameof(FontWidth));
+        }
+    }
+    
+    private float _fontHeight;
+    public float FontHeight
+    {
+        get => _fontHeight;
+        set
+        {
+            if (_fontHeight == value)
+                return;
+    
+            _fontHeight = value;
+            OnPropertyChanged(nameof(FontHeight));
+        }
+    }
+    
+    private float _fontBaseLine;
+    public float FontBaseLine
+    {
+        get => _fontBaseLine;
+        set
+        {
+            if (_fontBaseLine == value)
+                return;
+    
+            _fontBaseLine = value;
+            OnPropertyChanged(nameof(FontBaseLine));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -42,11 +107,11 @@ public class ImageFontChunk : NamedChunk
 
     public ImageFontChunk(uint version, string name, float fontSize, float fontWidth, float fontHeight, float fontBaseLine) : base(ChunkID, name)
     {
-        Version = version;
-        FontSize = fontSize;
-        FontWidth = fontWidth;
-        FontHeight = fontHeight;
-        FontBaseLine = fontBaseLine;
+        _version = version;
+        _fontSize = fontSize;
+        _fontWidth = fontWidth;
+        _fontHeight = fontHeight;
+        _fontBaseLine = fontBaseLine;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

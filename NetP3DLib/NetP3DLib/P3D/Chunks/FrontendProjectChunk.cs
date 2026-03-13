@@ -15,10 +15,49 @@ public class FrontendProjectChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Frontend_Project;
 
+    private uint _version;
     [DefaultValue(1)]
-    public uint Version { get; set; }
-    public uint ResolutionX { get; set; }
-    public uint ResolutionY { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
+    private uint _resolutionX;
+    public uint ResolutionX
+    {
+        get => _resolutionX;
+        set
+        {
+            if (_resolutionX == value)
+                return;
+    
+            _resolutionX = value;
+            OnPropertyChanged(nameof(ResolutionX));
+        }
+    }
+    
+    private uint _resolutionY;
+    public uint ResolutionY
+    {
+        get => _resolutionY;
+        set
+        {
+            if (_resolutionY == value)
+                return;
+    
+            _resolutionY = value;
+            OnPropertyChanged(nameof(ResolutionY));
+        }
+    }
+    
     private readonly P3DString _platform;
     public string Platform
     {
@@ -70,9 +109,9 @@ public class FrontendProjectChunk : NamedChunk
 
     public FrontendProjectChunk(string name, uint version, uint resolutionX, uint resolutionY, string platform, string pagePath, string resourcePath, string screenPath) : base(ChunkID, name)
     {
-        Version = version;
-        ResolutionX = resolutionX;
-        ResolutionY = resolutionY;
+        _version = version;
+        _resolutionX = resolutionX;
+        _resolutionY = resolutionY;
         _platform = new(this, platform, nameof(Platform));
         _pagePath = new(this, pagePath, nameof(PagePath));
         _resourcePath = new(this, resourcePath, nameof(ResourcePath));

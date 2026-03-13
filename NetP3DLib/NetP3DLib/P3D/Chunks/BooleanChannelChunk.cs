@@ -15,13 +15,33 @@ public class BooleanChannelChunk : ParamChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Boolean_Channel;
 
+    private uint _version;
     [DefaultValue(0)]
-    public uint Version { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     private ushort _startState;
     public bool StartState
     {
         get => _startState == 1;
-        set => _startState = (ushort)(value ? 1u : 0u);
+        set
+        {
+            if (StartState == value)
+                return;
+
+            _startState = (ushort)(value ? 1u : 0u);
+            OnPropertyChanged(nameof(StartState));
+        }
     }
     public uint NumValues
     {
@@ -33,13 +53,17 @@ public class BooleanChannelChunk : ParamChunk
 
             if (value < NumValues)
             {
-                while (NumValues > value)
-                    Values.RemoveAt(Values.Count - 1);
+                Values.RemoveRange((int)value, (int)(NumValues - value));
             }
             else
             {
-                while (NumValues < value)
-                    Values.Add(default);
+                int count = (int)(value - NumValues);
+                var newValues = new ushort[count];
+
+                for (var i = 0; i < count; i++)
+                    newValues[i] = default;
+
+                Values.AddRange(newValues);
             }
         }
     }
@@ -73,10 +97,12 @@ public class BooleanChannelChunk : ParamChunk
 
     public BooleanChannelChunk(uint version, string param, ushort startState, IList<ushort> values) : base(ChunkID, param)
     {
-        Version = version;
+        _version = version;
         _startState = startState;
-        Values = CreateSizeAwareList(values);
+        Values = CreateSizeAwareList(values, Values_CollectionChanged);
     }
+    
+    private void Values_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(Values));
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
     {

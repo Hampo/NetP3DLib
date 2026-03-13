@@ -13,11 +13,76 @@ public class WalkerCameraDataChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Walker_Camera_Data;
 
-    public uint Index { get; set; }
-    public float MinMagnitude { get; set; }
-    public float MaxMagnitude { get; set; }
-    public float Elevation { get; set; }
-    public Vector3 TargetOffset { get; set; }
+    private uint _index;
+    public uint Index
+    {
+        get => _index;
+        set
+        {
+            if (_index == value)
+                return;
+    
+            _index = value;
+            OnPropertyChanged(nameof(Index));
+        }
+    }
+    
+    private float _minMagnitude;
+    public float MinMagnitude
+    {
+        get => _minMagnitude;
+        set
+        {
+            if (_minMagnitude == value)
+                return;
+    
+            _minMagnitude = value;
+            OnPropertyChanged(nameof(MinMagnitude));
+        }
+    }
+    
+    private float _maxMagnitude;
+    public float MaxMagnitude
+    {
+        get => _maxMagnitude;
+        set
+        {
+            if (_maxMagnitude == value)
+                return;
+    
+            _maxMagnitude = value;
+            OnPropertyChanged(nameof(MaxMagnitude));
+        }
+    }
+    
+    private float _elevation;
+    public float Elevation
+    {
+        get => _elevation;
+        set
+        {
+            if (_elevation == value)
+                return;
+    
+            _elevation = value;
+            OnPropertyChanged(nameof(Elevation));
+        }
+    }
+    
+    private Vector3 _targetOffset;
+    public Vector3 TargetOffset
+    {
+        get => _targetOffset;
+        set
+        {
+            if (_targetOffset == value)
+                return;
+    
+            _targetOffset = value;
+            OnPropertyChanged(nameof(TargetOffset));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -42,11 +107,11 @@ public class WalkerCameraDataChunk : Chunk
 
     public WalkerCameraDataChunk(uint index, float minMagnitude, float maxMagnitude, float elevation, Vector3 targetOffset) : base(ChunkID)
     {
-        Index = index;
-        MinMagnitude = minMagnitude;
-        MaxMagnitude = maxMagnitude;
-        Elevation = elevation;
-        TargetOffset = targetOffset;
+        _index = index;
+        _minMagnitude = minMagnitude;
+        _maxMagnitude = maxMagnitude;
+        _elevation = elevation;
+        _targetOffset = targetOffset;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

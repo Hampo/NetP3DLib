@@ -15,15 +15,42 @@ public class AnimatedObjectFactoryChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Animated_Object_Factory;
 
+    private uint _version;
     [DefaultValue(0)]
-    public uint Version { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     private readonly P3DString _baseAnimation;
     public string BaseAnimation
     {
         get => _baseAnimation?.Value ?? string.Empty;
         set => _baseAnimation.Value = value;
     }
-    public uint NumAnimations { get; set; }
+    
+    private uint _numAnimations;
+    public uint NumAnimations
+    {
+        get => _numAnimations;
+        set
+        {
+            if (_numAnimations == value)
+                return;
+    
+            _numAnimations = value;
+            OnPropertyChanged(nameof(NumAnimations));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -47,9 +74,9 @@ public class AnimatedObjectFactoryChunk : NamedChunk
 
     public AnimatedObjectFactoryChunk(uint version, string name, string baseAnimation, uint numAnimations) : base(ChunkID, name)
     {
-        Version = version;
+        _version = version;
         _baseAnimation = new(this, baseAnimation, nameof(BaseAnimation));
-        NumAnimations = numAnimations;
+        _numAnimations = numAnimations;
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

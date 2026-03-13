@@ -20,9 +20,49 @@ public class VisibilityAnimChunk : NamedChunk
         get => _sceneName?.Value ?? string.Empty;
         set => _sceneName.Value = value;
     }
-    public uint Version { get; set; }
-    public uint NumFrames { get; set; }
-    public float FrameRate { get; set; }
+    
+    private uint _version;
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
+    private uint _numFrames;
+    public uint NumFrames
+    {
+        get => _numFrames;
+        set
+        {
+            if (_numFrames == value)
+                return;
+    
+            _numFrames = value;
+            OnPropertyChanged(nameof(NumFrames));
+        }
+    }
+    
+    private float _frameRate;
+    public float FrameRate
+    {
+        get => _frameRate;
+        set
+        {
+            if (_frameRate == value)
+                return;
+    
+            _frameRate = value;
+            OnPropertyChanged(nameof(FrameRate));
+        }
+    }
+    
     public uint NumChannels => GetChildCount(ChunkIdentifier.Visibility_Anim_Channel);
 
     public override byte[] DataBytes
@@ -52,9 +92,9 @@ public class VisibilityAnimChunk : NamedChunk
     public VisibilityAnimChunk(string name, string sceneName, uint version, uint numFrames, float frameRate) : base(ChunkID, name)
     {
         _sceneName = new(this, sceneName, nameof(SceneName));
-        Version = version;
-        NumFrames = numFrames;
-        FrameRate = frameRate;
+        _version = version;
+        _numFrames = numFrames;
+        _frameRate = frameRate;
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

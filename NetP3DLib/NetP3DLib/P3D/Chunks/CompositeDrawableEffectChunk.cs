@@ -16,9 +16,30 @@ public class CompositeDrawableEffectChunk : NamedChunk
     public bool IsTranslucent
     {
         get => _isTranslucent != 0;
-        set => _isTranslucent = value ? 1u : 0u;
+        set
+        {
+            if (IsTranslucent == value)
+                return;
+
+            _isTranslucent = value ? 1u : 0u;
+            OnPropertyChanged(nameof(IsTranslucent));
+        }
     }
-    public uint SkeletonJointId { get; set; }
+    
+    private uint _skeletonJointId;
+    public uint SkeletonJointId
+    {
+        get => _skeletonJointId;
+        set
+        {
+            if (_skeletonJointId == value)
+                return;
+    
+            _skeletonJointId = value;
+            OnPropertyChanged(nameof(SkeletonJointId));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -46,7 +67,7 @@ public class CompositeDrawableEffectChunk : NamedChunk
     public CompositeDrawableEffectChunk(string name, uint isTranslucent, uint skeletonJointId) : base(ChunkID, name)
     {
         _isTranslucent = isTranslucent;
-        SkeletonJointId = skeletonJointId;
+        _skeletonJointId = skeletonJointId;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

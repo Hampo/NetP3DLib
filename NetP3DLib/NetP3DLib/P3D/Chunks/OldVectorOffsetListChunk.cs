@@ -16,8 +16,21 @@ public class OldVectorOffsetListChunk : ParamChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Vector_Offset_List;
 
+    private uint _version;
     [DefaultValue(0)]
-    public uint Version { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     public uint NumOffsets
     {
         get => (uint)(Offsets?.Count ?? 0);
@@ -69,9 +82,11 @@ public class OldVectorOffsetListChunk : ParamChunk
 
     public OldVectorOffsetListChunk(uint version, string param, IList<Vector3> offsets) : base(ChunkID, param)
     {
-        Version = version;
-        Offsets = CreateSizeAwareList(offsets);
+        _version = version;
+        Offsets = CreateSizeAwareList(offsets, Offsets_CollectionChanged);
     }
+    
+    private void Offsets_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(Offsets));
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
     {

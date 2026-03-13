@@ -18,14 +18,48 @@ public class StatePropStateDataV1Chunk : NamedChunk
     public bool AutoTransition
     {
         get => _autoTransition != 0;
-        set => _autoTransition = value ? 1u : 0u;
+        set
+        {
+            if (AutoTransition == value)
+                return;
+
+            _autoTransition = value ? 1u : 0u;
+            OnPropertyChanged(nameof(AutoTransition));
+        }
     }
-    public uint OutState { get; set; }
+    
+    private uint _outState;
+    public uint OutState
+    {
+        get => _outState;
+        set
+        {
+            if (_outState == value)
+                return;
+    
+            _outState = value;
+            OnPropertyChanged(nameof(OutState));
+        }
+    }
+    
     public uint NumDrawables => GetChildCount(ChunkIdentifier.State_Prop_Visibilities_Data);
     public uint NumFrameControllers => GetChildCount(ChunkIdentifier.State_Prop_Frame_Controller_Data);
     public uint NumEvents => GetChildCount(ChunkIdentifier.State_Prop_Event_Data);
     public uint NumCallbacks => GetChildCount(ChunkIdentifier.State_Prop_Callback_Data);
-    public float OutFrame { get; set; }
+    private float _outFrame;
+    public float OutFrame
+    {
+        get => _outFrame;
+        set
+        {
+            if (_outFrame == value)
+                return;
+    
+            _outFrame = value;
+            OnPropertyChanged(nameof(OutFrame));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -59,8 +93,8 @@ public class StatePropStateDataV1Chunk : NamedChunk
     public StatePropStateDataV1Chunk(string name, uint autoTransition, uint outState, float outFrame) : base(ChunkID, name)
     {
         _autoTransition = autoTransition;
-        OutState = outState;
-        OutFrame = outFrame;
+        _outState = outState;
+        _outFrame = outFrame;
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

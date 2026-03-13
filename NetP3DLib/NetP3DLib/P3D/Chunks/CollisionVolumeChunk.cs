@@ -20,8 +20,34 @@ public class CollisionVolumeChunk : Chunk
         ChunkIdentifier.Collision_Axis_Aligned_Bounding_Box,
     ];
 
-    public uint ObjectReferenceIndex { get; set; }
-    public int OwnerIndex { get; set; }
+    private uint _objectReferenceIndex;
+    public uint ObjectReferenceIndex
+    {
+        get => _objectReferenceIndex;
+        set
+        {
+            if (_objectReferenceIndex == value)
+                return;
+    
+            _objectReferenceIndex = value;
+            OnPropertyChanged(nameof(ObjectReferenceIndex));
+        }
+    }
+    
+    private int _ownerIndex;
+    public int OwnerIndex
+    {
+        get => _ownerIndex;
+        set
+        {
+            if (_ownerIndex == value)
+                return;
+    
+            _ownerIndex = value;
+            OnPropertyChanged(nameof(OwnerIndex));
+        }
+    }
+    
     public uint NumSubVolumes => GetChildCount(ChunkIdentifier.Collision_Volume);
 
     public override byte[] DataBytes
@@ -47,8 +73,8 @@ public class CollisionVolumeChunk : Chunk
 
     public CollisionVolumeChunk(uint objectReferenceIndex, int ownerIndex) : base(ChunkID)
     {
-        ObjectReferenceIndex = objectReferenceIndex;
-        OwnerIndex = ownerIndex;
+        _objectReferenceIndex = objectReferenceIndex;
+        _ownerIndex = ownerIndex;
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

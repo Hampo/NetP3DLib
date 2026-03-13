@@ -18,9 +18,35 @@ public class FrontendPolygonChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Frontend_Polygon;
 
+    private uint _version;
     [DefaultValue(1)]
-    public uint Version { get; set; }
-    public uint Translucency { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
+    private uint _translucency;
+    public uint Translucency
+    {
+        get => _translucency;
+        set
+        {
+            if (_translucency == value)
+                return;
+    
+            _translucency = value;
+            OnPropertyChanged(nameof(Translucency));
+        }
+    }
+    
     public uint NumPoints
     {
         get => (uint)(Points?.Count ?? 0);
@@ -92,11 +118,15 @@ public class FrontendPolygonChunk : NamedChunk
 
     public FrontendPolygonChunk(string name, uint version, uint translucency, IList<Vector3> points, IList<Color> colours) : base(ChunkID, name)
     {
-        Version = version;
-        Translucency = translucency;
-        Points = CreateSizeAwareList(points);
-        Colours = CreateSizeAwareList(colours);
+        _version = version;
+        _translucency = translucency;
+        Points = CreateSizeAwareList(points, Points_CollectionChanged);
+        Colours = CreateSizeAwareList(colours, Colours_CollectionChanged);
     }
+    
+    private void Points_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(Points));
+    
+    private void Colours_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(Colours));
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {

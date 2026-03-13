@@ -14,7 +14,20 @@ public class LensFlareGroupChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Lens_Flare_Group;
 
-    public uint Version { get; set; }
+    private uint _version;
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     private readonly P3DString _shaderName;
     public string ShaderName
     {
@@ -25,22 +38,70 @@ public class LensFlareGroupChunk : NamedChunk
     public bool ZTest
     {
         get => _zTest == 1;
-        set => _zTest = value ? 1u : 0u;
+        set
+        {
+            if (ZTest == value)
+                return;
+
+            _zTest = value ? 1u : 0u;
+            OnPropertyChanged(nameof(ZTest));
+        }
     }
     private uint _zWrite;
     public bool ZWrite
     {
         get => _zWrite == 1;
-        set => _zWrite = value ? 1u : 0u;
+        set
+        {
+            if (ZWrite == value)
+                return;
+
+            _zWrite = value ? 1u : 0u;
+            OnPropertyChanged(nameof(ZWrite));
+        }
     }
     private uint _fog;
     public bool Fog
     {
         get => _fog == 1;
-        set => _fog = value ? 1u : 0u;
+        set
+        {
+            if (Fog == value)
+                return;
+
+            _fog = value ? 1u : 0u;
+            OnPropertyChanged(nameof(Fog));
+        }
     }
-    public float SourceRadius { get; set; }
-    public float EdgeRadius { get; set; }
+    
+    private float _sourceRadius;
+    public float SourceRadius
+    {
+        get => _sourceRadius;
+        set
+        {
+            if (_sourceRadius == value)
+                return;
+    
+            _sourceRadius = value;
+            OnPropertyChanged(nameof(SourceRadius));
+        }
+    }
+    
+    private float _edgeRadius;
+    public float EdgeRadius
+    {
+        get => _edgeRadius;
+        set
+        {
+            if (_edgeRadius == value)
+                return;
+    
+            _edgeRadius = value;
+            OnPropertyChanged(nameof(EdgeRadius));
+        }
+    }
+    
     public uint NumLensFlares => GetChildCount(ChunkIdentifier.Lens_Flare);
 
     public override byte[] DataBytes
@@ -76,13 +137,13 @@ public class LensFlareGroupChunk : NamedChunk
 
     public LensFlareGroupChunk(uint version, string name, string shaderName, uint zTest, uint zWrite, uint fog, float sourceRadius, float edgeRadius) : base(ChunkID, name)
     {
-        Version = version;
+        _version = version;
         _shaderName = new(this, shaderName, nameof(ShaderName));
         _zTest = zTest;
         _zWrite = zWrite;
         _fog = fog;
-        SourceRadius = sourceRadius;
-        EdgeRadius = edgeRadius;
+        _sourceRadius = sourceRadius;
+        _edgeRadius = edgeRadius;
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

@@ -12,7 +12,20 @@ public class GameAttributeMatrixParameterChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Game_Attribute_Matrix_Parameter;
 
-    public Matrix4x4 Value { get; set; }
+    private Matrix4x4 _value;
+    public Matrix4x4 Value
+    {
+        get => _value;
+        set
+        {
+            if (_value == value)
+                return;
+    
+            _value = value;
+            OnPropertyChanged(nameof(Value));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -34,7 +47,7 @@ public class GameAttributeMatrixParameterChunk : NamedChunk
 
     public GameAttributeMatrixParameterChunk(string name, Matrix4x4 value) : base(ChunkID, name)
     {
-        Value = value;
+        _value = value;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

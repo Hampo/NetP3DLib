@@ -13,11 +13,76 @@ public class CollisionMeshTreeChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Collision_Mesh_Tree;
 
-    public uint Version { get; set; }
-    public uint FirstNode { get; set; }
-    public uint HierarchyIndex { get; set; }
-    public Vector3 Low { get; set; }
-    public Vector3 High { get; set; }
+    private uint _version;
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
+    private uint _firstNode;
+    public uint FirstNode
+    {
+        get => _firstNode;
+        set
+        {
+            if (_firstNode == value)
+                return;
+    
+            _firstNode = value;
+            OnPropertyChanged(nameof(FirstNode));
+        }
+    }
+    
+    private uint _hierarchyIndex;
+    public uint HierarchyIndex
+    {
+        get => _hierarchyIndex;
+        set
+        {
+            if (_hierarchyIndex == value)
+                return;
+    
+            _hierarchyIndex = value;
+            OnPropertyChanged(nameof(HierarchyIndex));
+        }
+    }
+    
+    private Vector3 _low;
+    public Vector3 Low
+    {
+        get => _low;
+        set
+        {
+            if (_low == value)
+                return;
+    
+            _low = value;
+            OnPropertyChanged(nameof(Low));
+        }
+    }
+    
+    private Vector3 _high;
+    public Vector3 High
+    {
+        get => _high;
+        set
+        {
+            if (_high == value)
+                return;
+    
+            _high = value;
+            OnPropertyChanged(nameof(High));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -42,11 +107,11 @@ public class CollisionMeshTreeChunk : Chunk
 
     public CollisionMeshTreeChunk(uint version, uint firstNode, uint hierarchyIndex, Vector3 low, Vector3 high) : base(ChunkID)
     {
-        Version = version;
-        FirstNode = firstNode;
-        HierarchyIndex = hierarchyIndex;
-        Low = low;
-        High = high;
+        _version = version;
+        _firstNode = firstNode;
+        _hierarchyIndex = hierarchyIndex;
+        _low = low;
+        _high = high;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

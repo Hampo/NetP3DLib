@@ -13,9 +13,48 @@ public class BillboardTransformChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Billboard_Transform;
 
-    public uint Version { get; set; }
-    public Quaternion Rotation { get; set; }
-    public Vector3 Translation { get; set; }
+    private uint _version;
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
+    private Quaternion _rotation;
+    public Quaternion Rotation
+    {
+        get => _rotation;
+        set
+        {
+            if (_rotation == value)
+                return;
+    
+            _rotation = value;
+            OnPropertyChanged(nameof(Rotation));
+        }
+    }
+    
+    private Vector3 _translation;
+    public Vector3 Translation
+    {
+        get => _translation;
+        set
+        {
+            if (_translation == value)
+                return;
+    
+            _translation = value;
+            OnPropertyChanged(nameof(Translation));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -38,9 +77,9 @@ public class BillboardTransformChunk : Chunk
 
     public BillboardTransformChunk(uint version, Quaternion rotation, Vector3 translation) : base(ChunkID)
     {
-        Version = version;
-        Rotation = rotation;
-        Translation = translation;
+        _version = version;
+        _rotation = rotation;
+        _translation = translation;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

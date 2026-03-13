@@ -12,8 +12,34 @@ public class BoundingBoxChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Bounding_Box;
 
-    public Vector3 Low { get; set; }
-    public Vector3 High { get; set; }
+    private Vector3 _low;
+    public Vector3 Low
+    {
+        get => _low;
+        set
+        {
+            if (_low == value)
+                return;
+    
+            _low = value;
+            OnPropertyChanged(nameof(Low));
+        }
+    }
+    
+    private Vector3 _high;
+    public Vector3 High
+    {
+        get => _high;
+        set
+        {
+            if (_high == value)
+                return;
+    
+            _high = value;
+            OnPropertyChanged(nameof(High));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -35,8 +61,8 @@ public class BoundingBoxChunk : Chunk
 
     public BoundingBoxChunk(Vector3 low, Vector3 high) : base(ChunkID)
     {
-        Low = low;
-        High = high;
+        _low = low;
+        _high = high;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

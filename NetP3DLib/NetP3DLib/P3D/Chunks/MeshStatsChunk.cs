@@ -12,9 +12,48 @@ public class MeshStatsChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Mesh_Stats;
 
-    public uint Version { get; set; }
-    public uint IsRendered { get; set; }
-    public uint IsCollision { get; set; }
+    private uint _version;
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
+    private uint _isRendered;
+    public uint IsRendered
+    {
+        get => _isRendered;
+        set
+        {
+            if (_isRendered == value)
+                return;
+    
+            _isRendered = value;
+            OnPropertyChanged(nameof(IsRendered));
+        }
+    }
+    
+    private uint _isCollision;
+    public uint IsCollision
+    {
+        get => _isCollision;
+        set
+        {
+            if (_isCollision == value)
+                return;
+    
+            _isCollision = value;
+            OnPropertyChanged(nameof(IsCollision));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -37,9 +76,9 @@ public class MeshStatsChunk : NamedChunk
 
     public MeshStatsChunk(uint version, string name, uint isRendered, uint isCollision) : base(ChunkID, name)
     {
-        Version = version;
-        IsRendered = isRendered;
-        IsCollision = isCollision;
+        _version = version;
+        _isRendered = isRendered;
+        _isCollision = isCollision;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

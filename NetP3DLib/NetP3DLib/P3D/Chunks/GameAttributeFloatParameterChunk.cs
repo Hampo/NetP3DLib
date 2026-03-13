@@ -12,7 +12,20 @@ public class GameAttributeFloatParameterChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Game_Attribute_Float_Parameter;
 
-    public float Value { get; set; }
+    private float _value;
+    public float Value
+    {
+        get => _value;
+        set
+        {
+            if (_value == value)
+                return;
+    
+            _value = value;
+            OnPropertyChanged(nameof(Value));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -34,7 +47,7 @@ public class GameAttributeFloatParameterChunk : NamedChunk
 
     public GameAttributeFloatParameterChunk(string name, float value) : base(ChunkID, name)
     {
-        Value = value;
+        _value = value;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

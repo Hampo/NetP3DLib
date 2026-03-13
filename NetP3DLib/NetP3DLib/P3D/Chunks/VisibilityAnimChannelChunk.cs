@@ -14,7 +14,20 @@ public class VisibilityAnimChannelChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Visibility_Anim_Channel;
 
-    public ushort StartState { get; set; }
+    private ushort _startState;
+    public ushort StartState
+    {
+        get => _startState;
+        set
+        {
+            if (_startState == value)
+                return;
+    
+            _startState = value;
+            OnPropertyChanged(nameof(StartState));
+        }
+    }
+    
     public uint NumFrames
     {
         get => (uint)(Frames?.Count ?? 0);
@@ -60,9 +73,11 @@ public class VisibilityAnimChannelChunk : NamedChunk
 
     public VisibilityAnimChannelChunk(string name, ushort startState, IList<uint> frames) : base(ChunkID, name)
     {
-        StartState = startState;
-        Frames = CreateSizeAwareList(frames);
+        _startState = startState;
+        Frames = CreateSizeAwareList(frames, Frames_CollectionChanged);
     }
+    
+    private void Frames_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(Frames));
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
     {

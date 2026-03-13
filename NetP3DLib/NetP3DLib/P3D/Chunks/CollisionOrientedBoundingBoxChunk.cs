@@ -13,7 +13,20 @@ public class CollisionOrientedBoundingBoxChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Collision_Oriented_Bounding_Box;
 
-    public Vector3 HalfExtents { get; set; }
+    private Vector3 _halfExtents;
+    public Vector3 HalfExtents
+    {
+        get => _halfExtents;
+        set
+        {
+            if (_halfExtents == value)
+                return;
+    
+            _halfExtents = value;
+            OnPropertyChanged(nameof(HalfExtents));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -34,7 +47,7 @@ public class CollisionOrientedBoundingBoxChunk : Chunk
 
     public CollisionOrientedBoundingBoxChunk(Vector3 halfExtents) : base(ChunkID)
     {
-        HalfExtents = halfExtents;
+        _halfExtents = halfExtents;
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

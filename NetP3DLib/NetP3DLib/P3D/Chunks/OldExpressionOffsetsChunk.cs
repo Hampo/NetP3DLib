@@ -67,8 +67,10 @@ public class OldExpressionOffsetsChunk : Chunk
 
     public OldExpressionOffsetsChunk(IList<uint> primitiveGroupIndices) : base(ChunkID)
     {
-        PrimitiveGroupIndices = CreateSizeAwareList(primitiveGroupIndices);
+        PrimitiveGroupIndices = CreateSizeAwareList(primitiveGroupIndices, PrimitiveGroupIndices_CollectionChanged);
     }
+    
+    private void PrimitiveGroupIndices_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(PrimitiveGroupIndices));
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
     {

@@ -12,7 +12,20 @@ public class ShaderColourParameterChunk : ParamChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Shader_Colour_Parameter;
 
-    public Color Value { get; set; }
+    private Color _value;
+    public Color Value
+    {
+        get => _value;
+        set
+        {
+            if (_value == value)
+                return;
+    
+            _value = value;
+            OnPropertyChanged(nameof(Value));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -34,7 +47,7 @@ public class ShaderColourParameterChunk : ParamChunk
 
     public ShaderColourParameterChunk(string param, Color value) : base(ChunkID, param)
     {
-        Value = value;
+        _value = value;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

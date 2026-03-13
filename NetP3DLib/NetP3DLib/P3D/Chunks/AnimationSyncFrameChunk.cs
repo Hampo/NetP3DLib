@@ -11,8 +11,34 @@ public class AnimationSyncFrameChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Animation_Sync_Frame;
 
-    public uint Version { get; set; }
-    public float SyncFrame { get; set; }
+    private uint _version;
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
+    private float _syncFrame;
+    public float SyncFrame
+    {
+        get => _syncFrame;
+        set
+        {
+            if (_syncFrame == value)
+                return;
+    
+            _syncFrame = value;
+            OnPropertyChanged(nameof(SyncFrame));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -34,8 +60,8 @@ public class AnimationSyncFrameChunk : Chunk
 
     public AnimationSyncFrameChunk(uint version, float syncFrame) : base(ChunkID)
     {
-        Version = version;
-        SyncFrame = syncFrame;
+        _version = version;
+        _syncFrame = syncFrame;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

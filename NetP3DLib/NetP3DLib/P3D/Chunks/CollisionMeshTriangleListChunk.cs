@@ -24,13 +24,17 @@ public class CollisionMeshTriangleListChunk : Chunk
 
             if (value < NumTriangles)
             {
-                while (NumTriangles > value)
-                    Triangles.RemoveAt(Triangles.Count - 1);
+                Triangles.RemoveRange((int)value, (int)(NumTriangles - value));
             }
             else
             {
-                while (NumTriangles < value)
-                    Triangles.Add(new());
+                int count = (int)(value - NumTriangles);
+                var newTriangles = new Triangle[count];
+
+                for (var i = 0; i < count; i++)
+                    newTriangles[i] = new();
+
+                Triangles.AddRange(newTriangles);
             }
         }
     }
@@ -57,8 +61,23 @@ public class CollisionMeshTriangleListChunk : Chunk
 
     public CollisionMeshTriangleListChunk(IList<Triangle> triangles) : base(ChunkID)
     {
-        Triangles = CreateSizeAwareList(triangles);
+        Triangles = CreateSizeAwareList(triangles, Triangles_CollectionChanged);
     }
+    
+    private void Triangles_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
+        OnPropertyChanged(nameof(Triangles));
+
+        if (e.OldItems != null)
+            foreach (Triangle oldItem in e.OldItems)
+                oldItem.PropertyChanged -= Triangles_PropertyChanged;
+    
+        if (e.NewItems != null)
+            foreach (Triangle newItem in e.NewItems)
+                newItem.PropertyChanged += Triangles_PropertyChanged;
+    }
+    
+    private void Triangles_PropertyChanged() => OnPropertyChanged(nameof(Triangles));
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
     {
@@ -79,10 +98,63 @@ public class CollisionMeshTriangleListChunk : Chunk
     {
         public const uint Size = sizeof(ushort) + sizeof(ushort) + sizeof(ushort) + sizeof(ushort);
 
-        public ushort Index0 { get; set; }
-        public ushort Index1 { get; set; }
-        public ushort Index2 { get; set; }
-        public ushort Flags { get; set; }
+        public event Action? PropertyChanged;
+
+        private ushort _index0;
+        public ushort Index0
+        {
+            get => _index0;
+            set
+            {
+                if (_index0 == value)
+                    return;
+    
+                _index0 = value;
+                PropertyChanged?.Invoke();
+            }
+        }
+    
+        private ushort _index1;
+        public ushort Index1
+        {
+            get => _index1;
+            set
+            {
+                if (_index1 == value)
+                    return;
+    
+                _index1 = value;
+                PropertyChanged?.Invoke();
+            }
+        }
+    
+        private ushort _index2;
+        public ushort Index2
+        {
+            get => _index2;
+            set
+            {
+                if (_index2 == value)
+                    return;
+    
+                _index2 = value;
+                PropertyChanged?.Invoke();
+            }
+        }
+    
+        private ushort _flags;
+        public ushort Flags
+        {
+            get => _flags;
+            set
+            {
+                if (_flags == value)
+                    return;
+    
+                _flags = value;
+                PropertyChanged?.Invoke();
+            }
+        }
 
         public byte[] DataBytes
         {
@@ -101,26 +173,26 @@ public class CollisionMeshTriangleListChunk : Chunk
 
         public Triangle(BinaryReader br)
         {
-            Index0 = br.ReadUInt16();
-            Index1 = br.ReadUInt16();
-            Index2 = br.ReadUInt16();
-            Flags = br.ReadUInt16();
+            _index0 = br.ReadUInt16();
+            _index1 = br.ReadUInt16();
+            _index2 = br.ReadUInt16();
+            _flags = br.ReadUInt16();
         }
 
         public Triangle(ushort index0, ushort index1, ushort index2, ushort flags)
         {
-            Index0 = index0;
-            Index1 = index1;
-            Index2 = index2;
-            Flags = flags;
+            _index0 = index0;
+            _index1 = index1;
+            _index2 = index2;
+            _flags = flags;
         }
 
         public Triangle()
         {
-            Index0 = 0;
-            Index1 = 0;
-            Index2 = 0;
-            Flags = 0;
+            _index0 = 0;
+            _index1 = 0;
+            _index2 = 0;
+            _flags = 0;
         }
 
         internal void Write(BinaryWriter bw)

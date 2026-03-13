@@ -13,20 +13,61 @@ public class FrontendLayer2Chunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Frontend_Layer_2;
 
-    public uint Version { get; set; }
+    private uint _version;
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     private uint _visible;
     public bool Visible
     {
         get => _visible != 0;
-        set => _visible = value ? 1u : 0u;
+        set
+        {
+            if (Visible == value)
+                return;
+
+            _visible = value ? 1u : 0u;
+            OnPropertyChanged(nameof(Visible));
+        }
     }
     private uint _editable;
     public bool Editable
     {
         get => _editable != 0;
-        set => _editable = value ? 1u : 0u;
+        set
+        {
+            if (Editable == value)
+                return;
+
+            _editable = value ? 1u : 0u;
+            OnPropertyChanged(nameof(Editable));
+        }
     }
-    public uint Alpha { get; set; }
+    
+    private uint _alpha;
+    public uint Alpha
+    {
+        get => _alpha;
+        set
+        {
+            if (_alpha == value)
+                return;
+    
+            _alpha = value;
+            OnPropertyChanged(nameof(Alpha));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -55,10 +96,10 @@ public class FrontendLayer2Chunk : NamedChunk
 
     public FrontendLayer2Chunk(string name, uint version, uint visible, uint editable, uint alpha) : base(ChunkID, name)
     {
-        Version = version;
+        _version = version;
         _visible = visible;
         _editable = editable;
-        Alpha = alpha;
+        _alpha = alpha;
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

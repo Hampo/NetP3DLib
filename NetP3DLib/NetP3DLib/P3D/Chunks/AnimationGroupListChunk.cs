@@ -13,8 +13,21 @@ public class AnimationGroupListChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Animation_Group_List;
 
+    private uint _version;
     [DefaultValue(0)]
-    public uint Version { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     public uint NumGroups => GetChildCount(ChunkIdentifier.Animation_Group);
 
     public override byte[] DataBytes
@@ -39,7 +52,7 @@ public class AnimationGroupListChunk : Chunk
 
     public AnimationGroupListChunk(uint version) : base(ChunkID)
     {
-        Version = version;
+        _version = version;
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

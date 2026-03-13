@@ -58,8 +58,23 @@ public class MatrixListChunk : Chunk
 
     public MatrixListChunk(IList<Matrix> matrices) : base(ChunkID)
     {
-        Matrices = CreateSizeAwareList(matrices);
+        Matrices = CreateSizeAwareList(matrices, Matrices_CollectionChanged);
     }
+    
+    private void Matrices_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
+        OnPropertyChanged(nameof(Matrices));
+
+        if (e.OldItems != null)
+            foreach (Matrix oldItem in e.OldItems)
+                oldItem.PropertyChanged -= Matrices_PropertyChanged;
+    
+        if (e.NewItems != null)
+            foreach (Matrix newItem in e.NewItems)
+                newItem.PropertyChanged += Matrices_PropertyChanged;
+    }
+    
+    private void Matrices_PropertyChanged() => OnPropertyChanged(nameof(Matrices));
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
@@ -87,35 +102,88 @@ public class MatrixListChunk : Chunk
 
     public class Matrix
     {
-        public byte A { get; set; }
-        public byte B { get; set; }
-        public byte C { get; set; }
-        public byte D { get; set; }
+        public event Action? PropertyChanged;
 
+        private byte _a;
+        public byte A
+        {
+            get => _a;
+            set
+            {
+                if (_a == value)
+                    return;
+    
+                _a = value;
+                PropertyChanged?.Invoke();
+            }
+        }
+    
+        private byte _b;
+        public byte B
+        {
+            get => _b;
+            set
+            {
+                if (_b == value)
+                    return;
+    
+                _b = value;
+                PropertyChanged?.Invoke();
+            }
+        }
+    
+        private byte _c;
+        public byte C
+        {
+            get => _c;
+            set
+            {
+                if (_c == value)
+                    return;
+    
+                _c = value;
+                PropertyChanged?.Invoke();
+            }
+        }
+    
+        private byte _d;
+        public byte D
+        {
+            get => _d;
+            set
+            {
+                if (_d == value)
+                    return;
+    
+                _d = value;
+                PropertyChanged?.Invoke();
+            }
+        }
+    
         public byte[] DataBytes => [D, C, B, A];
 
         public Matrix(BinaryReader br)
         {
-            D = br.ReadByte();
-            C = br.ReadByte();
-            B = br.ReadByte();
-            A = br.ReadByte();
+            _d = br.ReadByte();
+            _c = br.ReadByte();
+            _b = br.ReadByte();
+            _a = br.ReadByte();
         }
 
         public Matrix(byte a, byte b, byte c, byte d)
         {
-            A = a;
-            B = b;
-            C = c;
-            D = d;
+            _a = a;
+            _b = b;
+            _c = c;
+            _d = d;
         }
 
         public Matrix()
         {
-            A = 0;
-            B = 0;
-            C = 0;
-            D = 0;
+            _a = 0;
+            _b = 0;
+            _c = 0;
+            _d = 0;
         }
 
         internal void Write(BinaryWriter bw)

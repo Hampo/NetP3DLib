@@ -17,7 +17,20 @@ public class PhotonMapChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Photon_Map;
 
-    public uint Version { get; set; }
+    private uint _version;
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     public uint NumLights
     {
         get => (uint)(Lights?.Count ?? 0);
@@ -124,11 +137,30 @@ public class PhotonMapChunk : NamedChunk
 
     public PhotonMapChunk(string name, uint version, IList<string> lights, IList<float> lightScales, IList<Photon> photons) : base(ChunkID, name)
     {
-        Version = version;
-        Lights = CreateSizeAwareList(lights);
-        LightScales = CreateSizeAwareList(lightScales);
-        Photons = CreateSizeAwareList(photons);
+        _version = version;
+        Lights = CreateSizeAwareList(lights, Lights_CollectionChanged);
+        LightScales = CreateSizeAwareList(lightScales, LightScales_CollectionChanged);
+        Photons = CreateSizeAwareList(photons, Photons_CollectionChanged);
     }
+    
+    private void Lights_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(Lights));
+    
+    private void LightScales_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(LightScales));
+    
+    private void Photons_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
+        OnPropertyChanged(nameof(Photons));
+
+        if (e.OldItems != null)
+            foreach (Photon oldItem in e.OldItems)
+                oldItem.PropertyChanged -= Photons_PropertyChanged;
+    
+        if (e.NewItems != null)
+            foreach (Photon newItem in e.NewItems)
+                newItem.PropertyChanged += Photons_PropertyChanged;
+    }
+    
+    private void Photons_PropertyChanged() => OnPropertyChanged(nameof(Photons));
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
     {
@@ -165,16 +197,147 @@ public class PhotonMapChunk : NamedChunk
     {
         public const uint Size = sizeof(float) * 3 + sizeof(short) + sizeof(byte) + sizeof(byte) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(byte) + sizeof(byte);
 
-        public Vector3 Position { get; set; }
-        public short Plane { get; set; }
-        public byte Theta { get; set; }
-        public byte Phi { get; set; }
-        public float RedPower { get; set; }
-        public float GreenPower { get; set; }
-        public float BluePower { get; set; }
-        public float AlphaPower { get; set; }
-        public byte NumScatterings { get; set; }
-        public byte LightIndex { get; set; }
+        public event Action? PropertyChanged;
+
+        private Vector3 _position;
+        public Vector3 Position
+        {
+            get => _position;
+            set
+            {
+                if (_position == value)
+                    return;
+    
+                _position = value;
+                PropertyChanged?.Invoke();
+            }
+        }
+    
+        private short _plane;
+        public short Plane
+        {
+            get => _plane;
+            set
+            {
+                if (_plane == value)
+                    return;
+    
+                _plane = value;
+                PropertyChanged?.Invoke();
+            }
+        }
+    
+        private byte _theta;
+        public byte Theta
+        {
+            get => _theta;
+            set
+            {
+                if (_theta == value)
+                    return;
+    
+                _theta = value;
+                PropertyChanged?.Invoke();
+            }
+        }
+    
+        private byte _phi;
+        public byte Phi
+        {
+            get => _phi;
+            set
+            {
+                if (_phi == value)
+                    return;
+    
+                _phi = value;
+                PropertyChanged?.Invoke();
+            }
+        }
+    
+        private float _redPower;
+        public float RedPower
+        {
+            get => _redPower;
+            set
+            {
+                if (_redPower == value)
+                    return;
+    
+                _redPower = value;
+                PropertyChanged?.Invoke();
+            }
+        }
+    
+        private float _greenPower;
+        public float GreenPower
+        {
+            get => _greenPower;
+            set
+            {
+                if (_greenPower == value)
+                    return;
+    
+                _greenPower = value;
+                PropertyChanged?.Invoke();
+            }
+        }
+    
+        private float _bluePower;
+        public float BluePower
+        {
+            get => _bluePower;
+            set
+            {
+                if (_bluePower == value)
+                    return;
+    
+                _bluePower = value;
+                PropertyChanged?.Invoke();
+            }
+        }
+    
+        private float _alphaPower;
+        public float AlphaPower
+        {
+            get => _alphaPower;
+            set
+            {
+                if (_alphaPower == value)
+                    return;
+    
+                _alphaPower = value;
+                PropertyChanged?.Invoke();
+            }
+        }
+    
+        private byte _numScatterings;
+        public byte NumScatterings
+        {
+            get => _numScatterings;
+            set
+            {
+                if (_numScatterings == value)
+                    return;
+    
+                _numScatterings = value;
+                PropertyChanged?.Invoke();
+            }
+        }
+    
+        private byte _lightIndex;
+        public byte LightIndex
+        {
+            get => _lightIndex;
+            set
+            {
+                if (_lightIndex == value)
+                    return;
+    
+                _lightIndex = value;
+                PropertyChanged?.Invoke();
+            }
+        }
 
         public byte[] DataBytes
         {
@@ -199,44 +362,44 @@ public class PhotonMapChunk : NamedChunk
 
         public Photon(BinaryReader br)
         {
-            Position = br.ReadVector3();
-            Plane = br.ReadInt16();
-            Theta = br.ReadByte();
-            Phi = br.ReadByte();
-            RedPower = br.ReadSingle();
-            GreenPower = br.ReadSingle();
-            BluePower = br.ReadSingle();
-            AlphaPower = br.ReadSingle();
-            NumScatterings = br.ReadByte();
-            LightIndex = br.ReadByte();
+            _position = br.ReadVector3();
+            _plane = br.ReadInt16();
+            _theta = br.ReadByte();
+            _phi = br.ReadByte();
+            _redPower = br.ReadSingle();
+            _greenPower = br.ReadSingle();
+            _bluePower = br.ReadSingle();
+            _alphaPower = br.ReadSingle();
+            _numScatterings = br.ReadByte();
+            _lightIndex = br.ReadByte();
         }
 
         public Photon(Vector3 position, short plane, byte theta, byte phi, float redPower, float greenPower, float bluePower, float alphaPower, byte numScatterings, byte lightIndex)
         {
-            Position = position;
-            Plane = plane;
-            Theta = theta;
-            Phi = phi;
-            RedPower = redPower;
-            GreenPower = greenPower;
-            BluePower = bluePower;
-            AlphaPower = alphaPower;
-            NumScatterings = numScatterings;
-            LightIndex = lightIndex;
+            _position = position;
+            _plane = plane;
+            _theta = theta;
+            _phi = phi;
+            _redPower = redPower;
+            _greenPower = greenPower;
+            _bluePower = bluePower;
+            _alphaPower = alphaPower;
+            _numScatterings = numScatterings;
+            _lightIndex = lightIndex;
         }
 
         public Photon()
         {
-            Position = new();
-            Plane = 0;
-            Theta = 0;
-            Phi = 0;
-            RedPower = 0;
-            GreenPower = 0;
-            BluePower = 0;
-            AlphaPower = 0;
-            NumScatterings = 0;
-            LightIndex = 0;
+            _position = new();
+            _plane = 0;
+            _theta = 0;
+            _phi = 0;
+            _redPower = 0;
+            _greenPower = 0;
+            _bluePower = 0;
+            _alphaPower = 0;
+            _numScatterings = 0;
+            _lightIndex = 0;
         }
 
         internal void Write(BinaryWriter bw)

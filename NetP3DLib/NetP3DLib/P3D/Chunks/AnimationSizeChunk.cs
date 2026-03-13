@@ -12,8 +12,21 @@ public class AnimationSizeChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Animation_Size;
 
+    private uint _version;
     [DefaultValue(1)]
-    public uint Version { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     public uint PC => (ParentChunk as AnimationChunk)?.CalculateMemorySize(AnimationChunk.Platform.PC) ?? 0;
     public uint PS2 => (ParentChunk as AnimationChunk)?.CalculateMemorySize(AnimationChunk.Platform.PS2) ?? 0;
     public uint XBOX => (ParentChunk as AnimationChunk)?.CalculateMemorySize(AnimationChunk.Platform.XBOX) ?? 0;
@@ -47,7 +60,7 @@ public class AnimationSizeChunk : Chunk
 
     public AnimationSizeChunk(uint version) : base(ChunkID)
     {
-        Version = version;
+        _version = version;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

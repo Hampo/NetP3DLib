@@ -19,16 +19,146 @@ public class SpatialNodeChunk : Chunk
         Z = 2,
     }
 
-    public Axis SplitAxis { get; set; }
-    public float SplitPosition { get; set; }
-    public uint StaticEntityLimit { get; set; }
-    public uint StaticPhysEntityLimit { get; set; }
-    public uint IntersectEntityLimit { get; set; }
-    public uint DynaPhysEntityLimit { get; set; }
-    public uint FenceEntityLimit { get; set; }
-    public uint RoadSegmentEntityLimit { get; set; }
-    public uint PathSegmentEntityLimit { get; set; }
-    public uint AnimEntityLimit { get; set; }
+    private Axis _splitAxis;
+    public Axis SplitAxis
+    {
+        get => _splitAxis;
+        set
+        {
+            if (_splitAxis == value)
+                return;
+    
+            _splitAxis = value;
+            OnPropertyChanged(nameof(SplitAxis));
+        }
+    }
+    
+    private float _splitPosition;
+    public float SplitPosition
+    {
+        get => _splitPosition;
+        set
+        {
+            if (_splitPosition == value)
+                return;
+    
+            _splitPosition = value;
+            OnPropertyChanged(nameof(SplitPosition));
+        }
+    }
+    
+    private uint _staticEntityLimit;
+    public uint StaticEntityLimit
+    {
+        get => _staticEntityLimit;
+        set
+        {
+            if (_staticEntityLimit == value)
+                return;
+    
+            _staticEntityLimit = value;
+            OnPropertyChanged(nameof(StaticEntityLimit));
+        }
+    }
+    
+    private uint _staticPhysEntityLimit;
+    public uint StaticPhysEntityLimit
+    {
+        get => _staticPhysEntityLimit;
+        set
+        {
+            if (_staticPhysEntityLimit == value)
+                return;
+    
+            _staticPhysEntityLimit = value;
+            OnPropertyChanged(nameof(StaticPhysEntityLimit));
+        }
+    }
+    
+    private uint _intersectEntityLimit;
+    public uint IntersectEntityLimit
+    {
+        get => _intersectEntityLimit;
+        set
+        {
+            if (_intersectEntityLimit == value)
+                return;
+    
+            _intersectEntityLimit = value;
+            OnPropertyChanged(nameof(IntersectEntityLimit));
+        }
+    }
+    
+    private uint _dynaPhysEntityLimit;
+    public uint DynaPhysEntityLimit
+    {
+        get => _dynaPhysEntityLimit;
+        set
+        {
+            if (_dynaPhysEntityLimit == value)
+                return;
+    
+            _dynaPhysEntityLimit = value;
+            OnPropertyChanged(nameof(DynaPhysEntityLimit));
+        }
+    }
+    
+    private uint _fenceEntityLimit;
+    public uint FenceEntityLimit
+    {
+        get => _fenceEntityLimit;
+        set
+        {
+            if (_fenceEntityLimit == value)
+                return;
+    
+            _fenceEntityLimit = value;
+            OnPropertyChanged(nameof(FenceEntityLimit));
+        }
+    }
+    
+    private uint _roadSegmentEntityLimit;
+    public uint RoadSegmentEntityLimit
+    {
+        get => _roadSegmentEntityLimit;
+        set
+        {
+            if (_roadSegmentEntityLimit == value)
+                return;
+    
+            _roadSegmentEntityLimit = value;
+            OnPropertyChanged(nameof(RoadSegmentEntityLimit));
+        }
+    }
+    
+    private uint _pathSegmentEntityLimit;
+    public uint PathSegmentEntityLimit
+    {
+        get => _pathSegmentEntityLimit;
+        set
+        {
+            if (_pathSegmentEntityLimit == value)
+                return;
+    
+            _pathSegmentEntityLimit = value;
+            OnPropertyChanged(nameof(PathSegmentEntityLimit));
+        }
+    }
+    
+    private uint _animEntityLimit;
+    public uint AnimEntityLimit
+    {
+        get => _animEntityLimit;
+        set
+        {
+            if (_animEntityLimit == value)
+                return;
+    
+            _animEntityLimit = value;
+            OnPropertyChanged(nameof(AnimEntityLimit));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -58,16 +188,16 @@ public class SpatialNodeChunk : Chunk
 
     public SpatialNodeChunk(Axis splitAxis, float splitPosition, uint staticEntityLimit, uint staticPhysEntityLimit, uint intersectEntityLimit, uint dynaPhysEntityLimit, uint fencyEntityLimit, uint roadSegmentEntityLimit, uint pathSegmentEntityLimit, uint animEntityLimit) : base(ChunkID)
     {
-        SplitAxis = splitAxis;
-        SplitPosition = splitPosition;
-        StaticEntityLimit = staticEntityLimit;
-        StaticPhysEntityLimit = staticPhysEntityLimit;
-        IntersectEntityLimit = intersectEntityLimit;
-        DynaPhysEntityLimit = dynaPhysEntityLimit;
-        FenceEntityLimit = fencyEntityLimit;
-        RoadSegmentEntityLimit = roadSegmentEntityLimit;
-        PathSegmentEntityLimit = pathSegmentEntityLimit;
-        AnimEntityLimit = animEntityLimit;
+        _splitAxis = splitAxis;
+        _splitPosition = splitPosition;
+        _staticEntityLimit = staticEntityLimit;
+        _staticPhysEntityLimit = staticPhysEntityLimit;
+        _intersectEntityLimit = intersectEntityLimit;
+        _dynaPhysEntityLimit = dynaPhysEntityLimit;
+        _fenceEntityLimit = fencyEntityLimit;
+        _roadSegmentEntityLimit = roadSegmentEntityLimit;
+        _pathSegmentEntityLimit = pathSegmentEntityLimit;
+        _animEntityLimit = animEntityLimit;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

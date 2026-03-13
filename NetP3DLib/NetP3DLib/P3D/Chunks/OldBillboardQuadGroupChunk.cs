@@ -15,8 +15,21 @@ public class OldBillboardQuadGroupChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Billboard_Quad_Group;
 
+    private uint _version;
     [DefaultValue(0)]
-    public uint Version { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     private readonly P3DString _shader;
     public string Shader
     {
@@ -27,15 +40,43 @@ public class OldBillboardQuadGroupChunk : NamedChunk
     public bool ZTest
     {
         get => _zTest != 0;
-        set => _zTest = value ? 1u : 0u;
+        set
+        {
+            if (ZTest == value)
+                return;
+
+            _zTest = value ? 1u : 0u;
+            OnPropertyChanged(nameof(ZTest));
+        }
     }
     private uint _zWrite;
     public bool ZWrite
     {
         get => _zWrite != 0;
-        set => _zWrite = value ? 1u : 0u;
+        set
+        {
+            if (ZWrite == value)
+                return;
+
+            _zWrite = value ? 1u : 0u;
+            OnPropertyChanged(nameof(ZWrite));
+        }
     }
-    public uint Occlusion { get; set; }
+    
+    private uint _occlusion;
+    public uint Occlusion
+    {
+        get => _occlusion;
+        set
+        {
+            if (_occlusion == value)
+                return;
+    
+            _occlusion = value;
+            OnPropertyChanged(nameof(Occlusion));
+        }
+    }
+    
     public uint NumQuads => GetChildCount(ChunkIdentifier.Old_Billboard_Quad);
 
     public override byte[] DataBytes
@@ -69,11 +110,11 @@ public class OldBillboardQuadGroupChunk : NamedChunk
 
     public OldBillboardQuadGroupChunk(uint version, string name, string shader, uint zTest, uint zWrite, uint occlusion) : base(ChunkID, name)
     {
-        Version = version;
+        _version = version;
         _shader = new(this, shader, nameof(Shader));
         _zTest = zTest;
         _zWrite = zWrite;
-        Occlusion = occlusion;
+        _occlusion = occlusion;
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

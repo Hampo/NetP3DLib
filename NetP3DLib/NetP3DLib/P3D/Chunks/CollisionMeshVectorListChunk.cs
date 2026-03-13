@@ -25,13 +25,17 @@ public class CollisionMeshVectorListChunk : Chunk
 
             if (value < NumVectors)
             {
-                while (NumVectors > value)
-                    Vectors.RemoveAt(Vectors.Count - 1);
+                Vectors.RemoveRange((int)value, (int)(NumVectors - value));
             }
             else
             {
-                while (NumVectors < value)
-                    Vectors.Add(default);
+                int count = (int)(value - NumVectors);
+                var newVectors = new Vector3[count];
+
+                for (var i = 0; i < count; i++)
+                    newVectors[i] = default;
+
+                Vectors.AddRange(newVectors);
             }
         }
     }
@@ -58,8 +62,10 @@ public class CollisionMeshVectorListChunk : Chunk
 
     public CollisionMeshVectorListChunk(IList<Vector3> vectors) : base(ChunkID)
     {
-        Vectors = CreateSizeAwareList(vectors);
+        Vectors = CreateSizeAwareList(vectors, Vectors_CollectionChanged);
     }
+    
+    private void Vectors_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(Vectors));
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
     {

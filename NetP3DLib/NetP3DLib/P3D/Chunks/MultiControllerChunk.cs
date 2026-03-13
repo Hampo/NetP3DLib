@@ -13,10 +13,49 @@ public class MultiControllerChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Multi_Controller;
 
+    private uint _version;
     [DefaultValue(0)]
-    public uint Version { get; set; }
-    public float Length { get; set; }
-    public float Framerate { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
+    private float _length;
+    public float Length
+    {
+        get => _length;
+        set
+        {
+            if (_length == value)
+                return;
+    
+            _length = value;
+            OnPropertyChanged(nameof(Length));
+        }
+    }
+    
+    private float _framerate;
+    public float Framerate
+    {
+        get => _framerate;
+        set
+        {
+            if (_framerate == value)
+                return;
+    
+            _framerate = value;
+            OnPropertyChanged(nameof(Framerate));
+        }
+    }
+    
     public uint NumTracks
     {
         get
@@ -54,9 +93,9 @@ public class MultiControllerChunk : NamedChunk
 
     public MultiControllerChunk(string name, uint version, float length, float framerate) : base(ChunkID, name)
     {
-        Version = version;
-        Length = length;
-        Framerate = framerate;
+        _version = version;
+        _length = length;
+        _framerate = framerate;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

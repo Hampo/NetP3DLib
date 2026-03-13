@@ -12,10 +12,49 @@ public class ShadowMeshChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Shadow_Mesh;
 
-    public uint Version { get; set; }
+    private uint _version;
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     // TODO: Calculate from children
-    public uint NumVertices { get; set; }
-    public uint NumTriangles { get; set; }
+    private uint _numVertices;
+    public uint NumVertices
+    {
+        get => _numVertices;
+        set
+        {
+            if (_numVertices == value)
+                return;
+    
+            _numVertices = value;
+            OnPropertyChanged(nameof(NumVertices));
+        }
+    }
+    
+    private uint _numTriangles;
+    public uint NumTriangles
+    {
+        get => _numTriangles;
+        set
+        {
+            if (_numTriangles == value)
+                return;
+    
+            _numTriangles = value;
+            OnPropertyChanged(nameof(NumTriangles));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -39,9 +78,9 @@ public class ShadowMeshChunk : NamedChunk
 
     public ShadowMeshChunk(string name, uint version, uint numVertices, uint numTriangles) : base(ChunkID, name)
     {
-        Version = version;
-        NumVertices = numVertices;
-        NumTriangles = numTriangles;
+        _version = version;
+        _numVertices = numVertices;
+        _numTriangles = numTriangles;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

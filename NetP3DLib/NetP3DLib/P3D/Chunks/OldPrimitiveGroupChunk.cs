@@ -70,15 +70,42 @@ public class OldPrimitiveGroupChunk : Chunk
         { (uint)ChunkIdentifier.Tangent_List, VertexTypes.Tangent },
     };
 
+    private uint _version;
     [DefaultValue(0)]
-    public uint Version { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     private readonly P3DString _shaderName;
     public string ShaderName
     {
         get => _shaderName?.Value ?? string.Empty;
         set => _shaderName.Value = value;
     }
-    public PrimitiveTypes PrimitiveType { get; set; }
+    
+    private PrimitiveTypes _primitiveType;
+    public PrimitiveTypes PrimitiveType
+    {
+        get => _primitiveType;
+        set
+        {
+            if (_primitiveType == value)
+                return;
+    
+            _primitiveType = value;
+            OnPropertyChanged(nameof(PrimitiveType));
+        }
+    }
+    
     public VertexTypes VertexType
     {
         get
@@ -174,9 +201,9 @@ public class OldPrimitiveGroupChunk : Chunk
 
     public OldPrimitiveGroupChunk(uint version, string shaderName, PrimitiveTypes primitiveType) : base(ChunkID)
     {
-        Version = version;
+        _version = version;
         _shaderName = new(this, shaderName, nameof(ShaderName));
-        PrimitiveType = primitiveType;
+        _primitiveType = primitiveType;
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

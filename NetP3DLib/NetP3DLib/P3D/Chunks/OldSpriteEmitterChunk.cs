@@ -15,8 +15,21 @@ public class OldSpriteEmitterChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Sprite_Emitter;
 
+    private uint _version;
     [DefaultValue(0)]
-    public uint Version { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
     private readonly P3DString _shaderName;
     public string ShaderName
     {
@@ -30,7 +43,21 @@ public class OldSpriteEmitterChunk : NamedChunk
         get => _angleMode?.Value ?? string.Empty;
         set => _angleMode.Value = value;
     }
-    public float Angle { get; set; }
+    
+    private float _angle;
+    public float Angle
+    {
+        get => _angle;
+        set
+        {
+            if (_angle == value)
+                return;
+    
+            _angle = value;
+            OnPropertyChanged(nameof(Angle));
+        }
+    }
+    
     private readonly FourCC _textureAnimMode;
     [MaxLength(4)]
     public string TextureAnimMode
@@ -38,8 +65,35 @@ public class OldSpriteEmitterChunk : NamedChunk
         get => _textureAnimMode?.Value ?? string.Empty;
         set => _textureAnimMode.Value = value;
     }
-    public uint NumTextureFrames { get; set; }
-    public uint TextureFrameRate { get; set; }
+    
+    private uint _numTextureFrames;
+    public uint NumTextureFrames
+    {
+        get => _numTextureFrames;
+        set
+        {
+            if (_numTextureFrames == value)
+                return;
+    
+            _numTextureFrames = value;
+            OnPropertyChanged(nameof(NumTextureFrames));
+        }
+    }
+    
+    private uint _textureFrameRate;
+    public uint TextureFrameRate
+    {
+        get => _textureFrameRate;
+        set
+        {
+            if (_textureFrameRate == value)
+                return;
+    
+            _textureFrameRate = value;
+            OnPropertyChanged(nameof(TextureFrameRate));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -67,13 +121,13 @@ public class OldSpriteEmitterChunk : NamedChunk
 
     public OldSpriteEmitterChunk(uint version, string name, string shaderName, string angleMode, float angle, string textureAnimMode, uint numTextureFrames, uint textureFrameRate) : base(ChunkID, name)
     {
-        Version = version;
+        _version = version;
         _shaderName = new(this, shaderName, nameof(ShaderName));
         _angleMode = new(this, angleMode, nameof(AngleMode));
-        Angle = angle;
+        _angle = angle;
         _textureAnimMode = new(this, textureAnimMode, nameof(TextureAnimMode));
-        NumTextureFrames = numTextureFrames;
-        TextureFrameRate = textureFrameRate;
+        _numTextureFrames = numTextureFrames;
+        _textureFrameRate = textureFrameRate;
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

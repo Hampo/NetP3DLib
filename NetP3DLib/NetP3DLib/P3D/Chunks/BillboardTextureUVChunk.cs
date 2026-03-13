@@ -13,14 +13,118 @@ public class BillboardTextureUVChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Billboard_Texture_UV;
 
-    public uint Version { get; set; }
-    public uint RandomU { get; set; }
-    public uint RandomV { get; set; }
-    public Vector2 UV0 { get; set; }
-    public Vector2 UV1 { get; set; }
-    public Vector2 UV2 { get; set; }
-    public Vector2 UV3 { get; set; }
-    public Vector2 UVOffset { get; set; }
+    private uint _version;
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
+    private uint _randomU;
+    public uint RandomU
+    {
+        get => _randomU;
+        set
+        {
+            if (_randomU == value)
+                return;
+    
+            _randomU = value;
+            OnPropertyChanged(nameof(RandomU));
+        }
+    }
+    
+    private uint _randomV;
+    public uint RandomV
+    {
+        get => _randomV;
+        set
+        {
+            if (_randomV == value)
+                return;
+    
+            _randomV = value;
+            OnPropertyChanged(nameof(RandomV));
+        }
+    }
+    
+    private Vector2 _uV0;
+    public Vector2 UV0
+    {
+        get => _uV0;
+        set
+        {
+            if (_uV0 == value)
+                return;
+    
+            _uV0 = value;
+            OnPropertyChanged(nameof(UV0));
+        }
+    }
+    
+    private Vector2 _uV1;
+    public Vector2 UV1
+    {
+        get => _uV1;
+        set
+        {
+            if (_uV1 == value)
+                return;
+    
+            _uV1 = value;
+            OnPropertyChanged(nameof(UV1));
+        }
+    }
+    
+    private Vector2 _uV2;
+    public Vector2 UV2
+    {
+        get => _uV2;
+        set
+        {
+            if (_uV2 == value)
+                return;
+    
+            _uV2 = value;
+            OnPropertyChanged(nameof(UV2));
+        }
+    }
+    
+    private Vector2 _uV3;
+    public Vector2 UV3
+    {
+        get => _uV3;
+        set
+        {
+            if (_uV3 == value)
+                return;
+    
+            _uV3 = value;
+            OnPropertyChanged(nameof(UV3));
+        }
+    }
+    
+    private Vector2 _uVOffset;
+    public Vector2 UVOffset
+    {
+        get => _uVOffset;
+        set
+        {
+            if (_uVOffset == value)
+                return;
+    
+            _uVOffset = value;
+            OnPropertyChanged(nameof(UVOffset));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -42,14 +146,14 @@ public class BillboardTextureUVChunk : Chunk
 
     public BillboardTextureUVChunk(uint version, uint randomU, uint randomV, Vector2 uv0, Vector2 uv1, Vector2 uv2, Vector2 uv3, Vector2 uvOffset) : base(ChunkID)
     {
-        Version = version;
-        RandomU = randomU;
-        RandomV = randomV;
-        UV0 = uv0;
-        UV1 = uv1;
-        UV2 = uv2;
-        UV3 = uv3;
-        UVOffset = uvOffset;
+        _version = version;
+        _randomU = randomU;
+        _randomV = randomV;
+        _uV0 = uv0;
+        _uV1 = uv1;
+        _uV2 = uv2;
+        _uV3 = uv3;
+        _uVOffset = uvOffset;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

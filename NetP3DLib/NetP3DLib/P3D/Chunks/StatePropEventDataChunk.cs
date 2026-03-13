@@ -28,8 +28,34 @@ public class StatePropEventDataChunk : NamedChunk
         VehicleHit,
     }
 
-    public uint ToState { get; set; }
-    public Events Event { get; set; }
+    private uint _toState;
+    public uint ToState
+    {
+        get => _toState;
+        set
+        {
+            if (_toState == value)
+                return;
+    
+            _toState = value;
+            OnPropertyChanged(nameof(ToState));
+        }
+    }
+    
+    private Events _event;
+    public Events Event
+    {
+        get => _event;
+        set
+        {
+            if (_event == value)
+                return;
+    
+            _event = value;
+            OnPropertyChanged(nameof(Event));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -52,8 +78,8 @@ public class StatePropEventDataChunk : NamedChunk
 
     public StatePropEventDataChunk(string name, uint toState, Events @event) : base(ChunkID, name)
     {
-        ToState = toState;
-        Event = @event;
+        _toState = toState;
+        _event = @event;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

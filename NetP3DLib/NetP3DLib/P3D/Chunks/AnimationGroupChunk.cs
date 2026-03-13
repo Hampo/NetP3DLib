@@ -30,9 +30,35 @@ public class AnimationGroupChunk : NamedChunk
         //ChunkIdentifier.Event_Channel,
     ];
 
+    private uint _version;
     [DefaultValue(0)]
-    public uint Version { get; set; }
-    public uint GroupID { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
+    private uint _groupID;
+    public uint GroupID
+    {
+        get => _groupID;
+        set
+        {
+            if (_groupID == value)
+                return;
+    
+            _groupID = value;
+            OnPropertyChanged(nameof(GroupID));
+        }
+    }
+    
     public uint NumChannels
     {
         get
@@ -71,8 +97,8 @@ public class AnimationGroupChunk : NamedChunk
 
     public AnimationGroupChunk(uint version, string name, uint groupID) : base(ChunkID, name)
     {
-        Version = version;
-        GroupID = groupID;
+        _version = version;
+        _groupID = groupID;
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

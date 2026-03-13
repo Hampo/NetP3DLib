@@ -12,7 +12,20 @@ public class CollisionSphereChunk : Chunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Collision_Sphere;
 
-    public float Radius { get; set; }
+    private float _radius;
+    public float Radius
+    {
+        get => _radius;
+        set
+        {
+            if (_radius == value)
+                return;
+    
+            _radius = value;
+            OnPropertyChanged(nameof(Radius));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -33,7 +46,7 @@ public class CollisionSphereChunk : Chunk
 
     public CollisionSphereChunk(float radius) : base(ChunkID)
     {
-        Radius = radius;
+        _radius = radius;
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()

@@ -13,8 +13,21 @@ public class OldVertexAnimKeyFrameChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Old_Vertex_Anim_Key_Frame;
 
+    private uint _version;
     [DefaultValue(0)]
-    public uint Version { get; set; }
+    public uint Version
+    {
+        get => _version;
+        set
+        {
+            if (_version == value)
+                return;
+    
+            _version = value;
+            OnPropertyChanged(nameof(Version));
+        }
+    }
+    
 
     public override byte[] DataBytes
     {
@@ -36,7 +49,7 @@ public class OldVertexAnimKeyFrameChunk : NamedChunk
 
     public OldVertexAnimKeyFrameChunk(uint version, string name) : base(ChunkID, name)
     {
-        Version = version;
+        _version = version;
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
