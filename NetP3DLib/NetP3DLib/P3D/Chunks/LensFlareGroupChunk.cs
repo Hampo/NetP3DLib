@@ -153,6 +153,9 @@ public class LensFlareGroupChunk : NamedChunk
 
         if (!ShaderName.IsValidP3DString())
             yield return new InvalidP3DStringException(this, nameof(ShaderName), ShaderName);
+
+        if ((ParentChunk != null || ParentFile != null) && FindNamedChunkInParentHierarchy<ShaderChunk>(ShaderName) == null)
+            yield return new InvalidP3DException(this, $"Could not find the shader named \"{ShaderName}\" in the parent hierarchy.");
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
