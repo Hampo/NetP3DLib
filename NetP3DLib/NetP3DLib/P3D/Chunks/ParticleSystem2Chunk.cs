@@ -69,6 +69,9 @@ public class ParticleSystem2Chunk : NamedChunk
 
         if (!FactoryName.IsValidP3DString())
             yield return new InvalidP3DStringException(this, nameof(FactoryName), FactoryName);
+
+        if ((ParentChunk != null || ParentFile != null) && FindNamedChunkInParentHierarchy<ParticleSystemFactoryChunk>(FactoryName) == null)
+            yield return new InvalidP3DException(this, $"Could not find factory with name \"{FactoryName}\" in the parent hierarchy.");
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
