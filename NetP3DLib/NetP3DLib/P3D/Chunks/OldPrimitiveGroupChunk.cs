@@ -214,7 +214,10 @@ public class OldPrimitiveGroupChunk : Chunk
         if (!ShaderName.IsValidP3DString())
             yield return new InvalidP3DStringException(this, nameof(ShaderName), ShaderName);
 
-        if (GetChildCount(ChunkIdentifier.Matrix_Palette) != 0)
+        if ((ParentChunk != null || ParentFile != null) && FindNamedChunkInParentHierarchy<ShaderChunk>(ShaderName) == null)
+            yield return new InvalidP3DException(this, $"Could not find the shader named \"{ShaderName}\" in the parent hierarchy.");
+
+        if (GetFirstChunkOfType<MatrixPaletteChunk>() != null)
         {
             switch (ParentChunk)
             {
