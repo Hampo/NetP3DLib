@@ -1,6 +1,7 @@
 using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
+using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
@@ -51,6 +52,27 @@ public class CompositeDrawableSkinChunk : NamedChunk
     public CompositeDrawableSkinChunk(string name, uint isTranslucent) : base(ChunkID, name)
     {
         _isTranslucent = isTranslucent;
+    }
+
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
+    {
+        foreach (var error in base.ValidateChunk())
+            yield return error;
+
+        if (ParentChunk != null || ParentFile != null)
+        {
+            var compositeDrawableChunk = (ParentChunk as CompositeDrawableSkinListChunk)?.ParentChunk as CompositeDrawableChunk;
+
+            var skinChunk = FindNamedChunkInParentHierarchy<SkinChunk>(Name);
+            if (skinChunk == null)
+            {
+                yield return new InvalidP3DException(this, $"Could not find skin with name \"{Name}\" in the parent hierarchy.");
+            }
+            else if (compositeDrawableChunk != null && skinChunk.SkeletonName != compositeDrawableChunk.SkeletonName)
+            {
+                yield return new InvalidP3DException(this, $"The skin's skeleton \"{skinChunk.SkeletonName}\" does not match composite drawable's \"{compositeDrawableChunk.SkeletonName}\".");
+            }
+        }
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)

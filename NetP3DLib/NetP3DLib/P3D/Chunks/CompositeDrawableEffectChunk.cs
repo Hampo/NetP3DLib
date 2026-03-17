@@ -1,6 +1,7 @@
 using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
+using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
@@ -68,6 +69,28 @@ public class CompositeDrawableEffectChunk : NamedChunk
     {
         _isTranslucent = isTranslucent;
         _skeletonJointId = skeletonJointId;
+    }
+
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
+    {
+        foreach (var error in base.ValidateChunk())
+            yield return error;
+
+        if (ParentChunk != null || ParentFile != null)
+        {
+            var compositeDrawableChunk = (ParentChunk as CompositeDrawableEffectListChunk)?.ParentChunk as CompositeDrawableChunk;
+
+            var particleSystemChunk = FindNamedChunkInParentHierarchy<ParticleSystemChunk>(Name);
+            if (particleSystemChunk == null)
+                yield return new InvalidP3DException(this, $"Could not find particle system with name \"{Name}\" in the parent hierarchy.");
+            
+            if (compositeDrawableChunk != null)
+            {
+                var skeletonChunk = compositeDrawableChunk.FindNamedChunkInParentHierarchy<SkeletonChunk>(compositeDrawableChunk.SkeletonName);
+                if (skeletonChunk != null && SkeletonJointId >= skeletonChunk.NumJoints)
+                    yield return new InvalidP3DException(this, $"The {nameof(SkeletonJointId)} {SkeletonJointId} exceeds the number of joints in skeleton \"{compositeDrawableChunk.SkeletonName}\".");
+            }
+        }
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
