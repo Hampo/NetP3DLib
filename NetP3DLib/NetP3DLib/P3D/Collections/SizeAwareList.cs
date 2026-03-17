@@ -64,7 +64,8 @@ public class SizeAwareList<T> : ObservableCollection<T>
     /// </summary>
     public void InsertRange(int index, IEnumerable<T> items)
     {
-        if (items == null) throw new ArgumentNullException(nameof(items));
+        if (items == null)
+            throw new ArgumentNullException(nameof(items));
 
         var itemsList = items as IList<T> ?? [.. items];
         if (itemsList.Count == 0)
@@ -96,15 +97,21 @@ public class SizeAwareList<T> : ObservableCollection<T>
     /// </summary>
     public void RemoveRange(int index, int count)
     {
-        if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
-        if (count < 0) throw new ArgumentOutOfRangeException(nameof(count));
-        if (index + count > Count) throw new ArgumentException("Range exceeds list bounds.");
+        if (index < 0)
+            throw new ArgumentOutOfRangeException(nameof(index));
+
+        if (count < 0)
+            throw new ArgumentOutOfRangeException(nameof(count));
+
+        if (index + count > Count)
+            throw new ArgumentException("Range exceeds list bounds.");
 
         CheckReentrancy();
 
-        var removedItems = new List<T>(count);
+        var removedItems = new T[count];
+        var j = 0;
         for (int i = index; i < index + count; i++)
-            removedItems.Add(Items[i]);
+            removedItems[j++] = Items[i];
 
         TrackSizeChange(() =>
         {

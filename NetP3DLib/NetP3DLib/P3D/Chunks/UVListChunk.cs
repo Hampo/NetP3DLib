@@ -26,13 +26,17 @@ public class UVListChunk : Chunk
 
             if (value < NumUVs)
             {
-                while (NumUVs > value)
-                    UVs.RemoveAt(UVs.Count - 1);
+                UVs.RemoveRange((int)value, (int)(NumUVs - value));
             }
             else
             {
-                while (NumUVs < value)
-                    UVs.Add(default);
+                int count = (int)(value - NumUVs);
+                var newUVs = new Vector2[count];
+
+                for (var i = 0; i < count; i++)
+                    newUVs[i] = default;
+
+                UVs.AddRange(newUVs);
             }
         }
     }

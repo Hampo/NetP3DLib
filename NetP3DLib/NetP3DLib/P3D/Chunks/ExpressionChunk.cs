@@ -30,7 +30,7 @@ public class ExpressionChunk : NamedChunk
             OnPropertyChanged(nameof(Version));
         }
     }
-    
+
     public uint NumKeys
     {
         get => (uint)(Keys?.Count ?? 0);
@@ -41,13 +41,17 @@ public class ExpressionChunk : NamedChunk
 
             if (value < NumKeys)
             {
-                while (NumKeys > value)
-                    Keys.RemoveAt(Keys.Count - 1);
+                Keys.RemoveRange((int)value, (int)(NumKeys - value));
             }
             else
             {
-                while (NumKeys < value)
-                    Keys.Add(default);
+                int count = (int)(value - NumKeys);
+                var newKeys = new float[count];
+
+                for (var i = 0; i < count; i++)
+                    newKeys[i] = default;
+
+                Keys.AddRange(newKeys);
             }
             NumIndices = value;
         }
@@ -63,13 +67,17 @@ public class ExpressionChunk : NamedChunk
 
             if (value < NumIndices)
             {
-                while (NumIndices > value)
-                    Indices.RemoveAt(Indices.Count - 1);
+                Indices.RemoveRange((int)value, (int)(NumIndices - value));
             }
             else
             {
-                while (NumIndices < value)
-                    Indices.Add(default);
+                int count = (int)(value - NumIndices);
+                var newIndices = new uint[count];
+
+                for (var i = 0; i < count; i++)
+                    newIndices[i] = default;
+
+                Indices.AddRange(newIndices);
             }
             NumKeys = value;
         }

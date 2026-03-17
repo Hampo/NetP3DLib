@@ -38,13 +38,17 @@ public class FrontendLanguageChunk : NamedChunk
 
             if (value < NumEntries)
             {
-                while (NumEntries > value)
-                    Entries.RemoveAt(Entries.Count - 1);
+                Entries.RemoveRange((int)value, (int)(NumEntries - value));
             }
             else
             {
-                while (NumEntries < value)
-                    Entries.Add(new());
+                int count = (int)(value - NumEntries);
+                var newEntries = new Entry[count];
+
+                for (var i = 0; i < count; i++)
+                    newEntries[i] = new();
+
+                Entries.AddRange(newEntries);
             }
         }
     }

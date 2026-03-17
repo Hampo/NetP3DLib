@@ -51,13 +51,17 @@ public class MemoryImageVertexListChunk : Chunk
 
             if (value < VertexSize)
             {
-                while (VertexSize > value)
-                    Vertex.RemoveAt(Vertex.Count - 1);
+                Vertex.RemoveRange((int)value, (int)(VertexSize - value));
             }
             else
             {
-                while (VertexSize < value)
-                    Vertex.Add(default);
+                int count = (int)(value - VertexSize);
+                var newVertices = new byte[count];
+
+                for (var i = 0; i < count; i++)
+                    newVertices[i] = default;
+
+                Vertex.AddRange(newVertices);
             }
         }
     }

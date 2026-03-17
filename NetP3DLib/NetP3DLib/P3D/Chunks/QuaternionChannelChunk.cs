@@ -31,7 +31,7 @@ public class QuaternionChannelChunk : ParamChunk
             OnPropertyChanged(nameof(Version));
         }
     }
-    
+
     public uint NumFrames
     {
         get => (uint)(Frames?.Count ?? 0);
@@ -42,13 +42,17 @@ public class QuaternionChannelChunk : ParamChunk
 
             if (value < NumFrames)
             {
-                while (NumFrames > value)
-                    Frames.RemoveAt(Frames.Count - 1);
+                Frames.RemoveRange((int)value, (int)(NumFrames - value));
             }
             else
             {
-                while (NumFrames < value)
-                    Frames.Add(default);
+                int count = (int)(value - NumFrames);
+                var newFrames = new ushort[count];
+
+                for (var i = 0; i < count; i++)
+                    newFrames[i] = default;
+
+                Frames.AddRange(newFrames);
             }
             NumValues = value;
         }
@@ -64,13 +68,17 @@ public class QuaternionChannelChunk : ParamChunk
 
             if (value < NumValues)
             {
-                while (NumValues > value)
-                    Values.RemoveAt(Values.Count - 1);
+                Values.RemoveRange((int)value, (int)(NumValues - value));
             }
             else
             {
-                while (NumValues < value)
-                    Values.Add(default);
+                int count = (int)(value - NumValues);
+                var newValues = new Quaternion[count];
+
+                for (var i = 0; i < count; i++)
+                    newValues[i] = default;
+
+                Values.AddRange(newValues);
             }
             NumFrames = value;
         }

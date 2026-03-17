@@ -26,13 +26,17 @@ public class MultiColourListChunk : Chunk
 
             if (value < NumColours)
             {
-                while (NumColours > value)
-                    Colours.RemoveAt(Colours.Count - 1);
+                Colours.RemoveRange((int)value, (int)(NumColours - value));
             }
             else
             {
-                while (NumColours < value)
-                    Colours.Add(default);
+                int count = (int)(value - NumColours);
+                var newColours = new Color[count];
+
+                for (var i = 0; i < count; i++)
+                    newColours[i] = default;
+
+                Colours.AddRange(newColours);
             }
         }
     }

@@ -24,13 +24,17 @@ public class OldExpressionOffsetsChunk : Chunk
 
             if (value < NumPrimitiveGroups)
             {
-                while (NumPrimitiveGroups > value)
-                    PrimitiveGroupIndices.RemoveAt(PrimitiveGroupIndices.Count - 1);
+                PrimitiveGroupIndices.RemoveRange((int)value, (int)(NumPrimitiveGroups - value));
             }
             else
             {
-                while (NumPrimitiveGroups < value)
-                    PrimitiveGroupIndices.Add(default);
+                int count = (int)(value - NumPrimitiveGroups);
+                var newPrimitiveGroupIndices = new uint[count];
+
+                for (var i = 0; i < count; i++)
+                    newPrimitiveGroupIndices[i] = default;
+
+                PrimitiveGroupIndices.AddRange(newPrimitiveGroupIndices);
             }
         }
     }

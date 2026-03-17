@@ -39,13 +39,17 @@ public class OldVector2OffsetListChunk : ParamChunk
 
             if (value < NumOffsets)
             {
-                while (NumOffsets > value)
-                    Offsets.RemoveAt(Offsets.Count - 1);
+                Offsets.RemoveRange((int)value, (int)(NumOffsets - value));
             }
             else
             {
-                while (NumOffsets < value)
-                    Offsets.Add(default);
+                int count = (int)(value - NumOffsets);
+                var newOffsets = new Vector2[count];
+
+                for (var i = 0; i < count; i++)
+                    newOffsets[i] = default;
+
+                Offsets.AddRange(newOffsets);
             }
         }
     }

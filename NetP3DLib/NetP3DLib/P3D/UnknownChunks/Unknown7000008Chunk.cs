@@ -20,13 +20,17 @@ public class Unknown7000008Chunk : Chunk
 
             if (value < NumUnknown)
             {
-                while (NumUnknown > value)
-                    Unknown.RemoveAt(Unknown.Count - 1);
+                Unknown.RemoveRange((int)value, (int)(NumUnknown - value));
             }
             else
             {
-                while (NumUnknown < value)
-                    Unknown.Add(default);
+                int count = (int)(value - NumUnknown);
+                var newUnknown = new short[count];
+
+                for (var i = 0; i < count; i++)
+                    newUnknown[i] = default;
+
+                Unknown.AddRange(newUnknown);
             }
         }
     }

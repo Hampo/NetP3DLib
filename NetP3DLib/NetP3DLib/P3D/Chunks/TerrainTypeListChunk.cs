@@ -40,13 +40,17 @@ public class TerrainTypeListChunk : Chunk
 
             if (value < NumTypes)
             {
-                while (NumTypes > value)
-                    Types.RemoveAt(Types.Count - 1);
+                Types.RemoveRange((int)value, (int)(NumTypes - value));
             }
             else
             {
-                while (NumTypes < value)
-                    Types.Add(new());
+                int count = (int)(value - NumTypes);
+                var newTypes = new TerrainType[count];
+
+                for (var i = 0; i < count; i++)
+                    newTypes[i] = new();
+
+                Types.AddRange(newTypes);
             }
         }
     }

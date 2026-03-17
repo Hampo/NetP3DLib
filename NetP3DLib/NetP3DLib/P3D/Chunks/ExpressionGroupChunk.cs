@@ -55,13 +55,17 @@ public class ExpressionGroupChunk : NamedChunk
 
             if (value < NumStages)
             {
-                while (NumStages > value)
-                    Stages.RemoveAt(Stages.Count - 1);
+                Stages.RemoveRange((int)value, (int)(NumStages - value));
             }
             else
             {
-                while (NumStages < value)
-                    Stages.Add(default);
+                int count = (int)(value - NumStages);
+                var newStages = new Stage[count];
+
+                for (var i = 0; i < count; i++)
+                    newStages[i] = default;
+
+                Stages.AddRange(newStages);
             }
         }
     }

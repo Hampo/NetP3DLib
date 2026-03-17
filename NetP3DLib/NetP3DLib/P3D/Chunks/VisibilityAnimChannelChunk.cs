@@ -38,13 +38,17 @@ public class VisibilityAnimChannelChunk : NamedChunk
 
             if (value < NumFrames)
             {
-                while (NumFrames > value)
-                    Frames.RemoveAt(Frames.Count - 1);
+                Frames.RemoveRange((int)value, (int)(NumFrames - value));
             }
             else
             {
-                while (NumFrames < value)
-                    Frames.Add(default);
+                int count = (int)(value - NumFrames);
+                var newFrames = new uint[count];
+
+                for (var i = 0; i < count; i++)
+                    newFrames[i] = default;
+
+                Frames.AddRange(newFrames);
             }
         }
     }

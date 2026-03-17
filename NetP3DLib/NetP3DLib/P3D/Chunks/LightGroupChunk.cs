@@ -25,13 +25,17 @@ public class LightGroupChunk : NamedChunk
 
             if (value < NumLights)
             {
-                while (NumLights > value)
-                    Lights.RemoveAt(Lights.Count - 1);
+                Lights.RemoveRange((int)value, (int)(NumLights - value));
             }
             else
             {
-                while (NumLights < value)
-                    Lights.Add(string.Empty);
+                int count = (int)(value - NumLights);
+                var newLights = new string[count];
+
+                for (var i = 0; i < count; i++)
+                    newLights[i] = string.Empty;
+
+                Lights.AddRange(newLights);
             }
         }
     }

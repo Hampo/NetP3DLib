@@ -27,13 +27,17 @@ public class OldOffsetListChunk : Chunk
 
             if (value < NumOffsets)
             {
-                while (NumOffsets > value)
-                    Offsets.RemoveAt(Offsets.Count - 1);
+                Offsets.RemoveRange((int)value, (int)(NumOffsets - value));
             }
             else
             {
-                while (NumOffsets < value)
-                    Offsets.Add(new());
+                int count = (int)(value - NumOffsets);
+                var newOffsets = new OffsetEntry[count];
+
+                for (var i = 0; i < count; i++)
+                    newOffsets[i] = new();
+
+                Offsets.AddRange(newOffsets);
             }
         }
     }

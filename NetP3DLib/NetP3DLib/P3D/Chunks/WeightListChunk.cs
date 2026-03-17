@@ -26,13 +26,17 @@ public class WeightListChunk : Chunk
 
             if (value < NumWeights)
             {
-                while (NumWeights > value)
-                    Weights.RemoveAt(Weights.Count - 1);
+                Weights.RemoveRange((int)value, (int)(NumWeights - value));
             }
             else
             {
-                while (NumWeights < value)
-                    Weights.Add(default);
+                int count = (int)(value - NumWeights);
+                var newWeights = new Vector3[count];
+
+                for (var i = 0; i < count; i++)
+                    newWeights[i] = default;
+
+                Weights.AddRange(newWeights);
             }
         }
     }

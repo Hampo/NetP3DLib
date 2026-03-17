@@ -26,13 +26,17 @@ public class ATCChunk : Chunk
 
             if (value < NumEntries)
             {
-                while (NumEntries > value)
-                    Entries.RemoveAt(Entries.Count - 1);
+                Entries.RemoveRange((int)value, (int)(NumEntries - value));
             }
             else
             {
-                while (NumEntries < value)
-                    Entries.Add(new());
+                int count = (int)(value - NumEntries);
+                var newEntires = new Entry[count];
+
+                for (var i = 0; i < count; i++)
+                    newEntires[i] = new();
+
+                Entries.AddRange(newEntires);
             }
         }
     }

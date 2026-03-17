@@ -23,13 +23,17 @@ public class IndexListChunk : Chunk
 
             if (value < NumIndices)
             {
-                while (NumIndices > value)
-                    Indices.RemoveAt(Indices.Count - 1);
+                Indices.RemoveRange((int)value, (int)(NumIndices - value));
             }
             else
             {
-                while (NumIndices < value)
-                    Indices.Add(default);
+                int count = (int)(value - NumIndices);
+                var newIndices = new uint[count];
+
+                for (var i = 0; i < count; i++)
+                    newIndices[i] = default;
+
+                Indices.AddRange(newIndices);
             }
         }
     }

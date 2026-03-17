@@ -26,13 +26,17 @@ public class IntersectChunk : Chunk
 
             if (value < NumIndices)
             {
-                while (NumIndices > value)
-                    Indices.RemoveAt(Indices.Count - 1);
+                Indices.RemoveRange((int)value, (int)(NumIndices - value));
             }
             else
             {
-                while (NumIndices < value)
-                    Indices.Add(default);
+                int count = (int)(value - NumIndices);
+                var newIndices = new uint[count];
+
+                for (var i = 0; i < count; i++)
+                    newIndices[i] = default;
+
+                Indices.AddRange(newIndices);
             }
         }
     }
@@ -47,13 +51,17 @@ public class IntersectChunk : Chunk
 
             if (value < NumPositions)
             {
-                while (NumPositions > value)
-                    Positions.RemoveAt(Positions.Count - 1);
+                Positions.RemoveRange((int)value, (int)(NumPositions - value));
             }
             else
             {
-                while (NumPositions < value)
-                    Positions.Add(default);
+                int count = (int)(value - NumPositions);
+                var newPositions = new Vector3[count];
+
+                for (var i = 0; i < count; i++)
+                    newPositions[i] = default;
+
+                Positions.AddRange(newPositions);
             }
         }
     }
@@ -68,13 +76,17 @@ public class IntersectChunk : Chunk
 
             if (value < NumNormals)
             {
-                while (NumNormals > value)
-                    Normals.RemoveAt(Normals.Count - 1);
+                Normals.RemoveRange((int)value, (int)(NumNormals - value));
             }
             else
             {
-                while (NumNormals < value)
-                    Normals.Add(default);
+                int count = (int)(value - NumNormals);
+                var newNormals = new Vector3[count];
+
+                for (var i = 0; i < count; i++)
+                    newNormals[i] = default;
+
+                Normals.AddRange(newNormals);
             }
         }
     }

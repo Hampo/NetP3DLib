@@ -24,13 +24,17 @@ public class ImageGlyphListChunk : Chunk
 
             if (value < NumGlyphs)
             {
-                while (NumGlyphs > value)
-                    Glyphs.RemoveAt(Glyphs.Count - 1);
+                Glyphs.RemoveRange((int)value, (int)(NumGlyphs - value));
             }
             else
             {
-                while (NumGlyphs < value)
-                    Glyphs.Add(new());
+                int count = (int)(value - NumGlyphs);
+                var newGlyphs = new Glyph[count];
+
+                for (var i = 0; i < count; i++)
+                    newGlyphs[i] = new();
+
+                Glyphs.AddRange(newGlyphs);
             }
         }
     }

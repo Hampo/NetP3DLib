@@ -26,13 +26,17 @@ public class NormalListChunk : Chunk
 
             if (value < NumNormals)
             {
-                while (NumNormals > value)
-                    Normals.RemoveAt(Normals.Count - 1);
+                Normals.RemoveRange((int)value, (int)(NumNormals - value));
             }
             else
             {
-                while (NumNormals < value)
-                    Normals.Add(default);
+                int count = (int)(value - NumNormals);
+                var newNormals = new Vector3[count];
+
+                for (var i = 0; i < count; i++)
+                    newNormals[i] = default;
+
+                Normals.AddRange(newNormals);
             }
         }
     }

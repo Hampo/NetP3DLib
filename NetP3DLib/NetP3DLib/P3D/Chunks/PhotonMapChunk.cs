@@ -41,13 +41,17 @@ public class PhotonMapChunk : NamedChunk
 
             if (value < NumLights)
             {
-                while (NumLights > value)
-                    Lights.RemoveAt(Lights.Count - 1);
+                Lights.RemoveRange((int)value, (int)(NumLights - value));
             }
             else
             {
-                while (NumLights < value)
-                    Lights.Add(string.Empty);
+                int count = (int)(value - NumLights);
+                var newLights = new string[count];
+
+                for (var i = 0; i < count; i++)
+                    newLights[i] = string.Empty;
+
+                Lights.AddRange(newLights);
             }
             NumLightScales = value;
         }
@@ -63,13 +67,17 @@ public class PhotonMapChunk : NamedChunk
 
             if (value < NumLightScales)
             {
-                while (NumLightScales > value)
-                    LightScales.RemoveAt(LightScales.Count - 1);
+                LightScales.RemoveRange((int)value, (int)(NumLightScales - value));
             }
             else
             {
-                while (NumLightScales < value)
-                    LightScales.Add(default);
+                int count = (int)(value - NumLightScales);
+                var newLightScales = new float[count];
+
+                for (var i = 0; i < count; i++)
+                    newLightScales[i] = default;
+
+                LightScales.AddRange(newLightScales);
             }
             NumLights = value;
         }
@@ -85,13 +93,17 @@ public class PhotonMapChunk : NamedChunk
 
             if (value < NumPhotons)
             {
-                while (NumPhotons > value)
-                    Photons.RemoveAt(Photons.Count - 1);
+                Photons.RemoveRange((int)value, (int)(NumPhotons - value));
             }
             else
             {
-                while (NumPhotons < value)
-                    Photons.Add(new());
+                int count = (int)(value - NumPhotons);
+                var newPhotons = new Photon[count];
+
+                for (var i = 0; i < count; i++)
+                    newPhotons[i] = new();
+
+                Photons.AddRange(newPhotons);
             }
         }
     }

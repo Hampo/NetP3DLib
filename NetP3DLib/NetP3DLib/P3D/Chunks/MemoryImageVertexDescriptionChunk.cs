@@ -51,13 +51,17 @@ public class MemoryImageVertexDescriptionChunk : Chunk
 
             if (value < DescriptionSize)
             {
-                while (DescriptionSize > value)
-                    Description.RemoveAt(Description.Count - 1);
+                Description.RemoveRange((int)value, (int)(DescriptionSize - value));
             }
             else
             {
-                while (DescriptionSize < value)
-                    Description.Add(default);
+                int count = (int)(value - DescriptionSize);
+                var newDescriptions = new byte[count];
+
+                for (var i = 0; i < count; i++)
+                    newDescriptions[i] = default;
+
+                Description.AddRange(newDescriptions);
             }
         }
     }

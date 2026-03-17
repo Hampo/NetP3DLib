@@ -25,13 +25,17 @@ public class MatrixListChunk : Chunk
 
             if (value < NumMatrices)
             {
-                while (NumMatrices > value)
-                    Matrices.RemoveAt(Matrices.Count - 1);
+                Matrices.RemoveRange((int)value, (int)(NumMatrices - value));
             }
             else
             {
-                while (NumMatrices < value)
-                    Matrices.Add(new());
+                int count = (int)(value - NumMatrices);
+                var newMatrices = new Matrix[count];
+
+                for (var i = 0; i < count; i++)
+                    newMatrices[i] = new();
+
+                Matrices.AddRange(newMatrices);
             }
         }
     }

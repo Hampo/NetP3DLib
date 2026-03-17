@@ -26,13 +26,17 @@ public class MultiControllerTracksChunk : Chunk
 
             if (value < NumTracks)
             {
-                while (NumTracks > value)
-                    Tracks.RemoveAt(Tracks.Count - 1);
+                Tracks.RemoveRange((int)value, (int)(NumTracks - value));
             }
             else
             {
-                while (NumTracks < value)
-                    Tracks.Add(new());
+                int count = (int)(value - NumTracks);
+                var newTracks = new Track[count];
+
+                for (var i = 0; i < count; i++)
+                    newTracks[i] = new();
+
+                Tracks.AddRange(newTracks);
             }
         }
     }

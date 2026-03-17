@@ -26,13 +26,17 @@ public class PositionListChunk : Chunk
 
             if (value < NumPositions)
             {
-                while (NumPositions > value)
-                    Positions.RemoveAt(Positions.Count - 1);
+                Positions.RemoveRange((int)value, (int)(NumPositions - value));
             }
             else
             {
-                while (NumPositions < value)
-                    Positions.Add(default);
+                int count = (int)(value - NumPositions);
+                var newPositions = new Vector3[count];
+
+                for (var i = 0; i < count; i++)
+                    newPositions[i] = default;
+
+                Positions.AddRange(newPositions);
             }
         }
     }

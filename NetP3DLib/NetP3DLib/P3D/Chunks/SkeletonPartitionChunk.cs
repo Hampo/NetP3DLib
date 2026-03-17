@@ -24,13 +24,17 @@ public class SkeletonPartitionChunk : NamedChunk
 
             if (value < NumJointValues)
             {
-                while (NumJointValues > value)
-                    JointBits.RemoveAt(JointBits.Count - 1);
+                JointBits.RemoveRange((int)value, (int)(NumJointValues - value));
             }
             else
             {
-                while (NumJointValues < value)
-                    JointBits.Add(0);
+                int count = (int)(value - NumJointValues);
+                var newJointBits = new uint[count];
+
+                for (var i = 0; i < count; i++)
+                    newJointBits[i] = default;
+
+                JointBits.AddRange(newJointBits);
             }
         }
     }

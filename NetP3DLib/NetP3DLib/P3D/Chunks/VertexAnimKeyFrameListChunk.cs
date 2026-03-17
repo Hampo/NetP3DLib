@@ -38,13 +38,17 @@ public class VertexAnimKeyFrameListChunk : Chunk
 
             if (value < NumKeyFrameIds)
             {
-                while (NumKeyFrameIds > value)
-                    KeyFrameIds.RemoveAt(KeyFrameIds.Count - 1);
+                KeyFrameIds.RemoveRange((int)value, (int)(NumKeyFrameIds - value));
             }
             else
             {
-                while (NumKeyFrameIds < value)
-                    KeyFrameIds.Add(default);
+                int count = (int)(value - NumKeyFrameIds);
+                var newKeyFrameIds = new uint[count];
+
+                for (var i = 0; i < count; i++)
+                    newKeyFrameIds[i] = default;
+
+                KeyFrameIds.AddRange(newKeyFrameIds);
             }
             NumKeyFrameCounts = value;
         }
@@ -60,13 +64,17 @@ public class VertexAnimKeyFrameListChunk : Chunk
 
             if (value < NumKeyFrameCounts)
             {
-                while (NumKeyFrameCounts > value)
-                    KeyFrameCounts.RemoveAt(KeyFrameCounts.Count - 1);
+                KeyFrameCounts.RemoveRange((int)value, (int)(NumKeyFrameCounts - value));
             }
             else
             {
-                while (NumKeyFrameCounts < value)
-                    KeyFrameCounts.Add(default);
+                int count = (int)(value - NumKeyFrameCounts);
+                var newKeyFrameCounts = new uint[count];
+
+                for (var i = 0; i < count; i++)
+                    newKeyFrameCounts[i] = default;
+
+                KeyFrameCounts.AddRange(newKeyFrameCounts);
             }
             NumKeyFrameIds = value;
         }

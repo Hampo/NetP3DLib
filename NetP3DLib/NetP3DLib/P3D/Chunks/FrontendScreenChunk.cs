@@ -41,13 +41,17 @@ public class FrontendScreenChunk : NamedChunk
 
             if (value < NumPageNames)
             {
-                while (NumPageNames > value)
-                    PageNames.RemoveAt(PageNames.Count - 1);
+                PageNames.RemoveRange((int)value, (int)(NumPageNames - value));
             }
             else
             {
-                while (NumPageNames < value)
-                    PageNames.Add(string.Empty);
+                int count = (int)(value - NumPageNames);
+                var newPageNames = new string[count];
+
+                for (var i = 0; i < count; i++)
+                    newPageNames[i] = string.Empty;
+
+                PageNames.AddRange(newPageNames);
             }
         }
     }

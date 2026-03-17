@@ -26,13 +26,17 @@ public class TangentListChunk : Chunk
 
             if (value < NumTangents)
             {
-                while (NumTangents > value)
-                    Tangents.RemoveAt(Tangents.Count - 1);
+                Tangents.RemoveRange((int)value, (int)(NumTangents - value));
             }
             else
             {
-                while (NumTangents < value)
-                    Tangents.Add(default);
+                int count = (int)(value - NumTangents);
+                var newTangents = new Vector3[count];
+
+                for (var i = 0; i < count; i++)
+                    newTangents[i] = default;
+
+                Tangents.AddRange(newTangents);
             }
         }
     }

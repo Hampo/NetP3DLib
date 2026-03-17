@@ -26,13 +26,17 @@ public class HistoryChunk : Chunk
 
             if (value < NumHistory)
             {
-                while (NumHistory > value)
-                    History.RemoveAt(History.Count - 1);
+                History.RemoveRange((int)value, (int)(NumHistory - value));
             }
             else
             {
-                while (NumHistory < value)
-                    History.Add(string.Empty);
+                int count = (int)(value - NumHistory);
+                var newHistory = new string[count];
+
+                for (var i = 0; i < count; i++)
+                    newHistory[i] = string.Empty;
+
+                History.AddRange(newHistory);
             }
         }
     }

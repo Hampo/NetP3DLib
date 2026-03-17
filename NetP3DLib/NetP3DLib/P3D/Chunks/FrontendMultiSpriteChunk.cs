@@ -177,13 +177,17 @@ public class FrontendMultiSpriteChunk : NamedChunk
 
             if (value < NumImageNames)
             {
-                while (NumImageNames > value)
-                    ImageNames.RemoveAt(ImageNames.Count - 1);
+                ImageNames.RemoveRange((int)value, (int)(NumImageNames - value));
             }
             else
             {
-                while (NumImageNames < value)
-                    ImageNames.Add(string.Empty);
+                int count = (int)(value - NumImageNames);
+                var newFrames = new string[count];
+
+                for (var i = 0; i < count; i++)
+                    newFrames[i] = string.Empty;
+
+                ImageNames.AddRange(newFrames);
             }
         }
     }

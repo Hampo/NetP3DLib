@@ -57,13 +57,17 @@ public class FrontendPolygonChunk : NamedChunk
 
             if (value < NumPoints)
             {
-                while (NumPoints > value)
-                    Points.RemoveAt(Points.Count - 1);
+                Points.RemoveRange((int)value, (int)(NumPoints - value));
             }
             else
             {
-                while (NumPoints < value)
-                    Points.Add(default);
+                int count = (int)(value - NumPoints);
+                var newPoints = new Vector3[count];
+
+                for (var i = 0; i < count; i++)
+                    newPoints[i] = default;
+
+                Points.AddRange(newPoints);
             }
             NumColours = value;
         }
@@ -79,13 +83,17 @@ public class FrontendPolygonChunk : NamedChunk
 
             if (value < NumColours)
             {
-                while (NumColours > value)
-                    Colours.RemoveAt(Colours.Count - 1);
+                Colours.RemoveRange((int)value, (int)(NumColours - value));
             }
             else
             {
-                while (NumColours < value)
-                    Colours.Add(default);
+                int count = (int)(value - NumColours);
+                var newColours = new Color[count];
+
+                for (var i = 0; i < count; i++)
+                    newColours[i] = default;
+
+                Colours.AddRange(newColours);
             }
             NumPoints = value;
         }
