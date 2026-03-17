@@ -35,6 +35,7 @@ public class TreeNodeChunk : Chunk
                 return;
 
             _parentOffset = value;
+            OnPropertyChanged(nameof(ParentOffset));
             (ParentChunk as TreeChunk)?.MarkDirty();
         }
     }

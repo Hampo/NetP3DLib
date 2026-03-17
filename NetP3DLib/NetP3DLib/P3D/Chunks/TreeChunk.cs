@@ -98,13 +98,19 @@ public class TreeChunk : Chunk
     private void Chunk_ChildAdded(Chunk child)
     {
         if (child is TreeNodeChunk)
+        {
             MarkTopologyDirty();
+            child.PropertyChanged += TreeNode_PropertyChanged;
+        }
     }
 
     private void Chunk_ChildRemoved(Chunk child, int oldIndex)
     {
         if (child is TreeNodeChunk)
+        {
             MarkTopologyDirty();
+            child.PropertyChanged -= TreeNode_PropertyChanged;
+        }
     }
 
     private void Chunk_ChildrenAdded(IReadOnlyList<Chunk> children)
@@ -114,6 +120,7 @@ public class TreeChunk : Chunk
             if (child is TreeNodeChunk)
             {
                 MarkTopologyDirty();
+                child.PropertyChanged += TreeNode_PropertyChanged;
                 return;
             }
         }
@@ -126,10 +133,13 @@ public class TreeChunk : Chunk
             if (child is TreeNodeChunk)
             {
                 MarkTopologyDirty();
+                child.PropertyChanged += TreeNode_PropertyChanged;
                 return;
             }
         }
     }
+
+    private void TreeNode_PropertyChanged(string propertyName) => MarkDirty();
 
     private void Chunk_ChildrenCleared() => MarkTopologyDirty();
 
