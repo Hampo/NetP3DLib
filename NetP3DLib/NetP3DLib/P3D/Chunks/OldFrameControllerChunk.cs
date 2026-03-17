@@ -28,7 +28,7 @@ public class OldFrameControllerChunk : NamedChunk
         Add<ScenegraphChunk>(AnimationType.ScenegraphVisibility);
         Add<ShaderChunk>(AnimationType.Texture);
         Add<OldBillboardQuadGroupChunk>(AnimationType.BillboardQuadGroup);
-        Add<ParticleSystem2Chunk>(AnimationType.Effect);
+        Add<ParticleSystemChunk>(AnimationType.Effect);
         Add<MeshChunk>(AnimationType.Vertex);
         Add<ShaderChunk>(AnimationType.Shader);
     }

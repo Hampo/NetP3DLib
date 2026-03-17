@@ -91,7 +91,7 @@ public class P3DFile
         (uint)ChunkIdentifier.Skeleton,
         (uint)ChunkIdentifier.Lens_Flare_Group,
         (uint)ChunkIdentifier.Particle_System_Factory,
-        (uint)ChunkIdentifier.Particle_System_2,
+        (uint)ChunkIdentifier.Particle_System,
         (uint)ChunkIdentifier.Old_Billboard_Quad,
         (uint)ChunkIdentifier.Old_Billboard_Quad_Group,
         (uint)ChunkIdentifier.Mesh,
