@@ -441,12 +441,16 @@ public abstract class Chunk
             ListHelper.CleanListInDictionary(_paramChunks, (childType, paramChunk.Param));
     }
 
+    public event Action<string>? PropertyChanged;
+    internal void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(propertyName);
+
     public event Action<Chunk>? ChildAdded;
     internal void OnChildAdded(Chunk child)
     {
         ProcessAddedChild(child);
 
         ChildAdded?.Invoke(child);
+        PropertyChanged?.Invoke(nameof(Children));
     }
 
     public event Action<Chunk, int>? ChildRemoved;
@@ -455,6 +459,7 @@ public abstract class Chunk
         ProcessRemovedChild(child);
 
         ChildRemoved?.Invoke(child, oldIndex);
+        PropertyChanged?.Invoke(nameof(Children));
     }
 
     public event Action<IReadOnlyList<Chunk>>? ChildrenAdded;
@@ -464,6 +469,7 @@ public abstract class Chunk
             ProcessAddedChild(child);
 
         ChildrenAdded?.Invoke(children);
+        PropertyChanged?.Invoke(nameof(Children));
     }
 
     public event Action<IReadOnlyList<(Chunk child, int oldIndex)>>? ChildrenRemoved;
@@ -473,6 +479,7 @@ public abstract class Chunk
             ProcessRemovedChild(child);
 
         ChildrenRemoved?.Invoke(children);
+        PropertyChanged?.Invoke(nameof(Children));
     }
 
     public event Action? ChildrenCleared;
@@ -483,10 +490,8 @@ public abstract class Chunk
         _namedChunks.Clear();
         _paramChunks.Clear();
         ChildrenCleared?.Invoke();
+        PropertyChanged?.Invoke(nameof(Children));
     }
-
-    public event Action<string>? PropertyChanged;
-    internal void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(propertyName);
 
     /// <summary>
     /// Creates a clone of the current chunk.
