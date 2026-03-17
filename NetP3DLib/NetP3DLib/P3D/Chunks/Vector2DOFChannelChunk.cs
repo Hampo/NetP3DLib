@@ -110,7 +110,7 @@ public class Vector2DOFChannelChunk : ParamChunk
     {
         get
         {
-            List<byte> data = [];
+            var data = new List<byte>((int)DataLength);
 
             data.AddRange(BitConverter.GetBytes(Version));
             data.AddRange(BinaryExtensions.GetFourCCBytes(Param));

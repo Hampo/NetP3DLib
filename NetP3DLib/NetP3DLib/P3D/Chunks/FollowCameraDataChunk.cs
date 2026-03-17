@@ -88,7 +88,7 @@ public class FollowCameraDataChunk : Chunk
     {
         get
         {
-            List<byte> data = [];
+            var data = new List<byte>((int)DataLength);
 
             data.AddRange(BitConverter.GetBytes(Index));
             data.AddRange(BitConverter.GetBytes(Rotation));

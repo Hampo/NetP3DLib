@@ -44,7 +44,7 @@ public class TopologyChunk : Chunk
     {
         get
         {
-            List<byte> data = [];
+            var data = new List<byte>((int)DataLength);
 
             data.AddRange(BitConverter.GetBytes(NumTopology));
             foreach (var entry in Topologies)
@@ -188,7 +188,7 @@ public class TopologyChunk : Chunk
         {
             get
             {
-                List<byte> data = [];
+                var data = new List<byte>((int)Size);
 
                 data.AddRange(BitConverter.GetBytes(V0));
                 data.AddRange(BitConverter.GetBytes(V1));

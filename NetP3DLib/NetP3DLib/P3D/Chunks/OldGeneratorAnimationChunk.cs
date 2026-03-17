@@ -32,7 +32,7 @@ public class OldGeneratorAnimationChunk : Chunk
     {
         get
         {
-            List<byte> data = [];
+            var data = new List<byte>((int)DataLength);
 
             data.AddRange(BitConverter.GetBytes(Version));
 

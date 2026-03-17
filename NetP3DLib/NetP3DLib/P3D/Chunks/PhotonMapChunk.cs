@@ -101,7 +101,7 @@ public class PhotonMapChunk : NamedChunk
     {
         get
         {
-            List<byte> data = [];
+            var data = new List<byte>((int)DataLength);
 
             data.AddRange(BinaryExtensions.GetP3DStringBytes(Name));
             data.AddRange(BitConverter.GetBytes(Version));
@@ -343,7 +343,7 @@ public class PhotonMapChunk : NamedChunk
         {
             get
             {
-                List<byte> data = [];
+                var data = new List<byte>((int)Size);
 
                 data.AddRange(BinaryExtensions.GetBytes(Position));
                 data.AddRange(BitConverter.GetBytes(Plane));

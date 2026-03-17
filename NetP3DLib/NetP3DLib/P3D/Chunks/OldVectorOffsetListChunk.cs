@@ -57,7 +57,7 @@ public class OldVectorOffsetListChunk : ParamChunk
     {
         get
         {
-            List<byte> data = [];
+            var data = new List<byte>((int)DataLength);
 
             data.AddRange(BitConverter.GetBytes(Version));
             data.AddRange(BitConverter.GetBytes(NumOffsets));

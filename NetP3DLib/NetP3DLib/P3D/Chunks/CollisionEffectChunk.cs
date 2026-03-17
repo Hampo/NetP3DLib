@@ -69,7 +69,7 @@ public class CollisionEffectChunk : Chunk
     {
         get
         {
-            List<byte> data = [];
+            var data = new List<byte>((int)DataLength);
 
             data.AddRange(BitConverter.GetBytes((uint)ClassType));
             data.AddRange(BitConverter.GetBytes(PhysPropID));

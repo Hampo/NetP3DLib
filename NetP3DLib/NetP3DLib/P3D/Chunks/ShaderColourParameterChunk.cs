@@ -31,7 +31,7 @@ public class ShaderColourParameterChunk : ParamChunk
     {
         get
         {
-            List<byte> data = [];
+            var data = new List<byte>((int)DataLength);
 
             data.AddRange(BinaryExtensions.GetFourCCBytes(Param));
             data.AddRange(BinaryExtensions.GetBytes(Value));

@@ -42,7 +42,7 @@ public class WeightListChunk : Chunk
     {
         get
         {
-            List<byte> data = [];
+            var data = new List<byte>((int)DataLength);
 
             data.AddRange(BitConverter.GetBytes(NumWeights));
             foreach (var weight in Weights)

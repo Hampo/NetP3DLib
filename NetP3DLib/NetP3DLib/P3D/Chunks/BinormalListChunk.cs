@@ -46,7 +46,7 @@ public class BinormalListChunk : Chunk
     {
         get
         {
-            List<byte> data = [];
+            var data = new List<byte>((int)DataLength);
 
             data.AddRange(BitConverter.GetBytes(NumBinormals));
             foreach (var normal in Binormals)

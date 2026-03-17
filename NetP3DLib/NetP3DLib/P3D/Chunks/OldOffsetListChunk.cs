@@ -87,7 +87,7 @@ public class OldOffsetListChunk : Chunk
     {
         get
         {
-            List<byte> data = [];
+            var data = new List<byte>((int)DataLength);
 
             data.AddRange(BitConverter.GetBytes(NumOffsets));
             data.AddRange(BitConverter.GetBytes(KeyIndex));
@@ -205,7 +205,7 @@ public class OldOffsetListChunk : Chunk
         {
             get
             {
-                List<byte> data = [];
+                var data = new List<byte>((int)Size);
 
                 data.AddRange(BitConverter.GetBytes(Index));
                 data.AddRange(BinaryExtensions.GetBytes(Offset));

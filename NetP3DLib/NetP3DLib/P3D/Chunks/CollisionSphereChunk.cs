@@ -31,7 +31,7 @@ public class CollisionSphereChunk : Chunk
     {
         get
         {
-            List<byte> data = [];
+            var data = new List<byte>((int)DataLength);
 
             data.AddRange(BitConverter.GetBytes(Radius));
 

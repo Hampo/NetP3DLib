@@ -30,7 +30,7 @@ public class FrontendStringTextBibleChunk : Chunk
     {
         get
         {
-            List<byte> data = [];
+            var data = new List<byte>((int)DataLength);
 
             data.AddRange(BinaryExtensions.GetP3DStringBytes(BibleName));
             data.AddRange(BinaryExtensions.GetP3DStringBytes(StringID));

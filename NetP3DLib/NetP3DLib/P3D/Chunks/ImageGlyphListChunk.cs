@@ -40,7 +40,7 @@ public class ImageGlyphListChunk : Chunk
     {
         get
         {
-            List<byte> data = [];
+            var data = new List<byte>((int)DataLength);
 
             data.AddRange(BitConverter.GetBytes(NumGlyphs));
             foreach (var glyph in Glyphs)
@@ -184,7 +184,7 @@ public class ImageGlyphListChunk : Chunk
         {
             get
             {
-                List<byte> data = [];
+                var data = new List<byte>((int)Size);
 
                 data.AddRange(BitConverter.GetBytes(XOrigin));
                 data.AddRange(BitConverter.GetBytes(LeftBearing));

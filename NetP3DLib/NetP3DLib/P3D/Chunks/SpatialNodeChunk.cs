@@ -164,7 +164,7 @@ public class SpatialNodeChunk : Chunk
     {
         get
         {
-            List<byte> data = [];
+            var data = new List<byte>((int)DataLength);
 
             data.Add((byte)SplitAxis);
             data.AddRange(BitConverter.GetBytes(SplitPosition));

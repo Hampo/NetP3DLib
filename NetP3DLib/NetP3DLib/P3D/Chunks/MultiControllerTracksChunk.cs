@@ -42,7 +42,7 @@ public class MultiControllerTracksChunk : Chunk
     {
         get
         {
-            List<byte> data = [];
+            var data = new List<byte>((int)DataLength);
 
             data.AddRange(BitConverter.GetBytes(NumTracks));
             foreach (var track in Tracks)
@@ -196,7 +196,7 @@ public class MultiControllerTracksChunk : Chunk
         {
             get
             {
-                List<byte> data = [];
+                var data = new List<byte>((int)DataLength);
 
                 data.AddRange(BinaryExtensions.GetP3DStringBytes(Name));
                 data.AddRange(BitConverter.GetBytes(StartTime));

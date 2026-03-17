@@ -72,7 +72,7 @@ public class InstParticleSystemChunk : Chunk
     {
         get
         {
-            List<byte> data = [];
+            var data = new List<byte>((int)DataLength);
 
             data.AddRange(BitConverter.GetBytes((int)ParticleType));
             data.AddRange(BitConverter.GetBytes(MaxInstances));

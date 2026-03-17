@@ -42,7 +42,7 @@ public class ATCChunk : Chunk
     {
         get
         {
-            List<byte> data = [];
+            var data = new List<byte>((int)DataLength);
 
             data.AddRange(BitConverter.GetBytes(NumEntries));
             foreach (var entry in Entries)
@@ -228,7 +228,7 @@ public class ATCChunk : Chunk
         {
             get
             {
-                List<byte> data = [];
+                var data = new List<byte>((int)DataLength);
 
                 data.AddRange(BinaryExtensions.GetP3DStringBytes(SoundResourceDataName));
                 data.AddRange(BinaryExtensions.GetP3DStringBytes(Particle));

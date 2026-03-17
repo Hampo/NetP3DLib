@@ -39,7 +39,7 @@ public class IndexListChunk : Chunk
     {
         get
         {
-            List<byte> data = [];
+            var data = new List<byte>((int)DataLength);
 
             data.AddRange(BitConverter.GetBytes(NumIndices));
             foreach (var index in Indices)

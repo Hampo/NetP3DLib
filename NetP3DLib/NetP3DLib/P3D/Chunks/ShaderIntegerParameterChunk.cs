@@ -31,7 +31,7 @@ public class ShaderIntegerParameterChunk : ParamChunk
     {
         get
         {
-            List<byte> data = [];
+            var data = new List<byte>((int)DataLength);
 
             data.AddRange(BinaryExtensions.GetFourCCBytes(Param));
             data.AddRange(BitConverter.GetBytes(Value));

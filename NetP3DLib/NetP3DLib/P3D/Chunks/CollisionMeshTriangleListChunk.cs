@@ -44,7 +44,7 @@ public class CollisionMeshTriangleListChunk : Chunk
     {
         get
         {
-            List<byte> data = [];
+            var data = new List<byte>((int)DataLength);
 
             data.AddRange(BitConverter.GetBytes(NumTriangles));
             foreach (var entry in Triangles)
@@ -160,7 +160,7 @@ public class CollisionMeshTriangleListChunk : Chunk
         {
             get
             {
-                List<byte> data = [];
+                var data = new List<byte>((int)Size);
 
                 data.AddRange(BitConverter.GetBytes(Index0));
                 data.AddRange(BitConverter.GetBytes(Index1));

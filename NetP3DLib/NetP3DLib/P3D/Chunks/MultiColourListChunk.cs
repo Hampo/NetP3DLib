@@ -57,7 +57,7 @@ public class MultiColourListChunk : Chunk
     {
         get
         {
-            List<byte> data = [];
+            var data = new List<byte>((int)DataLength);
 
             data.AddRange(BitConverter.GetBytes(NumColours));
             data.AddRange(BitConverter.GetBytes(Channel));

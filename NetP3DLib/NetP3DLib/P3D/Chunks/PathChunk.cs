@@ -43,7 +43,7 @@ public class PathChunk : Chunk
     {
         get
         {
-            List<byte> data = [];
+            var data = new List<byte>((int)DataLength);
 
             data.AddRange(BitConverter.GetBytes(NumPositions));
             foreach (var pos in Positions)

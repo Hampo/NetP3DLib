@@ -37,7 +37,7 @@ public class ImageDataChunk : Chunk
     {
         get
         {
-            List<byte> data = [];
+            var data = new List<byte>((int)DataLength);
 
             data.AddRange(BitConverter.GetBytes(ImageData.Length));
             data.AddRange([.. ImageData]);

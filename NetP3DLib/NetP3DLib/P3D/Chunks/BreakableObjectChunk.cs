@@ -76,7 +76,7 @@ public class BreakableObjectChunk : Chunk
     {
         get
         {
-            List<byte> data = [];
+            var data = new List<byte>((int)DataLength);
 
             data.AddRange(BitConverter.GetBytes((int)Index));
             data.AddRange(BitConverter.GetBytes(MaxInstances));

@@ -36,7 +36,7 @@ public class Unknown7000008Chunk : Chunk
     {
         get
         {
-            List<byte> data = [];
+            var data = new List<byte>((int)DataLength);
 
             data.AddRange(BitConverter.GetBytes(NumUnknown));
             foreach (var unknown in Unknown)

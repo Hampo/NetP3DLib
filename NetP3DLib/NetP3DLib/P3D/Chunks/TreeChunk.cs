@@ -47,7 +47,7 @@ public class TreeChunk : Chunk
     {
         get
         {
-            List<byte> data = [];
+            var data = new List<byte>((int)DataLength);
 
             data.AddRange(BitConverter.GetBytes(NumNodes));
             data.AddRange(BinaryExtensions.GetBytes(BoundsMin));

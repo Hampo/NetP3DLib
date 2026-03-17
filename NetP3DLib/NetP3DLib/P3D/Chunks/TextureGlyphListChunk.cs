@@ -42,7 +42,7 @@ public class TextureGlyphListChunk : Chunk
     {
         get
         {
-            List<byte> data = [];
+            var data = new List<byte>((int)DataLength);
 
             data.AddRange(BitConverter.GetBytes(NumGlyphs));
             foreach (var glyph in Glyphs)
@@ -213,7 +213,7 @@ public class TextureGlyphListChunk : Chunk
         {
             get
             {
-                List<byte> data = [];
+                var data = new List<byte>((int)Size);
 
                 data.AddRange(BitConverter.GetBytes(TextureNum));
                 data.AddRange(BinaryExtensions.GetBytes(BottomLeft));

@@ -46,7 +46,7 @@ public class AnimationHeaderChunk : Chunk
     {
         get
         {
-            List<byte> data = [];
+            var data = new List<byte>((int)DataLength);
 
             data.AddRange(BitConverter.GetBytes(Version));
             data.AddRange(BitConverter.GetBytes(NumGroups));

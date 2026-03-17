@@ -39,7 +39,7 @@ public class MatrixPaletteChunk : Chunk
     {
         get
         {
-            List<byte> data = [];
+            var data = new List<byte>((int)DataLength);
 
             data.AddRange(BitConverter.GetBytes(NumMatrices));
             foreach (var mat in Matrices)

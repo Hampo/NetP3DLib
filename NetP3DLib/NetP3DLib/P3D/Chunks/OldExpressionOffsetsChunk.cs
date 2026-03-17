@@ -41,7 +41,7 @@ public class OldExpressionOffsetsChunk : Chunk
     {
         get
         {
-            List<byte> data = [];
+            var data = new List<byte>((int)DataLength);
 
             data.AddRange(BitConverter.GetBytes(NumPrimitiveGroups));
             data.AddRange(BitConverter.GetBytes(NumOffsetLists));

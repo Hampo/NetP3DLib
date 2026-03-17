@@ -24,7 +24,7 @@ public class ShaderTextureParameterChunk : ParamChunk
     {
         get
         {
-            List<byte> data = [];
+            var data = new List<byte>((int)DataLength);
 
             data.AddRange(BinaryExtensions.GetFourCCBytes(Param));
             data.AddRange(BinaryExtensions.GetP3DStringBytes(Value));

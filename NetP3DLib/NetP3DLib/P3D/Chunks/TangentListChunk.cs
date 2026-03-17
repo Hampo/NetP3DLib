@@ -42,7 +42,7 @@ public class TangentListChunk : Chunk
     {
         get
         {
-            List<byte> data = [];
+            var data = new List<byte>((int)DataLength);
 
             data.AddRange(BitConverter.GetBytes(NumTangents));
             foreach (var normal in Tangents)

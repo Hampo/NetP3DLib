@@ -54,7 +54,7 @@ public class CollisionVolumeChunk : Chunk
     {
         get
         {
-            List<byte> data = [];
+            var data = new List<byte>((int)DataLength);
 
             data.AddRange(BitConverter.GetBytes(ObjectReferenceIndex));
             data.AddRange(BitConverter.GetBytes(OwnerIndex));
