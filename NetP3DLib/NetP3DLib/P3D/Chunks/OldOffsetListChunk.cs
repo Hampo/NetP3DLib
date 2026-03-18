@@ -69,6 +69,7 @@ public class OldOffsetListChunk : Chunk
             var oldSize = HeaderSize;
             _hasPrimGroupIndex = value;
             RecalculateSize(oldSize);
+            OnPropertyChanged(nameof(HasPrimGroupIndex));
         }
     }
     

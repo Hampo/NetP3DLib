@@ -64,8 +64,12 @@ public class RoadChunk : NamedChunk
         get => (byte)(_bitmask & SpeedMask);
         set
         {
+            if (Speed == value)
+                return;
+
             _bitmask &= ~SpeedMask;
             _bitmask |= value;
+            OnPropertyChanged(nameof(Speed));
         }
     }
     public byte Intelligence
@@ -73,8 +77,12 @@ public class RoadChunk : NamedChunk
         get => (byte)((_bitmask & IntelligenceMask) >> 8);
         set
         {
+            if (Intelligence == value)
+                return;
+
             _bitmask &= ~IntelligenceMask;
             _bitmask |= (uint)(value << 8);
+            OnPropertyChanged(nameof(Intelligence));
         }
     }
     public bool Shortcut
@@ -82,10 +90,14 @@ public class RoadChunk : NamedChunk
         get => (_bitmask & ShortcutMask) != 0;
         set
         {
+            if (Shortcut == value)
+                return;
+
             if (value)
                 _bitmask |= ShortcutMask;
             else
                 _bitmask &= ~ShortcutMask;
+            OnPropertyChanged(nameof(Shortcut));
         }
     }
 
