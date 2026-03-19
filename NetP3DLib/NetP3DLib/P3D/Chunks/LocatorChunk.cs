@@ -440,7 +440,7 @@ public class LocatorChunk : NamedChunk
                 var oldSize = DataArray.Count;
                 _key = value;
                 var newSize = DataArray.Count;
-                OnSizeChanged(newSize - oldSize);
+                OnSizeChanged((newSize - oldSize) * sizeof(uint));
                 OnPropertyChanged(nameof(Key));
             }
         }
@@ -545,7 +545,7 @@ public class LocatorChunk : NamedChunk
                 }
 
                 var newSize = DataArray.Count;
-                OnSizeChanged(newSize - oldSize);
+                OnSizeChanged((newSize - oldSize) * sizeof(uint));
                 OnPropertyChanged(nameof(FreeCar));
             }
         }
@@ -634,7 +634,7 @@ public class LocatorChunk : NamedChunk
                 var oldSize = DataArray.Count;
                 _dynaLoadData = value;
                 var newSize = DataArray.Count;
-                OnSizeChanged(newSize - oldSize);
+                OnSizeChanged((newSize - oldSize) * sizeof(uint));
                 OnPropertyChanged(nameof(DynaLoadData));
             }
         }
@@ -724,7 +724,7 @@ public class LocatorChunk : NamedChunk
                 var oldSize = DataArray.Count;
                 _interiorName = value;
                 var newSize = DataArray.Count;
-                OnSizeChanged(newSize - oldSize);
+                OnSizeChanged((newSize - oldSize) * sizeof(uint));
                 OnPropertyChanged(nameof(InteriorName));
             }
         }
@@ -932,7 +932,7 @@ public class LocatorChunk : NamedChunk
                 var oldSize = DataArray.Count;
                 _objectName = value;
                 var newSize = DataArray.Count;
-                OnSizeChanged(newSize - oldSize);
+                OnSizeChanged((newSize - oldSize) * sizeof(uint));
                 OnPropertyChanged(nameof(ObjectName));
             }
         }
@@ -948,7 +948,7 @@ public class LocatorChunk : NamedChunk
                 var oldSize = DataArray.Count;
                 _jointName = value;
                 var newSize = DataArray.Count;
-                OnSizeChanged(newSize - oldSize);
+                OnSizeChanged((newSize - oldSize) * sizeof(uint));
                 OnPropertyChanged(nameof(JointName));
             }
         }
@@ -965,7 +965,7 @@ public class LocatorChunk : NamedChunk
                 var oldSize = DataArray.Count;
                 _actionName = value;
                 var newSize = DataArray.Count;
-                OnSizeChanged(newSize - oldSize);
+                OnSizeChanged((newSize - oldSize) * sizeof(uint));
                 OnPropertyChanged(nameof(ActionName));
             }
         }
