@@ -540,7 +540,7 @@ public class LocatorChunk : NamedChunk
                 else
                 {
                     if (!_parkedCar.HasValue)
-                        ParkedCar = false;
+                        _parkedCar = 0u;
                     _freeCar = value;
                 }
 
