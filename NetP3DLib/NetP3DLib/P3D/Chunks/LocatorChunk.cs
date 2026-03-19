@@ -499,16 +499,16 @@ public class LocatorChunk : NamedChunk
         }
     
         private uint? _parkedCar = null;
-        public uint? ParkedCar
+        public bool ParkedCar
         {
-            get => _parkedCar;
+            get => _parkedCar.HasValue && _parkedCar == 1;
             set
             {
-                if (_parkedCar == value)
+                if (ParkedCar == value)
                     return;
 
                 var oldHasValue = _parkedCar.HasValue;
-                _parkedCar = value;
+                _parkedCar = value ? 1u : 0u;
                 var newHasValue = _parkedCar.HasValue;
 
                 if (oldHasValue != newHasValue)
@@ -532,7 +532,18 @@ public class LocatorChunk : NamedChunk
                     return;
 
                 var oldSize = DataArray.Count;
-                _freeCar = value;
+
+                if (string.IsNullOrEmpty(value))
+                {
+                    _freeCar = null;
+                }
+                else
+                {
+                    if (!_parkedCar.HasValue)
+                        ParkedCar = false;
+                    _freeCar = value;
+                }
+
                 var newSize = DataArray.Count;
                 OnSizeChanged(newSize - oldSize);
                 OnPropertyChanged(nameof(FreeCar));
@@ -547,9 +558,9 @@ public class LocatorChunk : NamedChunk
                 [
                     CreateFloatData(Rotation),
                 ];
-                if (ParkedCar.HasValue)
+                if (_parkedCar.HasValue)
                 {
-                    data.Add(ParkedCar.Value);
+                    data.Add(_parkedCar.Value);
                     if (FreeCar != null)
                         data.AddRange(CreateStringData(FreeCar));
                 }
@@ -561,34 +572,32 @@ public class LocatorChunk : NamedChunk
         public CarStartLocatorData(IList<uint> data) : base(LocatorTypes.CarStart)
         {
             _rotation = ParseDataFloat(data[0]);
-            ParkedCar = data.Count > 1 ? data[1] : null;
-            FreeCar = data.Count > 2 ? ParseDataString(data, 2).String : null;
+            _parkedCar = data.Count > 1 ? data[1] : null;
+            _freeCar = data.Count > 2 ? ParseDataString(data, 2).String : null;
         }
 
-        public CarStartLocatorData(float rotation) : base(LocatorTypes.CarStart)
+        public CarStartLocatorData(float rotation) : this(rotation, null, null)
+        {
+        }
+
+        public CarStartLocatorData(float rotation, bool parkedCar) : this(rotation, parkedCar? 1u : 0u, null)
+        {
+        }
+
+        public CarStartLocatorData(float rotation, bool parkedCar, string? freeCar) : this(rotation, parkedCar ? 1u : 0u, freeCar)
+        {
+        }
+
+        public CarStartLocatorData(float rotation, uint? parkedCar, string? freeCar) : base(LocatorTypes.CarStart)
         {
             _rotation = rotation;
-            ParkedCar = null;
-            FreeCar = null;
+            _parkedCar = parkedCar;
+            _freeCar = freeCar;
         }
 
-        public CarStartLocatorData(float rotation, uint parkedCar) : base(LocatorTypes.CarStart)
-        {
-            _rotation = rotation;
-            ParkedCar = parkedCar;
-            FreeCar = null;
-        }
+        internal override LocatorData Clone() => _parkedCar.HasValue ? new CarStartLocatorData(Rotation, _parkedCar.Value, _freeCar) : new CarStartLocatorData(Rotation);
 
-        public CarStartLocatorData(float rotation, uint parkedCar, string? freeCar) : base(LocatorTypes.CarStart)
-        {
-            _rotation = rotation;
-            ParkedCar = parkedCar;
-            FreeCar = freeCar;
-        }
-
-        internal override LocatorData Clone() => ParkedCar.HasValue ? new CarStartLocatorData(Rotation, ParkedCar.Value, FreeCar) : new CarStartLocatorData(Rotation);
-
-        public override string ToString() => $"_rotation = {Rotation}, ParkedCar = {ParkedCar?.ToString() ?? "null"}, FreeCar = {FreeCar ?? "null"}";
+        public override string ToString() => $"Rotation = {Rotation}, ParkedCar = {(_parkedCar.HasValue ? ParkedCar.ToString() : "null")}, FreeCar = {FreeCar ?? "null"}";
     }
 
     /// <summary>
