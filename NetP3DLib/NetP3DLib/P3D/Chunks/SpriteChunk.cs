@@ -79,15 +79,15 @@ public class SpriteChunk : NamedChunk
     
     public uint ImageCount => GetChildCount(ChunkIdentifier.Image);
     private uint _blitBorder;
-    public bool BlitBorder
+    public uint BlitBorder
     {
-        get => _blitBorder != 0;
+        get => _blitBorder;
         set
         {
-            if (BlitBorder == value)
+            if (_blitBorder == value)
                 return;
     
-            _blitBorder = value ? 1u : 0u;
+            _blitBorder = value;
             OnPropertyChanged(nameof(BlitBorder));
         }
     }
@@ -114,10 +114,6 @@ public class SpriteChunk : NamedChunk
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint) + BinaryExtensions.GetP3DStringLength(Shader) + sizeof(uint) + sizeof(uint) + sizeof(uint) + sizeof(uint);
 
     public SpriteChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadUInt32(), br.ReadUInt32(), br.ReadP3DString(), br.ReadUInt32(), br.ReadUInt32(), br.SkipAndRead(sizeof(uint), br.ReadUInt32))
-    {
-    }
-
-    public SpriteChunk(string name, uint nativeX, uint nativeY, string shader, uint imageWidth, uint imageHeight, bool blitBorder) : this(name, nativeX, nativeY, shader, imageWidth, imageHeight, blitBorder ? 1u : 0u)
     {
     }
 
