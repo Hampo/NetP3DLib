@@ -123,7 +123,7 @@ public class ChunkFileCollection : Collection<Chunk>
             child.SizeChanged -= OnChildSizeChanged;
         }
 
-        _owner.OnChunksCleared();
+        _owner.OnChunksCleared(oldItems);
     }
 
     public IReadOnlyList<Chunk> GetRange(int index, int count) => ((List<Chunk>)Items).GetRange(index, count);

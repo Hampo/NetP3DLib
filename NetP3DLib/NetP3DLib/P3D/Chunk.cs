@@ -482,14 +482,14 @@ public abstract class Chunk
         PropertyChanged?.Invoke(nameof(Children));
     }
 
-    public event Action? ChildrenCleared;
-    internal void OnChildrenCleared()
+    public event Action<IReadOnlyList<(Chunk chunk, int oldIndex)>>? ChildrenCleared;
+    internal void OnChildrenCleared(IReadOnlyList<(Chunk chunk, int oldIndex)> children)
     {
         _childCounts.Clear();
         _chunksByType.Clear();
         _namedChunks.Clear();
         _paramChunks.Clear();
-        ChildrenCleared?.Invoke();
+        ChildrenCleared?.Invoke(children);
         PropertyChanged?.Invoke(nameof(Children));
     }
 

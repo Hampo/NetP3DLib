@@ -162,7 +162,7 @@ public class ChunkCollection : Collection<Chunk>
             child.SizeChanged -= OnChildSizeChanged;
         }
 
-        _owner.OnChildrenCleared();
+        _owner.OnChildrenCleared(oldItems);
     }
 
     public IReadOnlyList<Chunk> GetRange(int index, int count) => ((List<Chunk>)Items).GetRange(index, count);

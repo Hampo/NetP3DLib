@@ -131,7 +131,11 @@ public class TreeChunk : Chunk
 
     private void TreeNode_PropertyChanged(string propertyName) => MarkDirty();
 
-    private void Chunk_ChildrenCleared() => MarkTopologyDirty();
+    private void Chunk_ChildrenCleared(IReadOnlyList<(Chunk chunk, int oldIndex)> children)
+    {
+        foreach (var (child, _) in children)
+            HandleChildAdded(child);
+    }
 
     internal void RecalculateSubTreeSizeIfNeeded()
     {

@@ -599,14 +599,14 @@ public class P3DFile
         ChunksRemoved?.Invoke(chunks);
     }
 
-    public event Action? ChunksCleared;
-    internal void OnChunksCleared()
+    public event Action<IReadOnlyList<(Chunk chunk, int oldIndex)>>? ChunksCleared;
+    internal void OnChunksCleared(IReadOnlyList<(Chunk chunk, int oldIndex)> children)
     {
         _chunkCounts.Clear();
         _chunksByType.Clear();
         _namedChunks.Clear();
         _paramChunks.Clear();
-        ChunksCleared?.Invoke();
+        ChunksCleared?.Invoke(children);
     }
 
     public P3DFile Clone()
