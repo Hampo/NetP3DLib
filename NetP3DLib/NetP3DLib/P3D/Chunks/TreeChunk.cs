@@ -95,48 +95,38 @@ public class TreeChunk : Chunk
         _needsRecalculate = true;
     }
 
-    private void Chunk_ChildAdded(Chunk child)
+    private void HandleChildAdded(Chunk child)
     {
-        if (child is TreeNodeChunk)
-        {
-            MarkTopologyDirty();
-            child.PropertyChanged += TreeNode_PropertyChanged;
-        }
+        if (child is not TreeNodeChunk)
+            return;
+
+        MarkTopologyDirty();
+        child.PropertyChanged += TreeNode_PropertyChanged;
     }
 
-    private void Chunk_ChildRemoved(Chunk child, int oldIndex)
+    private void HandleChildRemoved(Chunk child)
     {
-        if (child is TreeNodeChunk)
-        {
-            MarkTopologyDirty();
-            child.PropertyChanged -= TreeNode_PropertyChanged;
-        }
+        if (child is not TreeNodeChunk)
+            return;
+
+        MarkTopologyDirty();
+        child.PropertyChanged -= TreeNode_PropertyChanged;
     }
+
+    private void Chunk_ChildAdded(Chunk child) => HandleChildAdded(child);
+
+    private void Chunk_ChildRemoved(Chunk child, int oldIndex) => HandleChildRemoved(child);
 
     private void Chunk_ChildrenAdded(IReadOnlyList<Chunk> children)
     {
         foreach (var child in children)
-        {
-            if (child is TreeNodeChunk)
-            {
-                MarkTopologyDirty();
-                child.PropertyChanged += TreeNode_PropertyChanged;
-                return;
-            }
-        }
+            HandleChildAdded(child);
     }
 
     private void Chunk_ChildrenRemoved(IReadOnlyList<(Chunk child, int oldIndex)> children)
     {
         foreach (var (child, _) in children)
-        {
-            if (child is TreeNodeChunk)
-            {
-                MarkTopologyDirty();
-                child.PropertyChanged += TreeNode_PropertyChanged;
-                return;
-            }
-        }
+            HandleChildRemoved(child);
     }
 
     private void TreeNode_PropertyChanged(string propertyName) => MarkDirty();
