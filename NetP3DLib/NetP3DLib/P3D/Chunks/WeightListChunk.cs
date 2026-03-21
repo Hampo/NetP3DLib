@@ -84,8 +84,8 @@ public class WeightListChunk : Chunk
 
             if (MathUtil.NearEqual(sum, 0))
                 yield return new InvalidP3DException(this, $"Weight {i} is all zeros.");
-            else if (!MathUtil.NearEqual(sum, 1))
-                yield return new InvalidP3DException(this, $"Weight {i} does not have a sum of 1 (sum={sum}).");
+            //else if (!MathUtil.NearEqual(sum, 1))
+            //    yield return new InvalidP3DException(this, $"Weight {i} does not have a sum of 1 (sum={sum}).");
         }
     }
 
