@@ -537,4 +537,204 @@ public static class BinaryExtensions
         br.BaseStream.Seek(skip, SeekOrigin.Current);
         return read();
     }
+
+    public static T[] ReadArray<T>(this BinaryReader br, Func<T> readValue, out int count)
+    {
+        count = br.ReadInt32();
+        var results = new T[count];
+        for (var i = 0; i < count; i++)
+            results[i] = readValue();
+        return results;
+    }
+
+    public static T[] ReadArray<T>(this BinaryReader br, int count, Func<T> readValue)
+    {
+        var results = new T[count];
+        for (var i = 0; i < count; i++)
+            results[i] = readValue();
+        return results;
+    }
+
+    public static TEnum[] ReadEnumArray<TEnum>(this BinaryReader br, out int count) where TEnum : struct, Enum => ReadArray(br, GetReader<TEnum>(br), out count);
+
+    public static TEnum[] ReadEnumArray<TEnum>(this BinaryReader br, int count) where TEnum : struct, Enum => ReadArray(br, count, GetReader<TEnum>(br));
+
+    private static Func<TEnum> GetReader<TEnum>(BinaryReader br) where TEnum : struct, Enum
+    {
+        Type underlyingType = Enum.GetUnderlyingType(typeof(TEnum));
+
+        if (underlyingType == typeof(byte))
+            return () => (TEnum)(object)br.ReadByte();
+
+        if (underlyingType == typeof(sbyte))
+            return () => (TEnum)(object)br.ReadSByte();
+
+        if (underlyingType == typeof(short))
+            return () => (TEnum)(object)br.ReadInt16();
+
+        if (underlyingType == typeof(ushort))
+            return () => (TEnum)(object)br.ReadUInt16();
+
+        if (underlyingType == typeof(int))
+            return () => (TEnum)(object)br.ReadInt32();
+
+        if (underlyingType == typeof(uint))
+            return () => (TEnum)(object)br.ReadUInt32();
+
+        if (underlyingType == typeof(long))
+            return () => (TEnum)(object)br.ReadInt64();
+
+        if (underlyingType == typeof(ulong))
+            return () => (TEnum)(object)br.ReadUInt64();
+
+        throw new NotSupportedException($"Unsupported enum underlying type: {underlyingType}");
+    }
+
+    public static byte[] ReadByteArray(this BinaryReader br, out int count)
+    {
+        count = br.ReadInt32();
+        return br.ReadBytes(count);
+    }
+
+    public static byte[] ReadByteArray(this BinaryReader br, int count) => br.ReadBytes(count);
+
+    public static short[] ReadInt16Array(this BinaryReader br, out int count)
+    {
+        count = br.ReadInt32();
+        return ReadInt16Array(br, count);
+    }
+
+    public static short[] ReadInt16Array(this BinaryReader br, int count)
+    {
+        var results = new short[count];
+        for (var i = 0; i < count; i++)
+            results[i] = br.ReadInt16();
+        return results;
+    }
+
+    public static ushort[] ReadUInt16Array(this BinaryReader br, out int count)
+    {
+        count = br.ReadInt32();
+        return ReadUInt16Array(br, count);
+    }
+
+    public static ushort[] ReadUInt16Array(this BinaryReader br, int count)
+    {
+        var results = new ushort[count];
+        for (var i = 0; i < count; i++)
+            results[i] = br.ReadUInt16();
+        return results;
+    }
+
+    public static int[] ReadInt32Array(this BinaryReader br, out int count)
+    {
+        count = br.ReadInt32();
+        return ReadInt32Array(br, count);
+    }
+
+    public static int[] ReadInt32Array(this BinaryReader br, int count)
+    {
+        var results = new int[count];
+        for (var i = 0; i < count; i++)
+            results[i] = br.ReadInt32();
+        return results;
+    }
+
+    public static uint[] ReadUInt32Array(this BinaryReader br, out int count)
+    {
+        count = br.ReadInt32();
+        return ReadUInt32Array(br, count);
+    }
+
+    public static uint[] ReadUInt32Array(this BinaryReader br, int count)
+    {
+        var results = new uint[count];
+        for (var i = 0; i < count; i++)
+            results[i] = br.ReadUInt32();
+        return results;
+    }
+
+    public static float[] ReadSingleArray(this BinaryReader br, out int count)
+    {
+        count = br.ReadInt32();
+        return ReadSingleArray(br, count);
+    }
+
+    public static float[] ReadSingleArray(this BinaryReader br, int count)
+    {
+        var results = new float[count];
+        for (var i = 0; i < count; i++)
+            results[i] = br.ReadSingle();
+        return results;
+    }
+
+    public static Vector2[] ReadVector2Array(this BinaryReader br, out int count)
+    {
+        count = br.ReadInt32();
+        return ReadVector2Array(br, count);
+    }
+
+    public static Vector2[] ReadVector2Array(this BinaryReader br, int count)
+    {
+        var results = new Vector2[count];
+        for (var i = 0; i < count; i++)
+            results[i] = br.ReadVector2();
+        return results;
+    }
+
+    public static Vector3[] ReadVector3Array(this BinaryReader br, out int count)
+    {
+        count = br.ReadInt32();
+        return ReadVector3Array(br, count);
+    }
+
+    public static Vector3[] ReadVector3Array(this BinaryReader br, int count)
+    {
+        var results = new Vector3[count];
+        for (var i = 0; i < count; i++)
+            results[i] = br.ReadVector3();
+        return results;
+    }
+
+    public static Quaternion[] ReadQuaternionArray(this BinaryReader br, out int count)
+    {
+        count = br.ReadInt32();
+        return ReadQuaternionArray(br, count);
+    }
+
+    public static Quaternion[] ReadQuaternionArray(this BinaryReader br, int count)
+    {
+        var results = new Quaternion[count];
+        for (var i = 0; i < count; i++)
+            results[i] = br.ReadQuaternion();
+        return results;
+    }
+
+    public static Color[] ReadColorArray(this BinaryReader br, out int count)
+    {
+        count = br.ReadInt32();
+        return ReadColorArray(br, count);
+    }
+
+    public static Color[] ReadColorArray(this BinaryReader br, int count)
+    {
+        var results = new Color[count];
+        for (var i = 0; i < count; i++)
+            results[i] = br.ReadColor();
+        return results;
+    }
+
+    public static string[] ReadP3DStringArray(this BinaryReader br, out int count)
+    {
+        count = br.ReadInt32();
+        return ReadP3DStringArray(br, count);
+    }
+
+    public static string[] ReadP3DStringArray(this BinaryReader br, int count)
+    {
+        var results = new string[count];
+        for (var i = 0; i < count; i++)
+            results[i] = br.ReadP3DString();
+        return results;
+    }
 }

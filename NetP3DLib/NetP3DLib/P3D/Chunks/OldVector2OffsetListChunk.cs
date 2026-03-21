@@ -3,7 +3,6 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
-using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -72,7 +71,7 @@ public class OldVector2OffsetListChunk : ParamChunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) + 4 + sizeof(float) * 2 * NumOffsets;
 
-    public OldVector2OffsetListChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), ReadParam(br, out var numOffsets), ListHelper.ReadArray(numOffsets, br.ReadVector2))
+    public OldVector2OffsetListChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), ReadParam(br, out var numOffsets), br.ReadVector2Array(numOffsets))
     {
     }
 

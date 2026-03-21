@@ -9,6 +9,8 @@ public class ObservableByteArray : IEnumerable<byte>
     private readonly byte[] _data;
     private readonly Action? _onChanged;
 
+    public byte[] RawArray => _data;
+
     public ObservableByteArray(int size, Action? onChanged = null)
     {
         _data = new byte[size];

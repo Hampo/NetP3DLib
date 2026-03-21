@@ -1,7 +1,7 @@
 using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Collections;
-using NetP3DLib.P3D.Helpers;
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 
@@ -51,7 +51,7 @@ public class Unknown7000008Chunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(short) * NumUnknown;
 
-    public Unknown7000008Chunk(EndianAwareBinaryReader br) : this(ListHelper.ReadArray(br.ReadInt32(), br.ReadInt16))
+    public Unknown7000008Chunk(EndianAwareBinaryReader br) : this(br.ReadInt16Array(out _))
     {
     }
 

@@ -3,7 +3,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
-using NetP3DLib.P3D.Helpers;
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 
@@ -99,7 +99,7 @@ public class VertexAnimKeyFrameListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) + sizeof(uint) * NumKeyFrameIds + sizeof(uint) * NumKeyFrameCounts;
 
-    public VertexAnimKeyFrameListChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), ListHelper.ReadArray(br.ReadInt32, br.ReadUInt32, out var numKeyFrameIds), ListHelper.ReadArray(numKeyFrameIds, br.ReadUInt32))
+    public VertexAnimKeyFrameListChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadUInt32Array(out var numKeyFrameIds), br.ReadUInt32Array(numKeyFrameIds))
     {
     }
 

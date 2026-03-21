@@ -2,7 +2,7 @@ using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
-using NetP3DLib.P3D.Helpers;
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 
@@ -54,7 +54,7 @@ public class IndexListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) * NumIndices;
 
-    public IndexListChunk(EndianAwareBinaryReader br) : this(ListHelper.ReadArray(br.ReadInt32(), br.ReadUInt32))
+    public IndexListChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32Array(out _))
     {
     }
 

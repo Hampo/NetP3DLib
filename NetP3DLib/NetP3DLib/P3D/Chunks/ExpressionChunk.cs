@@ -4,7 +4,6 @@ using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
-using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -103,7 +102,7 @@ public class ExpressionChunk : NamedChunk
     }
     public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(float) * NumKeys + sizeof(uint) * NumIndices;
 
-    public ExpressionChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadP3DString(), ListHelper.ReadArray(br.ReadInt32, br.ReadSingle, out var numKeys), ListHelper.ReadArray(numKeys, br.ReadUInt32))
+    public ExpressionChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadP3DString(), br.ReadSingleArray(out var numKeys), br.ReadUInt32Array(numKeys))
     {
     }
 

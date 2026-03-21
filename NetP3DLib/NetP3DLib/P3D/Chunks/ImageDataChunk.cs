@@ -27,7 +27,10 @@ public class ImageDataChunk : Chunk
                 return;
 
             var oldSize = HeaderSize;
-            _imageData = new(value?.ToArray() ?? [], _imageDataChanged);
+            if (value is ObservableByteArray oba)
+                _imageData = new(oba.RawArray, _imageDataChanged);
+            else
+                _imageData = new(value?.ToArray() ?? [], _imageDataChanged);
             RecalculateSize(oldSize);
             _imageDataChanged();
         }
@@ -69,8 +72,8 @@ public class ImageDataChunk : Chunk
     protected override void WriteData(EndianAwareBinaryWriter bw)
     {
         bw.Write(ImageData.Length);
-        bw.Write([.. ImageData]);
+        bw.Write(ImageData.RawArray);
     }
 
-    protected override Chunk CloneSelf() => new ImageDataChunk([.. ImageData]);
+    protected override Chunk CloneSelf() => new ImageDataChunk(ImageData.RawArray);
 }

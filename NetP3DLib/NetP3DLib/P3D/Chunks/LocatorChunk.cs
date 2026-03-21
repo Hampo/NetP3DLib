@@ -2,7 +2,6 @@ using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
-using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -94,7 +93,7 @@ public class LocatorChunk : NamedChunk
     private static LocatorData ReadLocatorData(EndianAwareBinaryReader br)
     {
         var type = (LocatorTypes)br.ReadUInt32();
-        var data = ListHelper.ReadArray(br.ReadInt32(), br.ReadUInt32);
+        var data = br.ReadUInt32Array(out _);
         return type switch
         {
             LocatorTypes.Event => new EventLocatorData(data),

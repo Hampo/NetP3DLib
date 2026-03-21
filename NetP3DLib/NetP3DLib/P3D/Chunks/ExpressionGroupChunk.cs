@@ -4,7 +4,6 @@ using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
-using NetP3DLib.P3D.Helpers;
 using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
@@ -89,7 +88,7 @@ public class ExpressionGroupChunk : NamedChunk
     }
     public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + BinaryExtensions.GetP3DStringLength(TargetName) + sizeof(uint) + sizeof(uint) * NumStages;
 
-    public ExpressionGroupChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadP3DString(), br.ReadP3DString(), ListHelper.ReadArray(br.ReadInt32(), () => (Stage)br.ReadUInt32()))
+    public ExpressionGroupChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadP3DString(), br.ReadP3DString(), br.ReadEnumArray<Stage>(out _))
     {
     }
 

@@ -4,7 +4,6 @@ using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
-using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 
@@ -69,7 +68,7 @@ public class HistoryChunk : Chunk
         }
     }
 
-    public HistoryChunk(EndianAwareBinaryReader br) : this(ListHelper.ReadArray(br.ReadUInt16(), br.ReadP3DString))
+    public HistoryChunk(EndianAwareBinaryReader br) : this(br.ReadP3DStringArray(br.ReadUInt16()))
     {
     }
 

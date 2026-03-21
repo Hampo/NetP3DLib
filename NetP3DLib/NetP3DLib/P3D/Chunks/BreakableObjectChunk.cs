@@ -3,7 +3,6 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using System;
 using System.Collections.Generic;
-using static NetP3DLib.P3D.Chunks.InstParticleSystemChunk;
 
 namespace NetP3DLib.P3D.Chunks;
 

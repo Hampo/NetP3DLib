@@ -3,7 +3,6 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
-using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 
@@ -66,7 +65,7 @@ public class OldExpressionOffsetsChunk : Chunk
     {
         var numPrimitiveGroups = br.ReadInt32();
         var numOffsetLists = br.ReadUInt32();
-        return ListHelper.ReadArray(numPrimitiveGroups, br.ReadUInt32);
+        return br.ReadUInt32Array(numPrimitiveGroups);
     }
 
     public OldExpressionOffsetsChunk(IList<uint> primitiveGroupIndices) : base(ChunkID)

@@ -607,13 +607,16 @@ public class UnknownChunk : Chunk
                 return;
 
             var oldSize = HeaderSize;
-            _data = new(value?.ToArray() ?? [], _dataChanged);
+            if (value is ObservableByteArray oba)
+                _data = new(oba.RawArray, _dataChanged);
+            else
+                _data = new(value?.ToArray() ?? [], _dataChanged);
             RecalculateSize(oldSize);
             _dataChanged();
         }
     }
 
-    public override byte[] DataBytes => [.. Data];
+    public override byte[] DataBytes => Data.RawArray;
 
     public override uint DataLength => (uint)Data.Length;
 

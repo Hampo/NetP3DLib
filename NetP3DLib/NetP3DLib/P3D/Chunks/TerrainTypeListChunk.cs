@@ -2,7 +2,7 @@ using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
-using NetP3DLib.P3D.Helpers;
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -72,7 +72,7 @@ public class TerrainTypeListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) + sizeof(byte) * NumTypes;
 
-    public TerrainTypeListChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), ListHelper.ReadArray(br.ReadInt32(), () => new TerrainType(br)))
+    public TerrainTypeListChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadArray(() => new TerrainType(br), out _))
     {
     }
 

@@ -4,7 +4,6 @@ using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
-using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -113,7 +112,7 @@ public class IntersectChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + sizeof(uint) * NumIndices + sizeof(uint) + sizeof(float) * 3 * NumPositions + sizeof(uint) + sizeof(float) * 3 * NumNormals;
 
-    public IntersectChunk(EndianAwareBinaryReader br) : this(ListHelper.ReadArray(br.ReadInt32(), br.ReadUInt32), ListHelper.ReadArray(br.ReadInt32(), br.ReadVector3), ListHelper.ReadArray(br.ReadInt32(), br.ReadVector3))
+    public IntersectChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32Array(out _), br.ReadVector3Array(out _), br.ReadVector3Array(out _))
     {
     }
 

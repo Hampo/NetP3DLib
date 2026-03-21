@@ -4,7 +4,6 @@ using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
-using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -143,7 +142,7 @@ public class PhotonMapChunk : NamedChunk
         }
     }
 
-    public PhotonMapChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadUInt32(), ListHelper.ReadArray(br.ReadInt32, br.ReadP3DString, out var numLights), ListHelper.ReadArray(numLights, br.ReadSingle), ListHelper.ReadArray(br.ReadInt32(), () => new Photon(br)))
+    public PhotonMapChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadUInt32(), br.ReadP3DStringArray(out var numLights), br.ReadSingleArray(numLights), br.ReadArray(() => new Photon(br), out _))
     {
     }
 

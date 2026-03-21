@@ -3,7 +3,6 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
-using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 
@@ -56,7 +55,7 @@ public class SkeletonPartitionChunk : NamedChunk
     }
     public override uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(uint) * NumJointValues;
 
-    public SkeletonPartitionChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), ListHelper.ReadArray(br.ReadInt32(), br.ReadUInt32))
+    public SkeletonPartitionChunk(EndianAwareBinaryReader br) : this(br.ReadP3DString(), br.ReadUInt32Array(out _))
     {
     }
 

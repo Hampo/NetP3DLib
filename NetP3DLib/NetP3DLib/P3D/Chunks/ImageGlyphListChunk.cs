@@ -2,7 +2,7 @@ using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
-using NetP3DLib.P3D.Helpers;
+using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -55,7 +55,7 @@ public class ImageGlyphListChunk : Chunk
     }
     public override uint DataLength => sizeof(uint) + Glyph.Size * NumGlyphs;
 
-    public ImageGlyphListChunk(EndianAwareBinaryReader br) : this(ListHelper.ReadArray(br.ReadInt32(), () => new Glyph(br)))
+    public ImageGlyphListChunk(EndianAwareBinaryReader br) : this(br.ReadArray(() => new Glyph(br), out _))
     {
     }
 

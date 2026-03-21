@@ -4,7 +4,6 @@ using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
-using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 
@@ -101,7 +100,7 @@ public class CollisionMetaDataShortChannelChunk : NamedChunk
     }
     public override uint DataLength => sizeof(uint) + BinaryExtensions.GetP3DStringLength(Name) + sizeof(uint) + sizeof(ushort) * NumIndices + sizeof(ushort) * NumValues;
 
-    public CollisionMetaDataShortChannelChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadP3DString(), ListHelper.ReadArray(br.ReadInt32, br.ReadUInt16, out var numIndices), ListHelper.ReadArray(numIndices, br.ReadUInt16))
+    public CollisionMetaDataShortChannelChunk(EndianAwareBinaryReader br) : this(br.ReadUInt32(), br.ReadP3DString(), br.ReadUInt16Array(out var numIndices), br.ReadUInt16Array(numIndices))
     {
     }
 
