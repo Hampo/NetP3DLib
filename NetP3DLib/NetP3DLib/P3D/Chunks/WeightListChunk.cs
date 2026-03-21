@@ -1,4 +1,5 @@
 using NetP3DLib.IO;
+using NetP3DLib.Numerics;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Collections;
 using NetP3DLib.P3D.Enums;
@@ -75,6 +76,14 @@ public class WeightListChunk : Chunk
 
         if (ParentChunk is OldPrimitiveGroupChunk oldPrimitiveGroup && oldPrimitiveGroup.NumVertices != NumWeights)
             yield return new InvalidP3DException(this, $"Num Weights value {NumWeights} does not match parent Num Vertices value {oldPrimitiveGroup.NumVertices}.");
+
+        for (var i = 0; i < Weights.Count; i++)
+        {
+            var weight = Weights[i];
+            var sum = weight.X + weight.Y + weight.Z;
+            if (!MathUtil.NearEqual(sum, 1))
+                yield return new InvalidP3DException(this, $"Weight {i} does not have a sum of 1.");
+        }
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
