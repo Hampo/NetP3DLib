@@ -85,9 +85,5 @@ public static class MathUtil
     /// </summary>
     /// <param name="value">The float value to convert.</param>
     /// <returns>The bitwise representation of the float as an integer.</returns>
-    private static int FloatToInt32Bits(float value)
-    {
-        byte[] bytes = BitConverter.GetBytes(value);
-        return BitConverter.ToInt32(bytes, 0);
-    }
+    private static unsafe int FloatToInt32Bits(float value) => *(int*)&value;
 }

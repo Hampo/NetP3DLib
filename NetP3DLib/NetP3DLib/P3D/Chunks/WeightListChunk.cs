@@ -82,9 +82,9 @@ public class WeightListChunk : Chunk
             var weight = Weights[i];
             var sum = weight.X + weight.Y + weight.Z;
 
-            if (MathUtil.NearEqual(sum, 0))
+            if (MathUtil.IsZero(sum))
                 yield return new InvalidP3DException(this, $"Weight {i} is all zeros.");
-            //else if (!MathUtil.NearEqual(sum, 1))
+            //else if (!MathUtil.IsOne(sum))
             //    yield return new InvalidP3DException(this, $"Weight {i} does not have a sum of 1 (sum={sum}).");
         }
     }
