@@ -192,7 +192,7 @@ public class ChunkCollection : Collection<Chunk>
 
         int startIndex = Count;
 
-        ((List<Chunk>)Items).AddRange(items);
+        ((List<Chunk>)Items).AddRange(chunkList);
         TotalSize += addedSize;
 
         int i = startIndex;
@@ -203,7 +203,7 @@ public class ChunkCollection : Collection<Chunk>
             item.SizeChanged += OnChildSizeChanged;
         }
 
-        _owner.OnChildrenAdded(items as IReadOnlyList<Chunk> ?? [.. items]);
+        _owner.OnChildrenAdded(chunkList as IReadOnlyList<Chunk> ?? [.. chunkList]);
     }
 
     public void InsertRange(int index, IEnumerable<Chunk> items)
@@ -242,7 +242,7 @@ public class ChunkCollection : Collection<Chunk>
 
         UpdateChildIndices(index + chunkList.Count);
 
-        _owner.OnChildrenAdded(items as IReadOnlyList<Chunk> ?? [.. items]);
+        _owner.OnChildrenAdded(chunkList as IReadOnlyList<Chunk> ?? [.. chunkList]);
     }
 
     public void RemoveRange(int index, int count)

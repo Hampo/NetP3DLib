@@ -154,7 +154,7 @@ public class ChunkFileCollection : Collection<Chunk>
             throw new OverflowException($"Adding chunks with total size {addedSize} would overflow owner size {_owner.Size}.");
 
         int startIndex = Count;
-        ((List<Chunk>)Items).AddRange(items);
+        ((List<Chunk>)Items).AddRange(chunkList);
         _totalSize += addedSize;
 
         int i = startIndex;
@@ -165,7 +165,7 @@ public class ChunkFileCollection : Collection<Chunk>
             item.SizeChanged += OnChildSizeChanged;
         }
 
-        _owner.OnChunksAdded(items as IReadOnlyList<Chunk> ?? [.. items]);
+        _owner.OnChunksAdded(chunkList as IReadOnlyList<Chunk> ?? [.. chunkList]);
     }
 
     public void InsertRange(int index, IEnumerable<Chunk> items)
@@ -206,7 +206,7 @@ public class ChunkFileCollection : Collection<Chunk>
 
         UpdateChildIndices(index + chunkList.Count);
 
-        _owner.OnChunksAdded(items as IReadOnlyList<Chunk> ?? [.. items]);
+        _owner.OnChunksAdded(chunkList as IReadOnlyList<Chunk> ?? [.. chunkList]);
     }
 
     public void RemoveRange(int index, int count)
