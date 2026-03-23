@@ -402,6 +402,26 @@ public abstract class Chunk
         return chunk.ParentFile;
     }
 
+    public List<int>? GetChunkHierarchy()
+    {
+        if (ParentFile == null && ParentChunk == null)
+            return null;
+
+        var indices = new List<int>();
+        var current = this;
+        while (current != null && current.ParentChunk != null)
+        {
+            indices.Add(current.IndexInParent);
+            current = current.ParentChunk;
+        }
+
+        if (current?.ParentFile == null)
+            return null;
+        indices.Add(current.IndexInParent);
+
+        return indices;
+    }
+
     /// <summary>
     /// Writes the chunk's properties to <paramref name="bw"/>.
     /// <para>This should be overwritten for known chunks.</para>
