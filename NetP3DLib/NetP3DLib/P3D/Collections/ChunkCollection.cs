@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace NetP3DLib.P3D.Collections;
 public class ChunkCollection : Collection<Chunk>
@@ -173,6 +174,8 @@ public class ChunkCollection : Collection<Chunk>
             throw new ArgumentNullException(nameof(items), $"{nameof(items)} cannot be null.");
 
         var chunkList = items as ICollection<Chunk> ?? [.. items];
+        if (chunkList.Count == 0)
+            return;
 
         uint addedSize = 0;
         foreach (var item in chunkList)
@@ -212,6 +215,8 @@ public class ChunkCollection : Collection<Chunk>
             throw new ArgumentNullException(nameof(items), $"{nameof(items)} cannot be null.");
 
         var chunkList = items as ICollection<Chunk> ?? [.. items];
+        if (chunkList.Count == 0)
+            return;
 
         var addedSize = 0u;
         foreach (var item in chunkList)

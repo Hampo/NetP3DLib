@@ -134,6 +134,8 @@ public class ChunkFileCollection : Collection<Chunk>
             throw new ArgumentNullException(nameof(items), $"{nameof(items)} cannot be null.");
 
         var chunkList = items as ICollection<Chunk> ?? [.. items];
+        if (chunkList.Count == 0)
+            return;
 
         uint addedSize = 0;
         foreach (var item in chunkList)
@@ -174,6 +176,8 @@ public class ChunkFileCollection : Collection<Chunk>
             throw new ArgumentNullException(nameof(items), $"{nameof(items)} cannot be null.");
 
         var chunkList = items as ICollection<Chunk> ?? [.. items];
+        if (chunkList.Count == 0)
+            return;
 
         var addedSize = 0u;
         foreach (var item in chunkList)
