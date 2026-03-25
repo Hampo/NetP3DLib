@@ -123,6 +123,8 @@ public enum ChunkIdentifier : uint
     Lens_Flare_Group = 0x16006,
     Light = 0x13000,
     Light_Cone_Param = 0x13003,
+    Light_Decay_Range = 0x13006,
+    Light_Decay_Range_Rotation_Y = 0x13007,
     Light_Direction = 0x13001,
     Light_Group = 0x2380,
     Light_Illumination_Type = 0x13008,

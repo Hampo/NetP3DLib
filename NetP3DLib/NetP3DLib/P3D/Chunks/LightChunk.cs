@@ -16,8 +16,10 @@ public class LightChunk : NamedChunk
 
     public enum Types : uint
     {
-        Ambient = 0,
-        Directional = 2,
+        Ambient,
+        Point,
+        Directional,
+        Spotlight,
     }
 
     private uint _version;
