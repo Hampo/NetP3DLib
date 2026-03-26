@@ -336,24 +336,50 @@ public abstract class Chunk
             throw new ArgumentException($"{chunkType.Name} must inherit from {nameof(NamedChunk)}", nameof(chunkType));
 
         if (ParentFile != null)
-            return ParentFile.GetFirstChunkOfType(chunkType, name);
+        {
+            var chunk = ParentFile.GetFirstChunkOfType(chunkType, name);
+            if (chunk != null && chunk.IndexInParent < IndexInParent)
+                return chunk;
+
+            var sets = ParentFile.GetChunksOfType<SetChunk>(name);
+            foreach (var set in sets)
+            {
+                if (set.IndexInParent > IndexInParent)
+                    break;
+
+                if (set.GetSetType() == chunkType)
+                    return (NamedChunk)set.Children[0];
+            }
+
+            return null;
+        }
 
         var current = ParentChunk;
+        var currentIndex = IndexInParent;
         while (current != null)
         {
-            var found = current.GetFirstChunkOfType(chunkType, name) ?? current.ParentFile?.GetFirstChunkOfType(chunkType, name);
+            var chunk = current.GetFirstChunkOfType(chunkType, name);
+            if (chunk != null && chunk.IndexInParent < currentIndex)
+                return chunk;
 
-            if (found != null)
-                return found;
+            chunk = current.ParentFile?.GetFirstChunkOfType(chunkType, name);
+            if (chunk != null && chunk.IndexInParent < current.IndexInParent)
+                return chunk;
 
             if (current.ParentFile != null)
             {
                 var sets = current.ParentFile.GetChunksOfType<SetChunk>(name);
                 foreach (var set in sets)
+                {
+                    if (set.IndexInParent > current.IndexInParent)
+                        break;
+
                     if (set.GetSetType() == chunkType)
                         return (NamedChunk)set.Children[0];
+                }
             }
 
+            currentIndex = current.IndexInParent;
             current = current.ParentChunk;
         }
 
@@ -362,25 +388,53 @@ public abstract class Chunk
 
     public T? FindNamedChunkInParentHierarchy<T>(string name) where T : NamedChunk
     {
+        var chunkType = typeof(T);
+
         if (ParentFile != null)
-            return ParentFile.GetFirstChunkOfType<T>(name);
+        {
+            var chunk = ParentFile.GetFirstChunkOfType<T>(name);
+            if (chunk != null && chunk.IndexInParent < IndexInParent)
+                return chunk;
+
+            var sets = ParentFile.GetChunksOfType<SetChunk>(name);
+            foreach (var set in sets)
+            {
+                if (set.IndexInParent > IndexInParent)
+                    break;
+
+                if (set.GetSetType() == chunkType)
+                    return (T)set.Children[0];
+            }
+
+            return null;
+        }
 
         var current = ParentChunk;
+        var currentIndex = IndexInParent;
         while (current != null)
         {
-            var found = current.GetFirstChunkOfType<T>(name) ?? current.ParentFile?.GetFirstChunkOfType<T>(name);
+            var chunk = current.GetFirstChunkOfType<T>(name);
+            if (chunk != null && chunk.IndexInParent < currentIndex)
+                return chunk;
 
-            if (found != null)
-                return found;
+            chunk = current.ParentFile?.GetFirstChunkOfType<T>(name);
+            if (chunk != null && chunk.IndexInParent < current.IndexInParent)
+                return chunk;
 
             if (current.ParentFile != null)
             {
                 var sets = current.ParentFile.GetChunksOfType<SetChunk>(name);
                 foreach (var set in sets)
-                    if (set.GetSetType() == typeof(T))
+                {
+                    if (set.IndexInParent > current.IndexInParent)
+                        break;
+
+                    if (set.GetSetType() == chunkType)
                         return (T)set.Children[0];
+                }
             }
 
+            currentIndex = current.IndexInParent;
             current = current.ParentChunk;
         }
 
