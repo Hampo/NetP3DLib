@@ -335,16 +335,18 @@ public abstract class Chunk
         if (!typeof(NamedChunk).IsAssignableFrom(chunkType))
             throw new ArgumentException($"{chunkType.Name} must inherit from {nameof(NamedChunk)}", nameof(chunkType));
 
-        if (ParentFile != null)
+        var currentParentFile = ParentFile;
+        var currentIndex = IndexInParent;
+        if (currentParentFile != null)
         {
-            var chunk = ParentFile.GetFirstChunkOfType(chunkType, name);
-            if (chunk != null && chunk.IndexInParent < IndexInParent)
+            var chunk = currentParentFile.GetFirstChunkOfType(chunkType, name);
+            if (chunk != null && chunk.IndexInParent < currentIndex)
                 return chunk;
 
-            var sets = ParentFile.GetChunksOfType<SetChunk>(name);
+            var sets = currentParentFile.GetChunksOfType<SetChunk>(name);
             foreach (var set in sets)
             {
-                if (set.IndexInParent > IndexInParent)
+                if (set.IndexInParent > currentIndex)
                     break;
 
                 if (set.GetSetType() == chunkType)
@@ -355,31 +357,34 @@ public abstract class Chunk
         }
 
         var current = ParentChunk;
-        var currentIndex = IndexInParent;
         while (current != null)
         {
             var chunk = current.GetFirstChunkOfType(chunkType, name);
             if (chunk != null && chunk.IndexInParent < currentIndex)
                 return chunk;
 
-            chunk = current.ParentFile?.GetFirstChunkOfType(chunkType, name);
-            if (chunk != null && chunk.IndexInParent < current.IndexInParent)
-                return chunk;
+            currentParentFile = current.ParentFile;
+            currentIndex = current.IndexInParent;
 
-            if (current.ParentFile != null)
+            if (currentParentFile != null)
             {
-                var sets = current.ParentFile.GetChunksOfType<SetChunk>(name);
+                chunk = currentParentFile.GetFirstChunkOfType(chunkType, name);
+                if (chunk != null && chunk.IndexInParent < currentIndex)
+                    return chunk;
+
+                var sets = currentParentFile.GetChunksOfType<SetChunk>(name);
                 foreach (var set in sets)
                 {
-                    if (set.IndexInParent > current.IndexInParent)
+                    if (set.IndexInParent > currentIndex)
                         break;
 
                     if (set.GetSetType() == chunkType)
                         return (NamedChunk)set.Children[0];
                 }
+
+                return null;
             }
 
-            currentIndex = current.IndexInParent;
             current = current.ParentChunk;
         }
 
@@ -390,16 +395,18 @@ public abstract class Chunk
     {
         var chunkType = typeof(T);
 
-        if (ParentFile != null)
+        var currentParentFile = ParentFile;
+        var currentIndex = IndexInParent;
+        if (currentParentFile != null)
         {
-            var chunk = ParentFile.GetFirstChunkOfType<T>(name);
-            if (chunk != null && chunk.IndexInParent < IndexInParent)
+            var chunk = currentParentFile.GetFirstChunkOfType<T>(name);
+            if (chunk != null && chunk.IndexInParent < currentIndex)
                 return chunk;
 
-            var sets = ParentFile.GetChunksOfType<SetChunk>(name);
+            var sets = currentParentFile.GetChunksOfType<SetChunk>(name);
             foreach (var set in sets)
             {
-                if (set.IndexInParent > IndexInParent)
+                if (set.IndexInParent > currentIndex)
                     break;
 
                 if (set.GetSetType() == chunkType)
@@ -410,31 +417,34 @@ public abstract class Chunk
         }
 
         var current = ParentChunk;
-        var currentIndex = IndexInParent;
         while (current != null)
         {
             var chunk = current.GetFirstChunkOfType<T>(name);
             if (chunk != null && chunk.IndexInParent < currentIndex)
                 return chunk;
 
-            chunk = current.ParentFile?.GetFirstChunkOfType<T>(name);
-            if (chunk != null && chunk.IndexInParent < current.IndexInParent)
-                return chunk;
+            currentParentFile = current.ParentFile;
+            currentIndex = current.IndexInParent;
 
-            if (current.ParentFile != null)
+            if (currentParentFile != null)
             {
-                var sets = current.ParentFile.GetChunksOfType<SetChunk>(name);
+                chunk = currentParentFile.GetFirstChunkOfType<T>(name);
+                if (chunk != null && chunk.IndexInParent < currentIndex)
+                    return chunk;
+
+                var sets = currentParentFile.GetChunksOfType<SetChunk>(name);
                 foreach (var set in sets)
                 {
-                    if (set.IndexInParent > current.IndexInParent)
+                    if (set.IndexInParent > currentIndex)
                         break;
 
                     if (set.GetSetType() == chunkType)
                         return (T)set.Children[0];
                 }
+
+                return null;
             }
 
-            currentIndex = current.IndexInParent;
             current = current.ParentChunk;
         }
 
