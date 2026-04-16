@@ -1,6 +1,7 @@
 using NetP3DLib.IO;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
+using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,10 @@ public class IntersectionChunk : NamedChunk
     public enum TrafficBehaviours : uint
     {
         NoStop,
-        NWay
+        NWay,
+        FourWay,
+        NoStopN,
+        NWayN,
     }
 
     private Vector3 _position;
@@ -87,6 +91,15 @@ public class IntersectionChunk : NamedChunk
         _position = position;
         _radius = radius;
         _trafficBehaviour = trafficBehaviour;
+    }
+
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
+    {
+        foreach (var error in base.ValidateChunk())
+            yield return error;
+
+        if (TrafficBehaviour != TrafficBehaviours.NoStop && TrafficBehaviour != TrafficBehaviours.NWay)
+            yield return new InvalidP3DException(this, $"The Simpsons: Hit & Run only support NoStop and NWay. {TrafficBehaviour} will default to NoStop.");
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
