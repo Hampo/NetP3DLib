@@ -99,7 +99,7 @@ public class IntersectionChunk : NamedChunk
             yield return error;
 
         if (TrafficBehaviour != TrafficBehaviours.NoStop && TrafficBehaviour != TrafficBehaviours.NWay)
-            yield return new InvalidP3DException(this, $"The Simpsons: Hit & Run only support NoStop and NWay. {TrafficBehaviour} will default to NoStop.");
+            yield return new InvalidP3DException(this, $"The Simpsons: Hit & Run only supports {TrafficBehaviours.NoStop} and {TrafficBehaviours.NWay}. {TrafficBehaviour} will default to {TrafficBehaviours.NoStop}.");
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
