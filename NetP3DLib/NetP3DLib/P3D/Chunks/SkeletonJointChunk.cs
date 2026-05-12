@@ -1,6 +1,8 @@
 using NetP3DLib.IO;
+using NetP3DLib.Numerics;
 using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
+using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
@@ -145,6 +147,15 @@ public class SkeletonJointChunk : NamedChunk
         _secondaryAxis = secondaryAxis;
         _twistAxis = twistAxis;
         _restPose = restPose;
+    }
+
+    public override IEnumerable<InvalidP3DException> ValidateChunk()
+    {
+        foreach (var error in base.ValidateChunk())
+            yield return error;
+
+        if (!(MathUtil.IsZero(_restPose.M14) && MathUtil.IsZero(_restPose.M24) && MathUtil.IsZero(_restPose.M34) && MathUtil.IsOne(_restPose.M44)))
+            yield return new InvalidP3DException(this, "Invalid rest pose: only affine transformation matrices are supported (last column must be 0, 0, 0, 1).");
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
