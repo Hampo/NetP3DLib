@@ -4,6 +4,7 @@ using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Numerics;
 using System.Text;
 
@@ -356,9 +357,28 @@ public class LocatorChunk : NamedChunk
                 OnPropertyChanged(nameof(Event));
             }
         }
-    
-        private uint? _parameter = null;
-        public uint? Parameter
+
+        private bool _hasParameter = false;
+        public bool HasParameter
+        {
+            get => _hasParameter;
+            set
+            {
+                if (_hasParameter == value)
+                    return;
+
+                _hasParameter = value;
+
+                if (value)
+                    OnSizeChanged(sizeof(uint));
+                else
+                    OnSizeChanged(-sizeof(uint));
+
+                OnPropertyChanged(nameof(HasParameter));
+            }
+        }
+        private uint _parameter = 0;
+        public uint Parameter
         {
             get => _parameter;
             set
@@ -366,23 +386,13 @@ public class LocatorChunk : NamedChunk
                 if (_parameter == value)
                     return;
 
-                var oldHasValue = _parameter.HasValue;
                 _parameter = value;
-                var newHasValue = _parameter.HasValue;
-
-                if (oldHasValue != newHasValue)
-                {
-                    if (oldHasValue)
-                        OnSizeChanged(-sizeof(uint));
-                    else
-                        OnSizeChanged(sizeof(uint));
-                }
 
                 OnPropertyChanged(nameof(Parameter));
             }
         }
 
-        public override uint DataLen => Parameter.HasValue ? 2u : 1u;
+        public override uint DataLen => HasParameter ? 2u : 1u;
         public override List<uint> DataArray
         {
             get
@@ -391,8 +401,8 @@ public class LocatorChunk : NamedChunk
                 [
                     (uint)Event,
                 ];
-                if (Parameter.HasValue)
-                    data.Add(Parameter.Value);
+                if (HasParameter)
+                    data.Add(Parameter);
 
                 return [.. data];
             }
@@ -402,24 +412,27 @@ public class LocatorChunk : NamedChunk
         {
             _event = (Events)data[0];
             if (data.Count > 1)
-                Parameter = data[1];
+            {
+                _hasParameter = true;
+                _parameter = data[1];
+            }
         }
 
         public EventLocatorData(Events @event) : base(LocatorTypes.Event)
         {
             _event = @event;
-            Parameter = null;
         }
 
         public EventLocatorData(Events @event, uint parameter) : base(LocatorTypes.Event)
         {
             _event = @event;
-            Parameter = parameter;
+            _hasParameter = true;
+            _parameter = parameter;
         }
 
-        internal override LocatorData Clone() => Parameter.HasValue ? new EventLocatorData(Event, Parameter.Value) : new EventLocatorData(Event);
+        internal override LocatorData Clone() => HasParameter ? new EventLocatorData(Event, Parameter) : new EventLocatorData(Event);
 
-        public override string ToString() => $"_event = {Event}, Parameter = {Parameter?.ToString() ?? "null"}";
+        public override string ToString() => $"_event = {Event}, Parameter = {(HasParameter ? Parameter.ToString() : "null")}";
     }
 
     /// <summary>
@@ -496,33 +509,68 @@ public class LocatorChunk : NamedChunk
                 OnPropertyChanged(nameof(Rotation));
             }
         }
-    
-        private uint? _parkedCar = null;
+
+        private bool _hasParkedCar = false;
+        public bool HasParkedCar
+        {
+            get => _hasParkedCar;
+            set
+            {
+                if (_hasParkedCar == value)
+                    return;
+
+                _hasParkedCar = value;
+
+                if (value)
+                {
+                    OnSizeChanged(sizeof(uint));
+                }
+                else
+                {
+                    OnSizeChanged(-sizeof(uint));
+                    HasFreeCar = false;
+                }
+
+                OnPropertyChanged(nameof(HasParkedCar));
+            }
+        }
+        private uint _parkedCar = 0;
         public bool ParkedCar
         {
-            get => _parkedCar.HasValue && _parkedCar == 1;
+            get => _parkedCar == 1;
             set
             {
                 if (ParkedCar == value)
                     return;
 
-                var oldHasValue = _parkedCar.HasValue;
                 _parkedCar = value ? 1u : 0u;
-                var newHasValue = _parkedCar.HasValue;
-
-                if (oldHasValue != newHasValue)
-                {
-                    if (oldHasValue)
-                        OnSizeChanged(-sizeof(uint));
-                    else
-                        OnSizeChanged(sizeof(uint));
-                }
 
                 OnPropertyChanged(nameof(ParkedCar));
             }
         }
-        private string? _freeCar = null;
-        public string? FreeCar
+
+        private bool _hasFreeCar = false;
+        public bool HasFreeCar
+        {
+            get => _hasFreeCar;
+            set
+            {
+                if (_hasFreeCar == value)
+                    return;
+
+                var oldSize = DataArray.Count;
+                _hasFreeCar = value;
+                var newSize = DataArray.Count;
+                OnSizeChanged((newSize - oldSize) * sizeof(uint));
+
+                if (value)
+                    HasParkedCar = true;
+
+                OnPropertyChanged(nameof(HasFreeCar));
+            }
+        }
+        private string _freeCar = string.Empty;
+        public string FreeCar
         {
             get => _freeCar;
             set
@@ -530,21 +578,18 @@ public class LocatorChunk : NamedChunk
                 if (_freeCar == value)
                     return;
 
-                var oldSize = DataArray.Count;
 
                 if (string.IsNullOrEmpty(value))
                 {
-                    _freeCar = null;
-                }
-                else
-                {
-                    if (!_parkedCar.HasValue)
-                        _parkedCar = 0u;
-                    _freeCar = value;
+                    HasFreeCar = false;
+                    return;
                 }
 
+                var oldSize = DataArray.Count;
+                _freeCar = value;
                 var newSize = DataArray.Count;
                 OnSizeChanged((newSize - oldSize) * sizeof(uint));
+
                 OnPropertyChanged(nameof(FreeCar));
             }
         }
@@ -557,10 +602,10 @@ public class LocatorChunk : NamedChunk
                 [
                     CreateFloatData(Rotation),
                 ];
-                if (_parkedCar.HasValue)
+                if (HasParkedCar)
                 {
-                    data.Add(_parkedCar.Value);
-                    if (FreeCar != null)
+                    data.Add(_parkedCar);
+                    if (HasFreeCar && !string.IsNullOrWhiteSpace(FreeCar))
                         data.AddRange(CreateStringData(FreeCar));
                 }
 
@@ -571,8 +616,16 @@ public class LocatorChunk : NamedChunk
         public CarStartLocatorData(IList<uint> data) : base(LocatorTypes.CarStart)
         {
             _rotation = ParseDataFloat(data[0]);
-            _parkedCar = data.Count > 1 ? data[1] : null;
-            _freeCar = data.Count > 2 ? ParseDataString(data, 2).String : null;
+            if (data.Count > 1)
+            {
+                _hasParkedCar = true;
+                _parkedCar = data[1];
+                if (data.Count > 2)
+                {
+                    _hasFreeCar = true;
+                    _freeCar = ParseDataString(data, 2).String;
+                }
+            }
         }
 
         public CarStartLocatorData(float rotation) : this(rotation, null, null)
@@ -590,13 +643,22 @@ public class LocatorChunk : NamedChunk
         public CarStartLocatorData(float rotation, uint? parkedCar, string? freeCar) : base(LocatorTypes.CarStart)
         {
             _rotation = rotation;
-            _parkedCar = parkedCar;
-            _freeCar = freeCar;
+            if (parkedCar.HasValue)
+            {
+                _hasParkedCar = true;
+                _parkedCar = parkedCar.Value;
+            }
+            if (!string.IsNullOrWhiteSpace(freeCar))
+            {
+                _hasParkedCar = true;
+                _hasFreeCar = true;
+                _freeCar = freeCar!;
+            }
         }
 
-        internal override LocatorData Clone() => _parkedCar.HasValue ? new CarStartLocatorData(Rotation, _parkedCar.Value, _freeCar) : new CarStartLocatorData(Rotation);
+        internal override LocatorData Clone() => new CarStartLocatorData(Rotation, HasParkedCar ? _parkedCar : null, HasFreeCar ? _freeCar : null);
 
-        public override string ToString() => $"Rotation = {Rotation}, ParkedCar = {(_parkedCar.HasValue ? ParkedCar.ToString() : "null")}, FreeCar = {FreeCar ?? "null"}";
+        public override string ToString() => $"Rotation = {Rotation}, ParkedCar = {(HasParkedCar ? ParkedCar.ToString() : "null")}, FreeCar = {(HasFreeCar ? FreeCar : "null")}";
     }
 
     /// <summary>
@@ -660,8 +722,27 @@ public class LocatorChunk : NamedChunk
     /// </summary>
     public class OcclusionLocatorData : LocatorData
     {
-        private uint? _occlusions = null;
-        public uint? Occlusions
+        private bool _hasOcclusions = false;
+        public bool HasOcclusions
+        {
+            get => _hasOcclusions;
+            set
+            {
+                if (_hasOcclusions == value)
+                    return;
+
+                _hasOcclusions = value;
+
+                if (value)
+                    OnSizeChanged(sizeof(uint));
+                else
+                    OnSizeChanged(-sizeof(uint));
+
+                OnPropertyChanged(nameof(HasOcclusions));
+            }
+        }
+        private uint _occlusions = 0;
+        public uint Occlusions
         {
             get => _occlusions;
             set
@@ -669,28 +750,22 @@ public class LocatorChunk : NamedChunk
                 if (_occlusions == value)
                     return;
 
-                var oldHasValue = _occlusions.HasValue;
                 _occlusions = value;
-                var newHasValue = _occlusions.HasValue;
-
-                if (oldHasValue != newHasValue)
-                {
-                    if (oldHasValue)
-                        OnSizeChanged(-sizeof(uint));
-                    else
-                        OnSizeChanged(sizeof(uint));
-                }
 
                 OnPropertyChanged(nameof(Occlusions));
             }
         }
 
-        public override uint DataLen => Occlusions.HasValue ? 1u : 0u;
-        public override List<uint> DataArray => Occlusions.HasValue ? [Occlusions.Value] : [];
+        public override uint DataLen => HasOcclusions ? 1u : 0u;
+        public override List<uint> DataArray => HasOcclusions ? [Occlusions] : [];
 
         public OcclusionLocatorData(IList<uint> data) : base(LocatorTypes.Occlusion)
         {
-            Occlusions = data.Count > 0 ? data[0] : null;
+            if (data.Count > 0)
+            {
+                _hasOcclusions = true;
+                _occlusions = data[0];
+            }
         }
 
         public OcclusionLocatorData() : base(LocatorTypes.Occlusion)
@@ -698,12 +773,13 @@ public class LocatorChunk : NamedChunk
 
         public OcclusionLocatorData(uint occlusions) : base(LocatorTypes.Occlusion)
         {
-            Occlusions = occlusions;
+            _hasOcclusions = true;
+            _occlusions = occlusions;
         }
 
-        internal override LocatorData Clone() => Occlusions.HasValue ? new OcclusionLocatorData(Occlusions.Value) : new OcclusionLocatorData();
+        internal override LocatorData Clone() => HasOcclusions ? new OcclusionLocatorData(Occlusions) : new OcclusionLocatorData();
 
-        public override string ToString() => $"Occlusions = {Occlusions?.ToString() ?? "null"}";
+        public override string ToString() => $"Occlusions = {(HasOcclusions ? Occlusions.ToString() : "null")}";
     }
 
     /// <summary>
@@ -794,7 +870,7 @@ public class LocatorChunk : NamedChunk
         public InteriorEntranceLocatorData(IList<uint> data) : base(LocatorTypes.InteriorEntrance)
         {
             var interiorName = ParseDataString(data);
-            InteriorName = interiorName.String;
+            _interiorName = interiorName.String;
             var index = interiorName.Index;
             _right = new(ParseDataFloat(data[index++]), ParseDataFloat(data[index++]), ParseDataFloat(data[index++]));
             _up = new(ParseDataFloat(data[index++]), ParseDataFloat(data[index++]), ParseDataFloat(data[index++]));
@@ -803,7 +879,7 @@ public class LocatorChunk : NamedChunk
 
         public InteriorEntranceLocatorData(string interiorName, Vector3 right, Vector3 up, Vector3 front) : base(LocatorTypes.InteriorEntrance)
         {
-            InteriorName = interiorName;
+            _interiorName = interiorName;
             _right = right;
             _up = up;
             _front = front;
@@ -861,7 +937,6 @@ public class LocatorChunk : NamedChunk
             }
         }
     
-
         public override uint DataLen => 9;
         public override List<uint> DataArray =>
         [
@@ -1181,16 +1256,42 @@ public class LocatorChunk : NamedChunk
         {
             get => _followPlayer == 1u;
             set
-        {
-            if (FollowPlayer == value)
-                return;
+            {
+                if (FollowPlayer == value)
+                    return;
 
-            _followPlayer = value ? 1u : 0u;
-            OnPropertyChanged(nameof(FollowPlayer));
+                _followPlayer = value ? 1u : 0u;
+                OnPropertyChanged(nameof(FollowPlayer));
+            }
         }
+
+        private bool _hasTransitionTargetRate = false;
+        public bool HasTransitionTargetRate
+        {
+            get => _hasTransitionTargetRate;
+            set
+            {
+                if (_hasTransitionTargetRate == value)
+                    return;
+
+                _hasTransitionTargetRate = value;
+
+                if (value)
+                {
+                    OnSizeChanged(sizeof(float));
+                }
+                else
+                {
+                    OnSizeChanged(-sizeof(float));
+                    HasFlags = false;
+                    HasFlags2 = false;
+                }
+
+                OnPropertyChanged(nameof(HasTransitionTargetRate));
+            }
         }
-        private float? _transitionTargetRate = null;
-        public float? TransitionTargetRate
+        private float _transitionTargetRate = 0.04f;
+        public float TransitionTargetRate
         {
             get => _transitionTargetRate;
             set
@@ -1198,206 +1299,139 @@ public class LocatorChunk : NamedChunk
                 if (_transitionTargetRate == value)
                     return;
 
-                var oldHasValue = _transitionTargetRate.HasValue;
                 _transitionTargetRate = value;
-                var newHasValue = _transitionTargetRate.HasValue;
-
-                if (oldHasValue != newHasValue)
-                {
-                    if (oldHasValue)
-                        OnSizeChanged(-sizeof(float));
-                    else
-                        OnSizeChanged(sizeof(float));
-
-                }
                 
                 OnPropertyChanged(nameof(TransitionTargetRate));
             }
         }
-        private uint? _flags = null;
-        public bool? OneShot
-        {
-            get
-            {
-                if (_flags == null)
-                    return null;
 
-                return (_flags & 1u) == 1u;
-            }
+        private bool _hasFlags = false;
+        public bool HasFlags
+        {
+            get => _hasFlags;
             set
             {
-                bool value2 = value ?? false;
-                uint current = _flags ?? 0;
-
-                bool isSet = (current & 1u) != 0;
-                if (isSet == value2)
+                if (_hasFlags == value)
                     return;
 
-                if (value2)
-                    current |= 1u;
-                else
-                    current &= ~1u;
+                _hasFlags = value;
 
-                var oldHasValue = _flags.HasValue;
-                _flags = current;
-                var newHasValue = _flags.HasValue;
-
-                if (oldHasValue != newHasValue)
+                if (value)
                 {
-                    if (oldHasValue)
-                        OnSizeChanged(-sizeof(uint));
-                    else
-                        OnSizeChanged(sizeof(uint));
+                    OnSizeChanged(sizeof(uint));
+                    HasTransitionTargetRate = true;
                 }
+                else
+                {
+                    OnSizeChanged(-sizeof(uint));
+                    HasFlags2 = false;
+                }
+
+                OnPropertyChanged(nameof(HasFlags));
+            }
+        }
+        private uint _flags = 0;
+        public bool OneShot
+        {
+            get => (_flags & 1u) != 0u;
+            set
+            {
+                if (OneShot == value)
+                    return;
+
+                if (value)
+                    _flags |= 1u;
+                else
+                    _flags &= ~1u;
 
                 OnPropertyChanged(nameof(OneShot));
             }
         }
-        public bool? DisableFOV
+        public bool DisableFOV
         {
-            get
-            {
-                if (_flags == null)
-                    return null;
-
-                return (_flags & (1u << 1)) == (1u << 1);
-            }
+            get => (_flags & (1u << 1)) != 0;
             set
             {
-                bool value2 = value ?? false;
-                uint current = _flags ?? 0;
-
-                bool isSet = (current & (1u << 1)) != 0;
-                if (isSet == value2)
+                if (DisableFOV == value)
                     return;
 
-                if (value2)
-                    current |= (1u << 1);
+                if (value)
+                    _flags |= (1u << 1);
                 else
-                    current &= ~(1u << 1);
-
-                var oldHasValue = _flags.HasValue;
-                _flags = current;
-                var newHasValue = _flags.HasValue;
-
-                if (oldHasValue != newHasValue)
-                {
-                    if (oldHasValue)
-                        OnSizeChanged(-sizeof(uint));
-                    else
-                        OnSizeChanged(sizeof(uint));
-                }
+                    _flags &= ~(1u << 1);
 
                 OnPropertyChanged(nameof(DisableFOV));
             }
         }
-        private uint? _cutInOut = null;
-        public bool? CutInOut
+
+        private bool _hasFlags2 = false;
+        public bool HasFlags2
+        {
+            get => _hasFlags2;
+            set
+            {
+                if (_hasFlags2 == value)
+                    return;
+
+                _hasFlags2 = value;
+
+                if (value)
+                {
+                    OnSizeChanged(sizeof(uint) * 2);
+                    HasTransitionTargetRate = true;
+                    HasFlags = true;
+                }
+                else
+                {
+                    OnSizeChanged(-sizeof(uint) * 2);
+                }
+
+                OnPropertyChanged(nameof(HasFlags2));
+            }
+        }
+        private uint _cutInOut = 0u;
+        public bool CutInOut
         {
             get => _cutInOut == 1u;
             set
             {
-                if (value == null)
-                {
-                    if (_cutInOut != null)
-                    {
-                        _cutInOut = null;
-                        OnSizeChanged(-sizeof(uint));
-                    }
-                    return;
-                }
-
                 if (CutInOut == value)
                     return;
 
-                var oldHasValue = _cutInOut.HasValue;
-                _cutInOut = value.Value ? 1u : 0u;
-                var newHasValue = _cutInOut.HasValue;
-
-                if (oldHasValue != newHasValue)
-                {
-                    if (oldHasValue)
-                        OnSizeChanged(-sizeof(uint));
-                    else
-                        OnSizeChanged(sizeof(uint));
-                }
+                _cutInOut = value ? 1u : 0u;
 
                 OnPropertyChanged(nameof(CutInOut));
             }
         }
-        private uint? _flags2 = null;
-        public bool? CarOnly
+        private uint _flags2 = 0;
+        public bool CarOnly
         {
-            get
-            {
-                if (_flags2 == null)
-                    return null;
-
-                return (_flags2 & 1u) == 1u;
-            }
+            get => (_flags2 & 1u) == 1u;
             set
             {
-                bool value2 = value ?? false;
-                uint current = _flags2 ?? 0;
-
-                bool isSet = (current & 1u) == 1u;
-                if (isSet == value2)
+                if (CarOnly == value)
                     return;
 
-                if (value2)
-                    current |= 1u;
+                if (value)
+                    _flags2 |= 1u;
                 else
-                    current &= ~1u;
-
-                var oldHasValue = _flags2.HasValue;
-                _flags2 = current;
-                var newHasValue = _flags2.HasValue;
-
-                if (oldHasValue != newHasValue)
-                {
-                    if (oldHasValue)
-                        OnSizeChanged(-sizeof(uint));
-                    else
-                        OnSizeChanged(sizeof(uint));
-                }
+                    _flags2 &= ~1u;
 
                 OnPropertyChanged(nameof(CarOnly));
             }
         }
-        public bool? OnFootOnly
+        public bool OnFootOnly
         {
-            get
-            {
-                if (_flags2 == null)
-                    return null;
-
-                return (_flags2 & (1u << 1)) == (1u << 1);
-            }
+            get => (_flags2 & (1u << 1)) == (1u << 1);
             set
             {
-                bool value2 = value ?? false;
-                uint current = _flags2 ?? 0;
-
-                bool isSet = (current & (1u << 1)) == (1u << 1);
-                if (isSet == value2)
+                if (OnFootOnly == value)
                     return;
 
-                if (value2)
-                    current |= (1u << 1);
+                if (value)
+                    _flags2 |= (1u << 1);
                 else
-                    current &= ~(1u << 1);
-
-                var oldHasValue = _flags2.HasValue;
-                _flags2 = current;
-                var newHasValue = _flags2.HasValue;
-
-                if (oldHasValue != newHasValue)
-                {
-                    if (oldHasValue)
-                        OnSizeChanged(-sizeof(uint));
-                    else
-                        OnSizeChanged(sizeof(uint));
-                }
+                    _flags2 &= ~(1u << 1);
 
                 OnPropertyChanged(nameof(OnFootOnly));
             }
@@ -1416,18 +1450,18 @@ public class LocatorChunk : NamedChunk
                 data.Add(CreateFloatData(TargetLag));
                 data.Add(_followPlayer);
 
-                if (!TransitionTargetRate.HasValue)
+                if (!HasTransitionTargetRate)
                     return [.. data];
-                data.Add(CreateFloatData(TransitionTargetRate.Value));
+                data.Add(CreateFloatData(TransitionTargetRate));
 
-                if (!_flags.HasValue)
+                if (!HasFlags)
                     return [.. data];
-                data.Add(_flags.Value);
+                data.Add(_flags);
 
-                if (!_cutInOut.HasValue || !_flags2.HasValue)
+                if (!HasFlags2)
                     return [.. data];
-                data.Add(_cutInOut.Value);
-                data.Add(_flags2.Value);
+                data.Add(_cutInOut);
+                data.Add(_flags2);
 
                 return [.. data];
             }
@@ -1435,83 +1469,95 @@ public class LocatorChunk : NamedChunk
 
         public StaticCameraLocatorData(IList<uint> data) : base(LocatorTypes.StaticCamera)
         {
-            TargetPosition = new(ParseDataFloat(data[0]), ParseDataFloat(data[1]), ParseDataFloat(data[2]));
+            _targetPosition = new(ParseDataFloat(data[0]), ParseDataFloat(data[1]), ParseDataFloat(data[2]));
             _fov = ParseDataFloat(data[3]);
             _targetLag = ParseDataFloat(data[4]);
             _followPlayer = data[5];
-            TransitionTargetRate = data.Count > 6 ? ParseDataFloat(data[6]) : null;
-            _flags = data.Count > 7 ? data[7] : null;
-            _cutInOut = data.Count > 8 ? data[8] : null;
-            _flags2 = data.Count > 9 ? data[9] : null;
+            if (data.Count <= 6)
+                return;
+
+            _hasTransitionTargetRate = true;
+            _transitionTargetRate = ParseDataFloat(data[6]);
+            if (data.Count <= 7)
+                return;
+
+            _hasFlags = true;
+            _flags = data[7];
+            if (data.Count <= 8)
+                return;
+
+            _cutInOut = data[8];
+            if (data.Count <= 9)
+                return;
+
+            _hasFlags2 = true;
+            _flags2 = data[9];
         }
 
         public StaticCameraLocatorData(Vector3 targetPosition, float fov, float targetLag, uint followPlayer) : base(LocatorTypes.StaticCamera)
         {
-            TargetPosition = targetPosition;
+            _targetPosition = targetPosition;
             _fov = fov;
             _targetLag = targetLag;
             _followPlayer = followPlayer;
-            TransitionTargetRate = null;
-            _flags = null;
-            _cutInOut = null;
-            _flags2 = null;
         }
 
-        public StaticCameraLocatorData(Vector3 targetPosition, float fov, float targetLag, uint followPlayer, float? transitionTargetRate) : base(LocatorTypes.StaticCamera)
+        public StaticCameraLocatorData(Vector3 targetPosition, float fov, float targetLag, uint followPlayer, float transitionTargetRate) : base(LocatorTypes.StaticCamera)
         {
-            TargetPosition = targetPosition;
+            _targetPosition = targetPosition;
             _fov = fov;
             _targetLag = targetLag;
             _followPlayer = followPlayer;
-            TransitionTargetRate = transitionTargetRate;
-            _flags = null;
-            _cutInOut = null;
-            _flags2 = null;
+            _hasTransitionTargetRate = true;
+            _transitionTargetRate = transitionTargetRate;
         }
 
-        public StaticCameraLocatorData(Vector3 targetPosition, float fov, float targetLag, uint followPlayer, float? transitionTargetRate, bool oneShot, bool disableFOV) : base(LocatorTypes.StaticCamera)
+        public StaticCameraLocatorData(Vector3 targetPosition, float fov, float targetLag, uint followPlayer, float transitionTargetRate, bool oneShot, bool disableFOV) : base(LocatorTypes.StaticCamera)
         {
-            TargetPosition = targetPosition;
+            _targetPosition = targetPosition;
             _fov = fov;
             _targetLag = targetLag;
             _followPlayer = followPlayer;
-            TransitionTargetRate = transitionTargetRate;
+            _hasTransitionTargetRate = true;
+            _transitionTargetRate = transitionTargetRate;
+            _hasFlags = true;
             OneShot = oneShot;
             DisableFOV = disableFOV;
-            _cutInOut = null;
-            _flags2 = null;
         }
 
-        public StaticCameraLocatorData(Vector3 targetPosition, float fov, float targetLag, uint followPlayer, float? transitionTargetRate, bool oneShot, bool disableFOV, bool cutInOut, bool carOnly, bool onFootOnly) : base(LocatorTypes.StaticCamera)
+        public StaticCameraLocatorData(Vector3 targetPosition, float fov, float targetLag, uint followPlayer, float transitionTargetRate, bool oneShot, bool disableFOV, bool cutInOut, bool carOnly, bool onFootOnly) : base(LocatorTypes.StaticCamera)
         {
-            TargetPosition = targetPosition;
+            _targetPosition = targetPosition;
             _fov = fov;
             _targetLag = targetLag;
             _followPlayer = followPlayer;
-            TransitionTargetRate = transitionTargetRate;
+            _hasTransitionTargetRate = true;
+            _transitionTargetRate = transitionTargetRate;
+            _hasFlags = true;
             OneShot = oneShot;
             DisableFOV = disableFOV;
+            _hasFlags2 = true;
             CutInOut = cutInOut;
             CarOnly = carOnly;
             OnFootOnly = onFootOnly;
         }
 
-        internal override LocatorData Clone() => (TransitionTargetRate.HasValue, _flags.HasValue, _cutInOut.HasValue, _flags2.HasValue) switch
+        internal override LocatorData Clone() => (HasTransitionTargetRate, HasFlags, HasFlags2) switch
         {
-            (true, true, true, true) =>
+            (true, true, true) =>
                 new StaticCameraLocatorData(TargetPosition, FOV, TargetLag, _followPlayer,
-                                        TransitionTargetRate!.Value!, OneShot!.Value!, DisableFOV!.Value!, CutInOut!.Value!, CarOnly!.Value!, OnFootOnly!.Value!),
-            (true, true, _, _) =>
+                                        TransitionTargetRate, OneShot, DisableFOV, CutInOut, CarOnly, OnFootOnly),
+            (true, true, _) =>
                 new StaticCameraLocatorData(TargetPosition, FOV, TargetLag, _followPlayer,
-                                        TransitionTargetRate!.Value, OneShot!.Value!, DisableFOV!.Value!),
-            (true, _, _, _) =>
+                                        TransitionTargetRate, OneShot, DisableFOV),
+            (true, _, _) =>
                 new StaticCameraLocatorData(TargetPosition, FOV, TargetLag, _followPlayer,
-                                        TransitionTargetRate!.Value),
+                                        TransitionTargetRate),
             _ =>
                 new StaticCameraLocatorData(TargetPosition, FOV, TargetLag, _followPlayer)
         };
 
-        public override string ToString() => $"TargetPosition = {TargetPosition}, _fOV = {FOV}, _targetLag = {TargetLag}, FollowPlayer = {_followPlayer}, TransitionTargetRate = {TransitionTargetRate?.ToString() ?? "null"}, OneShot = {OneShot}, DisableFOV = {DisableFOV}, CutInOut = {CutInOut}, CarOnly = {CarOnly}, OnFootOnly = {OnFootOnly}";
+        public override string ToString() => $"TargetPosition = {TargetPosition}, _fOV = {FOV}, _targetLag = {TargetLag}, FollowPlayer = {_followPlayer}, TransitionTargetRate = {(HasTransitionTargetRate ? TransitionTargetRate.ToString() : "null")}, OneShot = {OneShot}, DisableFOV = {DisableFOV}, CutInOut = {CutInOut}, CarOnly = {CarOnly}, OnFootOnly = {OnFootOnly}";
     }
 
     /// <summary>
