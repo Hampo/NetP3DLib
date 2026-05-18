@@ -4,7 +4,6 @@ using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Numerics;
 using System.Text;
 
