@@ -7,6 +7,7 @@ using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -148,6 +149,109 @@ public class ShaderChunk : NamedChunk
         _hasTranslucency = hasTranslucency;
         _vertexNeeds = vertexNeeds;
         _vertexMask = vertexMask;
+    }
+
+    /// <summary>
+    /// Sets the specified colour parameter to the specified value
+    /// </summary>
+    /// <param name="param">The FourCC param name to set</param>
+    /// <param name="value">The value to set to</param>
+    /// <returns><c>true</c> if the parameter was newly created</returns>
+    /// <exception cref="InvalidP3DFourCCException">Throws if <paramref name="param"/> is invalid</exception>
+    public bool SetColourParameter(string param, Color value)
+    {
+        if (!param.IsValidFourCC())
+            throw new InvalidP3DFourCCException(null, nameof(param), $"Must use a valid FourCC for {nameof(param)}.");
+
+        var paramChunk = GetFirstParamOfType<ShaderColourParameterChunk>(param);
+        if (paramChunk == null)
+        {
+            Children.Add(new ShaderColourParameterChunk(param, value));
+            return true;
+        }
+        
+        paramChunk.Value = value;
+        return false;
+    }
+
+    /// <summary>
+    /// Sets the specified float parameter to the specified value.
+    /// </summary>
+    /// <param name="param">The FourCC param name to set.</param>
+    /// <param name="value">The value to set to.</param>
+    /// <returns><c>true</c> if the parameter was newly created.</returns>
+    /// <exception cref="InvalidP3DFourCCException">Throws if <paramref name="param"/> is invalid.</exception>
+    public bool SetFloatParameter(string param, float value)
+    {
+        if (!param.IsValidFourCC())
+            throw new InvalidP3DFourCCException(null, nameof(param), $"Must use a valid FourCC for {nameof(param)}.");
+
+        var paramChunk = GetFirstParamOfType<ShaderFloatParameterChunk>(param);
+        if (paramChunk == null)
+        {
+            Children.Add(new ShaderFloatParameterChunk(param, value));
+            return true;
+        }
+
+        paramChunk.Value = value;
+        return false;
+    }
+
+    /// <summary>
+    /// Sets the specified integer parameter to the specified value.
+    /// </summary>
+    /// <param name="param">The FourCC param name to set.</param>
+    /// <param name="value">The value to set to.</param>
+    /// <returns><c>true</c> if the parameter was newly created.</returns>
+    /// <exception cref="InvalidP3DFourCCException">Throws if <paramref name="param"/> is invalid.</exception>
+    public bool SetIntegerParameter(string param, uint value)
+    {
+        if (!param.IsValidFourCC())
+            throw new InvalidP3DFourCCException(null, nameof(param), $"Must use a valid FourCC for {nameof(param)}.");
+
+        var paramChunk = GetFirstParamOfType<ShaderIntegerParameterChunk>(param);
+        if (paramChunk == null)
+        {
+            Children.Add(new ShaderIntegerParameterChunk(param, value));
+            return true;
+        }
+
+        paramChunk.Value = value;
+        return false;
+    }
+
+    /// <summary>
+    /// Sets the specified integer parameter to the specified value.
+    /// </summary>
+    /// <param name="param">The FourCC param name to set.</param>
+    /// <param name="value">The value to set to. The value is converted to <see cref="uint"/>.</param>
+    /// <returns><c>true</c> if the parameter was newly created.</returns>
+    /// <exception cref="InvalidP3DFourCCException">Throws if <paramref name="param"/> is invalid.</exception>
+    public bool SetIntegerParameter(string param, int value) => SetIntegerParameter(param, (uint)value);
+
+    /// <summary>
+    /// Sets the specified texture parameter to the specified value.
+    /// </summary>
+    /// <param name="param">The FourCC param name to set.</param>
+    /// <param name="value">The value to set to.</param>
+    /// <returns><c>true</c> if the parameter was newly created.</returns>
+    /// <exception cref="InvalidP3DFourCCException">Throws if <paramref name="param"/> is invalid.</exception>
+    public bool SetTextureParameter(string param, string value)
+    {
+        if (!param.IsValidFourCC())
+            throw new InvalidP3DFourCCException(null, nameof(param), $"Must use a valid FourCC for {nameof(param)}.");
+        if (!value.IsValidP3DString())
+            throw new InvalidP3DStringException(null, nameof(value), $"Must use a valid P3D string for {nameof(value)}.");
+
+        var paramChunk = GetFirstParamOfType<ShaderTextureParameterChunk>(param);
+        if (paramChunk == null)
+        {
+            Children.Add(new ShaderTextureParameterChunk(param, value));
+            return true;
+        }
+
+        paramChunk.Value = value;
+        return false;
     }
 
     public override IEnumerable<InvalidP3DException> ValidateChunk()
