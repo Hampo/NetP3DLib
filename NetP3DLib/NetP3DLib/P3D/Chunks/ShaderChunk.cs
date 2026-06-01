@@ -152,12 +152,26 @@ public class ShaderChunk : NamedChunk
     }
 
     /// <summary>
-    /// Sets the specified colour parameter to the specified value
+    /// Gets the specified colour parameter.
     /// </summary>
-    /// <param name="param">The FourCC param name to set</param>
-    /// <param name="value">The value to set to</param>
-    /// <returns><c>true</c> if the parameter was newly created</returns>
-    /// <exception cref="InvalidP3DFourCCException">Throws if <paramref name="param"/> is invalid</exception>
+    /// <param name="param">The FourCC param name to get.</param>
+    /// <returns>The value if set, <c>null</c> if not.</returns>
+    /// <exception cref="InvalidP3DFourCCException">Throws if <paramref name="param"/> is invalid.</exception>
+    public Color? GetColourParameter(string param)
+    {
+        if (!param.IsValidFourCC())
+            throw new InvalidP3DFourCCException(null, nameof(param), $"Must use a valid FourCC for {nameof(param)}.");
+
+        return GetFirstParamOfType<ShaderColourParameterChunk>(param)?.Value;
+    }
+
+    /// <summary>
+    /// Sets the specified colour parameter to the specified value.
+    /// </summary>
+    /// <param name="param">The FourCC param name to set.</param>
+    /// <param name="value">The value to set to.</param>
+    /// <returns><c>true</c> if the parameter was newly created.</returns>
+    /// <exception cref="InvalidP3DFourCCException">Throws if <paramref name="param"/> is invalid.</exception>
     public bool SetColourParameter(string param, Color value)
     {
         if (!param.IsValidFourCC())
@@ -172,6 +186,20 @@ public class ShaderChunk : NamedChunk
         
         paramChunk.Value = value;
         return false;
+    }
+
+    /// <summary>
+    /// Gets the specified float parameter.
+    /// </summary>
+    /// <param name="param">The FourCC param name to get.</param>
+    /// <returns>The value if set, <c>null</c> if not.</returns>
+    /// <exception cref="InvalidP3DFourCCException">Throws if <paramref name="param"/> is invalid.</exception>
+    public float? GetFloatParameter(string param)
+    {
+        if (!param.IsValidFourCC())
+            throw new InvalidP3DFourCCException(null, nameof(param), $"Must use a valid FourCC for {nameof(param)}.");
+
+        return GetFirstParamOfType<ShaderFloatParameterChunk>(param)?.Value;
     }
 
     /// <summary>
@@ -195,6 +223,20 @@ public class ShaderChunk : NamedChunk
 
         paramChunk.Value = value;
         return false;
+    }
+
+    /// <summary>
+    /// Gets the specified integer parameter.
+    /// </summary>
+    /// <param name="param">The FourCC param name to get.</param>
+    /// <returns>The value if set, <c>null</c> if not.</returns>
+    /// <exception cref="InvalidP3DFourCCException">Throws if <paramref name="param"/> is invalid.</exception>
+    public uint? GetIntegerParameter(string param)
+    {
+        if (!param.IsValidFourCC())
+            throw new InvalidP3DFourCCException(null, nameof(param), $"Must use a valid FourCC for {nameof(param)}.");
+
+        return GetFirstParamOfType<ShaderIntegerParameterChunk>(param)?.Value;
     }
 
     /// <summary>
@@ -228,6 +270,20 @@ public class ShaderChunk : NamedChunk
     /// <returns><c>true</c> if the parameter was newly created.</returns>
     /// <exception cref="InvalidP3DFourCCException">Throws if <paramref name="param"/> is invalid.</exception>
     public bool SetIntegerParameter(string param, int value) => SetIntegerParameter(param, (uint)value);
+
+    /// <summary>
+    /// Gets the specified texture parameter.
+    /// </summary>
+    /// <param name="param">The FourCC param name to get.</param>
+    /// <returns>The value if set, <c>null</c> if not.</returns>
+    /// <exception cref="InvalidP3DFourCCException">Throws if <paramref name="param"/> is invalid.</exception>
+    public string? GetTextureParameter(string param)
+    {
+        if (!param.IsValidFourCC())
+            throw new InvalidP3DFourCCException(null, nameof(param), $"Must use a valid FourCC for {nameof(param)}.");
+
+        return GetFirstParamOfType<ShaderTextureParameterChunk>(param)?.Value;
+    }
 
     /// <summary>
     /// Sets the specified texture parameter to the specified value.
