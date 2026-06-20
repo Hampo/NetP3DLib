@@ -136,19 +136,26 @@ public static partial class ChunkLoader
         uint actualHeaderSize;
         if (ChunkTypes.TryGetValue(chunkId, out var entry))
         {
-            var (chunkType, chunkConstructor) = entry;
+            try
+            {
+                var (chunkType, chunkConstructor) = entry;
 
-            var startPos = br.BaseStream.Position;
-            var expectedEndPos = startPos + headerSize;
+                var startPos = br.BaseStream.Position;
+                var expectedEndPos = startPos + headerSize;
 
-            c = chunkConstructor(br, headerSize);
+                c = chunkConstructor(br, headerSize);
 
-            var actualEndPos = br.BaseStream.Position;
+                var actualEndPos = br.BaseStream.Position;
 
-            if (actualEndPos > expectedEndPos)
-                throw new InvalidDataException($"Chunk {c} read {actualEndPos - expectedEndPos} bytes past its header boundary.");
+                if (actualEndPos > expectedEndPos)
+                    throw new InvalidDataException($"Chunk {c} read {actualEndPos - expectedEndPos} bytes past its header boundary.");
 
-            actualHeaderSize = (uint)(actualEndPos - startPos);
+                actualHeaderSize = (uint)(actualEndPos - startPos);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error reading chunk data.\nChunk ID: 0x{chunkId:X}\nHeader size: {headerSize}\nChunk size: {chunkSize}", ex);
+            }
         }
         else
         {
