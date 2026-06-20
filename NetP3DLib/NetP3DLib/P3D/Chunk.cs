@@ -91,7 +91,7 @@ public abstract class Chunk
         list.AddRange(values);
         return list;
     }
-    internal void RecalculateSize(uint oldSize)
+    protected void RecalculateSize(uint oldSize)
     {
         int delta = (int)(HeaderSize - oldSize);
         if (delta == 0)
@@ -526,10 +526,10 @@ public abstract class Chunk
     }
 
     public event Action<string>? PropertyChanged;
-    internal void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(propertyName);
+    protected void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(propertyName);
 
     public event Action<Chunk>? ChildAdded;
-    internal void OnChildAdded(Chunk child)
+    protected void OnChildAdded(Chunk child)
     {
         ProcessAddedChild(child);
 
@@ -538,7 +538,7 @@ public abstract class Chunk
     }
 
     public event Action<Chunk, int>? ChildRemoved;
-    internal void OnChildRemoved(Chunk child, int oldIndex)
+    protected void OnChildRemoved(Chunk child, int oldIndex)
     {
         ProcessRemovedChild(child);
 
@@ -547,7 +547,7 @@ public abstract class Chunk
     }
 
     public event Action<IReadOnlyList<Chunk>>? ChildrenAdded;
-    internal void OnChildrenAdded(IReadOnlyList<Chunk> children)
+    protected void OnChildrenAdded(IReadOnlyList<Chunk> children)
     {
         foreach (var child in children)
             ProcessAddedChild(child);
@@ -557,7 +557,7 @@ public abstract class Chunk
     }
 
     public event Action<IReadOnlyList<(Chunk child, int oldIndex)>>? ChildrenRemoved;
-    internal void OnChildrenRemoved(IReadOnlyList<(Chunk child, int oldIndex)> children)
+    protected void OnChildrenRemoved(IReadOnlyList<(Chunk child, int oldIndex)> children)
     {
         foreach (var (child, _) in children)
             ProcessRemovedChild(child);
@@ -567,7 +567,7 @@ public abstract class Chunk
     }
 
     public event Action<IReadOnlyList<(Chunk chunk, int oldIndex)>>? ChildrenCleared;
-    internal void OnChildrenCleared(IReadOnlyList<(Chunk chunk, int oldIndex)> children)
+    protected void OnChildrenCleared(IReadOnlyList<(Chunk chunk, int oldIndex)> children)
     {
         _childCounts.Clear();
         _chunksByType.Clear();
