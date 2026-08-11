@@ -68,10 +68,13 @@ public class SetChunk : NamedChunk
 
         var childCount = GetChildCount();
         if (childCount == 0)
+        {
             yield return new InvalidP3DException(this, "You must have at least one child chunk.");
+            yield break;
+        }
 
         if (childCount > byte.MaxValue)
-            yield return new InvalidP3DException(this, $"The max number of child chunks is {byte.MinValue}.");
+            yield return new InvalidP3DException(this, $"The max number of child chunks is {byte.MaxValue}.");
 
         if (!typeof(NamedChunk).IsAssignableFrom(Children[0].GetType()))
             yield return new InvalidP3DException(this, $"The set type must be a {nameof(NamedChunk)}.");
