@@ -495,10 +495,8 @@ public abstract class Chunk
 
     private void ProcessAddedChild(Chunk child)
     {
-        if (_childCounts.ContainsKey(child.ID))
-            _childCounts[child.ID]++;
-        else
-            _childCounts[child.ID] = 1;
+        _childCounts.TryGetValue(child.ID, out var count);
+        _childCounts[child.ID] = count + 1;
 
         var childType = child.GetType();
         ListHelper.InsertSorted(_chunksByType, childType, child);
@@ -511,10 +509,13 @@ public abstract class Chunk
 
     private void ProcessRemovedChild(Chunk child)
     {
-        if (_childCounts[child.ID] == 1)
-            _childCounts.Remove(child.ID);
-        else
-            _childCounts[child.ID]--;
+        if (_childCounts.TryGetValue(child.ID, out var count))
+        {
+            if (count == 1)
+                _childCounts.Remove(child.ID);
+            else
+                _childCounts[child.ID] = count - 1;
+        }
 
         var childType = child.GetType();
         ListHelper.CleanListInDictionary(_chunksByType, childType);
