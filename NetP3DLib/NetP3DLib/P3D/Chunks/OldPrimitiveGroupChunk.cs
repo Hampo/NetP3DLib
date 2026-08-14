@@ -68,6 +68,7 @@ public class OldPrimitiveGroupChunk : Chunk
         { (uint)ChunkIdentifier.Position_List, VertexTypes.Position },
         { (uint)ChunkIdentifier.Binormal_List, VertexTypes.Binormal },
         { (uint)ChunkIdentifier.Tangent_List, VertexTypes.Tangent },
+        { (uint)ChunkIdentifier.Memory_Image_Vertex_List, VertexTypes.Position | VertexTypes.Normals | VertexTypes.UVs },
     };
 
     private uint _version;
