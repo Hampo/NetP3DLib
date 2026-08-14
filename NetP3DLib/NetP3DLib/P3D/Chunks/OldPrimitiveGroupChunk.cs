@@ -163,13 +163,15 @@ public class OldPrimitiveGroupChunk : Chunk
                         return matrixList.NumMatrices;
                     case TangentListChunk tangentList:
                         return tangentList.NumTangents;
+                    case MemoryImageVertexListChunk memoryImageVertexList:
+                        return memoryImageVertexList.NumVertices;
                 }
             }
 
             return 0;
         }
     }
-    public uint NumIndices => GetFirstChunkOfType<IndexListChunk>()?.NumIndices ?? 0;
+    public uint NumIndices => GetFirstChunkOfType<IndexListChunk>()?.NumIndices ?? GetFirstChunkOfType<MemoryImageIndexListChunk>()?.NumIndices ?? 0;
     public uint NumMatrices => GetFirstChunkOfType<MatrixPaletteChunk>()?.NumMatrices ?? 0;
 
     public override byte[] DataBytes
