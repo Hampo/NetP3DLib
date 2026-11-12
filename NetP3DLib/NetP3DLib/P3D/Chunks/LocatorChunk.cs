@@ -4,6 +4,7 @@ using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Numerics;
 using System.Text;
 
@@ -148,7 +149,9 @@ public class LocatorChunk : NamedChunk
         protected void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke();
 
         public LocatorTypes LocatorType { get; }
+        [Browsable(false)]
         public virtual uint DataLen => (uint)DataArray.Count;
+        [Browsable(false)]
         public abstract List<uint> DataArray { get; }
 
         public LocatorData(LocatorTypes locatorType)

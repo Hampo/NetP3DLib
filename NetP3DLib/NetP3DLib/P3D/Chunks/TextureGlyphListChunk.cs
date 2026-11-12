@@ -5,6 +5,7 @@ using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Numerics;
 
@@ -97,6 +98,7 @@ public class TextureGlyphListChunk : Chunk
 
     public class Glyph
     {
+        [Browsable(false)]
         public const uint Size = sizeof(uint) + sizeof(float) * 2 + sizeof(float) * 2 + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(uint);
 
         public event Action? PropertyChanged;
@@ -212,6 +214,7 @@ public class TextureGlyphListChunk : Chunk
             }
         }
 
+        [Browsable(false)]
         public byte[] DataBytes
         {
             get

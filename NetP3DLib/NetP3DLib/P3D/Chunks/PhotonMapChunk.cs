@@ -6,6 +6,7 @@ using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Numerics;
 
@@ -206,6 +207,7 @@ public class PhotonMapChunk : NamedChunk
 
     public class Photon
     {
+        [Browsable(false)]
         public const uint Size = sizeof(float) * 3 + sizeof(short) + sizeof(byte) + sizeof(byte) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(float) + sizeof(byte) + sizeof(byte);
 
         public event Action? PropertyChanged;
@@ -350,6 +352,7 @@ public class PhotonMapChunk : NamedChunk
             }
         }
 
+        [Browsable(false)]
         public byte[] DataBytes
         {
             get

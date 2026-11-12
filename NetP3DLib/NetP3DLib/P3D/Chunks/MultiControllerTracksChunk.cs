@@ -6,6 +6,7 @@ using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
@@ -195,6 +196,7 @@ public class MultiControllerTracksChunk : Chunk
             }
         }
 
+        [Browsable(false)]
         public byte[] DataBytes
         {
             get
@@ -210,6 +212,7 @@ public class MultiControllerTracksChunk : Chunk
             }
         }
 
+        [Browsable(false)]
         public uint DataLength => BinaryExtensions.GetP3DStringLength(Name) + sizeof(float) + sizeof(float) + sizeof(float);
 
         public Track(BinaryReader br)

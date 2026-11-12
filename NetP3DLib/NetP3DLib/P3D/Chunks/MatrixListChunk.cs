@@ -6,6 +6,7 @@ using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
@@ -163,7 +164,8 @@ public class MatrixListChunk : Chunk
                 PropertyChanged?.Invoke();
             }
         }
-    
+
+        [Browsable(false)]
         public byte[] DataBytes => [D, C, B, A];
 
         public Matrix(BinaryReader br)

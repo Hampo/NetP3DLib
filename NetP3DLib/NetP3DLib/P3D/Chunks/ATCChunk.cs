@@ -6,6 +6,7 @@ using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
@@ -227,6 +228,7 @@ public class ATCChunk : Chunk
             }
         }
 
+        [Browsable(false)]
         public byte[] DataBytes
         {
             get
@@ -244,6 +246,7 @@ public class ATCChunk : Chunk
             }
         }
 
+        [Browsable(false)]
         public uint DataLength => BinaryExtensions.GetP3DStringLength(SoundResourceDataName) + BinaryExtensions.GetP3DStringLength(Particle) + BinaryExtensions.GetP3DStringLength(BreakableObject) + sizeof(float) + sizeof(float) + sizeof(float);
 
         public Entry(BinaryReader br)

@@ -10,6 +10,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 
 namespace NetP3DLib.P3D;
@@ -27,7 +28,9 @@ public class P3DFile
     /// </summary>
     public static StringPaddingMode StringPaddingMode { get; set; } = StringPaddingMode.LegacyExcludeLength;
 
+    [Browsable(false)]
     public ChunkFileCollection Chunks { get; private set; }
+    [Browsable(false)]
     public ReadOnlyCollection<Chunk> AllChunks
     {
         get
@@ -53,6 +56,7 @@ public class P3DFile
     }
 
     public uint Size => HEADER_SIZE + Chunks.TotalSize;
+    [Browsable(false)]
     public byte[] Bytes
     {
         get

@@ -5,6 +5,7 @@ using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Numerics;
 
@@ -131,6 +132,7 @@ public class MemoryImageVertexListChunk : Chunk
 
     public class Vertex
     {
+        [Browsable(false)]
         public const uint Size = sizeof(float) * 3 + sizeof(uint) + sizeof(float) * 2;
 
         public event Action? PropertyChanged;
@@ -177,6 +179,7 @@ public class MemoryImageVertexListChunk : Chunk
             }
         }
 
+        [Browsable(false)]
         public byte[] DataBytes
         {
             get

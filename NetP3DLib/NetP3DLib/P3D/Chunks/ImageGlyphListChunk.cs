@@ -5,6 +5,7 @@ using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 
 namespace NetP3DLib.P3D.Chunks;
@@ -96,6 +97,7 @@ public class ImageGlyphListChunk : Chunk
 
     public class Glyph
     {
+        [Browsable(false)]
         public const uint Size = sizeof(ushort) + sizeof(ushort) + sizeof(ushort) + sizeof(ushort) + sizeof(ushort) + sizeof(uint);
 
         public Action? PropertyChanged;
@@ -184,6 +186,7 @@ public class ImageGlyphListChunk : Chunk
             }
         }
 
+        [Browsable(false)]
         public byte[] DataBytes
         {
             get

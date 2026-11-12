@@ -8,6 +8,8 @@ using NetP3DLib.P3D.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+
 #if DEBUG
 using System.Diagnostics;
 #endif
@@ -22,26 +24,32 @@ public abstract class Chunk
     /// <summary>
     /// Property <c>ID</c> is the chunk's identifier.
     /// </summary>
+    [Browsable(false)]
     public uint ID { get; set; }
     /// <summary>
     /// The parent file of this chunk. If <c>null</c>, chunk is not in a file.
     /// </summary>
+    [Browsable(false)]
     public P3DFile? ParentFile { get; internal set; } = null;
     /// <summary>
     /// The parent of this chunk. If <c>null</c>, either not in a hierarchy or in root of file (see <see cref="ParentFile"/>).
     /// </summary>
+    [Browsable(false)]
     public Chunk? ParentChunk { get; internal set; } = null;
     /// <summary>
     /// The index in <see cref="ParentChunk"/> or <see cref="ParentFile"/>. <c>-1</c> if no parent.
     /// </summary>
+    [Browsable(false)]
     public int IndexInParent { get; internal set; } = -1;
     /// <summary>
     /// Property <c>Children</c> is a collection of a chunk's children.
     /// </summary>
+    [Browsable(false)]
     public ChunkCollection Children { get; internal set; }
     /// <summary>
     /// Property <c>AllChildren</c> is all the chunk's children flattened.
     /// </summary>
+    [Browsable(false)]
     public ReadOnlyCollection<Chunk> AllChildren
     {
         get
@@ -70,16 +78,19 @@ public abstract class Chunk
     /// Property <c>DataBytes</c> is the chunk's header data, built from the chunk's properties.
     /// <para>NOTE: This will use the system's default <see cref="Endianness"/>.</para>
     /// </summary>
+    [Browsable(false)]
     public abstract byte[] DataBytes { get; }
     /// <summary>
     /// Property <c>DataLength</c> should be the number of bytes of <see cref="DataBytes"/>.
     /// <para>NOTE: This can be calculated by <see cref="DataBytes"/>.<c>Length</c>, however hardcoding is faster.</para>
     /// </summary>
+    [Browsable(false)]
     public virtual uint DataLength => (uint)DataBytes.Length;
     /// <summary>
     /// Property <c>HeaderSize</c> is the chunk's header size.
     /// <para>This is usually <see cref="P3DFile.HEADER_SIZE"/> + <see cref="DataBytes"/><c>.Length</c>.</para>
     /// </summary>
+    [Browsable(false)]
     public uint HeaderSize => P3DFile.HEADER_SIZE + DataLength;
 
     public event Action<Chunk, int>? SizeChanged;
@@ -103,11 +114,13 @@ public abstract class Chunk
     /// Property <c>Size</c> is the chunk's size.
     /// <para>This is usually <see cref="HeaderSize"/> + SUM(<see cref="Children"/>.<see cref="Size"/>).</para>
     /// </summary>
+    [Browsable(false)]
     public uint Size => HeaderSize + Children.TotalSize;
     /// <summary>
     /// Property <c>Bytes</c> is the chunk's data, built from the chunk's properties and children.
     /// <para>NOTE: This will use the system's default <see cref="Endianness"/>.</para>
     /// </summary>
+    [Browsable(false)]
     public byte[] Bytes
     {
         get
