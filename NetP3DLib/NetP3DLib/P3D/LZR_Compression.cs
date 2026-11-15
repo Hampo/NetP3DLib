@@ -118,7 +118,6 @@ public static class LZR_Compression
         }
     }
 
-    // TODO: Stop using `List<byte>` for compression
     private const int MINIMUM_MATCH_LENGTH = 4;
     private const int LZR_BLOCK_SIZE = 4096;
     private const int TREE_ROOT = LZR_BLOCK_SIZE;
@@ -126,17 +125,15 @@ public static class LZR_Compression
 
     private struct TreeNode
     {
-        public uint Parent;
         public uint Smaller;
         public uint Larger;
     }
 
     private static readonly TreeNode[] tree = new TreeNode[LZR_BLOCK_SIZE + 1];
 
-    private static void CompressBlock(List<byte> input, uint inputSize, List<byte> output, ref uint outputSize, bool fastest)
+    private static void CompressBlock(byte[] input, int inputStart, uint inputSize, byte[] output, ref int outputCount, bool fastest)
     {
         uint inputCount = 0;
-        uint outputCount = 0;
         uint literalStart = 0;
         uint literalCount = 0;
 
@@ -151,14 +148,14 @@ public static class LZR_Compression
             {
                 if (literalCount > 0)
                 {
-                    outputCount += WriteCount(output, literalCount, 0);
-                    output.AddRange(input.GetRange((int)literalStart, (int)literalCount));
-                    outputCount += literalCount;
+                    WriteCount(output, ref outputCount, literalCount, 0);
+
+                    Buffer.BlockCopy(input, inputStart + (int)literalStart, output, outputCount, (int)literalCount);
+                    outputCount += (int)literalCount;
                 }
 
-                outputCount += WriteCount(output, count, (byte)((offset & 0xf) << 4));
-                output.Add((byte)((offset & 0xff0) >> 4));
-                outputCount++;
+                WriteCount(output, ref outputCount, count, (byte)((offset & 0xf) << 4));
+                output[outputCount++] = (byte)((offset & 0xff0) >> 4);
 
                 if (fastest)
                 {
@@ -167,13 +164,14 @@ public static class LZR_Compression
                 else
                 {
                     uint total = count;
-                    bool failed = false;
-                    for (int c = 0; c < total; c++)
+
+                    for (uint c = 0; c < total; c++)
                     {
                         inputCount++;
-                        failed = AddString(input, inputCount, inputSize, ref offset, ref count);
+                        AddString(input, inputStart, inputCount, inputSize, ref offset, ref count);
                     }
                 }
+
                 literalCount = 0;
                 literalStart = inputCount;
             }
@@ -181,28 +179,29 @@ public static class LZR_Compression
             {
                 literalCount++;
                 inputCount++;
+
                 if (!fastest)
                 {
-                    if (AddString(input, inputCount, inputSize, ref offset, ref count))
+                    if (AddString(input, inputStart, inputCount, inputSize, ref offset, ref count))
                     {
-                        FindLongestMatch(input, inputCount, inputSize, ref offset, ref count);
+                        FindLongestMatch(input, inputStart, inputCount, inputSize, ref offset, ref count);
                     }
                 }
             }
+
             if (fastest)
             {
-                AddString(input, inputCount, inputSize, ref offset, ref count);
+                AddString(input, inputStart, inputCount, inputSize, ref offset, ref count);
             }
         }
 
         if (literalCount > 0)
         {
-            outputCount += WriteCount(output, literalCount, 0);
-            output.AddRange(input.GetRange((int)literalStart, (int)literalCount));
-            outputCount += literalCount;
-        }
+            WriteCount(output, ref outputCount, literalCount, 0);
 
-        outputSize = outputCount;
+            Buffer.BlockCopy(input, inputStart + (int)literalStart, output, outputCount, (int)literalCount);
+            outputCount += (int)literalCount;
+        }
     }
 
     /// <summary>
@@ -213,45 +212,57 @@ public static class LZR_Compression
     /// <param name="fast">If <c>true</c>, a slightly faster algorithm will be used.<para>Defaults to <c>false</c>.</para></param>
     /// <returns>A <see cref="byte"/> array containing the compressed bytes of <paramref name="input"/>.</returns>
     /// <exception cref="InvalidDataException">Thrown if <paramref name="input"/> is not a Little Endian Pure3D file.</exception>
-    public static byte[] CompressFile(List<byte> input, bool fast = false)
+    public static byte[] CompressFile(IList<byte> input, bool fast = false)
     {
-        var identifierBytes = new byte[4]
-        {
-            input[0],
-            input[1],
-            input[2],
-            input[3],
-        };
-        uint identifier = BitConverter.ToUInt32(identifierBytes, 0);
+        return CompressFile([.. input], fast);
+    }
+
+    private static byte[] CompressFile(byte[] input, bool fast)
+    {
+        uint identifier =
+            (uint)input[0] |
+            ((uint)input[1] << 8) |
+            ((uint)input[2] << 16) |
+            ((uint)input[3] << 24);
+
         if (identifier != P3DFile.SIGNATURE)
             throw new InvalidDataException("The specified file is not a Little Endian P3D file.");
 
-        uint fileSize = (uint)input.Count;
+        uint fileSize = (uint)input.Length;
 
-        List<byte> output = [];
-        output.AddRange(BitConverter.GetBytes(P3DFile.COMPRESSED_SIGNATURE));
-        output.AddRange(BitConverter.GetBytes(fileSize));
+        int blockCount = ((input.Length - 1) / LZR_BLOCK_SIZE) + 1;
 
-        uint remaining = fileSize;
+        byte[] output = new byte[checked(input.Length + blockCount * 64 + 8)];
 
-        uint start = 0;
-        while (remaining > 0)
+        int outputCount = 0;
+
+        WriteUInt32(output, ref outputCount, P3DFile.COMPRESSED_SIGNATURE);
+        WriteUInt32(output, ref outputCount, fileSize);
+
+        int start = 0;
+
+        while (start < input.Length)
         {
-            uint size = Math.Min(LZR_BLOCK_SIZE, remaining);
-            List<byte> comp = new((int)size);
-            uint compSize = 0;
+            int size = Math.Min(LZR_BLOCK_SIZE, input.Length - start);
 
-            CompressBlock(input.GetRange((int)start, (int)remaining), size, comp, ref compSize, fast);
+            int compSizePosition = outputCount;
 
-            output.AddRange(BitConverter.GetBytes(compSize));
-            output.AddRange(BitConverter.GetBytes(size));
-            output.AddRange(comp);
+            WriteUInt32(output, ref outputCount, 0);
+            WriteUInt32(output, ref outputCount, (uint)size);
+
+            int compStart = outputCount;
+
+            CompressBlock(input, start, (uint)size, output, ref outputCount, fast);
+
+            WriteUInt32(output, compSizePosition, (uint)(outputCount - compStart));
 
             start += size;
-            remaining -= size;
         }
 
-        return [.. output];
+        // Remove unused capacity.
+        Array.Resize(ref output, outputCount);
+
+        return output;
     }
 
     /// <summary>
@@ -269,20 +280,18 @@ public static class LZR_Compression
 
         using var stream = new MemoryStream();
         file.Write(stream, validate);
-        List<byte> input = [.. stream.ToArray()];
 
-        return CompressFile(input, fast);
+        return CompressFile(stream.ToArray(), fast);
     }
 
     private static void InitTree()
     {
         tree[TREE_ROOT].Larger = 0;
-        tree[0].Parent = TREE_ROOT;
         tree[0].Larger = UNUSED;
         tree[0].Smaller = UNUSED;
     }
 
-    private static bool AddString(List<byte> input, uint inputCount, uint inputSize, ref uint offset, ref uint count)
+    private static bool AddString(byte[] input, int inputStart, uint inputCount, uint inputSize, ref uint offset, ref uint count)
     {
         uint testNode = tree[TREE_ROOT].Larger;
         bool failure = false;
@@ -293,13 +302,15 @@ public static class LZR_Compression
             uint i;
             int delta = 0;
 
+            int currentPosition = inputStart + (int)inputCount;
+            int testPosition = inputStart + (int)testNode;
+
             for (i = 0; i < inputSize - inputCount; i++)
             {
-                delta = input[(int)(inputCount + i)] - input[(int)(testNode + i)];
+                delta = input[currentPosition + (int)i] - input[testPosition + (int)i];
+
                 if (delta != 0)
-                {
                     break;
-                }
             }
 
             if (i > count)
@@ -315,13 +326,14 @@ public static class LZR_Compression
                 }
             }
 
-            ref uint child = ref (delta >= 0 ? ref tree[testNode].Larger : ref tree[testNode].Smaller);
+            ref uint child = ref (delta >= 0 ? ref tree[(int)testNode].Larger : ref tree[(int)testNode].Smaller);
+
             if (child == UNUSED)
             {
                 child = inputCount;
-                tree[inputCount].Parent = testNode;
-                tree[inputCount].Larger = UNUSED;
-                tree[inputCount].Smaller = UNUSED;
+                tree[(int)inputCount].Larger = UNUSED;
+                tree[(int)inputCount].Smaller = UNUSED;
+
                 return failure;
             }
 
@@ -329,61 +341,88 @@ public static class LZR_Compression
         }
     }
 
-    private static void FindLongestMatch(List<byte> input, uint inputCount, uint inputSize, ref uint offset, ref uint count)
+    private static void FindLongestMatch(byte[] input, int inputStart, uint inputCount, uint inputSize, ref uint offset, ref uint count)
     {
         offset = 0;
         count = 0;
 
-        for (uint o = 0; o < inputCount; o++)
+        int searchEnd = inputStart + (int)inputCount;
+        byte firstByte = input[searchEnd];
+
+        int candidate = Array.IndexOf(input, firstByte, inputStart, (int)inputCount);
+
+        while (candidate >= 0)
         {
-            if (((o - inputCount) & 0xf) == 0)
+            uint candidatePosition = (uint)(candidate - inputStart);
+
+            if (((inputCount - candidatePosition) & 15) != 0)
             {
-                continue;
+                uint maxLength = Math.Min(inputSize - candidatePosition, inputSize - inputCount);
+
+                uint currentLength = 1;
+
+                int comparePosition = searchEnd + 1;
+                int candidateComparePosition = candidate + 1;
+
+                while ((currentLength < maxLength) &&
+                       (input[candidateComparePosition++] == input[comparePosition++]))
+                {
+                    currentLength++;
+                }
+
+                if (currentLength > count)
+                {
+                    count = currentLength;
+                    offset = candidatePosition;
+                }
             }
 
-            uint c;
-            for (c = 0; (c < inputSize - o) && (c + inputCount < inputSize); c++)
-            {
-                if (input[(int)(o + c)] == input[(int)(inputCount + c)])
-                {
-                    if (c + 1 > count)
-                    {
-                        count = c + 1;
-                        offset = o;
-                    }
-                }
-                else
-                {
-                    break;
-                }
-            }
+            int nextCandidate = candidate + 1;
+
+            if (nextCandidate >= searchEnd)
+                break;
+
+            candidate = Array.IndexOf(input, firstByte, nextCandidate, searchEnd - nextCandidate);
         }
 
         offset = inputCount - offset;
     }
 
-    private static uint WriteCount(List<byte> output, uint count, byte highBits)
+    private static void WriteCount(byte[] output, ref int outputCount, uint count, byte highBits)
     {
-        uint outCount = 0;
         if (count > 15)
         {
-            output.Add(highBits);
-            outCount++;
+            output[outputCount++] = highBits;
+
             count -= 15;
+
             while (count > 255)
             {
-                output.Add(0);
-                outCount++;
+                output[outputCount++] = 0;
                 count -= 255;
             }
-            output.Add((byte)count);
-            outCount++;
+
+            output[outputCount++] = (byte)count;
         }
         else
         {
-            output.Add((byte)(highBits | count));
-            outCount++;
+            output[outputCount++] = (byte)(highBits | count);
         }
-        return outCount;
+    }
+
+    private static void WriteUInt32(byte[] output, ref int outputCount, uint value)
+    {
+        output[outputCount++] = (byte)value;
+        output[outputCount++] = (byte)(value >> 8);
+        output[outputCount++] = (byte)(value >> 16);
+        output[outputCount++] = (byte)(value >> 24);
+    }
+
+    private static void WriteUInt32(byte[] output, int outputIndex, uint value)
+    {
+        output[outputIndex] = (byte)value;
+        output[outputIndex + 1] = (byte)(value >> 8);
+        output[outputIndex + 2] = (byte)(value >> 16);
+        output[outputIndex + 3] = (byte)(value >> 24);
     }
 }
