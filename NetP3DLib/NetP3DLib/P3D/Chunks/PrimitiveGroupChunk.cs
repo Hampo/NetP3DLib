@@ -7,7 +7,6 @@ using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using static NetP3DLib.P3D.Chunks.InstParticleSystemChunk;
 
 namespace NetP3DLib.P3D.Chunks;
 

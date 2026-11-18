@@ -4,6 +4,7 @@ using NetP3DLib.P3D.Enums;
 using NetP3DLib.P3D.Extensions;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -58,34 +59,50 @@ public class CollisionVectorChunk : Chunk
 
     public override string ToString()
     {
-        return ParentChunk switch
+        var name = ParentChunk switch
         {
             CollisionSphereChunk => IndexInParent switch
             {
-                0 => $"Centre ({GetChunkType(this)} (0x{ID:X}))",
-                _ => base.ToString()
+                0 => $"Centre",
+                _ => string.Empty
             },
             CollisionCylinderChunk => IndexInParent switch
             {
-                0 => $"Centre ({GetChunkType(this)} (0x{ID:X}))",
-                1 => $"Orientation ({GetChunkType(this)} (0x{ID:X}))",
-                _ => base.ToString()
+                0 => $"Centre",
+                1 => $"Orientation",
+                _ => string.Empty
             },
             CollisionOrientedBoundingBoxChunk => IndexInParent switch
             {
-                0 => $"Centre ({GetChunkType(this)} (0x{ID:X}))",
-                1 => $"Rotation Matrix X ({GetChunkType(this)} (0x{ID:X}))",
-                2 => $"Rotation Matrix Y ({GetChunkType(this)} (0x{ID:X}))",
-                3 => $"Rotation Matrix Z ({GetChunkType(this)} (0x{ID:X}))",
-                _ => base.ToString()
+                0 => $"Centre",
+                1 => $"Rotation Matrix X",
+                2 => $"Rotation Matrix Y",
+                3 => $"Rotation Matrix Z",
+                _ => string.Empty
             },
             CollisionWallChunk => IndexInParent switch
             {
-                0 => $"Position ({GetChunkType(this)} (0x{ID:X}))",
-                1 => $"Normal Ref ({GetChunkType(this)} (0x{ID:X}))",
-                _ => base.ToString()
+                0 => $"Position",
+                1 => $"Normal Ref",
+                _ => string.Empty
             },
-            _ => base.ToString(),
+            _ => string.Empty,
         };
+
+        if (name.Length == 0)
+            return base.ToString();
+
+        var sb = new StringBuilder($"{name}");
+
+        if (IncludeChunkTypeInString)
+            sb.Append($" ({ChunkType}");
+
+        if (IncludeChunkIDInString)
+            sb.Append($" (0x{ID:X})");
+
+        if (IncludeChunkTypeInString)
+            sb.Append(')');
+
+        return sb.ToString();
     }
 }

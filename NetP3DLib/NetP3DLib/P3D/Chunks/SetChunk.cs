@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
-using static NetP3DLib.P3D.Chunks.InstParticleSystemChunk;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -15,6 +14,22 @@ namespace NetP3DLib.P3D.Chunks;
 public class SetChunk : NamedChunk
 {
     public const ChunkIdentifier ChunkID = ChunkIdentifier.Set;
+
+    public override string ChunkType
+    {
+        get
+        {
+            var sb = new StringBuilder(GetChunkType(this));
+
+            var child = Children.Count > 0 ? Children[0] : null;
+            sb.Append($" ({child?.ChunkType ?? "Null"}");
+
+            if (IncludeChunkIDInString && child != null)
+                sb.Append($" (0x{child.ID:X})");
+
+            return sb.ToString();
+        }
+    }
 
     private uint _version;
     [DefaultValue(0)]
@@ -93,30 +108,4 @@ public class SetChunk : NamedChunk
     }
 
     protected override Chunk CloneSelf() => new SetChunk(Name, Version);
-
-    public override string ToString()
-    {
-        var sb = new StringBuilder($"\"{Name}\"");
-
-        var child = Children.Count > 0 ? Children[0] : null;
-        if (IncludeChunkTypeInString)
-            sb.Append($" ({child?.ChunkType ?? "Null"}");
-
-        if (IncludeChunkIDInString && child != null)
-            sb.Append($" (0x{child.ID:X})");
-
-        if (IncludeChunkTypeInString)
-            sb.Append(')');
-
-        if (IncludeChunkTypeInString)
-            sb.Append($" ({ChunkType}");
-
-        if (IncludeChunkIDInString)
-            sb.Append($" (0x{ID:X})");
-
-        if (IncludeChunkTypeInString)
-            sb.Append(')');
-
-        return sb.ToString();
-    }
 }

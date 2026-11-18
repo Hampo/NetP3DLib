@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Numerics;
 using System.Text;
-using static NetP3DLib.P3D.Chunks.InstParticleSystemChunk;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -34,6 +33,8 @@ public class LocatorChunk : NamedChunk
         PedGroup,
         Coin,
     }
+
+    public override string ChunkType => $"({LocatorType} {GetChunkType(this)} (Type {(int)LocatorType})";
 
     public LocatorTypes LocatorType => TypeData.LocatorType;
     public uint DataLen => TypeData.DataLen;
@@ -135,22 +136,6 @@ public class LocatorChunk : NamedChunk
         TypeData.WriteData(bw);
         bw.Write(Position);
         bw.Write(TriggerCount);
-    }
-
-    public override string ToString()
-    {
-        var sb = new StringBuilder($"\"{Name}\"");
-
-        if (IncludeChunkTypeInString)
-            sb.Append($" ({LocatorType} {ChunkType} (Type {(int)LocatorType})");
-
-        if (IncludeChunkIDInString)
-            sb.Append($" (0x{ID:X})");
-
-        if (IncludeChunkTypeInString)
-            sb.Append(')');
-
-        return sb.ToString();
     }
 
     protected override Chunk CloneSelf() => new LocatorChunk(Name, TypeData.Clone(), Position);

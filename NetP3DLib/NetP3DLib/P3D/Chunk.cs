@@ -98,7 +98,7 @@ public abstract class Chunk
     public uint HeaderSize => P3DFile.HEADER_SIZE + DataLength;
 
     [Browsable(false)]
-    public string ChunkType { get; }
+    public virtual string ChunkType => GetChunkType(this);
 
     public event Action<Chunk, int>? SizeChanged;
     protected SizeAwareList<T> CreateSizeAwareList<T>(int capacity = 0) => new(this, RecalculateSize, capacity);
@@ -150,7 +150,6 @@ public abstract class Chunk
     protected Chunk(uint chunkId)
     {
         ID = chunkId;
-        ChunkType = GetChunkType(this);
         Children = new(this);
     }
 

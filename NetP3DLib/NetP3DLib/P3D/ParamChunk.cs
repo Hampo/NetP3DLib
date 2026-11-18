@@ -5,7 +5,6 @@ using NetP3DLib.P3D.Extensions;
 using NetP3DLib.P3D.Types;
 using System.Collections.Generic;
 using System.Text;
-using System.Xml.Linq;
 
 namespace NetP3DLib.P3D;
 
