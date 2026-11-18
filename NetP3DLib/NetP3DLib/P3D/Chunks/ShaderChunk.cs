@@ -64,6 +64,7 @@ public class ShaderChunk : NamedChunk
     }
     
     private readonly P3DString _pddiShaderName;
+    [KnownValues(true, "simple", "environment", "spheremap", "refract", "error", "lightweight", "lightmap", "projtex", "pointsprite", "layered", "layeredmap", "toon", "hctune")]
     public string PddiShaderName
     {
         get => _pddiShaderName?.Value ?? string.Empty;
