@@ -9,10 +9,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Text;
 
 #if DEBUG
 using System.Diagnostics;
-using System.Text;
 #endif
 
 namespace NetP3DLib.P3D;
