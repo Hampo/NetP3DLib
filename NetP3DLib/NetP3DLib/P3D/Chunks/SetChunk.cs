@@ -27,6 +27,8 @@ public class SetChunk : NamedChunk
             if (IncludeChunkIDInString && child != null)
                 sb.Append($" (0x{child.ID:X})");
 
+            sb.Append(')');
+
             return sb.ToString();
         }
     }

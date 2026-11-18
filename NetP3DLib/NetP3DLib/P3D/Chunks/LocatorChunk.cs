@@ -34,7 +34,7 @@ public class LocatorChunk : NamedChunk
         Coin,
     }
 
-    public override string ChunkType => $"({LocatorType} {GetChunkType(this)} (Type {(int)LocatorType})";
+    public override string ChunkType => $"{LocatorType} {GetChunkType(this)} (Type {(int)LocatorType})";
 
     public LocatorTypes LocatorType => TypeData.LocatorType;
     public uint DataLen => TypeData.DataLen;
