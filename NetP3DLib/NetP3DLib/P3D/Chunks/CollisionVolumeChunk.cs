@@ -87,6 +87,23 @@ public class CollisionVolumeChunk : Chunk
 
         if (Children.Count - 1 != NumSubVolumes)
             yield return new InvalidP3DException(this, $"Remaining children must be {nameof(CollisionVolumeChunk)}");
+
+        var parentChunk = ParentChunk;
+        while (parentChunk is not null && parentChunk is not CollisionObjectChunk)
+            parentChunk = parentChunk.ParentChunk;
+
+        if (parentChunk is not CollisionObjectChunk collisionObjectChunk)
+            yield break;
+
+        var skeleton = FindNamedChunkInParentHierarchy<SkeletonChunk>(collisionObjectChunk.Name);
+        if (skeleton == null && collisionObjectChunk.Name.EndsWith("BV"))
+            skeleton = FindNamedChunkInParentHierarchy<SkeletonChunk>(collisionObjectChunk.Name.Substring(0, collisionObjectChunk.Name.Length - 2));
+
+        if (skeleton == null)
+            yield break;
+
+        if (ObjectReferenceIndex >= skeleton.NumJoints)
+            yield return new InvalidP3DException(this, $"{nameof(ObjectReferenceIndex)} must be less than the number of joints in the skeleton ({skeleton.NumJoints}).");
     }
 
     protected override void WriteData(EndianAwareBinaryWriter bw)
