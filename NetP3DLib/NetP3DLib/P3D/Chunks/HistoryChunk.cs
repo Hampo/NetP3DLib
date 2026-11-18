@@ -6,6 +6,7 @@ using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -101,5 +102,19 @@ public class HistoryChunk : Chunk
 
     protected override Chunk CloneSelf() => new HistoryChunk(History);
 
-    public override string ToString() => $"\"{(History.Count == 0 ? "" : History[0])}\" ({GetChunkType(this)} (0x{ID:X}))";
+    public override string ToString()
+    {
+        var sb = new StringBuilder($"\"{(History.Count == 0 ? "" : History[0])}\"");
+
+        if (IncludeChunkTypeInString)
+            sb.Append($" ({ChunkType}");
+
+        if (IncludeChunkIDInString)
+            sb.Append($" (0x{ID:X})");
+
+        if (IncludeChunkTypeInString)
+            sb.Append(')');
+
+        return sb.ToString();
+    }
 }

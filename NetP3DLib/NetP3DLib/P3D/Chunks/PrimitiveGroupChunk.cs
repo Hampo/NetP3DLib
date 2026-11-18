@@ -6,6 +6,8 @@ using NetP3DLib.P3D.Extensions;
 using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
+using System.Text;
+using static NetP3DLib.P3D.Chunks.InstParticleSystemChunk;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -303,5 +305,19 @@ public class PrimitiveGroupChunk : Chunk
 
     protected override Chunk CloneSelf() => new PrimitiveGroupChunk(Version, ShaderName, PrimitiveType, NumVertices, NumIndices, NumMatrices, MemoryImaged, Optimized, VertexAnimated, VertexAnimationMask);
 
-    public override string ToString() => $"\"{ShaderName}\" ({GetChunkType(this)} (0x{ID:X}))";
+    public override string ToString()
+    {
+        var sb = new StringBuilder($"\"{ShaderName}\"");
+
+        if (IncludeChunkTypeInString)
+            sb.Append($" ({ChunkType}");
+
+        if (IncludeChunkIDInString)
+            sb.Append($" (0x{ID:X})");
+
+        if (IncludeChunkTypeInString)
+            sb.Append(')');
+
+        return sb.ToString();
+    }
 }

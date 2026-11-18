@@ -4,6 +4,8 @@ using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
 using NetP3DLib.P3D.Types;
 using System.Collections.Generic;
+using System.Text;
+using System.Xml.Linq;
 
 namespace NetP3DLib.P3D;
 
@@ -35,5 +37,19 @@ public abstract class ParamChunk : Chunk
             yield return new InvalidP3DFourCCException(this, nameof(Param), Param);
     }
 
-    public override string ToString() => $"\"{Param}\" ({GetChunkType(this)} (0x{ID:X}))";
+    public override string ToString()
+    {
+        var sb = new StringBuilder($"\"{Param}\"");
+
+        if (IncludeChunkTypeInString)
+            sb.Append($" ({ChunkType}");
+
+        if (IncludeChunkIDInString)
+            sb.Append($" (0x{ID:X})");
+
+        if (IncludeChunkTypeInString)
+            sb.Append(')');
+
+        return sb.ToString();
+    }
 }

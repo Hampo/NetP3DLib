@@ -3,6 +3,7 @@ using NetP3DLib.P3D.Attributes;
 using NetP3DLib.P3D.Enums;
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -100,5 +101,19 @@ public class InstParticleSystemChunk : Chunk
 
     protected override Chunk CloneSelf() => new InstParticleSystemChunk(ParticleType, MaxInstances);
 
-    public override string ToString() => $"{ParticleType} ({GetChunkType(this)} (0x{ID:X}))";
+    public override string ToString()
+    {
+        var sb = new StringBuilder($"{ParticleType}");
+
+        if (IncludeChunkTypeInString)
+            sb.Append($" ({ChunkType}");
+
+        if (IncludeChunkIDInString)
+            sb.Append($" (0x{ID:X})");
+
+        if (IncludeChunkTypeInString)
+            sb.Append(')');
+
+        return sb.ToString();
+    }
 }

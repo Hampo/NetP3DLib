@@ -3,6 +3,8 @@ using NetP3DLib.P3D.Exceptions;
 using NetP3DLib.P3D.Extensions;
 using NetP3DLib.P3D.Types;
 using System.Collections.Generic;
+using System.Text;
+using static NetP3DLib.P3D.Chunks.InstParticleSystemChunk;
 
 namespace NetP3DLib.P3D;
 
@@ -33,5 +35,19 @@ public abstract class NamedChunk : Chunk
             yield return new InvalidP3DStringException(this, nameof(Name), Name);
     }
 
-    public override string ToString() => $"\"{Name}\" ({GetChunkType(this)} (0x{ID:X}))";
+    public override string ToString()
+    {
+        var sb = new StringBuilder($"\"{Name}\"");
+
+        if (IncludeChunkTypeInString)
+            sb.Append($" ({ChunkType}");
+
+        if (IncludeChunkIDInString)
+            sb.Append($" (0x{ID:X})");
+
+        if (IncludeChunkTypeInString)
+            sb.Append(')');
+
+        return sb.ToString();
+    }
 }

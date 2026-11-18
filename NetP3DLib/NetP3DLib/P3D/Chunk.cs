@@ -12,6 +12,7 @@ using System.ComponentModel;
 
 #if DEBUG
 using System.Diagnostics;
+using System.Text;
 #endif
 
 namespace NetP3DLib.P3D;
@@ -21,6 +22,9 @@ namespace NetP3DLib.P3D;
 /// </summary>
 public abstract class Chunk
 {
+    public static bool IncludeChunkTypeInString { get; set; } = true;
+    public static bool IncludeChunkIDInString { get; set; } = true;
+
     /// <summary>
     /// Property <c>ID</c> is the chunk's identifier.
     /// </summary>
@@ -93,6 +97,9 @@ public abstract class Chunk
     [Browsable(false)]
     public uint HeaderSize => P3DFile.HEADER_SIZE + DataLength;
 
+    [Browsable(false)]
+    public string ChunkType { get; }
+
     public event Action<Chunk, int>? SizeChanged;
     protected SizeAwareList<T> CreateSizeAwareList<T>(int capacity = 0) => new(this, RecalculateSize, capacity);
     protected SizeAwareList<T> CreateSizeAwareList<T>(IList<T> values, System.Collections.Specialized.NotifyCollectionChangedEventHandler collectionChangedHandler)
@@ -143,6 +150,7 @@ public abstract class Chunk
     protected Chunk(uint chunkId)
     {
         ID = chunkId;
+        ChunkType = GetChunkType(this);
         Children = new(this);
     }
 
@@ -597,7 +605,15 @@ public abstract class Chunk
     /// <returns>A duplicate of the current chunk.</returns>
     protected abstract Chunk CloneSelf();
 
-    public override string ToString() => $"{GetChunkType(this)} (0x{ID:X})";
+    public override string ToString()
+    {
+        var sb = new StringBuilder(ChunkType);
+
+        if (IncludeChunkIDInString)
+            sb.Append($" (0x{ID:X})");
+
+        return sb.ToString();
+    }
 
     /// <summary>
     /// This compares the current <see cref="Chunk"/> to another.

@@ -6,6 +6,8 @@ using NetP3DLib.P3D.Extensions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Text;
+using static NetP3DLib.P3D.Chunks.InstParticleSystemChunk;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -92,5 +94,29 @@ public class SetChunk : NamedChunk
 
     protected override Chunk CloneSelf() => new SetChunk(Name, Version);
 
-    public override string ToString() => $"\"{Name}\" ({(NumChildren > 0 ? $"{GetChunkType(Children[0])} (0x{Children[0].ID:X})" : "Null")}) ({GetChunkType(this)} (0x{ID:X}))";
+    public override string ToString()
+    {
+        var sb = new StringBuilder($"\"{Name}\"");
+
+        var child = Children.Count > 0 ? Children[0] : null;
+        if (IncludeChunkTypeInString)
+            sb.Append($" ({child?.ChunkType ?? "Null"}");
+
+        if (IncludeChunkIDInString && child != null)
+            sb.Append($" (0x{child.ID:X})");
+
+        if (IncludeChunkTypeInString)
+            sb.Append(')');
+
+        if (IncludeChunkTypeInString)
+            sb.Append($" ({ChunkType}");
+
+        if (IncludeChunkIDInString)
+            sb.Append($" (0x{ID:X})");
+
+        if (IncludeChunkTypeInString)
+            sb.Append(')');
+
+        return sb.ToString();
+    }
 }

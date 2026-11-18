@@ -6,6 +6,7 @@ using NetP3DLib.P3D.Extensions;
 using NetP3DLib.P3D.Types;
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace NetP3DLib.P3D.Chunks;
 
@@ -59,5 +60,19 @@ public class FrontendStringHardCodedChunk : Chunk
 
     protected override Chunk CloneSelf() => new FrontendStringHardCodedChunk(String);
 
-    public override string ToString() => $"\"{String}\" ({GetChunkType(this)} (0x{ID:X}))";
+    public override string ToString()
+    {
+        var sb = new StringBuilder($"\"{String}\"");
+
+        if (IncludeChunkTypeInString)
+            sb.Append($" ({ChunkType}");
+
+        if (IncludeChunkIDInString)
+            sb.Append($" (0x{ID:X})");
+
+        if (IncludeChunkTypeInString)
+            sb.Append(')');
+
+        return sb.ToString();
+    }
 }
