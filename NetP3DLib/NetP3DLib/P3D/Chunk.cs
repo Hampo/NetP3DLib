@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Text;
+using System.Runtime.CompilerServices;
+
 
 #if DEBUG
 using System.Diagnostics;
@@ -614,85 +616,27 @@ public abstract class Chunk
         return sb.ToString();
     }
 
-    /// <summary>
-    /// This compares the current <see cref="Chunk"/> to another.
-    /// </summary>
-    /// <param name="obj">The <see cref="Chunk"/> to compare to.</param>
-    /// <returns>Returns <c>true</c> if <paramref name="obj"/> is a <see cref="Chunk"/>, with the same <see cref="ID"/>, <see cref="DataBytes"/> and <see cref="Children"/>.</returns>
-    public override bool Equals(object obj)
-    {
-        if (obj is not Chunk chunk2)
-            return false;
+	/// <summary>
+	/// Checks whether <paramref name="obj"/> is the same instance as this chunk.
+	/// </summary>
+	public override bool Equals(object? obj) => ReferenceEquals(this, obj);
 
-        if (ID != chunk2.ID)
-            return false;
+	/// <summary>
+	/// Generates a hash code based on this chunk's object identity.
+	/// </summary>
+	public override int GetHashCode() => RuntimeHelpers.GetHashCode(this);
 
-        var dataLength = DataLength;
-        if (dataLength != chunk2.DataLength)
-            return false;
+	/// <summary>
+	/// Checks whether both references point to the same instance.
+	/// </summary>
+	public static bool operator ==(Chunk? left, Chunk? right) => ReferenceEquals(left, right);
 
-        var childCount = GetChildCount();
-        if (childCount != chunk2.Children.Count)
-            return false;
+	/// <summary>
+	/// Checks whether both references point to different instances.
+	/// </summary>
+	public static bool operator !=(Chunk? left, Chunk? right) => !ReferenceEquals(left, right);
 
-        var dataBytes = DataBytes;
-        var dataBytes2 = chunk2.DataBytes;
-        for (int i = 0; i < dataLength; i++)
-            if (dataBytes[i] != dataBytes2[i])
-                return false;
-
-        for (int i = 0; i < childCount; i++)
-        {
-            var subChunk = Children[i];
-            var subChunk2 = chunk2.Children[i];
-
-            if (!subChunk.Equals(subChunk2))
-                return false;
-        }
-
-        return true;
-    }
-
-    /// <summary>
-    /// Generates a unique hash code, taking note of <see cref="ID"/>, <see cref="DataBytes"/> and <see cref="Children"/>.
-    /// </summary>
-    /// <returns>An <c>int</c> with the hash code.</returns>
-    public override int GetHashCode()
-    {
-        int hash = ID.GetHashCode();
-        foreach (var b in DataBytes)
-            hash = (hash * 31) + b;
-        foreach (var child in Children)
-            hash = (hash * 31) + child.GetHashCode();
-        return hash;
-    }
-
-    /// <summary>
-    /// Checks if <paramref name="left"/> is equal to <paramref name="right"/> using <see cref="Equals(object)"/>.
-    /// </summary>
-    /// <param name="left">The <see cref="Chunk"/> to compare against.</param>
-    /// <param name="right">The <see cref="Chunk"/> to compare to.</param>
-    /// <returns>Returns <c>true</c> if <paramref name="left"/> is equal to <paramref name="right"/>.</returns>
-    public static bool operator ==(Chunk? left, Chunk? right)
-    {
-        if (left is null && right is null)
-            return true;
-
-        if (left is null || right is null)
-            return false;
-
-        return EqualityComparer<Chunk>.Default.Equals(left, right);
-    }
-
-    /// <summary>
-    /// Checks if <paramref name="left"/> is not equal to <paramref name="right"/> using <see cref="Equals(object)"/>.
-    /// </summary>
-    /// <param name="left">The <see cref="Chunk"/> to compare against.</param>
-    /// <param name="right">The <see cref="Chunk"/> to compare to.</param>
-    /// <returns>Returns <c>true</c> if <paramref name="left"/> is not equal to <paramref name="right"/>.</returns>
-    public static bool operator !=(Chunk? left, Chunk? right) => !(left == right);
-
-    protected static string GetChunkType(Chunk chunk)
+	protected static string GetChunkType(Chunk chunk)
     {
         if (Enum.IsDefined(typeof(ChunkIdentifier), (ChunkIdentifier)chunk.ID))
             return ((ChunkIdentifier)chunk.ID).ToString().Replace("_", " ");
