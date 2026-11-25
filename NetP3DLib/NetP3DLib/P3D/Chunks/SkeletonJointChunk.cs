@@ -156,7 +156,7 @@ public class SkeletonJointChunk : NamedChunk
 
         if (ParentChunk is SkeletonChunk)
             if (Parent >= IndexInParent && (Parent != 0 || IndexInParent != 0))
-            yield return new InvalidP3DException(this, "The parent joint can not be greater than the number of joints in the parent skeleton.");
+                yield return new InvalidP3DException(this, "The parent joint can not be greater than the number of joints in the parent skeleton.");
 
 		if (!(MathUtil.IsZero(_restPose.M14) && MathUtil.IsZero(_restPose.M24) && MathUtil.IsZero(_restPose.M34) && MathUtil.IsOne(_restPose.M44)))
             yield return new InvalidP3DException(this, "Invalid rest pose: only affine transformation matrices are supported (last column must be 0, 0, 0, 1).");
